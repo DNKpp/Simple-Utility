@@ -316,7 +316,7 @@ namespace sl::container
 			return std::rend(m_Data);
 		}
 
-		aconst_reverse_iteratoruto rend() const
+		const_reverse_iterator rend() const
 		{
 			return std::rend(m_Data);
 		}
