@@ -27,7 +27,7 @@
 
 #include <type_traits>
 
-namespace SL {
+namespace sl {
 namespace operators {
 
 	/*!
