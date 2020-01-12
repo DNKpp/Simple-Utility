@@ -102,7 +102,7 @@ namespace detail
 			return m_Container.erase(_first, _last);
 		}
 
-		template <class TComparable>
+		template <class TComparable, typename = std::enable_if_t<!std::is_convertible_v<TComparable, const_iterator>>>
 		iterator erase(const TComparable& _value)
 		{
 			auto itr = std::lower_bound(std::begin(m_Container), std::end(m_Container), _value, m_Compare);
@@ -376,7 +376,7 @@ namespace detail
 }
 
 	template <class T, class Compare = std::less<>, class Container = std::vector<T>>
-	using SortedVector = detail::BaseSkipList<T, true, Compare, Container>;
+	using SortedVector = detail::BaseSortedVector<T, true, Compare, Container>;
 	template <class T, class Compare = std::less<>, class Container = std::vector<T>>
-	using MultiSortedVector = detail::BaseSkipList<T, false, Compare, Container>;
+	using MultiSortedVector = detail::BaseSortedVector<T, false, Compare, Container>;
 }
