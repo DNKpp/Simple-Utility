@@ -43,7 +43,7 @@ namespace sl::container
 	*/
     template <class T, class TContainer = std::vector<T>>
     class Vector2d :
-		operators::Equal<Vector2D<T>>
+		operators::Equal<Vector2d<T>>
     {
     public:
     	using value_type = typename TContainer::value_type;
@@ -76,15 +76,51 @@ namespace sl::container
 			m_Data(_width * _height)
 		{
 		}
-    	
+
+    	/*!\brief Returns total cell count*/
+		size_type cell_count() const
+		{
+			return m_Data.size();
+		}
+
+        /*!\brief Returns the current width*/
+        size_type width() const
+        {
+            return m_Width;
+        }
+
+        /*!\brief Returns the current height*/
+        size_type height() const
+        {
+			return m_Height;
+        }
+
+    	bool empty() const
+		{
+			return m_Width == 0 || m_Height == 0;
+		}
+
+    	bool is_in_range(size_type _x, size_type _y) const
+		{
+			return _x < width() && _y < height();
+		}
 
         /*!\brief Access specific element
-        \param pos The position which will be returned.
+        \param _column The position which will be returned.
 		\attention Does not throw if index is out of range.
         \return Returns a const reference to the value.*/
-        const_iterator operator[](size_type _row) const
+        const_iterator operator[](size_type _column) const
         {
-            return std::begin(m_Data) + _row * width();
+            return std::begin(m_Data) + _column * height();
+        }
+
+    	/*!\brief Access specific element
+        \param _column The position which will be returned.
+		\attention Does not throw if index is out of range.
+        \return Returns a const reference to the value.*/
+        iterator operator[](size_type _column)
+        {
+            return std::begin(m_Data) + _column * height();
         }
 
         /*!\brief Access specific element
@@ -94,7 +130,7 @@ namespace sl::container
         \return Returns a const reference to the value*/
         const_reference at(size_type _x, size_type _y) const
         {
-            return m_Data.at(_y * getWidth() + _x);
+            return m_Data.at(_x * height() + _y);
         }
 
         /*!\brief Access specific element
@@ -104,25 +140,26 @@ namespace sl::container
         \return Returns a reference to the value*/
         reference at(size_type _x, size_type _y)
         {
-            return m_Data.at(_y * getWidth() + _x);
+            return m_Data.at(_x * height() + _y);
         }
 
         /*!\brief modify width
 		\details Resize all rows to the given width. If the new width is smaller than the current, all data in row
-		 behind the last element will be lost.
+			behind the last element will be lost.
         \param width The new width
 		\exception Lookup std::vector::resize reference*/
+    	/*
         void set_width(size_type _width)
         {
-			assert(_width >= 0);
-            if (_width < getWidth() && getHeight() > 0)
+			assert(0 <= _width);
+            if (_width < width())
             {
-                for (std::size_t i = 1; i < getHeight(); ++i)
+                for (std::size_t i = 1; i < height(); ++i)
                 {
-                    auto itrBegin = m_Data.begin() + getWidth() * i;
+                    auto itrBegin = m_Data.begin() + width() * i;
                     std::move(itrBegin, itrBegin + _width, m_Data.begin() + _width * i);
                 }
-                m_Data.resize(_width * getHeight());
+                m_Data.resize(_width * height());
             }
             else if (_width > getWidth() && getHeight() > 0)
             {
@@ -141,46 +178,33 @@ namespace sl::container
             }
             m_Width = _width;
         }
+    	*/
 
         /*!\brief modify height
 		\details Resize all columns to the given height. If the new height is smaller than the current, all data in column
 		 behind the last element will be lost.
         \param height The new height
 		\exception Lookup std::vector::resize reference*/
+    	/*
         void set_height(size_type _height)
         {
 			assert(_height >= 0);
             m_Data.resize(getWidth() * _height);
             m_Height = _height;
         }
+    	*/
 
         /*!\brief modify size
         \param width The new width
         \param height The new height
 		\exception Lookup std::vector::resize reference*/
-        void resize(size_type _width, size_type _height)
+        /*
+    	void resize(size_type _width, size_type _height)
         {
             setWidth(_width);
             setHeight(_height);
         }
-
-		/*!\brief Returns total cell count*/
-		size_type cell_count() const
-		{
-			return m_Data.size();
-		}
-
-        /*!\brief Returns the current width*/
-        size_type width() const
-        {
-            return m_Width;
-        }
-
-        /*!\brief Returns the current height*/
-        size_type height() const
-        {
-			return m_Height;
-        }
+    	*/
 
         /*!\brief Clears all internal data.*/
         void clear()
@@ -190,16 +214,12 @@ namespace sl::container
 			m_Height = 0;
         }
 
-		bool isNull() const
-		{
-			return m_Width == 0 || m_Height == 0;
-		}
-
         /*!\brief Inserts a new row at before the given iterator
 		\details The new line must at least equal to the Vector2D width.
         \param insertItr The position at which the new line will be inserted
         \param itrBegin The begin iterator of the new line
 		\exception Lookup std::vector::resize reference*/
+    	/*
         template <class TForeignIterator>
         void insert_row(size_type _row, TForeignIterator _itrBegin)
         {
@@ -208,15 +228,18 @@ namespace sl::container
             m_Data.insert((*this)[_row], _itrBegin, itrEnd);
             ++m_Height;
         }
+    	*/
 
         /*!\brief Erase the row at the given index.
         \param row The row index.
 		\exception Lookup std::vector::erase reference*/
+    	/*
         void erase_row(size_type _row)
         {
             m_Data.erase((*this)[_row], itr + width());
             --m_Height;
         }
+    	*/
 		
 		/*!\brief pointer to raw data
 		\attention This pointer is only valid as long as you do not resize the Vector2D.
@@ -243,62 +266,62 @@ namespace sl::container
             return _lhs.m_Size == _rhs.m_Size && _lhs.m_Data == _rhs.m_Data;
         }
 
-		auto begin()
+		iterator begin()
 		{
 			return std::begin(m_Data);
 		}
 
-		auto begin() const
+		const_iterator begin() const
 		{
 			return std::begin(m_Data);
 		}
 
-		auto cbegin() const
+		const_iterator cbegin() const
 		{
 			return std::cbegin(m_Data);
 		}
 
-		auto rbegin()
+		reverse_iterator rbegin()
 		{
 			return std::rbegin(m_Data);
 		}
 
-		auto rbegin() const
+		const_reverse_iterator rbegin() const
 		{
 			return std::rbegin(m_Data);
 		}
 
-		auto crbegin() const
+		const_reverse_iterator crbegin() const
 		{
 			return std::crbegin(m_Data);
 		}
 
-		auto end()
+		iterator end()
 		{
 			return std::end(m_Data);
 		}
 
-		auto end() const
+		const_iterator end() const
 		{
 			return std::end(m_Data);
 		}
 
-		auto cend() const
+		const_iterator cend() const
 		{
 			return std::cend(m_Data);
 		}
 
-		auto rend()
+		reverse_iterator rend()
 		{
 			return std::rend(m_Data);
 		}
 
-		auto rend() const
+		aconst_reverse_iteratoruto rend() const
 		{
 			return std::rend(m_Data);
 		}
 
-		auto crend() const
+		const_reverse_iterator crend() const
 		{
 			return std::crend(m_Data);
 		}
