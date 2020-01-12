@@ -60,9 +60,9 @@ namespace sl::container
     	using const_reverse_iterator = typename TContainer::const_reverse_iterator;
 
     private:
-        TContainer m_Data;
-        size_type m_Width = 0;
+    	size_type m_Width = 0;
     	size_type m_Height = 0;
+        TContainer m_Data;
 
     public:
         /*!\brief Constructing an empty Vector2D*/
