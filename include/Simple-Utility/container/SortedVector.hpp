@@ -324,15 +324,11 @@ namespace detail
 			if constexpr (UniqueElements)
 			{
 				if (itr == end() || m_Compare(_value, *itr))
-				{
-					m_Container.insert(itr, std::forward<TValueType>(_value));
-					return {itr, true};
-				}
+					return {m_Container.insert(itr, std::forward<TValueType>(_value)), true};
 			}
 			else
 			{
-				m_Container.insert(itr, std::forward<TValueType>(_value));
-				return {itr, true};
+				return {m_Container.insert(itr, std::forward<TValueType>(_value)), true};
 			}
 			return {itr, false};
 		}
@@ -343,8 +339,7 @@ namespace detail
 			auto itr = _lower_bound(m_Container, m_Compare, _value);
 			if (itr == end() || m_Compare(_value, *itr))
 			{
-				m_Container.insert(itr, std::forward<TValueType>(_value));
-				return {itr, true};
+				return {m_Container.insert(itr, std::forward<TValueType>(_value)), true};
 			}
 			*itr = std::forward<TValueType>(_value);
 			return {itr, false};
