@@ -99,6 +99,12 @@ namespace detail
 			insert(std::begin(_ilist), std::end(_ilist));
 		}
 
+		template <class TValueType>
+		std::pair<iterator, bool> insert_or_assign(TValueType&& _value)
+		{
+			return _insert_or_assign(std::forward<TValueType>(_value));
+		}
+
 		iterator erase(const_iterator _itr)
 		{
 			return m_Container.erase(_itr);
@@ -325,16 +331,24 @@ namespace detail
 			if constexpr (UniqueElements)
 			{
 				if (itr == end() || m_Compare(_value, *itr))
-				{
-					m_Container.insert(itr, std::forward<TValueType>(_value));
-					return {itr, true};
-				}
+					return {m_Container.insert(itr, std::forward<TValueType>(_value)), true};
 			}
 			else
 			{
-				m_Container.insert(itr, std::forward<TValueType>(_value));
-				return {itr, true};
+				return {m_Container.insert(itr, std::forward<TValueType>(_value)), true};
 			}
+			return {itr, false};
+		}
+
+		template <class TValueType>
+		std::pair<iterator, bool> _insert_or_assign(TValueType&& _value)
+		{
+			auto itr = _lower_bound(m_Container, m_Compare, _value);
+			if (itr == end() || m_Compare(_value, *itr))
+			{
+				return {m_Container.insert(itr, std::forward<TValueType>(_value)), true};
+			}
+			*itr = std::forward<TValueType>(_value);
 			return {itr, false};
 		}
 
