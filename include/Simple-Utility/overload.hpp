@@ -14,16 +14,11 @@
 
 namespace sl
 {
-	template <class ...Fs>
+	template<class... Ts>
 	struct overload :
-		Fs...
+		Ts...
 	{
-		template <class ...Ts>
-		overload(Ts&& ...ts) :
-			Fs{ std::forward<Ts>(ts) }...
-		{}
-
-		using Fs::operator()...;
+		using Ts::operator()...;
 	};
 
 	template <class ...Ts>
