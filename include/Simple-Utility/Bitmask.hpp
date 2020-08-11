@@ -21,7 +21,7 @@ namespace sl::detail
 	concept Flag = std::is_enum_v<T> || std::unsigned_integral<T>;
 
 	template <class T, Flag... TArgs>
-	constexpr T combine(TArgs&&... args) noexcept
+	constexpr T combine(TArgs... args) noexcept
 	{
 		return (static_cast<T>(args) | ...);
 	}
@@ -41,8 +41,8 @@ namespace sl
 		~Bitmask() noexcept = default;
 
 		template <detail::Flag... TArgs>
-		constexpr explicit Bitmask(TArgs&&... args) noexcept :
-			m_Mask{ detail::combine<TStorage>(std::forward<TArgs>(args)...) }
+		constexpr explicit Bitmask(TArgs... args) noexcept :
+			m_Mask{ detail::combine<TStorage>(args...) }
 		{}
 
 		constexpr explicit Bitmask(TStorage mask) noexcept :
@@ -77,28 +77,28 @@ namespace sl
 		}
 
 		template <detail::Flag... TArgs>
-		[[nodiscard]] constexpr bool contains(TArgs&&... args) const noexcept
+		[[nodiscard]] constexpr bool contains(TArgs... args) const noexcept
 		{
-			auto mask = detail::combine<TStorage>(std::forward<TArgs>(args)...);
+			auto mask = detail::combine<TStorage>(args...);
 			return (m_Mask & mask) == mask;
 		}
 
 		template <detail::Flag... TArgs>
-		constexpr void set(TArgs&&... args) noexcept
+		constexpr void set(TArgs... args) noexcept
 		{
-			m_Mask = detail::combine<TStorage>(std::forward<TArgs>(args)...);
+			m_Mask = detail::combine<TStorage>(args...);
 		}
 
 		template <detail::Flag... TArgs>
-		constexpr void apply(TArgs&&... args) noexcept
+		constexpr void apply(TArgs... args) noexcept
 		{
-			m_Mask |= detail::combine<TStorage>(std::forward<TArgs>(args)...);
+			m_Mask |= detail::combine<TStorage>(args...);
 		}
 
 		template <detail::Flag... TArgs>
-		constexpr void remove(TArgs&&... args) noexcept
+		constexpr void remove(TArgs... args) noexcept
 		{
-			m_Mask &= ~detail::combine<TStorage>(std::forward<TArgs>(args)...);
+			m_Mask &= ~detail::combine<TStorage>(args...);
 		}
 
 		constexpr Bitmask& operator &=(const Bitmask& mask) noexcept
