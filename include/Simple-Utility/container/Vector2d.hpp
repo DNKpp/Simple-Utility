@@ -1,8 +1,8 @@
 
-//          Copyright Dominic Koepke 2019 - 2020.
+//		  Copyright Dominic Koepke 2019 - 2020.
 // Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          https://www.boost.org/LICENSE_1_0.txt)
+//	(See accompanying file LICENSE_1_0.txt or copy at
+//		  https://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef SL_CONTAINER_VECTOR2D_HPP
 #define SL_CONTAINER_VECTOR2D_HPP
@@ -10,307 +10,256 @@
 #pragma once
 
 #include <compare>
+#include <span>
 #include <vector>
+#include <type_traits>
 
 namespace sl::container
 {
-    /*!@defgroup container container
-    \brief Useful container classes.
-    \details Here are some useful container classes. They are inspired by the STL container, thus you can use them with all STL algorithms.
-    @{*/
-
-    /*!\brief 2 dimensional vector.
-    *\details This class is a 2 dimensional vector. Internally, it is stored as an std::vector, thus all data is stored in a continuous range and allocation is much faster than
-    in a nested construct like std::vector<std::vector<T>>.
-    It provides all iterators a vector offers, too, so you can use it with all STL algorithms.
-	*/
-    template <class T, class TContainer = std::vector<T>>
-    class Vector2d
-    {
-    public:
-    	using value_type = typename TContainer::value_type;
-    	using allocator_type = typename TContainer::allocator_type;
+	template <class T, class TContainer = std::vector<T>>
+	class Vector2d
+	{
+	public:
+		using value_type = typename TContainer::value_type;
+		using allocator_type = typename TContainer::allocator_type;
 		using size_type = typename TContainer::size_type;
-    	using difference_type = typename TContainer::difference_type;
-        using reference = typename TContainer::reference;
-    	using const_reference = typename TContainer::const_reference;
-    	using pointer = typename TContainer::pointer;
-    	using const_pointer = typename TContainer::const_pointer;
-    	using iterator = typename TContainer::iterator;
-    	using const_iterator = typename TContainer::const_iterator;
-    	using reverse_iterator = typename TContainer::reverse_iterator;
-    	using const_reverse_iterator = typename TContainer::const_reverse_iterator;
+		using difference_type = typename TContainer::difference_type;
+		using reference = typename TContainer::reference;
+		using const_reference = typename TContainer::const_reference;
+		using pointer = typename TContainer::pointer;
+		using const_pointer = typename TContainer::const_pointer;
+		using iterator = typename TContainer::iterator;
+		using const_iterator = typename TContainer::const_iterator;
+		using reverse_iterator = typename TContainer::reverse_iterator;
+		using const_reverse_iterator = typename TContainer::const_reverse_iterator;
 
-    private:
-    	size_type m_Width = 0;
-    	size_type m_Height = 0;
-        TContainer m_Data;
+		using SubView = std::span<value_type, std::dynamic_extent>;
+		using ConstSubView = std::span<const value_type, std::dynamic_extent>;
 
-    public:
-        /*!\brief Constructing an empty Vector2D*/
-        Vector2d() = default;
+		constexpr Vector2d() noexcept(noexcept(TContainer())) = default;
 
-		/*!\brief Constructing a Vector2D with specific size
-		\param size The initializing size*/
-		explicit Vector2d(size_type _width, size_type _height) :
-            m_Width{ _width },
-    		m_Height{ _height },
-			m_Data(_width * _height)
+		/*ToDo: c++20
+		constexpr*/
+		~Vector2d() noexcept = default;
+
+		constexpr explicit Vector2d(size_type width, size_type height, const T& value = T{}) :
+			m_Width{ width },
+			m_Height{ height },
+			m_Data(width * height)
 		{
 		}
 
-    	constexpr bool operator ==(const Vector2d&) const noexcept = default;
-
-    	/*!\brief Returns total cell count*/
-		size_type cell_count() const
+		constexpr Vector2d(const Vector2d&) = default;
+		constexpr Vector2d& operator =(const Vector2d&) = default;
+		
+		constexpr Vector2d(Vector2d&& other) noexcept(std::is_nothrow_move_constructible_v<TContainer>)
 		{
-			return m_Data.size();
+			*this = std::move(other);	
+		}
+		
+		constexpr Vector2d& operator =(Vector2d&& other) noexcept(std::is_nothrow_move_assignable_v<TContainer>)
+		{
+			using std::swap;
+
+			swap(m_Data, other.m_Data);
+			swap(m_Width, other.m_Width);
+			swap(m_Height, other.m_Height);
+			return *this;
 		}
 
-        /*!\brief Returns the current width*/
-        size_type width() const
-        {
-            return m_Width;
-        }
+		[[nodiscard]] constexpr bool operator ==(const Vector2d&) const noexcept = default;
 
-        /*!\brief Returns the current height*/
-        size_type height() const
-        {
+		constexpr void setWidth(size_type width, const T& value = T{})
+		{
+			m_Data.reserve(width * m_Height);
+			setWidthImpl(width, value);
+		}
+
+		constexpr void setHeight(size_type height, const T& value = T{})
+		{
+			m_Data.reserve(m_Width * height);
+			setHeightImpl(height, value);
+		}
+
+		constexpr void resize(size_type width, size_type height, const T& value = T{})
+		{
+			m_Data.reserve(width * height);
+			setHeightImpl(height, value);
+			setWidthImpl(width, value);
+		}
+
+		[[nodiscard]] constexpr size_type cellCount() const noexcept
+		{
+			return std::size(m_Data);
+		}
+
+		[[nodiscard]] constexpr size_type width() const noexcept
+		{
+			return m_Width;
+		}
+
+		[[nodiscard]] constexpr size_type height() const noexcept
+		{
 			return m_Height;
-        }
+		}
 
-    	bool empty() const
+		[[nodiscard]] constexpr bool empty() const noexcept
 		{
 			return m_Width == 0 || m_Height == 0;
 		}
 
-    	bool is_in_range(size_type _x, size_type _y) const
+		[[nodiscard]] constexpr bool isInRange(size_type x, size_type y) const noexcept
 		{
-			return _x < width() && _y < height();
+			return x < width() && y < height();
 		}
 
-        /*!\brief Access specific element
-        \param _column The position which will be returned.
-		\attention Does not throw if index is out of range.
-        \return Returns a const reference to the value.*/
-        const_iterator operator[](size_type _column) const
-        {
-            return std::begin(m_Data) + _column * height();
-        }
+		[[nodiscard]] constexpr ConstSubView operator[](size_type column) const noexcept
+		{
+			return { std::cbegin(m_Data) + cellIndex(column, 0), height() };
+		}
 
-    	/*!\brief Access specific element
-        \param _column The position which will be returned.
-		\attention Does not throw if index is out of range.
-        \return Returns a const reference to the value.*/
-        iterator operator[](size_type _column)
-        {
-            return std::begin(m_Data) + _column * height();
-        }
+		[[nodiscard]] constexpr SubView operator[](size_type column) noexcept
+		{
+			return { std::begin(m_Data) + cellIndex(column, 0), height() };
+		}
 
-        /*!\brief Access specific element
-        \param x The x position which will be returned
-        \param y The y position which will be returned
-		\exception std::out_of_range parameter is out of range
-        \return Returns a const reference to the value*/
-        const_reference at(size_type _x, size_type _y) const
-        {
-            return m_Data.at(_x * height() + _y);
-        }
+		[[nodiscard]] constexpr const_reference at(size_type x, size_type y) const
+		{
+			return m_Data.at(ellIndex(x, y));
+		}
 
-        /*!\brief Access specific element
-        \param x The x position which will be returned
-        \param y The y position which will be returned
-		\exception std::out_of_range parameter is out of range
-        \return Returns a reference to the value*/
-        reference at(size_type _x, size_type _y)
-        {
-            return m_Data.at(_x * height() + _y);
-        }
+		[[nodiscard]] constexpr reference at(size_type x, size_type y)
+		{
+			return m_Data.at(cellIndex(x, y));
+		}
 
-        /*!\brief modify width
-		\details Resize all rows to the given width. If the new width is smaller than the current, all data in row
-			behind the last element will be lost.
-        \param width The new width
-		\exception Lookup std::vector::resize reference*/
-    	/*
-        void set_width(size_type _width)
-        {
-			assert(0 <= _width);
-            if (_width < width())
-            {
-                for (std::size_t i = 1; i < height(); ++i)
-                {
-                    auto itrBegin = m_Data.begin() + width() * i;
-                    std::move(itrBegin, itrBegin + _width, m_Data.begin() + _width * i);
-                }
-                m_Data.resize(_width * height());
-            }
-            else if (_width > getWidth() && getHeight() > 0)
-            {
-                auto widthDiff = _width - getWidth();
-                auto oldSize = m_Data.size();
-                m_Data.resize(_width * getHeight());
-                auto sizeDiff = m_Data.size() - oldSize;
-                for (std::size_t i = 0; i < getHeight() - 1; ++i)
-                {
-                    auto itrBegin = m_Data.rbegin() + sizeDiff + getWidth() * i;
-                    auto itrEnd = itrBegin + getWidth();
-                    auto destItrBegin = m_Data.rbegin() + widthDiff * (i + 1) + getWidth() * i;
-                    std::move(itrBegin, itrEnd, destItrBegin);
-                    std::fill(std::max(destItrBegin + _width, itrBegin), itrEnd, T());
-                }
-            }
-            m_Width = _width;
-        }
-    	*/
-
-        /*!\brief modify height
-		\details Resize all columns to the given height. If the new height is smaller than the current, all data in column
-		 behind the last element will be lost.
-        \param height The new height
-		\exception Lookup std::vector::resize reference*/
-    	/*
-        void set_height(size_type _height)
-        {
-			assert(_height >= 0);
-            m_Data.resize(getWidth() * _height);
-            m_Height = _height;
-        }
-    	*/
-
-        /*!\brief modify size
-        \param width The new width
-        \param height The new height
-		\exception Lookup std::vector::resize reference*/
-        /*
-    	void resize(size_type _width, size_type _height)
-        {
-            setWidth(_width);
-            setHeight(_height);
-        }
-    	*/
-
-        /*!\brief Clears all internal data.*/
-        void clear()
-        {
-            m_Data.clear();
+		constexpr void clear() noexcept
+		{
+			m_Data.clear();
 			m_Width = 0;
 			m_Height = 0;
-        }
-
-        /*!\brief Inserts a new row at before the given iterator
-		\details The new line must at least equal to the Vector2D width.
-        \param insertItr The position at which the new line will be inserted
-        \param itrBegin The begin iterator of the new line
-		\exception Lookup std::vector::resize reference*/
-    	/*
-        template <class TForeignIterator>
-        void insert_row(size_type _row, TForeignIterator _itrBegin)
-        {
-            auto itrEnd = _itrBegin;
-            std::advance(itrEnd, width());
-            m_Data.insert((*this)[_row], _itrBegin, itrEnd);
-            ++m_Height;
-        }
-    	*/
-
-        /*!\brief Erase the row at the given index.
-        \param row The row index.
-		\exception Lookup std::vector::erase reference*/
-    	/*
-        void erase_row(size_type _row)
-        {
-            m_Data.erase((*this)[_row], itr + width());
-            --m_Height;
-        }
-    	*/
-		
-		/*!\brief pointer to raw data
-		\attention This pointer is only valid as long as you do not resize the Vector2D.
-		\return pointer to first element*/
-		T* raw_data()
-		{
-			return m_Data.data();
 		}
-		
-		/*!\brief const pointer to raw data
-		*\attention This pointer is only valid as long as you do not resize the Vector2D.
-		\return const pointer to first element*/
-		const T* raw_data() const
+
+		[[nodiscard]] constexpr T* rawData() noexcept
 		{
 			return m_Data.data();
 		}
 
-        /*!\brief Checks if both Vector2D objects are equal
-		\details Two Vector2D objects are equal, if all their elements matches.
-        \param other The other Vector2D object.
-        \return Returns true if both Vector2D objects are equal*/
-        friend bool operator ==(const Vector2d& _lhs, const Vector2d& _rhs)
-        {
-            return _lhs.m_Size == _rhs.m_Size && _lhs.m_Data == _rhs.m_Data;
-        }
+		[[nodiscard]] const T* rawData() const noexcept
+		{
+			return m_Data.data();
+		}
 
-		iterator begin()
+		[[nodiscard]] constexpr iterator begin() noexcept
 		{
 			return std::begin(m_Data);
 		}
 
-		const_iterator begin() const
+		[[nodiscard]] constexpr const_iterator begin() const noexcept
 		{
 			return std::begin(m_Data);
 		}
 
-		const_iterator cbegin() const
+		[[nodiscard]] constexpr const_iterator cbegin() const noexcept
 		{
 			return std::cbegin(m_Data);
 		}
 
-		reverse_iterator rbegin()
+		[[nodiscard]] constexpr reverse_iterator rbegin() noexcept
 		{
 			return std::rbegin(m_Data);
 		}
 
-		const_reverse_iterator rbegin() const
+		[[nodiscard]] constexpr const_reverse_iterator rbegin() const noexcept
 		{
 			return std::rbegin(m_Data);
 		}
 
-		const_reverse_iterator crbegin() const
+		[[nodiscard]] constexpr const_reverse_iterator crbegin() const noexcept
 		{
 			return std::crbegin(m_Data);
 		}
 
-		iterator end()
+		[[nodiscard]] constexpr iterator end() noexcept
 		{
 			return std::end(m_Data);
 		}
 
-		const_iterator end() const
+		[[nodiscard]] constexpr const_iterator end() const noexcept
 		{
 			return std::end(m_Data);
 		}
 
-		const_iterator cend() const
+		[[nodiscard]] constexpr const_iterator cend() const noexcept
 		{
 			return std::cend(m_Data);
 		}
 
-		reverse_iterator rend()
+		[[nodiscard]] constexpr reverse_iterator rend() noexcept
 		{
 			return std::rend(m_Data);
 		}
 
-		const_reverse_iterator rend() const
+		[[nodiscard]] constexpr const_reverse_iterator rend() const noexcept
 		{
 			return std::rend(m_Data);
 		}
 
-		const_reverse_iterator crend() const
+		[[nodiscard]] constexpr const_reverse_iterator crend() const noexcept
 		{
 			return std::crend(m_Data);
 		}
-    };
-    /*! @}*/
+
+	private:
+		size_type m_Width = 0;
+		size_type m_Height = 0;
+		TContainer m_Data;
+
+		[[nodiscard]] constexpr size_type cellIndex(size_type x, size_type y) const noexcept
+		{
+			return x * height() + y;
+		}
+
+		constexpr void setWidthImpl(size_type width, const T& value)
+		{
+			m_Data.resize(width * m_Height, value);
+			
+			m_Width = width;
+		}
+
+		constexpr void setHeightImpl(size_type height, const T& value)
+		{
+			if (m_Height < height)
+			{
+				m_Data.resize(height * m_Width, value);
+				const auto diff = height - m_Height;
+
+				auto destItr = std::rbegin(m_Data) + diff;
+				auto srcItr = std::rbegin(m_Data) + diff * m_Width;
+				auto srcEnd = srcItr + m_Height;
+
+				while (srcEnd != std::rend(m_Data))
+				{
+					destItr = std::rotate(destItr, srcItr, srcEnd) + diff;
+					srcItr += m_Height;
+					srcEnd += m_Height;
+				}
+			}
+			else if (height < m_Height)
+			{
+				const auto diff = m_Height - height;
+				auto itr = std::begin(m_Data);
+				do
+				{
+					itr += height;
+					itr = m_Data.erase(itr, itr + diff);
+				}
+				while (itr != std::end(m_Data));
+			}
+
+			m_Height = height;
+		}
+	};
 }
 
-#endif // !SL_CONTAINER_VECTOR2D_HPP
+#endif
