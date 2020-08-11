@@ -14,6 +14,8 @@
 #include <vector>
 #include <type_traits>
 
+#include "Simple-Utility/TypeTraits.hpp"
+
 namespace sl::container
 {
 	template <class T, class TContainer = std::vector<T>>
@@ -67,7 +69,8 @@ namespace sl::container
 			return *this;
 		}
 
-		[[nodiscard]] constexpr bool operator ==(const Vector2d&) const noexcept = default;
+		// ToDo: c++20
+		[[nodiscard]] /*constexpr*/ bool operator ==(const Vector2d&) const noexcept(IsNothrowComparable_v<TContainer, TContainer>) = default;
 
 		constexpr void setWidth(size_type width, const T& value = T{})
 		{
