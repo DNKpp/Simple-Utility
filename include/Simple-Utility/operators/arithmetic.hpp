@@ -9,12 +9,16 @@
 
 #pragma once
 
+#include <compare>
+
 #include "Simple-Utility/concepts/arithmetic.hpp"
 
 namespace sl::operators
 {
 	struct Plus
 	{
+		constexpr auto operator <=>(const Plus&) const noexcept = default;
+		
 		template <class T1, class T2>
 		requires concepts::AddAssignable<T1, T2>
 		friend constexpr T1 operator +(T1 lhs, const T2& rhs) noexcept(noexcept(lhs += rhs))
@@ -26,6 +30,8 @@ namespace sl::operators
 
 	struct Minus
 	{
+		constexpr auto operator <=>(const Minus&) const noexcept = default;
+		
 		template <class T1, class T2>
 		requires concepts::SubtractAssignable<T1, T2>
 		friend constexpr T1 operator -(T1 lhs, const T2& rhs) noexcept(noexcept(lhs -= rhs))
@@ -37,6 +43,8 @@ namespace sl::operators
 
 	struct Multiply
 	{
+		constexpr auto operator <=>(const Multiply&) const noexcept = default;
+		
 		template <class T1, class T2>
 		requires concepts::MultiplyAssignable<T1, T2>
 		friend constexpr T1 operator *(T1 lhs, const T2& rhs) noexcept(noexcept(lhs *= rhs))
@@ -48,6 +56,8 @@ namespace sl::operators
 
 	struct Divide
 	{
+		constexpr auto operator <=>(const Divide&) const noexcept = default;
+		
 		template <class T1, class T2>
 		requires concepts::DivideAssignable<T1, T2>
 		friend constexpr T1 operator /(T1 lhs, const T2& rhs) noexcept(noexcept(lhs /= rhs))
@@ -59,6 +69,8 @@ namespace sl::operators
 
 	struct Modulo
 	{
+		constexpr auto operator <=>(const Modulo&) const noexcept = default;
+		
 		template <class T1, class T2>
 		requires concepts::ModuloAssignable<T1, T2>
 		friend constexpr T1 operator %(T1 lhs, const T2& rhs) noexcept(noexcept(lhs %= rhs))
@@ -75,6 +87,7 @@ namespace sl::operators
 		Divide,
 		Modulo
 	{
+		constexpr auto operator <=>(const Arithmetic&) const noexcept = default;
 	};
 }
 

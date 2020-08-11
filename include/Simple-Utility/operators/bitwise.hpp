@@ -9,12 +9,16 @@
 
 #pragma once
 
+#include <compare>
+
 #include "Simple-Utility/concepts/bitwise.hpp"
 
 namespace sl::operators
 {
 	struct BitwiseAnd
 	{
+		constexpr auto operator <=>(const BitwiseAnd&) const noexcept = default;
+		
 		template <class T1, class T2>
 		requires concepts::BitwiseAndAssignable<T1, T2>
 		friend constexpr T1 operator &(T1 lhs, const T2& rhs) noexcept(noexcept(lhs &= rhs))
@@ -26,6 +30,8 @@ namespace sl::operators
 
 	struct BitwiseOr
 	{
+		constexpr auto operator <=>(const BitwiseOr&) const noexcept = default;
+		
 		template <class T1, class T2>
 		requires concepts::BitwiseOrAssignable<T1, T2>
 		friend constexpr T1 operator |(T1 lhs, const T2& rhs) noexcept(noexcept(lhs |= rhs))
@@ -37,6 +43,8 @@ namespace sl::operators
 
 	struct BitwiseXor
 	{
+		constexpr auto operator <=>(const BitwiseXor&) const noexcept = default;
+		
 		template <class T1, class T2>
 		requires concepts::BitwiseXorAssignable<T1, T2>
 		friend constexpr T1 operator ^(T1 lhs, const T2& rhs) noexcept(noexcept(lhs ^= rhs))
@@ -48,6 +56,8 @@ namespace sl::operators
 
 	struct BitwiseShiftLeft
 	{
+		constexpr auto operator <=>(const BitwiseShiftLeft&) const noexcept = default;
+		
 		template <class T1, class T2>
 		requires concepts::BitwiseLeftShiftable<T1, T2>
 		friend constexpr T1 operator <<(T1 lhs, const T2& rhs) noexcept(noexcept(lhs <<= rhs))
@@ -59,6 +69,8 @@ namespace sl::operators
 
 	struct BitwiseShiftRight
 	{
+		constexpr auto operator <=>(const BitwiseShiftRight&) const noexcept = default;
+		
 		template <class T1, class T2>
 		requires concepts::BitwiseRightShiftable<T1, T2>
 		friend constexpr T1 operator >>(T1 lhs, const T2& rhs) noexcept(noexcept(lhs >>= rhs))
@@ -73,12 +85,14 @@ namespace sl::operators
 		BitwiseOr,
 		BitwiseXor
 	{
+		constexpr auto operator <=>(const BitwiseLogical&) const noexcept = default;
 	};
 
 	struct BitwiseShift :
 		BitwiseShiftRight,
 		BitwiseShiftLeft
 	{
+		constexpr auto operator <=>(const BitwiseShift&) const noexcept = default;
 	};
 }
 
