@@ -8,8 +8,9 @@ project(Test)
 add_executable(Test
     "main"
     "OperatorTest"
-    "BitmaskTest.cpp"
- )
+    "BitmaskTest"
+    "Vector2dTest"
+)
 
 target_include_directories(${PROJECT_NAME}
     PRIVATE "${CMAKE_SOURCE_DIR}/../include/"
