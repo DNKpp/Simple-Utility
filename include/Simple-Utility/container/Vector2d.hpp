@@ -9,9 +9,8 @@
 
 #pragma once
 
+#include <compare>
 #include <vector>
-#include <cassert>
-#include "Simple-Utility/operators/compare.hpp"
 
 namespace sl::container
 {
@@ -26,8 +25,7 @@ namespace sl::container
     It provides all iterators a vector offers, too, so you can use it with all STL algorithms.
 	*/
     template <class T, class TContainer = std::vector<T>>
-    class Vector2d :
-		operators::Equal<Vector2d<T>>
+    class Vector2d
     {
     public:
     	using value_type = typename TContainer::value_type;
@@ -60,6 +58,8 @@ namespace sl::container
 			m_Data(_width * _height)
 		{
 		}
+
+    	constexpr bool operator ==(const Vector2d&) const noexcept = default;
 
     	/*!\brief Returns total cell count*/
 		size_type cell_count() const
