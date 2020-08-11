@@ -30,7 +30,7 @@ namespace sl::detail
 namespace sl
 {
 	template <detail::Flag TFlag, std::unsigned_integral TStorage = unsigned int>
-	requires requires (TFlag flag) { static_cast<TStorage>(flag); }
+	requires requires (TFlag flag) { static_cast<TStorage>(flag); } && (sizeof(TFlag) <= sizeof(TStorage))
 	class Bitmask :
 		operators::BitwiseLogical
 	{
