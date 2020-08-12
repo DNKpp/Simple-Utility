@@ -18,7 +18,7 @@ namespace sl::container::detail
 {
 	template <class T>
 	concept Element = IsComparable_v<T> && (std::is_copy_assignable_v<T> || std::is_move_assignable_v<T>) &&
-		(std::is_copy_constructible_v<T> || std::is_move_constructible_v<T>);
+	(std::is_copy_constructible_v<T> || std::is_move_constructible_v<T>);
 }
 
 namespace sl::container
@@ -248,7 +248,7 @@ namespace sl::container
 				m_Height = height;
 			}
 			else if (m_Height < height)
-			{				
+			{
 				m_Data.resize(height * m_Width, value);
 				const auto diff = height - m_Height;
 
