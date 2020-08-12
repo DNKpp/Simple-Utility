@@ -1,4 +1,3 @@
-
 //		  Copyright Dominic Koepke 2019 - 2020.
 // Distributed under the Boost Software License, Version 1.0.
 //	(See accompanying file LICENSE_1_0.txt or copy at
@@ -11,14 +10,21 @@
 
 #include <compare>
 #include <span>
-#include <vector>
 #include <type_traits>
+#include <vector>
 
 #include "Simple-Utility/TypeTraits.hpp"
 
+namespace sl::container::detail
+{
+	template <class T>
+	concept Element = IsComparable_v<T> && (std::is_copy_assignable_v<T> || std::is_move_assignable_v<T>) &&
+	(std::is_copy_constructible_v<T> || std::is_move_constructible_v<T>);
+}
+
 namespace sl::container
 {
-	template <class T, class TContainer = std::vector<T>>
+	template <detail::Element T, class TContainer = std::vector<T>>
 	class Vector2d
 	{
 	public:
@@ -53,12 +59,12 @@ namespace sl::container
 
 		constexpr Vector2d(const Vector2d&) = default;
 		constexpr Vector2d& operator =(const Vector2d&) = default;
-		
+
 		constexpr Vector2d(Vector2d&& other) noexcept(std::is_nothrow_move_constructible_v<TContainer>)
 		{
-			*this = std::move(other);	
+			*this = std::move(other);
 		}
-		
+
 		constexpr Vector2d& operator =(Vector2d&& other) noexcept(std::is_nothrow_move_assignable_v<TContainer>)
 		{
 			using std::swap;
@@ -226,7 +232,7 @@ namespace sl::container
 		constexpr void setWidthImpl(size_type width, const T& value)
 		{
 			m_Data.resize(width * m_Height, value);
-			
+
 			m_Width = width;
 		}
 
