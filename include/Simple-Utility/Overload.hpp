@@ -1,4 +1,3 @@
-
 //          Copyright Dominic Koepke 2019 - 2020.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
@@ -10,19 +9,18 @@
 #pragma once
 
 #include <type_traits>
-#include <utility>
 
 namespace sl
 {
-	template<class... Ts>
-	struct overload :
-		Ts...
+	template <class... TArgs>
+	struct Overload :
+		TArgs...
 	{
-		using Ts::operator()...;
+		using TArgs::operator()...;
 	};
 
-	template <class ...Ts>
-	overload(Ts&&...)->overload<std::remove_cvref_t<Ts>...>;
+	template <class ...TArgs>
+	Overload(TArgs&&...) -> Overload<std::remove_cvref_t<TArgs>...>;
 }
 
 #endif
