@@ -177,6 +177,47 @@ TEST_CASE("functions", "[Vector2d]")
 		Vector2d<int> vec{ 4, 4 };
 		std::iota(std::begin(vec), std::end(vec), 0);
 
+		SECTION("set width from zero")
+		{
+			vec.clear();
+			
+			vec.setWidth(15);
+			REQUIRE(vec.width() == 15);
+			REQUIRE(vec.cellCount() == 0);
+			REQUIRE(std::empty(vec));
+		}
+
+		SECTION("set height from zero")
+		{
+			vec.clear();
+			
+			vec.setHeight(15);
+			REQUIRE(vec.height() == 15);
+			REQUIRE(vec.cellCount() == 0);
+			REQUIRE(std::empty(vec));
+		}
+
+		SECTION("resize from empty")
+		{
+			vec.clear();
+			
+			vec.resize(4, 0);
+			REQUIRE(vec.width() == 4);
+			REQUIRE(vec.cellCount() == 0);
+			REQUIRE(std::empty(vec));
+
+			vec.resize(0, 4);
+			REQUIRE(vec.height() == 4);
+			REQUIRE(vec.cellCount() == 0);
+			REQUIRE(std::empty(vec));
+
+			vec.resize(4, 8);
+			REQUIRE(vec.width() == 4);
+			REQUIRE(vec.height() == 8);
+			REQUIRE(vec.cellCount() == 32);
+			REQUIRE_FALSE(std::empty(vec));
+		}
+
 		SECTION("set width zero")
 		{
 			vec.setWidth(0);

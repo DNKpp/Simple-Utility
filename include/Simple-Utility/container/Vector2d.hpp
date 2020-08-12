@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <compare>
 #include <span>
 #include <type_traits>
 #include <vector>
@@ -19,7 +18,7 @@ namespace sl::container::detail
 {
 	template <class T>
 	concept Element = IsComparable_v<T> && (std::is_copy_assignable_v<T> || std::is_move_assignable_v<T>) &&
-	(std::is_copy_constructible_v<T> || std::is_move_constructible_v<T>);
+		(std::is_copy_constructible_v<T> || std::is_move_constructible_v<T>);
 }
 
 namespace sl::container
@@ -93,8 +92,7 @@ namespace sl::container
 		constexpr void resize(size_type width, size_type height, const T& value = T{})
 		{
 			m_Data.reserve(width * height);
-			setHeightImpl(height, value);
-			setWidthImpl(width, value);
+			resizeImpl(width, height, value);
 		}
 
 		[[nodiscard]] constexpr size_type cellCount() const noexcept
@@ -124,17 +122,17 @@ namespace sl::container
 
 		[[nodiscard]] constexpr ConstSubView operator[](size_type column) const noexcept
 		{
-			return { std::cbegin(m_Data) + cellIndex(column, 0), height() };
+			return { std::cbegin(m_Data) + static_cast<int>(cellIndex(column, 0)), height() };
 		}
 
 		[[nodiscard]] constexpr SubView operator[](size_type column) noexcept
 		{
-			return { std::begin(m_Data) + cellIndex(column, 0), height() };
+			return { std::begin(m_Data) + static_cast<int>(cellIndex(column, 0)), height() };
 		}
 
 		[[nodiscard]] constexpr const_reference at(size_type x, size_type y) const
 		{
-			return m_Data.at(ellIndex(x, y));
+			return m_Data.at(cellIndex(x, y));
 		}
 
 		[[nodiscard]] constexpr reference at(size_type x, size_type y)
@@ -229,6 +227,12 @@ namespace sl::container
 			return x * height() + y;
 		}
 
+		constexpr void resizeImpl(size_type width, size_type height, const T& value)
+		{
+			setHeightImpl(height, value);
+			setWidthImpl(width, value);
+		}
+
 		constexpr void setWidthImpl(size_type width, const T& value)
 		{
 			m_Data.resize(width * m_Height, value);
@@ -238,8 +242,13 @@ namespace sl::container
 
 		constexpr void setHeightImpl(size_type height, const T& value)
 		{
-			if (m_Height < height)
+			if (std::empty(m_Data))
 			{
+				m_Data.resize(m_Width * height, value);
+				m_Height = height;
+			}
+			else if (m_Height < height)
+			{				
 				m_Data.resize(height * m_Width, value);
 				const auto diff = height - m_Height;
 
