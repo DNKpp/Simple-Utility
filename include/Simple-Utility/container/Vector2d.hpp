@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <span>
 #include <type_traits>
 #include <vector>
 
@@ -39,9 +38,6 @@ namespace sl::container
 		using const_iterator = typename TContainer::const_iterator;
 		using reverse_iterator = typename TContainer::reverse_iterator;
 		using const_reverse_iterator = typename TContainer::const_reverse_iterator;
-
-		using SubView = std::span<value_type, std::dynamic_extent>;
-		using ConstSubView = std::span<const value_type, std::dynamic_extent>;
 
 		constexpr Vector2d() noexcept(noexcept(TContainer())) = default;
 
@@ -120,14 +116,18 @@ namespace sl::container
 			return x < width() && y < height();
 		}
 
-		[[nodiscard]] constexpr ConstSubView operator[](size_type column) const noexcept
+		[[nodiscard]] constexpr const_iterator operator[](size_type column) const noexcept
 		{
-			return { std::cbegin(m_Data) + static_cast<int>(cellIndex(column, 0)), height() };
+			auto itr = std::cbegin(m_Data);
+			std::advance(itr, cellIndex(column, 0));
+			return itr;
 		}
 
-		[[nodiscard]] constexpr SubView operator[](size_type column) noexcept
+		[[nodiscard]] constexpr iterator operator[](size_type column) noexcept
 		{
-			return { std::begin(m_Data) + static_cast<int>(cellIndex(column, 0)), height() };
+			auto itr = std::begin(m_Data);
+			std::advance(itr, cellIndex(column, 0));
+			return itr;
 		}
 
 		[[nodiscard]] constexpr const_reference at(size_type x, size_type y) const
