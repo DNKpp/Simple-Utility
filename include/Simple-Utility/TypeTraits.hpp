@@ -12,21 +12,21 @@
 
 namespace sl::detail
 {
-	template <class T1, class T2, class TReturn = void>
-	struct IsComparableImpl :
+	template <class ...>
+	using Void_t = void;
+
+	template <class T1, class T2>
+	using Comparability = decltype(std::declval<T1>() == std::declval<T2>());
+
+	template <class T1, class T2, class = void>
+	struct IsComparable :
 		std::false_type
 	{
 	};
 
 	template <class T1, class T2>
-	struct IsComparableImpl<T1, T2, bool> :
+	struct IsComparable<T1, T2, Void_t<Comparability<T1, T2>>> :
 		std::true_type
-	{
-	};
-
-	template <class T1, class T2>
-	struct IsComparable :
-		IsComparableImpl<T1, T2, decltype(std::declval<T1>() == std::declval<T2>())>
 	{
 	};
 
