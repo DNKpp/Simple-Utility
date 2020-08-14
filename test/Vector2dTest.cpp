@@ -151,25 +151,10 @@ TEST_CASE("functions", "[Vector2d]")
 				auto val = vec.at(c, r);
 				REQUIRE(val == i++);
 				REQUIRE(val == std::as_const(vec.at(c, r)));
+				REQUIRE(val == std::as_const(vec)[c][r]);
+				REQUIRE(val == vec[c][r]);
 			}
 		}
-	}
-
-	SECTION("SubView")
-	{
-		Vector2d<int> vec{ 4, 4 };
-		std::iota(std::begin(vec), std::end(vec), 0);
-
-		int i = 0;
-		for (std::size_t c = 0; c < vec.width(); ++c)
-		{
-			for (auto view = std::as_const(vec)[c]; auto val : view)
-			{
-				REQUIRE(val == i++);
-			}
-		}
-
-		REQUIRE(std::as_const(vec)[0].data() == vec[0].data());
 	}
 
 	SECTION("resize")
