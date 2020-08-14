@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <concepts>
 #include <type_traits>
 #include <vector>
 
@@ -16,8 +17,8 @@
 namespace sl::container::detail
 {
 	template <class T>
-	concept Element = IsComparable_v<T> && (std::is_copy_assignable_v<T> || std::is_move_assignable_v<T>) &&
-	(std::is_copy_constructible_v<T> || std::is_move_constructible_v<T>);
+	concept Element = std::equality_comparable<T> && std::default_initializable<T> && std::destructible<T> && (std::move_constructible<T> ||
+		std::copy_constructible<T>) && (std::is_move_assignable_v<T> || std::is_copy_assignable_v<T>);
 }
 
 namespace sl::container
