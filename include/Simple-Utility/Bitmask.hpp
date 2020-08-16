@@ -13,7 +13,7 @@
 #include <concepts>
 #include <type_traits>
 
-#include "operators/bitwise.hpp"
+#include "Simple-Utility/operators/bitwise.hpp"
 
 namespace sl::detail
 {
