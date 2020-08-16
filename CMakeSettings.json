@@ -31,39 +31,7 @@
 			"remoteCopyBuildOutput": false,
 			"remoteCopySourcesMethod": "rsync",
 			"addressSanitizerRuntimeFlags": "detect_leaks=0",
-			"variables": [
-				{
-					"name": "CMAKE_C_COMPILER",
-					"value": "/usr/bin/gcc-10",
-					"type": "FILEPATH"
-				},
-				{
-					"name": "CMAKE_C_COMPILER_AR",
-					"value": "/usr/bin/gcc-ar-10",
-					"type": "FILEPATH"
-				},
-				{
-					"name": "CMAKE_C_COMPILER_RANLIB",
-					"value": "/usr/bin/gcc-ranlib-10",
-					"type": "FILEPATH"
-				},
-				{
-					"name": "CMAKE_CXX_COMPILER",
-					"value": "/usr/bin/g++-10",
-					"type": "FILEPATH"
-				},
-				{
-					"name": "CMAKE_CXX_COMPILER_AR",
-					"value": "/usr/bin/gcc-ar-10",
-					"type": "FILEPATH"
-				},
-				{
-					"name": "CMAKE_CXX_COMPILER_RANLIB",
-					"value": "/usr/bin/gcc-ranlib-10",
-					"type": "FILEPATH"
-				}
-			],
-			"intelliSenseMode": "linux-gcc-x64"
+			"variables": []
 		}
 	]
 }
