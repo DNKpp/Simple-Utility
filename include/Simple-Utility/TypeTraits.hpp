@@ -56,6 +56,15 @@ namespace sl
 
 	template <class T1, class T2 = T1>
 	inline constexpr bool IsNothrowComparable_v = IsNothrowComparable<T1, T2>::value;
+
+	template <class>
+	struct AlwaysFalse :
+		std::false_type
+	{
+	};
+
+	template <class T>
+	inline constexpr bool AlwaysFalse_v = AlwaysFalse<T>::value;
 }
 
 #endif
