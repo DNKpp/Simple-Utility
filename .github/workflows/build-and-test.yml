@@ -1,8 +1,6 @@
 name: Build & Run Test
 
-on:
-  push:
-    branches: [master]
+on: [push]
 
 jobs:
   build-ubuntu:
@@ -11,7 +9,7 @@ jobs:
     - uses: actions/checkout@v2
     - uses: jwlawson/actions-setup-cmake@v1.3
     - uses: seanmiddleditch/gha-setup-ninja@master
-    - name: Install GCC 10 on Linux
+    - name: Install GCC-10  and Clang-10 on Linux
       run: |
         sudo apt-get update
         sudo apt install g++-10
