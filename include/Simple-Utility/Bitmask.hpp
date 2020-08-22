@@ -41,6 +41,7 @@ namespace sl
 		~Bitmask() noexcept = default;
 
 		template <detail::Flag... TArgs>
+		requires std::same_as<TFlag, std::common_type_t<TArgs...>>
 		constexpr explicit Bitmask(TArgs... args) noexcept :
 			m_Mask{ detail::combine<TStorage>(args...) }
 		{}
@@ -77,6 +78,7 @@ namespace sl
 		}
 
 		template <detail::Flag... TArgs>
+		requires std::same_as<TFlag, std::common_type_t<TArgs...>>
 		[[nodiscard]] constexpr bool contains(TArgs... args) const noexcept
 		{
 			auto mask = detail::combine<TStorage>(args...);
@@ -84,18 +86,21 @@ namespace sl
 		}
 
 		template <detail::Flag... TArgs>
+		requires std::same_as<TFlag, std::common_type_t<TArgs...>>
 		constexpr void set(TArgs... args) noexcept
 		{
 			m_Mask = detail::combine<TStorage>(args...);
 		}
 
 		template <detail::Flag... TArgs>
+		requires std::same_as<TFlag, std::common_type_t<TArgs...>>
 		constexpr void apply(TArgs... args) noexcept
 		{
 			m_Mask |= detail::combine<TStorage>(args...);
 		}
 
 		template <detail::Flag... TArgs>
+		requires std::same_as<TFlag, std::common_type_t<TArgs...>>
 		constexpr void remove(TArgs... args) noexcept
 		{
 			m_Mask &= ~detail::combine<TStorage>(args...);
