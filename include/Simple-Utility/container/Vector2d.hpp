@@ -17,8 +17,7 @@
 namespace sl::container::detail
 {
 	template <class T>
-	concept Element = std::equality_comparable<T> && std::default_initializable<T> && std::destructible<T> && (std::move_constructible<T> ||
-		std::copy_constructible<T>) && (std::is_move_assignable_v<T> || std::is_copy_assignable_v<T>);
+	concept Element = std::semiregular<T>;
 }
 
 namespace sl::container
@@ -71,8 +70,13 @@ namespace sl::container
 			return *this;
 		}
 
+		template <class T2 = T>
+		requires std::same_as<T, T2> && std::equality_comparable<T2>
 		// ToDo: c++20
-		[[nodiscard]] /*constexpr*/ bool operator ==(const Vector2d&) const noexcept(IsNothrowComparable_v<TContainer, TContainer>) = default;
+		[[nodiscard]] /*constexpr*/ bool operator ==(const Vector2d& other) const noexcept(IsNothrowComparable_v<TContainer, TContainer>)
+		{
+			return m_Width == other.m_Width && m_Height == other.m_Height && m_Data == other.m_Data;
+		}
 
 		constexpr void setWidth(size_type width, const T& value = T{})
 		{
