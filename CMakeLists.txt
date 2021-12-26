@@ -1,11 +1,18 @@
-cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
-project(simple_utility)
+cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
+
+project(Simple-Utility)
+
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
+include("get_cpm")
+
+OPTION(SIMPLE_UTILITY_BUILD_TESTS "Determines wether tests will be build or not." OFF)
 
 add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_include_directories(
 	${PROJECT_NAME}
 	INTERFACE
-	${CMAKE_CURRENT_SOURCE_DIR}/include
+	"${CMAKE_CURRENT_SOURCE_DIR}/include"
 )
 
 target_compile_features(
@@ -14,26 +21,8 @@ target_compile_features(
 	cxx_std_20
 )
 
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-	include(CTest)
+if (SIMPLE_UTILITY_BUILD_TESTS)
+	
+	add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tests")
 
-	add_executable(
-		test_simple_utility
-		${CMAKE_CURRENT_SOURCE_DIR}/test/main.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/test/OperatorTest.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/test/BitmaskTest.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/test/Vector2dTest.cpp
-	)
-
-	target_link_libraries(
-		test_simple_utility
-		PRIVATE
-		simple_utility
-	)
-
-	enable_testing()
-	add_test(
-		NAME Simple-Utility_TestSuite
-		COMMAND test_simple_utility
-	)
 endif()
