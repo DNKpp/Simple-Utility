@@ -17,6 +17,9 @@ namespace sl::concepts
 	{
 		{ lhs >> rhs } -> std::convertible_to<T1>;
 	};
+
+	template <class T1>
+	concept right_shiftable = right_shiftable_with<T1, T1>;
 }
 
 #endif
