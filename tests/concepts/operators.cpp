@@ -182,3 +182,32 @@ TEMPLATE_TEST_CASE_SIG
 {
 	REQUIRE(bidirectional_shift_assignable<T> == VExpected);
 }
+
+#pragma warning(disable: 26444)
+TEMPLATE_TEST_CASE_SIG
+(
+	"fully_shiftable_with should determine if two types can be used within all shift operator expressions.",
+	"[concepts][operators]",
+	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
+	(int, int, true),
+	(float, int, false),
+	(int, float, false)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(fully_shiftable_with<TLhs, TRhs> == VExpected);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_TEST_CASE_SIG
+(
+	"fully_shiftable should determine if a type can be used within all shift operator expressions.",
+	"[concepts][operators]",
+	((class T, bool VExpected), T, VExpected),
+	(int, true),
+	(float, false)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(fully_shiftable<T> == VExpected);
+}

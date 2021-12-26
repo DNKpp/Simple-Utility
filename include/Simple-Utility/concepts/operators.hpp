@@ -59,6 +59,12 @@ namespace sl::concepts
 
 	template <class T1>
 	concept bidirectional_shift_assignable = bidirectional_shift_assignable_with<T1, T1>;
+
+	template <class T1, class T2>
+	concept fully_shiftable_with = bidirectional_shift_assignable_with<T1, T2> && bidirectional_shiftable_with<T1, T2>;
+
+	template <class T1>
+	concept fully_shiftable = fully_shiftable_with<T1, T1>;
 }
 
 #endif
