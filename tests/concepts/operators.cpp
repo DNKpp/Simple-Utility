@@ -63,10 +63,10 @@ namespace
 		static constexpr bool value{ right_shiftable_with<TLhs, TRhs> == VResult };
 	};
 
-	template <class TLhs, class TRhs, bool VResult>
+	template <class TLhs, class TRhs, bool VResult, class... TArgs>
 	struct right_shiftable_with_r_testable
 	{
-		static constexpr bool value{ right_shiftable_with_r<TLhs, TRhs> == VResult };
+		static constexpr bool value{ right_shiftable_with_r<TLhs, TRhs, TArgs...> == VResult };
 	};
 
 	template <class T, bool VResult>
@@ -75,10 +75,10 @@ namespace
 		static constexpr bool value{ right_shiftable<T> == VResult };
 	};
 
-	template <class T, bool VResult>
+	template <class T, bool VResult, class... TArgs>
 	struct right_shiftable_r_testable
 	{
-		static constexpr bool value{ right_shiftable_r<T> == VResult };
+		static constexpr bool value{ right_shiftable_r<T, TArgs...> == VResult };
 	};
 
 	template <class TLhs, class TRhs, bool VResult>
@@ -87,10 +87,10 @@ namespace
 		static constexpr bool value{ left_shiftable_with<TLhs, TRhs> == VResult };
 	};
 
-	template <class TLhs, class TRhs, bool VResult>
+	template <class TLhs, class TRhs, bool VResult, class... TArgs>
 	struct left_shiftable_with_r_testable
 	{
-		static constexpr bool value{ left_shiftable_with_r<TLhs, TRhs> == VResult };
+		static constexpr bool value{ left_shiftable_with_r<TLhs, TRhs, TArgs...> == VResult };
 	};
 
 	template <class T, bool VResult>
@@ -99,10 +99,10 @@ namespace
 		static constexpr bool value{ left_shiftable<T> == VResult };
 	};
 
-	template <class T, bool VResult>
+	template <class T, bool VResult, class... TArgs>
 	struct left_shiftable_r_testable
 	{
-		static constexpr bool value{ left_shiftable_r<T> == VResult };
+		static constexpr bool value{ left_shiftable_r<T, TArgs...> == VResult };
 	};
 
 	template <class TLhs, class TRhs, bool VResult>
@@ -111,10 +111,10 @@ namespace
 		static constexpr bool value{ bidirectional_shiftable_with<TLhs, TRhs> == VResult };
 	};
 
-	template <class TLhs, class TRhs, bool VResult>
+	template <class TLhs, class TRhs, bool VResult, class... TArgs>
 	struct bidirectional_shiftable_with_r_testable
 	{
-		static constexpr bool value{ bidirectional_shiftable_with_r<TLhs, TRhs> == VResult };
+		static constexpr bool value{ bidirectional_shiftable_with_r<TLhs, TRhs, TArgs...> == VResult };
 	};
 
 	template <class T, bool VResult>
@@ -123,10 +123,10 @@ namespace
 		static constexpr bool value{ bidirectional_shiftable<T> == VResult };
 	};
 
-	template <class T, bool VResult>
+	template <class T, bool VResult, class... TArgs>
 	struct bidirectional_shiftable_r_testable
 	{
-		static constexpr bool value{ bidirectional_shiftable_r<T> == VResult };
+		static constexpr bool value{ bidirectional_shiftable_r<T, TArgs...> == VResult };
 	};
 
 	template <class TLhs, class TRhs, bool VResult>
@@ -135,10 +135,10 @@ namespace
 		static constexpr bool value{ right_shift_assignable_with<TLhs, TRhs> == VResult };
 	};
 
-	template <class TLhs, class TRhs, bool VResult>
+	template <class TLhs, class TRhs, bool VResult, class... TArgs>
 	struct right_shift_assignable_with_r_testable
 	{
-		static constexpr bool value{ right_shift_assignable_with_r<TLhs, TRhs> == VResult };
+		static constexpr bool value{ right_shift_assignable_with_r<TLhs, TRhs, TArgs...> == VResult };
 	};
 
 	template <class T, bool VResult>
@@ -147,10 +147,10 @@ namespace
 		static constexpr bool value{ right_shift_assignable<T> == VResult };
 	};
 
-	template <class T, bool VResult>
+	template <class T, bool VResult, class... TArgs>
 	struct right_shift_assignable_r_testable
 	{
-		static constexpr bool value{ right_shift_assignable_r<T> == VResult };
+		static constexpr bool value{ right_shift_assignable_r<T, TArgs...> == VResult };
 	};
 
 	template <class TLhs, class TRhs, bool VResult>
@@ -159,10 +159,10 @@ namespace
 		static constexpr bool value{ left_shift_assignable_with<TLhs, TRhs> == VResult };
 	};
 
-	template <class TLhs, class TRhs, bool VResult>
+	template <class TLhs, class TRhs, bool VResult, class... TArgs>
 	struct left_shift_assignable_with_r_testable
 	{
-		static constexpr bool value{ left_shift_assignable_with_r<TLhs, TRhs> == VResult };
+		static constexpr bool value{ left_shift_assignable_with_r<TLhs, TRhs, TArgs...> == VResult };
 	};
 
 	template <class T, bool VResult>
@@ -171,10 +171,10 @@ namespace
 		static constexpr bool value{ left_shift_assignable<T> == VResult };
 	};
 
-	template <class T, bool VResult>
+	template <class T, bool VResult, class... TArgs>
 	struct left_shift_assignable_r_testable
 	{
-		static constexpr bool value{ left_shift_assignable_r<T> == VResult };
+		static constexpr bool value{ left_shift_assignable_r<T, TArgs...> == VResult };
 	};
 
 	template <class TLhs, class TRhs, bool VResult>
@@ -183,10 +183,10 @@ namespace
 		static constexpr bool value{ bidirectional_shift_assignable_with<TLhs, TRhs> == VResult };
 	};
 
-	template <class TLhs, class TRhs, bool VResult>
+	template <class TLhs, class TRhs, bool VResult, class... TArgs>
 	struct bidirectional_shift_assignable_with_r_testable
 	{
-		static constexpr bool value{ bidirectional_shift_assignable_with_r<TLhs, TRhs> == VResult };
+		static constexpr bool value{ bidirectional_shift_assignable_with_r<TLhs, TRhs, TArgs...> == VResult };
 	};
 
 	template <class T, bool VResult>
@@ -195,10 +195,10 @@ namespace
 		static constexpr bool value{ bidirectional_shift_assignable<T> == VResult };
 	};
 
-	template <class T, bool VResult>
+	template <class T, bool VResult, class... TArgs>
 	struct bidirectional_shift_assignable_r_testable
 	{
-		static constexpr bool value{ bidirectional_shift_assignable_r<T> == VResult };
+		static constexpr bool value{ bidirectional_shift_assignable_r<T, TArgs...> == VResult };
 	};
 
 	template <class TLhs, class TRhs, bool VResult>
@@ -207,10 +207,10 @@ namespace
 		static constexpr bool value{ fully_shiftable_with<TLhs, TRhs> == VResult };
 	};
 
-	template <class TLhs, class TRhs, bool VResult>
+	template <class TLhs, class TRhs, bool VResult, class... TArgs>
 	struct fully_shiftable_with_r_testable
 	{
-		static constexpr bool value{ fully_shiftable_with_r<TLhs, TRhs> == VResult };
+		static constexpr bool value{ fully_shiftable_with_r<TLhs, TRhs, TArgs...> == VResult };
 	};
 
 	template <class T, bool VResult>
@@ -219,10 +219,10 @@ namespace
 		static constexpr bool value{ fully_shiftable<T> == VResult };
 	};
 
-	template <class T, bool VResult>
+	template <class T, bool VResult, class... TArgs>
 	struct fully_shiftable_r_testable
 	{
-		static constexpr bool value{ fully_shiftable_r<T> == VResult };
+		static constexpr bool value{ fully_shiftable_r<T, TArgs...> == VResult };
 	};
 }
 
@@ -520,6 +520,101 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(shift_target<fully ^ left>, false),
 		(shift_target<fully ^ right_assign>, false),
 		(shift_target<fully ^ left_assign>, false)
+	)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(TestType::value);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_PRODUCT_TEST_CASE_SIG
+(
+	"(right|left|bidirectional)_shiftable_with_r should determine if return type satisfies expectations.",
+	"[concepts][operators]",
+	((class TLhs, class TRhs, bool VExpected, class TReturn), TLhs, TRhs, VExpected, TReturn),
+	(right_shiftable_with_r_testable, left_shiftable_with_r_testable, bidirectional_shiftable_with_r_testable),
+	(
+		(int, int, true, int),
+		(int, int, true, const int),
+		(int, int, false, int&),
+		// (int, int, false, int&&), should not work, but can't do much to prevent it
+		// (int, int, false, const int&), same as above
+		(shift_target<fully>, int, true, shift_target<fully>),
+		(shift_target<fully>, int, true, const shift_target<fully>),
+		(shift_target<fully>, int, false, int),
+		(shift_target<fully>, int, false, shift_target<fully>&)
+		// (shift_target<fully>, int, false, shift_target<fully>&&), same as above
+		// (shift_target<fully>, int, false, const shift_target<fully>&) same as above
+	)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(TestType::value);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_PRODUCT_TEST_CASE_SIG
+(
+	"(right|left|bidirectional)_shift_r should determine if return type satisfies expectations.",
+	"[concepts][operators]",
+	((class T, bool VExpected, class TReturn), T, VExpected, TReturn),
+	(right_shiftable_r_testable, left_shiftable_r_testable, bidirectional_shiftable_r_testable),
+	(
+		(int, true, int),
+		(int, true, const int),
+		(int, false, int&)
+		// (int, false, int&&), should not work, but can't do much to prevent it
+		// (int, false, const int&), same as above
+	)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(TestType::value);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_PRODUCT_TEST_CASE_SIG
+(
+	"(right|left|bidirectional)_shift_assignable_with_r should determine if return type satisfies expectations.",
+	"[concepts][operators]",
+	((class TLhs, class TRhs, bool VExpected, class TReturn), TLhs, TRhs, VExpected, TReturn),
+	(right_shift_assignable_with_r_testable, left_shift_assignable_with_r_testable, bidirectional_shift_assignable_with_r_testable),
+	(
+		(int, int, true, int),
+		(int, int, true, const int),
+		(int, int, true, int&),
+		(int, int, true, const int&),
+		(int, int, false, int&&),
+		(int, int, false, no_shift),
+		(shift_target<fully>, int, true, shift_target<fully>),
+		(shift_target<fully>, int, true, const shift_target<fully>),
+		(shift_target<fully>, int, false, int),
+		(shift_target<fully>, int, true, shift_target<fully>&),
+		(shift_target<fully>, int, true, const shift_target<fully>&),
+		(shift_target<fully>, int, false, shift_target<fully>&&),
+		(shift_target<fully>, int, false, no_shift)
+	)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(TestType::value);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_PRODUCT_TEST_CASE_SIG
+(
+	"(right|left|bidirectional)_shift_assignable_r should determine if return type satisfies expectations.",
+	"[concepts][operators]",
+	((class T, bool VExpected, class TReturn), T, VExpected, TReturn),
+	(right_shift_assignable_r_testable, left_shift_assignable_r_testable, bidirectional_shift_assignable_r_testable),
+	(
+		(int, true, int),
+		(int, true, const int),
+		(int, true, int&),
+		(int, false, int&&),
+		(int, true, const int&),
+		(int, false, no_shift)
 	)
 )
 #pragma warning(default: 26444)
