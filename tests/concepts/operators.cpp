@@ -28,6 +28,11 @@ namespace
 	template <int VShifts = none>
 	struct shift_target
 	{
+		shift_target() = default;
+
+		explicit shift_target(int)
+		{}
+
 		shift_target operator <<(int) const
 			requires ((VShifts & left) != 0)
 		{
@@ -537,15 +542,16 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	(
 		(int, int, true, int),
 		(int, int, true, const int),
+		(int, int, true, int&&),
+		(int, int, true, const int&),
 		(int, int, false, int&),
-		// (int, int, false, int&&), should not work, but can't do much to prevent it
-		// (int, int, false, const int&), same as above
+		(int, int, false, shift_target<>),	// explicit ctor
 		(shift_target<fully>, int, true, shift_target<fully>),
 		(shift_target<fully>, int, true, const shift_target<fully>),
+		(shift_target<fully>, int, true, shift_target<fully>&&),
+		(shift_target<fully>, int, true, const shift_target<fully>&),
 		(shift_target<fully>, int, false, int),
 		(shift_target<fully>, int, false, shift_target<fully>&)
-		// (shift_target<fully>, int, false, shift_target<fully>&&), same as above
-		// (shift_target<fully>, int, false, const shift_target<fully>&) same as above
 	)
 )
 #pragma warning(default: 26444)
@@ -563,9 +569,10 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	(
 		(int, true, int),
 		(int, true, const int),
-		(int, false, int&)
-		// (int, false, int&&), should not work, but can't do much to prevent it
-		// (int, false, const int&), same as above
+		(int, true, int&&),
+		(int, true, const int&),
+		(int, false, int&),
+		(int, false, shift_target<>)	// explicit ctor
 	)
 )
 #pragma warning(default: 26444)
@@ -587,6 +594,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(int, int, true, const int&),
 		(int, int, false, int&&),
 		(int, int, false, no_shift),
+		(int, int, false, shift_target<>),	// explicit ctor
 		(shift_target<fully>, int, true, shift_target<fully>),
 		(shift_target<fully>, int, true, const shift_target<fully>),
 		(shift_target<fully>, int, false, int),
@@ -612,8 +620,9 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(int, true, int),
 		(int, true, const int),
 		(int, true, int&),
-		(int, false, int&&),
 		(int, true, const int&),
+		(int, false, int&&),
+		(int, false, shift_target<>),	// explicit ctor
 		(int, false, no_shift)
 	)
 )
