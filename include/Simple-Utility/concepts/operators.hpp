@@ -29,6 +29,12 @@ namespace sl::concepts
 
 	template <class T1>
 	concept left_shiftable = left_shiftable_with<T1, T1>;
+
+	template <class T1, class T2>
+	concept bidirectional_shiftable_with = left_shiftable_with<T1, T2> && right_shiftable_with<T1, T2>;
+
+	template <class T1>
+	concept bidirectional_shiftable = bidirectional_shiftable_with<T1, T1>;
 }
 
 #endif
