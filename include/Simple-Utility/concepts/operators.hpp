@@ -20,6 +20,15 @@ namespace sl::concepts
 
 	template <class T1>
 	concept right_shiftable = right_shiftable_with<T1, T1>;
+
+	template <class T1, class T2>
+	concept left_shiftable_with = requires(T1 lhs, T2 rhs)
+	{
+		{ lhs << rhs } -> std::convertible_to<T1>;
+	};
+
+	template <class T1>
+	concept left_shiftable = left_shiftable_with<T1, T1>;
 }
 
 #endif
