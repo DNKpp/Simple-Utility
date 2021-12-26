@@ -95,3 +95,32 @@ TEMPLATE_TEST_CASE_SIG
 {
 	REQUIRE(bidirectional_shiftable<T> == VExpected);
 }
+
+#pragma warning(disable: 26444)
+TEMPLATE_TEST_CASE_SIG
+(
+	"right_shift_assignable_with should determine if two types can be used within an operator >>= expression.",
+	"[concepts][operators]",
+	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
+	(int, int, true),
+	(float, int, false),
+	(int, float, false)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(right_shift_assignable_with<TLhs, TRhs> == VExpected);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_TEST_CASE_SIG
+(
+	"right_shift_assignable should determine if a type can be used within an operator >>= expression.",
+	"[concepts][operators]",
+	((class T, bool VExpected), T, VExpected),
+	(int, true),
+	(float, false)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(right_shift_assignable<T> == VExpected);
+}
