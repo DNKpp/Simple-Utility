@@ -21,7 +21,7 @@ namespace sl::concepts
 	template <class T1, class T2, class TResult = std::remove_cvref_t<T1>>
 	concept right_shiftable_with_r = requires(T1 lhs, T2 rhs)
 	{
-		{ lhs >> rhs } -> std::same_as<TResult>;
+		{ lhs >> rhs } -> std::convertible_to<TResult>;
 	};
 
 	template <class T>
@@ -39,7 +39,7 @@ namespace sl::concepts
 	template <class T1, class T2, class TResult = std::remove_cvref_t<T1>>
 	concept left_shiftable_with_r = requires(T1 lhs, T2 rhs)
 	{
-		{ lhs << rhs } -> std::same_as<TResult>;
+		{ lhs << rhs } -> std::convertible_to<TResult>;
 	};
 
 	template <class T>
@@ -69,7 +69,7 @@ namespace sl::concepts
 	template <class T1, class T2, class TResult = std::remove_cvref_t<T1>&>
 	concept right_shift_assignable_with_r = requires(T1 lhs, T2 rhs)
 	{
-		{ lhs >>= rhs } -> std::same_as<TResult>;
+		{ lhs >>= rhs } -> std::convertible_to<TResult>;
 	};
 
 	template <class T>
@@ -87,7 +87,7 @@ namespace sl::concepts
 	template <class T1, class T2, class TResult = std::remove_cvref_t<T1>&>
 	concept left_shift_assignable_with_r = requires(T1 lhs, T2 rhs)
 	{
-		{ lhs <<= rhs } -> std::same_as<TResult>;
+		{ lhs <<= rhs } -> std::convertible_to<TResult>;
 	};
 
 	template <class T>
