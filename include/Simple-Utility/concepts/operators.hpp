@@ -53,6 +53,12 @@ namespace sl::concepts
 
 	template <class T1>
 	concept left_shift_assignable = left_shift_assignable_with<T1, T1>;
+
+	template <class T1, class T2>
+	concept bidirectional_shift_assignable_with = left_shift_assignable_with<T1, T2> && right_shift_assignable_with<T1, T2>;
+
+	template <class T1>
+	concept bidirectional_shift_assignable = bidirectional_shift_assignable_with<T1, T1>;
 }
 
 #endif
