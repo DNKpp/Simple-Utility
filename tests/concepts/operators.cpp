@@ -9,6 +9,55 @@
 
 using namespace sl::concepts;
 
+namespace
+{
+	enum shift
+	{
+		none = 0,
+		left = 1 << 1,
+		right = 1 << 2,
+		bidirectional = left | right,
+
+		left_assign = 1 << 3,
+		right_assign = 1 << 4,
+		bidirectional_assign = left_assign | right_assign,
+
+		fully = bidirectional | bidirectional_assign
+	};
+
+	template <int VShifts = none>
+	struct shift_target
+	{
+		shift_target operator <<(int) const
+			requires ((VShifts & left) != 0)
+		{
+			return shift_target{};
+		}
+
+		shift_target operator >>(int) const
+			requires ((VShifts & right) != 0)
+		{
+			return shift_target{};
+		}
+
+		shift_target& operator <<=(int)
+			requires ((VShifts & left_assign) != 0)
+		{
+			return *this;
+		}
+
+		shift_target& operator >>=(int)
+			requires ((VShifts & right_assign) != 0)
+		{
+			return *this;
+		}
+	};
+
+	struct no_shift
+	{
+	};
+}
+
 #pragma warning(disable: 26444)
 TEMPLATE_TEST_CASE_SIG
 (
@@ -17,7 +66,11 @@ TEMPLATE_TEST_CASE_SIG
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
 	(int, int, true),
 	(float, int, false),
-	(int, float, false)
+	(int, float, false),
+	(shift_target<right>, int, true),
+	(const shift_target<right>, int, true),
+	(shift_target<right>, no_shift, false),
+	(shift_target<>, int, false)
 )
 #pragma warning(default: 26444)
 {
@@ -31,7 +84,10 @@ TEMPLATE_TEST_CASE_SIG
 	"[concepts][operators]",
 	((class T, bool VExpected), T, VExpected),
 	(int, true),
-	(float, false)
+	(float, false),
+	(shift_target<right>, false),
+	(const shift_target<right>, false),
+	(shift_target<>, false)
 )
 #pragma warning(default: 26444)
 {
@@ -46,7 +102,11 @@ TEMPLATE_TEST_CASE_SIG
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
 	(int, int, true),
 	(float, int, false),
-	(int, float, false)
+	(int, float, false),
+	(shift_target<left>, int, true),
+	(const shift_target<left>, int, true),
+	(shift_target<left>, no_shift, false),
+	(shift_target<>, int, false)
 )
 #pragma warning(default: 26444)
 {
@@ -60,7 +120,10 @@ TEMPLATE_TEST_CASE_SIG
 	"[concepts][operators]",
 	((class T, bool VExpected), T, VExpected),
 	(int, true),
-	(float, false)
+	(float, false),
+	(shift_target<left>, false),
+	(const shift_target<left>, false),
+	(shift_target<>, false)
 )
 #pragma warning(default: 26444)
 {
@@ -75,7 +138,11 @@ TEMPLATE_TEST_CASE_SIG
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
 	(int, int, true),
 	(float, int, false),
-	(int, float, false)
+	(int, float, false),
+	(shift_target<bidirectional>, int, true),
+	(const shift_target<bidirectional>, int, true),
+	(shift_target<left>, int, false),
+	(shift_target<right>, int, false)
 )
 #pragma warning(default: 26444)
 {
@@ -89,7 +156,11 @@ TEMPLATE_TEST_CASE_SIG
 	"[concepts][operators]",
 	((class T, bool VExpected), T, VExpected),
 	(int, true),
-	(float, false)
+	(float, false),
+	(shift_target<bidirectional>, false),
+	(const shift_target<bidirectional>, false),
+	(shift_target<left>, false),
+	(shift_target<right>, false)
 )
 #pragma warning(default: 26444)
 {
@@ -104,7 +175,11 @@ TEMPLATE_TEST_CASE_SIG
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
 	(int, int, true),
 	(float, int, false),
-	(int, float, false)
+	(int, float, false),
+	(shift_target<right_assign>, int, true),
+	(const shift_target<right_assign>, int, false),
+	(shift_target<right_assign>, no_shift, false),
+	(shift_target<>, int, false)
 )
 #pragma warning(default: 26444)
 {
@@ -118,7 +193,10 @@ TEMPLATE_TEST_CASE_SIG
 	"[concepts][operators]",
 	((class T, bool VExpected), T, VExpected),
 	(int, true),
-	(float, false)
+	(float, false),
+	(shift_target<right_assign>, false),
+	(const shift_target<right_assign>, false),
+	(shift_target<>, false)
 )
 #pragma warning(default: 26444)
 {
@@ -133,7 +211,11 @@ TEMPLATE_TEST_CASE_SIG
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
 	(int, int, true),
 	(float, int, false),
-	(int, float, false)
+	(int, float, false),
+	(shift_target<left_assign>, int, true),
+	(const shift_target<left_assign>, int, false),
+	(shift_target<left_assign>, no_shift, false),
+	(shift_target<>, int, false)
 )
 #pragma warning(default: 26444)
 {
@@ -147,7 +229,10 @@ TEMPLATE_TEST_CASE_SIG
 	"[concepts][operators]",
 	((class T, bool VExpected), T, VExpected),
 	(int, true),
-	(float, false)
+	(float, false),
+	(shift_target<right_assign>, false),
+	(const shift_target<right_assign>, false),
+	(shift_target<>, false)
 )
 #pragma warning(default: 26444)
 {
@@ -162,7 +247,11 @@ TEMPLATE_TEST_CASE_SIG
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
 	(int, int, true),
 	(float, int, false),
-	(int, float, false)
+	(int, float, false),
+	(shift_target<bidirectional_assign>, int, true),
+	(const shift_target<bidirectional_assign>, int, false),
+	(shift_target<left_assign>, int, false),
+	(shift_target<right_assign>, int, false)
 )
 #pragma warning(default: 26444)
 {
@@ -176,7 +265,11 @@ TEMPLATE_TEST_CASE_SIG
 	"[concepts][operators]",
 	((class T, bool VExpected), T, VExpected),
 	(int, true),
-	(float, false)
+	(float, false),
+	(shift_target<bidirectional_assign>, false),
+	(const shift_target<bidirectional_assign>, false),
+	(shift_target<left_assign>, false),
+	(shift_target<right_assign>, false)
 )
 #pragma warning(default: 26444)
 {
@@ -191,7 +284,13 @@ TEMPLATE_TEST_CASE_SIG
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
 	(int, int, true),
 	(float, int, false),
-	(int, float, false)
+	(int, float, false),
+	(shift_target<fully>, int, true),
+	(const shift_target<fully>, int, false),
+	(shift_target<fully ^ right>, int, false),
+	(shift_target<fully ^ left>, int, false),
+	(shift_target<fully ^ right_assign>, int, false),
+	(shift_target<fully ^ left_assign>, int, false)
 )
 #pragma warning(default: 26444)
 {
@@ -205,7 +304,13 @@ TEMPLATE_TEST_CASE_SIG
 	"[concepts][operators]",
 	((class T, bool VExpected), T, VExpected),
 	(int, true),
-	(float, false)
+	(float, false),
+	(shift_target<fully>, false),
+	(const shift_target<fully>, false),
+	(shift_target<fully ^ right>, false),
+	(shift_target<fully ^ left>, false),
+	(shift_target<fully ^ right_assign>, false),
+	(shift_target<fully ^ left_assign>, false)
 )
 #pragma warning(default: 26444)
 {
