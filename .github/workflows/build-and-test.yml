@@ -12,9 +12,9 @@ jobs:
     - name: Install GCC-10  and Clang-10 on Linux
       run: |
         sudo apt-get update
-        sudo apt install g++-11
+        sudo apt-get install g++-11
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 --slave /usr/bin/g++ g++ /usr/bin/g++-11 --slave /usr/bin/gcov gcov /usr/bin/gcov-11
-        sudo apt install clang-11
+        sudo apt-get install clang-11
     - name: Configure & Build (GCC)
       run: |
         cmake . -Bbuild_gcc -G "Ninja Multi-Config" -DSIMPLE_UTILITY_BUILD_TESTS=ON
