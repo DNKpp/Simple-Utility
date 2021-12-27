@@ -5,7 +5,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "../Helper.hpp"
+#include "../helper.hpp"
 #include "Simple-Utility/concepts/operators.hpp"
 
 using namespace sl::concepts;
