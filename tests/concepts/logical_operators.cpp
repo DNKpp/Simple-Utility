@@ -12,41 +12,24 @@ using namespace sl::concepts;
 
 namespace
 {
-	struct fail
-	{
-	};
-
+	// complemented
 	TESTABLE_UNARY_CONCEPT(complemented);
 
 	TESTABLE_UNARY_CONCEPT_R(complemented_r);
 
+	// invertible
 	TESTABLE_UNARY_CONCEPT(invertible);
 
 	TESTABLE_UNARY_CONCEPT_R(invertible_r);
 
+	// conjunctive
 	TESTABLE_UNARY_CONCEPT(conjunctive);
 
 	TESTABLE_UNARY_CONCEPT_R(conjunctive_r);
 
-	TESTABLE_UNARY_CONCEPT(disjunctive);
-
-	TESTABLE_UNARY_CONCEPT_R(disjunctive_r);
-
-	TESTABLE_UNARY_CONCEPT(exclusive_disjunctive);
-
-	TESTABLE_UNARY_CONCEPT_R(exclusive_disjunctive_r);
-
 	TESTABLE_UNARY_CONCEPT(conjunctive_assign);
 
 	TESTABLE_UNARY_CONCEPT_R(conjunctive_assign_r);
-
-	TESTABLE_UNARY_CONCEPT(disjunctive_assign);
-
-	TESTABLE_UNARY_CONCEPT_R(disjunctive_assign_r);
-
-	TESTABLE_UNARY_CONCEPT(exclusive_disjunctive_assign);
-
-	TESTABLE_UNARY_CONCEPT_R(exclusive_disjunctive_assign_r);
 
 	TESTABLE_BINARY_CONCEPT(conjunctive_with);
 
@@ -56,13 +39,33 @@ namespace
 
 	TESTABLE_BINARY_CONCEPT_R(conjunctive_assign_with_r);
 
+	// disjunctive
+
+	TESTABLE_UNARY_CONCEPT(disjunctive);
+
+	TESTABLE_UNARY_CONCEPT_R(disjunctive_r);
+
 	TESTABLE_BINARY_CONCEPT(disjunctive_with);
 
 	TESTABLE_BINARY_CONCEPT_R(disjunctive_with_r);
 
+	TESTABLE_UNARY_CONCEPT(disjunctive_assign);
+
+	TESTABLE_UNARY_CONCEPT_R(disjunctive_assign_r);
+
 	TESTABLE_BINARY_CONCEPT(disjunctive_assign_with);
 
 	TESTABLE_BINARY_CONCEPT_R(disjunctive_assign_with_r);
+
+	// exclusive disjunctive
+
+	TESTABLE_UNARY_CONCEPT(exclusive_disjunctive);
+
+	TESTABLE_UNARY_CONCEPT_R(exclusive_disjunctive_r);
+
+	TESTABLE_UNARY_CONCEPT(exclusive_disjunctive_assign);
+
+	TESTABLE_UNARY_CONCEPT_R(exclusive_disjunctive_assign_r);
 
 	TESTABLE_BINARY_CONCEPT(exclusive_disjunctive_with);
 
@@ -100,7 +103,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	(
 		(int, true),
 		(float, true),
-		(fail, false)
+		(empty_t, false)
 	)
 )
 #pragma warning(default: 26444)
@@ -119,7 +122,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(int, true, int),
 		(int, true, float),
 		(int, false, int&),
-		(int, false, fail)
+		(int, false, empty_t)
 	)
 )
 #pragma warning(default: 26444)
@@ -142,7 +145,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	(
 		(int, int, true),
 		(int, float, false),
-		(int, fail, false)
+		(int, empty_t, false)
 	)
 )
 #pragma warning(default: 26444)
@@ -165,7 +168,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	(
 		(int, true),
 		(float, false),
-		(fail, false)
+		(empty_t, false)
 	)
 )
 #pragma warning(default: 26444)
@@ -184,7 +187,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(int, true, int),
 		(int, true, float),
 		(int, false, int&),
-		(int, false, fail)
+		(int, false, empty_t)
 	)
 )
 #pragma warning(default: 26444)
@@ -203,7 +206,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(int, int, true, int),
 		(int, int, true, float),
 		(int, int, false, int&),
-		(int, int, false, fail)
+		(int, int, false, empty_t)
 	)
 )
 #pragma warning(default: 26444)
@@ -222,7 +225,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(int, true, int),
 		(int, true, float),
 		(int, true, int&),
-		(int, false, fail)
+		(int, false, empty_t)
 	)
 )
 #pragma warning(default: 26444)
@@ -241,7 +244,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(int, int, true, int),
 		(int, int, true, float),
 		(int, int, true, int&),
-		(int, int, false, fail)
+		(int, int, false, empty_t)
 	)
 )
 #pragma warning(default: 26444)
