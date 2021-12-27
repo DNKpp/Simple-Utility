@@ -308,6 +308,18 @@ namespace sl::concepts
 		{ ~t } -> std::convertible_to<TResult>;
 	};
 
+	template <class T>
+	concept invertible = requires(T t)
+	{
+		{ !t };
+	};
+
+	template <class T, class TResult = std::remove_cvref_t<T>>
+	concept invertible_r = requires(T t)
+	{
+		{ !t } -> std::convertible_to<TResult>;
+	};
+
 	/** @} */
 	/** @} */
 }

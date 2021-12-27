@@ -22,6 +22,20 @@ namespace
 	{
 		static constexpr bool value{ complemented_r<T, TArgs...> == VResult };
 	};
+
+	template <class T, bool VResult>
+	struct invertible_testable
+	{
+		static constexpr bool value{ invertible<T> == VResult };
+	};
+
+	template <class T, bool VResult, class... TArgs>
+	struct invertible_r_testable
+	{
+		static constexpr bool value{ invertible_r<T, TArgs...> == VResult };
+	};
+
+	struct non_invertible {};
 }
 
 #pragma warning(disable: 26444)
@@ -40,3 +54,22 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 {
 	REQUIRE(TestType::value);
 }
+
+#pragma warning(disable: 26444)
+TEMPLATE_PRODUCT_TEST_CASE_SIG
+(
+	"invertible(_r) should determine if a type can be used within an operator ! expression.",
+	"[concepts][operators]",
+	((class T, bool VExpected), T, VExpected),
+	(invertible_testable, invertible_r_testable),
+	(
+		(int, true),
+		(float, true),
+		(non_invertible, false)
+	)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(TestType::value);
+}
+
