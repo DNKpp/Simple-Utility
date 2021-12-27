@@ -5,6 +5,8 @@
 
 #include <catch2/catch.hpp>
 
+#include "../helper.hpp"
+
 #include "Simple-Utility/concepts/operators.hpp"
 
 using namespace sl::concepts;
@@ -31,7 +33,8 @@ namespace
 		shift_target() = default;
 
 		explicit shift_target(int)
-		{}
+		{
+		}
 
 		shift_target operator <<(int) const
 			requires ((VShifts & left) != 0)
@@ -62,173 +65,65 @@ namespace
 	{
 	};
 
-	template <class TLhs, class TRhs, bool VResult>
-	struct right_shiftable_with_testable
-	{
-		static constexpr bool value{ right_shiftable_with<TLhs, TRhs> == VResult };
-	};
+	// right shiftable
+	TESTABLE_BINARY_CONCEPT(right_shiftable_with);
 
-	template <class TLhs, class TRhs, bool VResult, class... TArgs>
-	struct right_shiftable_with_r_testable
-	{
-		static constexpr bool value{ right_shiftable_with_r<TLhs, TRhs, TArgs...> == VResult };
-	};
+	TESTABLE_BINARY_CONCEPT_R(right_shiftable_with_r);
 
-	template <class T, bool VResult>
-	struct right_shiftable_testable
-	{
-		static constexpr bool value{ right_shiftable<T> == VResult };
-	};
+	TESTABLE_UNARY_CONCEPT(right_shiftable);
 
-	template <class T, bool VResult, class... TArgs>
-	struct right_shiftable_r_testable
-	{
-		static constexpr bool value{ right_shiftable_r<T, TArgs...> == VResult };
-	};
+	TESTABLE_UNARY_CONCEPT_R(right_shiftable_r);
 
-	template <class TLhs, class TRhs, bool VResult>
-	struct left_shiftable_with_testable
-	{
-		static constexpr bool value{ left_shiftable_with<TLhs, TRhs> == VResult };
-	};
+	TESTABLE_BINARY_CONCEPT(right_shift_assignable_with);
 
-	template <class TLhs, class TRhs, bool VResult, class... TArgs>
-	struct left_shiftable_with_r_testable
-	{
-		static constexpr bool value{ left_shiftable_with_r<TLhs, TRhs, TArgs...> == VResult };
-	};
+	TESTABLE_BINARY_CONCEPT_R(right_shift_assignable_with_r);
 
-	template <class T, bool VResult>
-	struct left_shiftable_testable
-	{
-		static constexpr bool value{ left_shiftable<T> == VResult };
-	};
+	TESTABLE_UNARY_CONCEPT(right_shift_assignable);
 
-	template <class T, bool VResult, class... TArgs>
-	struct left_shiftable_r_testable
-	{
-		static constexpr bool value{ left_shiftable_r<T, TArgs...> == VResult };
-	};
+	TESTABLE_UNARY_CONCEPT_R(right_shift_assignable_r);
 
-	template <class TLhs, class TRhs, bool VResult>
-	struct bidirectional_shiftable_with_testable
-	{
-		static constexpr bool value{ bidirectional_shiftable_with<TLhs, TRhs> == VResult };
-	};
+	// left shiftable
+	TESTABLE_BINARY_CONCEPT(left_shiftable_with);
 
-	template <class TLhs, class TRhs, bool VResult, class... TArgs>
-	struct bidirectional_shiftable_with_r_testable
-	{
-		static constexpr bool value{ bidirectional_shiftable_with_r<TLhs, TRhs, TArgs...> == VResult };
-	};
+	TESTABLE_BINARY_CONCEPT_R(left_shiftable_with_r);
 
-	template <class T, bool VResult>
-	struct bidirectional_shiftable_testable
-	{
-		static constexpr bool value{ bidirectional_shiftable<T> == VResult };
-	};
+	TESTABLE_UNARY_CONCEPT(left_shiftable);
 
-	template <class T, bool VResult, class... TArgs>
-	struct bidirectional_shiftable_r_testable
-	{
-		static constexpr bool value{ bidirectional_shiftable_r<T, TArgs...> == VResult };
-	};
+	TESTABLE_UNARY_CONCEPT_R(left_shiftable_r);
 
-	template <class TLhs, class TRhs, bool VResult>
-	struct right_shift_assignable_with_testable
-	{
-		static constexpr bool value{ right_shift_assignable_with<TLhs, TRhs> == VResult };
-	};
+	TESTABLE_BINARY_CONCEPT(left_shift_assignable_with);
 
-	template <class TLhs, class TRhs, bool VResult, class... TArgs>
-	struct right_shift_assignable_with_r_testable
-	{
-		static constexpr bool value{ right_shift_assignable_with_r<TLhs, TRhs, TArgs...> == VResult };
-	};
+	TESTABLE_BINARY_CONCEPT_R(left_shift_assignable_with_r);
 
-	template <class T, bool VResult>
-	struct right_shift_assignable_testable
-	{
-		static constexpr bool value{ right_shift_assignable<T> == VResult };
-	};
+	TESTABLE_UNARY_CONCEPT(left_shift_assignable);
 
-	template <class T, bool VResult, class... TArgs>
-	struct right_shift_assignable_r_testable
-	{
-		static constexpr bool value{ right_shift_assignable_r<T, TArgs...> == VResult };
-	};
+	TESTABLE_UNARY_CONCEPT_R(left_shift_assignable_r);
 
-	template <class TLhs, class TRhs, bool VResult>
-	struct left_shift_assignable_with_testable
-	{
-		static constexpr bool value{ left_shift_assignable_with<TLhs, TRhs> == VResult };
-	};
+	// bidirectional shiftable
+	TESTABLE_BINARY_CONCEPT(bidirectional_shiftable_with);
 
-	template <class TLhs, class TRhs, bool VResult, class... TArgs>
-	struct left_shift_assignable_with_r_testable
-	{
-		static constexpr bool value{ left_shift_assignable_with_r<TLhs, TRhs, TArgs...> == VResult };
-	};
+	TESTABLE_BINARY_CONCEPT_R(bidirectional_shiftable_with_r);
 
-	template <class T, bool VResult>
-	struct left_shift_assignable_testable
-	{
-		static constexpr bool value{ left_shift_assignable<T> == VResult };
-	};
+	TESTABLE_UNARY_CONCEPT(bidirectional_shiftable);
 
-	template <class T, bool VResult, class... TArgs>
-	struct left_shift_assignable_r_testable
-	{
-		static constexpr bool value{ left_shift_assignable_r<T, TArgs...> == VResult };
-	};
+	TESTABLE_UNARY_CONCEPT_R(bidirectional_shiftable_r);
 
-	template <class TLhs, class TRhs, bool VResult>
-	struct bidirectional_shift_assignable_with_testable
-	{
-		static constexpr bool value{ bidirectional_shift_assignable_with<TLhs, TRhs> == VResult };
-	};
+	TESTABLE_BINARY_CONCEPT(bidirectional_shift_assignable_with);
 
-	template <class TLhs, class TRhs, bool VResult, class... TArgs>
-	struct bidirectional_shift_assignable_with_r_testable
-	{
-		static constexpr bool value{ bidirectional_shift_assignable_with_r<TLhs, TRhs, TArgs...> == VResult };
-	};
+	TESTABLE_BINARY_CONCEPT_R(bidirectional_shift_assignable_with_r);
 
-	template <class T, bool VResult>
-	struct bidirectional_shift_assignable_testable
-	{
-		static constexpr bool value{ bidirectional_shift_assignable<T> == VResult };
-	};
+	TESTABLE_UNARY_CONCEPT(bidirectional_shift_assignable);
 
-	template <class T, bool VResult, class... TArgs>
-	struct bidirectional_shift_assignable_r_testable
-	{
-		static constexpr bool value{ bidirectional_shift_assignable_r<T, TArgs...> == VResult };
-	};
+	TESTABLE_UNARY_CONCEPT_R(bidirectional_shift_assignable_r);
 
-	template <class TLhs, class TRhs, bool VResult>
-	struct fully_shiftable_with_testable
-	{
-		static constexpr bool value{ fully_shiftable_with<TLhs, TRhs> == VResult };
-	};
+	// fully shiftabele
+	TESTABLE_BINARY_CONCEPT(fully_shiftable_with);
 
-	template <class TLhs, class TRhs, bool VResult, class... TArgs>
-	struct fully_shiftable_with_r_testable
-	{
-		static constexpr bool value{ fully_shiftable_with_r<TLhs, TRhs, TArgs...> == VResult };
-	};
+	TESTABLE_BINARY_CONCEPT_R(fully_shiftable_with_r);
 
-	template <class T, bool VResult>
-	struct fully_shiftable_testable
-	{
-		static constexpr bool value{ fully_shiftable<T> == VResult };
-	};
+	TESTABLE_UNARY_CONCEPT(fully_shiftable);
 
-	template <class T, bool VResult, class... TArgs>
-	struct fully_shiftable_r_testable
-	{
-		static constexpr bool value{ fully_shiftable_r<T, TArgs...> == VResult };
-	};
+	TESTABLE_UNARY_CONCEPT_R(fully_shiftable_r);
 }
 
 #pragma warning(disable: 26444)
@@ -237,7 +132,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"right_shiftable_with(_r) should determine if two types can be used within an operator >> expression.",
 	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(right_shiftable_with_testable, right_shiftable_with_r_testable),
+	(testable_right_shiftable_with, testable_right_shiftable_with_r),
 	(
 		(int, int, true),
 		(float, int, false),
@@ -259,7 +154,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"right_shiftable(_r) should determine if a type can be used within an operator >> expression.",
 	"[concepts][operators][shift]",
 	((class T, bool VExpected), T, VExpected),
-	(right_shiftable_testable, right_shiftable_r_testable),
+	(testable_right_shiftable, testable_right_shiftable_r),
 	(
 		(int, true),
 		(float, false),
@@ -279,7 +174,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"left_shiftable_with(_r) should determine if two types can be used within an operator << expression.",
 	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(left_shiftable_with_testable, left_shiftable_with_r_testable),
+	(testable_left_shiftable_with, testable_left_shiftable_with_r),
 	(
 		(int, int, true),
 		(float, int, false),
@@ -301,7 +196,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"left_shiftable(_r) should determine if a type can be used within an operator << expression.",
 	"[concepts][operators][shift]",
 	((class T, bool VExpected), T, VExpected),
-	(left_shiftable_testable, left_shiftable_r_testable),
+	(testable_left_shiftable, testable_left_shiftable_r),
 	(
 		(int, true),
 		(float, false),
@@ -321,7 +216,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"bidirectional_shiftable_with(_r) should determine if two types can be used within operator << and operator >> expressions.",
 	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(bidirectional_shiftable_with_testable, bidirectional_shiftable_with_r_testable),
+	(testable_bidirectional_shiftable_with, testable_bidirectional_shiftable_with_r),
 	(
 		(int, int, true),
 		(float, int, false),
@@ -343,7 +238,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"bidirectional_shiftable(_r) should determine if a type can be used within operator << and operator >> expressions.",
 	"[concepts][operators][shift]",
 	((class T, bool VExpected), T, VExpected),
-	(bidirectional_shiftable_testable, bidirectional_shiftable_r_testable),
+	(testable_bidirectional_shiftable, testable_bidirectional_shiftable_r),
 	(
 		(int, true),
 		(float, false),
@@ -364,7 +259,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"right_shift_assignable_with(_r) should determine if two types can be used within an operator >>= expression.",
 	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(right_shift_assignable_with_testable, right_shift_assignable_with_r_testable),
+	(testable_right_shift_assignable_with, testable_right_shift_assignable_with_r),
 	(
 		(int, int, true),
 		(float, int, false),
@@ -386,7 +281,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"right_shift_assignable(_r) should determine if a type can be used within an operator >>= expression.",
 	"[concepts][operators][shift]",
 	((class T, bool VExpected), T, VExpected),
-	(right_shift_assignable_testable, right_shift_assignable_r_testable),
+	(testable_right_shift_assignable, testable_right_shift_assignable_r),
 	(
 		(int, true),
 		(float, false),
@@ -406,7 +301,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"left_shift_assignable_with(_r) should determine if two types can be used within an operator <<= expression.",
 	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(left_shift_assignable_with_testable, left_shift_assignable_with_r_testable),
+	(testable_left_shift_assignable_with, testable_left_shift_assignable_with_r),
 	(
 		(int, int, true),
 		(float, int, false),
@@ -428,7 +323,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"left_shift_assignable(_r) should determine if a type can be used within an operator <<= expression.",
 	"[concepts][operators][shift]",
 	((class T, bool VExpected), T, VExpected),
-	(left_shift_assignable_testable, left_shift_assignable_r_testable),
+	(testable_left_shift_assignable, testable_left_shift_assignable_r),
 	(
 		(int, true),
 		(float, false),
@@ -448,7 +343,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"bidirectional_shift_assignable_with(_r) should determine if two types can be used within operator <<= and operator >>= expressions.",
 	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(bidirectional_shift_assignable_with_testable, bidirectional_shift_assignable_with_r_testable),
+	(testable_bidirectional_shift_assignable_with, testable_bidirectional_shift_assignable_with_r),
 	(
 		(int, int, true),
 		(float, int, false),
@@ -470,7 +365,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"bidirectional_shift_assignable(_r) should determine if a type can be used within operator <<= and operator =>> expressions.",
 	"[concepts][operators][shift]",
 	((class T, bool VExpected), T, VExpected),
-	(bidirectional_shift_assignable_testable, bidirectional_shift_assignable_r_testable),
+	(testable_bidirectional_shift_assignable, testable_bidirectional_shift_assignable_r),
 	(
 		(int, true),
 		(float, false),
@@ -491,7 +386,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"fully_shiftable_with(_r) should determine if two types can be used within all shift operator expressions.",
 	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(fully_shiftable_with_testable, fully_shiftable_with_r_testable),
+	(testable_fully_shiftable_with, testable_fully_shiftable_with_r),
 	(
 		(int, int, true),
 		(float, int, false),
@@ -515,7 +410,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"fully_shiftable(_r) should determine if a type can be used within all shift operator expressions.",
 	"[concepts][operators][shift]",
 	((class T, bool VExpected), T, VExpected),
-	(fully_shiftable_testable, fully_shiftable_r_testable),
+	(testable_fully_shiftable, testable_fully_shiftable_r),
 	(
 		(int, true),
 		(float, false),
@@ -538,14 +433,14 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"(right|left|bidirectional)_shiftable_with_r should determine if return type satisfies expectations.",
 	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected, class TReturn), TLhs, TRhs, VExpected, TReturn),
-	(right_shiftable_with_r_testable, left_shiftable_with_r_testable, bidirectional_shiftable_with_r_testable),
+	(testable_right_shiftable_with_r, testable_left_shiftable_with_r, testable_bidirectional_shiftable_with_r),
 	(
 		(int, int, true, int),
 		(int, int, true, const int),
 		(int, int, true, int&&),
 		(int, int, true, const int&),
 		(int, int, false, int&),
-		(int, int, false, shift_target<>),	// explicit ctor
+		(int, int, false, shift_target<>), // explicit ctor
 		(shift_target<fully>, int, true, shift_target<fully>),
 		(shift_target<fully>, int, true, const shift_target<fully>),
 		(shift_target<fully>, int, true, shift_target<fully>&&),
@@ -565,14 +460,14 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"(right|left|bidirectional)_shift_r should determine if return type satisfies expectations.",
 	"[concepts][operators][shift]",
 	((class T, bool VExpected, class TReturn), T, VExpected, TReturn),
-	(right_shiftable_r_testable, left_shiftable_r_testable, bidirectional_shiftable_r_testable),
+	(testable_right_shiftable_r, testable_left_shiftable_r, testable_bidirectional_shiftable_r),
 	(
 		(int, true, int),
 		(int, true, const int),
 		(int, true, int&&),
 		(int, true, const int&),
 		(int, false, int&),
-		(int, false, shift_target<>)	// explicit ctor
+		(int, false, shift_target<>) // explicit ctor
 	)
 )
 #pragma warning(default: 26444)
@@ -586,7 +481,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"(right|left|bidirectional)_shift_assignable_with_r should determine if return type satisfies expectations.",
 	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected, class TReturn), TLhs, TRhs, VExpected, TReturn),
-	(right_shift_assignable_with_r_testable, left_shift_assignable_with_r_testable, bidirectional_shift_assignable_with_r_testable),
+	(testable_right_shift_assignable_with_r, testable_left_shift_assignable_with_r, testable_bidirectional_shift_assignable_with_r),
 	(
 		(int, int, true, int),
 		(int, int, true, const int),
@@ -594,7 +489,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(int, int, true, const int&),
 		(int, int, false, int&&),
 		(int, int, false, no_shift),
-		(int, int, false, shift_target<>),	// explicit ctor
+		(int, int, false, shift_target<>), // explicit ctor
 		(shift_target<fully>, int, true, shift_target<fully>),
 		(shift_target<fully>, int, true, const shift_target<fully>),
 		(shift_target<fully>, int, false, int),
@@ -615,14 +510,14 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"(right|left|bidirectional)_shift_assignable_r should determine if return type satisfies expectations.",
 	"[concepts][operators][shift]",
 	((class T, bool VExpected, class TReturn), T, VExpected, TReturn),
-	(right_shift_assignable_r_testable, left_shift_assignable_r_testable, bidirectional_shift_assignable_r_testable),
+	(testable_right_shift_assignable_r, testable_left_shift_assignable_r, testable_bidirectional_shift_assignable_r),
 	(
 		(int, true, int),
 		(int, true, const int),
 		(int, true, int&),
 		(int, true, const int&),
 		(int, false, int&&),
-		(int, false, shift_target<>),	// explicit ctor
+		(int, false, shift_target<>), // explicit ctor
 		(int, false, no_shift)
 	)
 )
