@@ -198,6 +198,26 @@ namespace
 	TESTABLE_BINARY_CONCEPT(exclusive_disjunctive_assign_with);
 
 	TESTABLE_BINARY_CONCEPT_R(exclusive_disjunctive_assign_with_r);
+
+	// logically combinable
+
+	TESTABLE_UNARY_CONCEPT(logically_combinable);
+
+	TESTABLE_UNARY_CONCEPT_R(logically_combinable_r);
+
+	TESTABLE_BINARY_CONCEPT(logically_combinable_with);
+
+	TESTABLE_BINARY_CONCEPT_R(logically_combinable_with_r);
+
+	// logically assignable
+
+	TESTABLE_UNARY_CONCEPT(logically_assignable);
+
+	TESTABLE_UNARY_CONCEPT_R(logically_assignable_r);
+
+	TESTABLE_BINARY_CONCEPT(logically_assignable_with);
+
+	TESTABLE_BINARY_CONCEPT_R(logically_assignable_with_r);
 }
 
 #pragma warning(disable: 26444)
@@ -506,7 +526,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"binary logically _r concepts should determine if a return type of an expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected, class TResult), T, VExpected, TResult),
-	(testable_conjunctive_r, testable_disjunctive_r, testable_exclusive_disjunctive_r),
+	(testable_conjunctive_r, testable_disjunctive_r, testable_exclusive_disjunctive_r, testable_logically_combinable_r),
 	(
 		(int, true, int),
 		(int, true, float),
@@ -527,7 +547,8 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"binary logically with_r concepts should determine if a return type of an expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected, class TResult), TLhs, TRhs, VExpected, TResult),
-	(testable_conjunctive_with_r, testable_disjunctive_with_r, testable_exclusive_disjunctive_with_r),
+	(testable_conjunctive_with_r, testable_disjunctive_with_r, testable_exclusive_disjunctive_with_r,
+		testable_logically_combinable_with_r),
 	(
 		(int, int, true, int),
 		(int, int, true, float),
@@ -548,7 +569,8 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"binary logically assign_r concepts should determine if a return type of an expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected, class TResult), T, VExpected, TResult),
-	(testable_conjunctive_assign_r, testable_disjunctive_assign_r, testable_exclusive_disjunctive_assign_r),
+	(testable_conjunctive_assign_r, testable_disjunctive_assign_r, testable_exclusive_disjunctive_assign_r,
+		testable_logically_assignable_r),
 	(
 		(int, true, int),
 		(int, true, float),
@@ -569,7 +591,8 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"binary logically assign_with_r concepts should determine if a return type of an expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected, class TResult), TLhs, TRhs, VExpected, TResult),
-	(testable_conjunctive_assign_with_r, testable_disjunctive_assign_with_r, testable_exclusive_disjunctive_assign_with_r),
+	(testable_conjunctive_assign_with_r, testable_disjunctive_assign_with_r, testable_exclusive_disjunctive_assign_with_r,
+		testable_logically_assignable_with_r),
 	(
 		(int, int, true, int),
 		(int, int, true, float),
@@ -577,6 +600,94 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(int, int, false, fail_t),
 		(logical_target<fully>, int, true, logical_target<fully>&),
 		(logical_target<fully>, int, false, int)
+	)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(TestType::value);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_PRODUCT_TEST_CASE_SIG
+(
+	"logically_combinable(_r) should determine if a type can be used within operator &, | and ^ expressions.",
+	"[concepts][operators][logically]",
+	((class T, bool VExpected), T, VExpected),
+	(testable_logically_combinable, testable_logically_combinable_r),
+	(
+		(int, true),
+		(float, false),
+		(fail_t, false),
+		(logical_target<fully>, true),
+		(logical_target<fully ^ conjunctive_op>, false),
+		(logical_target<fully ^ disjunctive_op>, false),
+		(logical_target<fully ^ ex_disjunctive_op>, false)
+	)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(TestType::value);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_PRODUCT_TEST_CASE_SIG
+(
+	"logically_combinable_with(_r) should determine if two types can be used within operator &, | and ^ expressions.",
+	"[concepts][operators][logically]",
+	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
+	(testable_logically_combinable_with, testable_logically_combinable_with_r),
+	(
+		(int, int, true),
+		(int, float, false),
+		(int, fail_t, false),
+		(logical_target<fully>, int, true),
+		(logical_target<fully ^ conjunctive_with_op>, int, false),
+		(logical_target<fully ^ disjunctive_with_op>, int, false),
+		(logical_target<fully ^ ex_disjunctive_with_op>, int, false)
+	)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(TestType::value);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_PRODUCT_TEST_CASE_SIG
+(
+	"logically_assignable(_r) should determine if a type can be used within operator &=, |= and ^= expressions.",
+	"[concepts][operators][logically]",
+	((class T, bool VExpected), T, VExpected),
+	(testable_logically_assignable, testable_logically_assignable_r),
+	(
+		(int, true),
+		(float, false),
+		(fail_t, false),
+		(logical_target<fully>, true),
+		(logical_target<fully ^ conjunctive_assign_op>, false),
+		(logical_target<fully ^ disjunctive_assign_op>, false),
+		(logical_target<fully ^ ex_disjunctive_assign_op>, false)
+	)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(TestType::value);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_PRODUCT_TEST_CASE_SIG
+(
+	"logically_assignable_with(_r) should determine if two types can be used within operator &=, |= and ^= expressions.",
+	"[concepts][operators][logically]",
+	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
+	(testable_logically_assignable_with, testable_logically_assignable_with_r),
+	(
+		(int, int, true),
+		(int, float, false),
+		(int, fail_t, false),
+		(logical_target<fully>, int, true),
+		(logical_target<fully ^ conjunctive_assign_with_op>, int, false),
+		(logical_target<fully ^ disjunctive_assign_with_op>, int, false),
+		(logical_target<fully ^ ex_disjunctive_assign_with_op>, int, false)
 	)
 )
 #pragma warning(default: 26444)

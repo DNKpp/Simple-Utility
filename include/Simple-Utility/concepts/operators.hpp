@@ -428,6 +428,45 @@ namespace sl::concepts
 	template <class T, class TResult = std::remove_cvref_t<T>&>
 	concept exclusive_disjunctive_assign_r = exclusive_disjunctive_assign_with_r<T, T, TResult>;
 
+	template <class TLhs, class TRhs>
+	concept logically_combinable_with = conjunctive_with<TLhs, TRhs>
+										&& disjunctive_with<TLhs, TRhs>
+										&& exclusive_disjunctive_with<TLhs, TRhs>;
+
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>>
+	concept logically_combinable_with_r = conjunctive_with_r<TLhs, TRhs, TResult>
+										&& disjunctive_with_r<TLhs, TRhs, TResult>
+										&& exclusive_disjunctive_with_r<TLhs, TRhs, TResult>;
+
+	template <class T>
+	concept logically_combinable = conjunctive<T>
+									&& disjunctive<T>
+									&& exclusive_disjunctive<T>;
+
+	template <class T, class TResult = std::remove_cvref_t<T>>
+	concept logically_combinable_r = conjunctive_r<T, TResult>
+									&& disjunctive_r<T, TResult>
+									&& exclusive_disjunctive_r<T, TResult>;
+
+	template <class TLhs, class TRhs>
+	concept logically_assignable_with = conjunctive_assign_with<TLhs, TRhs>
+										&& disjunctive_assign_with<TLhs, TRhs>
+										&& exclusive_disjunctive_assign_with<TLhs, TRhs>;
+
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>&>
+	concept logically_assignable_with_r = conjunctive_assign_with_r<TLhs, TRhs, TResult>
+										&& disjunctive_assign_with_r<TLhs, TRhs, TResult>
+										&& exclusive_disjunctive_assign_with_r<TLhs, TRhs, TResult>;
+
+	template <class T>
+	concept logically_assignable = conjunctive_assign<T>
+									&& disjunctive_assign<T>
+									&& exclusive_disjunctive_assign<T>;
+
+	template <class T, class TResult = std::remove_cvref_t<T>&>
+	concept logically_assignable_r = conjunctive_assign_r<T, TResult>
+									&& disjunctive_assign_r<T, TResult>
+									&& exclusive_disjunctive_assign_r<T, TResult>;
 	/** @} */
 	/** @} */
 }
