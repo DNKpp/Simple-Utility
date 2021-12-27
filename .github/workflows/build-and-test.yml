@@ -42,7 +42,7 @@ jobs:
         cmake --build build_msvc
     - name: Test
       run:
-        cmake --build build_msvc --target RUN_TESTS
+        cmake --build build_msvc --target test
 
     - name: Configure & Build (Clang-Cl)
       run: |
@@ -50,7 +50,7 @@ jobs:
         cmake --build build_clang-cl
     - name: Test (Clang-Cl)
       run:
-        cmake --build build_clang-cl --target RUN_TESTS
+        cmake --build build_clang-cl --target test
 
 #  build-macOS:
 #    runs-on: macos-latest
