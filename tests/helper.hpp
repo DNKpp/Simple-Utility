@@ -16,6 +16,10 @@ struct empty_t
 {
 };
 
+struct fail_t
+{
+};
+
 #define TESTABLE_UNARY_CONCEPT(test_concept)										\
 template <class T, bool VExpected>													\
 struct testable_##test_concept : std::bool_constant<test_concept<T> == VExpected>	\
