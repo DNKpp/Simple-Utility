@@ -1,0 +1,80 @@
+name: run tests
+
+on: [push, pull_request]
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler:
+          - pkg: g++-11
+            exe: g++-11
+          - pkg: g++-10
+            exe: g++-10
+          - pkg: clang-12
+            exe: clang++-12
+          - pkg: clang-11
+            exe: clang++-11
+          - pkg: clang-10
+            exe: clang++-10
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install compiler
+      run: |
+        sudo apt-get update
+        sudo apt-get install ${{ matrix.compiler.pkg }} -y
+    - name: Compile tests
+      env:
+        CXX: ${{ matrix.compiler.exe }}
+      run: |
+        cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON .
+        cmake --build . -j 4
+    - name: Run tests
+      env:
+        CTEST_OUTPUT_ON_FAILURE: 1
+      run: ctest --timeout 30 -C Debug -j4
+
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 10
+
+    strategy:
+      fail-fast: false
+      matrix:
+        toolset: [v142, clang-cl]
+        include:
+          - toolset: v142
+            toolset_option: -T"v142"
+          - toolset: clang-cl
+            toolset_option: -T"ClangCl"
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Compile tests
+      run: |
+        cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON ${{ matrix.toolset_option }} .
+        cmake --build . -j 4
+    - name: Run tests
+      env:
+        CTEST_OUTPUT_ON_FAILURE: 1
+      run: ctest --timeout 30 -C Debug -j4
+
+#  macos:
+#    timeout-minutes: 10
+#    runs-on: macOS-latest
+#
+#    steps:
+#    - uses: actions/checkout@v2
+#    - name: Compile tests
+#      run: |
+#        cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON .
+#        cmake --build . -j 4
+#    - name: Run tests
+#      env:
+#        CTEST_OUTPUT_ON_FAILURE: 1
+#      run: ctest --timeout 30 -C Debug -j4
