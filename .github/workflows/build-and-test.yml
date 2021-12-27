@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build-ubuntu:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
     - uses: jwlawson/actions-setup-cmake@v1.11
@@ -12,9 +12,9 @@ jobs:
     - name: Install GCC-10  and Clang-10 on Linux
       run: |
         sudo apt-get update
-        sudo apt install g++-10
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100 --slave /usr/bin/g++ g++ /usr/bin/g++-10 --slave /usr/bin/gcov gcov /usr/bin/gcov-10
-        sudo apt install clang-10
+        sudo apt install g++-11
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 --slave /usr/bin/g++ g++ /usr/bin/g++-11 --slave /usr/bin/gcov gcov /usr/bin/gcov-11
+        sudo apt install clang-11
     - name: Configure & Build (GCC)
       run: |
         cmake . -Bbuild_gcc -G "Ninja Multi-Config" -DSIMPLE_UTILITY_BUILD_TESTS=ON
