@@ -290,6 +290,25 @@ namespace sl::concepts
 	concept fully_shiftable_r = fully_shiftable_with_r<T, T, TResult, TAssignResult>;
 
 	/** @} */
+
+	/**
+	* \defgroup logical_operators logical operators
+	* @{
+	*/
+
+	template <class T>
+	concept complemented = requires(T t)
+	{
+		{ ~t };
+	};
+
+	template <class T, class TResult = std::remove_cvref_t<T>>
+	concept complemented_r = requires(T t)
+	{
+		{ ~t } -> std::convertible_to<TResult>;
+	};
+
+	/** @} */
 	/** @} */
 }
 
