@@ -5,183 +5,72 @@
 
 #include <catch2/catch.hpp>
 
+#include "../Helper.hpp"
 #include "Simple-Utility/concepts/operators.hpp"
 
 using namespace sl::concepts;
 
 namespace
 {
-	template <class T, bool VResult>
-	struct complemented_testable
-	{
-		static constexpr bool value{ complemented<T> == VResult };
-	};
-
-	template <class T, bool VResult, class... TArgs>
-	struct complemented_r_testable
-	{
-		static constexpr bool value{ complemented_r<T, TArgs...> == VResult };
-	};
-
-	template <class T, bool VResult>
-	struct invertible_testable
-	{
-		static constexpr bool value{ invertible<T> == VResult };
-	};
-
-	template <class T, bool VResult, class... TArgs>
-	struct invertible_r_testable
-	{
-		static constexpr bool value{ invertible_r<T, TArgs...> == VResult };
-	};
-
-	template <class TLhs, class TRhs, bool VResult>
-	struct conjunctive_with_testable
-	{
-		static constexpr bool value{ conjunctive_with<TLhs, TRhs> == VResult };
-	};
-
-	template <class TLhs, class TRhs, bool VResult, class... TArgs>
-	struct conjunctive_with_r_testable
-	{
-		static constexpr bool value{ conjunctive_with_r<TLhs, TRhs, TArgs...> == VResult };
-	};
-
-	template <class T, bool VResult>
-	struct conjunctive_testable
-	{
-		static constexpr bool value{ conjunctive<T> == VResult };
-	};
-
-	template <class T, bool VResult, class... TArgs>
-	struct conjunctive_r_testable
-	{
-		static constexpr bool value{ conjunctive_r<T, TArgs...> == VResult };
-	};
-
-	template <class TLhs, class TRhs, bool VResult>
-	struct conjunctive_assign_with_testable
-	{
-		static constexpr bool value{ conjunctive_assign_with<TLhs, TRhs> == VResult };
-	};
-
-	template <class TLhs, class TRhs, bool VResult, class... TArgs>
-	struct conjunctive_assign_with_r_testable
-	{
-		static constexpr bool value{ conjunctive_assign_with_r<TLhs, TRhs, TArgs...> == VResult };
-	};
-
-	template <class T, bool VResult>
-	struct conjunctive_assign_testable
-	{
-		static constexpr bool value{ conjunctive_assign<T> == VResult };
-	};
-
-	template <class T, bool VResult, class... TArgs>
-	struct conjunctive_assign_r_testable
-	{
-		static constexpr bool value{ conjunctive_assign_r<T, TArgs...> == VResult };
-	};
-
-	template <class TLhs, class TRhs, bool VResult>
-	struct disjunctive_with_testable
-	{
-		static constexpr bool value{ disjunctive_with<TLhs, TRhs> == VResult };
-	};
-
-	template <class TLhs, class TRhs, bool VResult, class... TArgs>
-	struct disjunctive_with_r_testable
-	{
-		static constexpr bool value{ disjunctive_with_r<TLhs, TRhs, TArgs...> == VResult };
-	};
-
-	template <class T, bool VResult>
-	struct disjunctive_testable
-	{
-		static constexpr bool value{ disjunctive<T> == VResult };
-	};
-
-	template <class T, bool VResult, class... TArgs>
-	struct disjunctive_r_testable
-	{
-		static constexpr bool value{ disjunctive_r<T, TArgs...> == VResult };
-	};
-
-	template <class TLhs, class TRhs, bool VResult>
-	struct disjunctive_assign_with_testable
-	{
-		static constexpr bool value{ disjunctive_assign_with<TLhs, TRhs> == VResult };
-	};
-
-	template <class TLhs, class TRhs, bool VResult, class... TArgs>
-	struct disjunctive_assign_with_r_testable
-	{
-		static constexpr bool value{ disjunctive_assign_with_r<TLhs, TRhs, TArgs...> == VResult };
-	};
-
-	template <class T, bool VResult>
-	struct disjunctive_assign_testable
-	{
-		static constexpr bool value{ disjunctive_assign<T> == VResult };
-	};
-
-	template <class T, bool VResult, class... TArgs>
-	struct disjunctive_assign_r_testable
-	{
-		static constexpr bool value{ disjunctive_assign_r<T, TArgs...> == VResult };
-	};
-
-	template <class TLhs, class TRhs, bool VResult>
-	struct exclusive_disjunctive_with_testable
-	{
-		static constexpr bool value{ exclusive_disjunctive_with<TLhs, TRhs> == VResult };
-	};
-
-	template <class TLhs, class TRhs, bool VResult, class... TArgs>
-	struct exclusive_disjunctive_with_r_testable
-	{
-		static constexpr bool value{ exclusive_disjunctive_with_r<TLhs, TRhs, TArgs...> == VResult };
-	};
-
-	template <class T, bool VResult>
-	struct exclusive_disjunctive_testable
-	{
-		static constexpr bool value{ exclusive_disjunctive<T> == VResult };
-	};
-
-	template <class T, bool VResult, class... TArgs>
-	struct exclusive_disjunctive_r_testable
-	{
-		static constexpr bool value{ exclusive_disjunctive_r<T, TArgs...> == VResult };
-	};
-
-	template <class TLhs, class TRhs, bool VResult>
-	struct exclusive_disjunctive_assign_with_testable
-	{
-		static constexpr bool value{ exclusive_disjunctive_assign_with<TLhs, TRhs> == VResult };
-	};
-
-	template <class TLhs, class TRhs, bool VResult, class... TArgs>
-	struct exclusive_disjunctive_assign_with_r_testable
-	{
-		static constexpr bool value{ exclusive_disjunctive_assign_with_r<TLhs, TRhs, TArgs...> == VResult };
-	};
-
-	template <class T, bool VResult>
-	struct exclusive_disjunctive_assign_testable
-	{
-		static constexpr bool value{ exclusive_disjunctive_assign<T> == VResult };
-	};
-
-	template <class T, bool VResult, class... TArgs>
-	struct exclusive_disjunctive_assign_r_testable
-	{
-		static constexpr bool value{ exclusive_disjunctive_assign_r<T, TArgs...> == VResult };
-	};
-
 	struct fail
 	{
 	};
+
+	TESTABLE_UNARY_CONCEPT(complemented);
+
+	TESTABLE_UNARY_CONCEPT_R(complemented_r);
+
+	TESTABLE_UNARY_CONCEPT(invertible);
+
+	TESTABLE_UNARY_CONCEPT_R(invertible_r);
+
+	TESTABLE_UNARY_CONCEPT(conjunctive);
+
+	TESTABLE_UNARY_CONCEPT_R(conjunctive_r);
+
+	TESTABLE_UNARY_CONCEPT(disjunctive);
+
+	TESTABLE_UNARY_CONCEPT_R(disjunctive_r);
+
+	TESTABLE_UNARY_CONCEPT(exclusive_disjunctive);
+
+	TESTABLE_UNARY_CONCEPT_R(exclusive_disjunctive_r);
+
+	TESTABLE_UNARY_CONCEPT(conjunctive_assign);
+
+	TESTABLE_UNARY_CONCEPT_R(conjunctive_assign_r);
+
+	TESTABLE_UNARY_CONCEPT(disjunctive_assign);
+
+	TESTABLE_UNARY_CONCEPT_R(disjunctive_assign_r);
+
+	TESTABLE_UNARY_CONCEPT(exclusive_disjunctive_assign);
+
+	TESTABLE_UNARY_CONCEPT_R(exclusive_disjunctive_assign_r);
+
+	TESTABLE_BINARY_CONCEPT(conjunctive_with);
+
+	TESTABLE_BINARY_CONCEPT_R(conjunctive_with_r);
+
+	TESTABLE_BINARY_CONCEPT(conjunctive_assign_with);
+
+	TESTABLE_BINARY_CONCEPT_R(conjunctive_assign_with_r);
+
+	TESTABLE_BINARY_CONCEPT(disjunctive_with);
+
+	TESTABLE_BINARY_CONCEPT_R(disjunctive_with_r);
+
+	TESTABLE_BINARY_CONCEPT(disjunctive_assign_with);
+
+	TESTABLE_BINARY_CONCEPT_R(disjunctive_assign_with_r);
+
+	TESTABLE_BINARY_CONCEPT(exclusive_disjunctive_with);
+
+	TESTABLE_BINARY_CONCEPT_R(exclusive_disjunctive_with_r);
+
+	TESTABLE_BINARY_CONCEPT(exclusive_disjunctive_assign_with);
+
+	TESTABLE_BINARY_CONCEPT_R(exclusive_disjunctive_assign_with_r);
 }
 
 #pragma warning(disable: 26444)
@@ -190,7 +79,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"complemented(_r) should determine if a type can be used within an operator ~ expression.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
-	(complemented_testable, complemented_r_testable),
+	(testable_complemented, testable_complemented_r),
 	(
 		(int, true),
 		(float, false)
@@ -207,7 +96,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"invertible(_r) should determine if a type can be used within an operator ! expression.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
-	(invertible_testable, invertible_r_testable),
+	(testable_invertible, testable_invertible_r),
 	(
 		(int, true),
 		(float, true),
@@ -225,7 +114,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"unary logically _r concepts should determine if a return type of an expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected, class TResult), T, VExpected, TResult),
-	(complemented_r_testable, invertible_r_testable),
+	(testable_complemented_r, testable_invertible_r),
 	(
 		(int, true, int),
 		(int, true, float),
@@ -244,12 +133,12 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"binary logically with(_r) should determine if two types can be used within the specific operator expression.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(conjunctive_with_testable, conjunctive_with_r_testable,
-		conjunctive_assign_with_testable, conjunctive_assign_with_r_testable,
-		disjunctive_with_testable, disjunctive_with_r_testable,
-		disjunctive_assign_with_testable, disjunctive_assign_with_r_testable,
-		exclusive_disjunctive_with_testable, exclusive_disjunctive_with_r_testable,
-		exclusive_disjunctive_assign_with_testable, exclusive_disjunctive_assign_with_r_testable),
+	(testable_conjunctive_with, testable_conjunctive_with_r,
+		testable_conjunctive_assign_with, testable_conjunctive_assign_with_r,
+		testable_disjunctive_with, testable_disjunctive_with_r,
+		testable_disjunctive_assign_with, testable_disjunctive_assign_with_r,
+		testable_exclusive_disjunctive_with, testable_exclusive_disjunctive_with_r,
+		testable_exclusive_disjunctive_assign_with, testable_exclusive_disjunctive_assign_with_r),
 	(
 		(int, int, true),
 		(int, float, false),
@@ -267,12 +156,12 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"binary logically (_r) should determine if a type can be used within the specific operator expression.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
-	(conjunctive_testable, conjunctive_r_testable,
-		conjunctive_assign_testable, conjunctive_assign_r_testable,
-		disjunctive_testable, disjunctive_r_testable,
-		disjunctive_assign_testable, disjunctive_assign_r_testable,
-		exclusive_disjunctive_testable, exclusive_disjunctive_r_testable,
-		exclusive_disjunctive_assign_testable, exclusive_disjunctive_assign_r_testable),
+	(testable_conjunctive, testable_conjunctive_r,
+		testable_conjunctive_assign, testable_conjunctive_assign_r,
+		testable_disjunctive, testable_disjunctive_r,
+		testable_disjunctive_assign, testable_disjunctive_assign_r,
+		testable_exclusive_disjunctive, testable_exclusive_disjunctive_r,
+		testable_exclusive_disjunctive_assign, testable_exclusive_disjunctive_assign_r),
 	(
 		(int, true),
 		(float, false),
@@ -290,7 +179,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"binary logically _r concepts should determine if a return type of an expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected, class TResult), T, VExpected, TResult),
-	(conjunctive_r_testable, disjunctive_r_testable, exclusive_disjunctive_r_testable),
+	(testable_conjunctive_r, testable_disjunctive_r, testable_exclusive_disjunctive_r),
 	(
 		(int, true, int),
 		(int, true, float),
@@ -309,7 +198,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"binary logically with_r concepts should determine if a return type of an expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected, class TResult), TLhs, TRhs, VExpected, TResult),
-	(conjunctive_with_r_testable, disjunctive_with_r_testable, exclusive_disjunctive_with_r_testable),
+	(testable_conjunctive_with_r, testable_disjunctive_with_r, testable_exclusive_disjunctive_with_r),
 	(
 		(int, int, true, int),
 		(int, int, true, float),
@@ -328,7 +217,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"binary logically assign_r concepts should determine if a return type of an expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected, class TResult), T, VExpected, TResult),
-	(conjunctive_assign_r_testable, disjunctive_assign_r_testable, exclusive_disjunctive_assign_r_testable),
+	(testable_conjunctive_assign_r, testable_disjunctive_assign_r, testable_exclusive_disjunctive_assign_r),
 	(
 		(int, true, int),
 		(int, true, float),
@@ -347,7 +236,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"binary logically assign_with_r concepts should determine if a return type of an expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected, class TResult), TLhs, TRhs, VExpected, TResult),
-	(conjunctive_assign_with_r_testable, disjunctive_assign_with_r_testable, exclusive_disjunctive_assign_with_r_testable),
+	(testable_conjunctive_assign_with_r, testable_disjunctive_assign_with_r, testable_exclusive_disjunctive_assign_with_r),
 	(
 		(int, int, true, int),
 		(int, int, true, float),
