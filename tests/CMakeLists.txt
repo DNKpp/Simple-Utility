@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
 include(CTest)
 
-CPMAddPackage("gh:catchorg/Catch2#v2.x")
+CPMAddPackage("gh:catchorg/Catch2@2.13.7")
 
 add_executable(
 	${PROJECT_NAME}-Tests
