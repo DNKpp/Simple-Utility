@@ -15,24 +15,12 @@ jobs:
             exe: g++-11
           - pkg: g++-10
             exe: g++-10
-          - pkg: g++-9
-            exe: g++-9
-          - pkg: g++-8
-            exe: g++-8
-          - pkg: g++-7
-            exe: g++-7
-          - pkg: clang-13
-            exe: clang++-13
           - pkg: clang-12
             exe: clang++-12
           - pkg: clang-11
             exe: clang++-11
           - pkg: clang-10
             exe: clang++-10
-          - pkg: clang-9
-            exe: clang++-9
-          - pkg: clang-8
-            exe: clang++-8
             
     steps:
     - uses: actions/checkout@v2
