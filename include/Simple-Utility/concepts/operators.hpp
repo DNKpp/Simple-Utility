@@ -405,21 +405,21 @@ namespace sl::concepts
 	};
 
 	template <class T>
-	concept exclusive_disjunctive = disjunctive_with<T, T>;
+	concept exclusive_disjunctive = exclusive_disjunctive_with<T, T>;
 
 	template <class T, class TResult = std::remove_cvref_t<T>>
-	concept exclusive_disjunctive_r = disjunctive_with_r<T, T, TResult>;
+	concept exclusive_disjunctive_r = exclusive_disjunctive_with_r<T, T, TResult>;
 
 	template <class TLhs, class TRhs>
 	concept exclusive_disjunctive_assign_with = requires(TLhs lhs, TRhs rhs)
 	{
-		{ lhs |= rhs };
+		{ lhs ^= rhs };
 	};
 
 	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>&>
 	concept exclusive_disjunctive_assign_with_r = requires(TLhs lhs, TRhs rhs)
 	{
-		{ lhs |= rhs } -> std::convertible_to<TResult>;
+		{ lhs ^= rhs } -> std::convertible_to<TResult>;
 	};
 
 	template <class T>
