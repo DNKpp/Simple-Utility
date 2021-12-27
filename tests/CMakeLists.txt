@@ -18,5 +18,4 @@ target_link_libraries(
 	Catch2::Catch2
 )
 
-enable_testing()
 add_test(${PROJECT_NAME}-TestSuite ${PROJECT_NAME}-Tests)
