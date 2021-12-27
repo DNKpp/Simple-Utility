@@ -35,7 +35,7 @@ namespace
 		static constexpr bool value{ invertible_r<T, TArgs...> == VResult };
 	};
 
-	struct non_invertible {};
+	struct fail {};
 }
 
 #pragma warning(disable: 26444)
@@ -65,7 +65,26 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	(
 		(int, true),
 		(float, true),
-		(non_invertible, false)
+		(fail, false)
+	)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(TestType::value);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_PRODUCT_TEST_CASE_SIG
+(
+	"unary logically _r concepts should determine if a return type of an expression can be converted to the expected one.",
+	"[concepts][operators]",
+	((class T, bool VExpected, class TResult), T, VExpected, TResult),
+	(complemented_r_testable, invertible_r_testable),
+	(
+		(int, true, int),
+		(int, true, float),
+		(int, false, int&),
+		(int, false, fail)
 	)
 )
 #pragma warning(default: 26444)
