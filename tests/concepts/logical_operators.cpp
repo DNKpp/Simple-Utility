@@ -92,7 +92,7 @@ namespace
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"complemented(_r) should determine if a type can be used within an operator ~ expression.",
-	"[concepts][operators]",
+	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
 	(complemented_testable, complemented_r_testable),
 	(
@@ -109,7 +109,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"invertible(_r) should determine if a type can be used within an operator ! expression.",
-	"[concepts][operators]",
+	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
 	(invertible_testable, invertible_r_testable),
 	(
@@ -127,7 +127,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"unary logically _r concepts should determine if a return type of an expression can be converted to the expected one.",
-	"[concepts][operators]",
+	"[concepts][operators][logically]",
 	((class T, bool VExpected, class TResult), T, VExpected, TResult),
 	(complemented_r_testable, invertible_r_testable),
 	(
@@ -146,7 +146,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"binary logically with(_r) should determine if two types can be used within the specific operator expression.",
-	"[concepts][operators]",
+	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
 	(conjunctive_with_testable, conjunctive_with_r_testable,
 		disjunctive_with_testable, disjunctive_with_r_testable),
@@ -165,7 +165,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"binary logically (_r) should determine if a type can be used within the specific operator expression.",
-	"[concepts][operators]",
+	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
 	(conjunctive_testable, conjunctive_r_testable, disjunctive_testable, disjunctive_r_testable),
 	(
@@ -183,7 +183,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"binary logically _r concepts should determine if a return type of an expression can be converted to the expected one.",
-	"[concepts][operators]",
+	"[concepts][operators][logically]",
 	((class T, bool VExpected, class TResult), T, VExpected, TResult),
 	(conjunctive_r_testable, disjunctive_r_testable),
 	(
@@ -202,7 +202,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"binary logically with_r concepts should determine if a return type of an expression can be converted to the expected one.",
-	"[concepts][operators]",
+	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected, class TResult), TLhs, TRhs, VExpected, TResult),
 	(conjunctive_with_r_testable, disjunctive_with_r_testable),
 	(
