@@ -83,6 +83,30 @@ namespace
 		static constexpr bool value{ disjunctive_r<T, TArgs...> == VResult };
 	};
 
+	template <class TLhs, class TRhs, bool VResult>
+	struct exclusive_disjunctive_with_testable
+	{
+		static constexpr bool value{ exclusive_disjunctive_with<TLhs, TRhs> == VResult };
+	};
+
+	template <class TLhs, class TRhs, bool VResult, class... TArgs>
+	struct exclusive_disjunctive_with_r_testable
+	{
+		static constexpr bool value{ exclusive_disjunctive_with_r<TLhs, TRhs, TArgs...> == VResult };
+	};
+
+	template <class T, bool VResult>
+	struct exclusive_disjunctive_testable
+	{
+		static constexpr bool value{ exclusive_disjunctive<T> == VResult };
+	};
+
+	template <class T, bool VResult, class... TArgs>
+	struct exclusive_disjunctive_r_testable
+	{
+		static constexpr bool value{ exclusive_disjunctive_r<T, TArgs...> == VResult };
+	};
+
 	struct fail
 	{
 	};
@@ -149,7 +173,8 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
 	(conjunctive_with_testable, conjunctive_with_r_testable,
-		disjunctive_with_testable, disjunctive_with_r_testable),
+		disjunctive_with_testable, disjunctive_with_r_testable,
+		exclusive_disjunctive_with_testable, exclusive_disjunctive_with_r_testable),
 	(
 		(int, int, true),
 		(int, float, false),
@@ -167,7 +192,9 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"binary logically (_r) should determine if a type can be used within the specific operator expression.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
-	(conjunctive_testable, conjunctive_r_testable, disjunctive_testable, disjunctive_r_testable),
+	(conjunctive_testable, conjunctive_r_testable,
+		disjunctive_testable, disjunctive_r_testable,
+		exclusive_disjunctive_testable, exclusive_disjunctive_r_testable),
 	(
 		(int, true),
 		(float, false),
@@ -185,7 +212,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"binary logically _r concepts should determine if a return type of an expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected, class TResult), T, VExpected, TResult),
-	(conjunctive_r_testable, disjunctive_r_testable),
+	(conjunctive_r_testable, disjunctive_r_testable, exclusive_disjunctive_r_testable),
 	(
 		(int, true, int),
 		(int, true, float),
@@ -204,7 +231,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"binary logically with_r concepts should determine if a return type of an expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected, class TResult), TLhs, TRhs, VExpected, TResult),
-	(conjunctive_with_r_testable, disjunctive_with_r_testable),
+	(conjunctive_with_r_testable, disjunctive_with_r_testable, exclusive_disjunctive_with_r_testable),
 	(
 		(int, int, true, int),
 		(int, int, true, float),
