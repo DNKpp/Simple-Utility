@@ -339,6 +339,24 @@ namespace sl::concepts
 	concept conjunctive_r = conjunctive_with_r<T, T, TResult>;
 
 	template <class TLhs, class TRhs>
+	concept conjunctive_assign_with = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs &= rhs };
+	};
+
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>&>
+	concept conjunctive_assign_with_r = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs &= rhs } -> std::convertible_to<TResult>;
+	};
+
+	template <class T>
+	concept conjunctive_assign = conjunctive_assign_with<T, T>;
+
+	template <class T, class TResult = std::remove_cvref_t<T>&>
+	concept conjunctive_assign_r = conjunctive_assign_with_r<T, T, TResult>;
+
+	template <class TLhs, class TRhs>
 	concept disjunctive_with = requires(TLhs lhs, TRhs rhs)
 	{
 		{ lhs | rhs };
@@ -357,6 +375,24 @@ namespace sl::concepts
 	concept disjunctive_r = disjunctive_with_r<T, T, TResult>;
 
 	template <class TLhs, class TRhs>
+	concept disjunctive_assign_with = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs |= rhs };
+	};
+
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>&>
+	concept disjunctive_assign_with_r = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs |= rhs } -> std::convertible_to<TResult>;
+	};
+
+	template <class T>
+	concept disjunctive_assign = disjunctive_assign_with<T, T>;
+
+	template <class T, class TResult = std::remove_cvref_t<T>&>
+	concept disjunctive_assign_r = disjunctive_assign_with_r<T, T, TResult>;
+
+	template <class TLhs, class TRhs>
 	concept exclusive_disjunctive_with = requires(TLhs lhs, TRhs rhs)
 	{
 		{ lhs ^ rhs };
@@ -373,6 +409,24 @@ namespace sl::concepts
 
 	template <class T, class TResult = std::remove_cvref_t<T>>
 	concept exclusive_disjunctive_r = disjunctive_with_r<T, T, TResult>;
+
+	template <class TLhs, class TRhs>
+	concept exclusive_disjunctive_assign_with = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs |= rhs };
+	};
+
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>&>
+	concept exclusive_disjunctive_assign_with_r = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs |= rhs } -> std::convertible_to<TResult>;
+	};
+
+	template <class T>
+	concept exclusive_disjunctive_assign = exclusive_disjunctive_assign_with<T, T>;
+
+	template <class T, class TResult = std::remove_cvref_t<T>&>
+	concept exclusive_disjunctive_assign_r = exclusive_disjunctive_assign_with_r<T, T, TResult>;
 
 	/** @} */
 	/** @} */
