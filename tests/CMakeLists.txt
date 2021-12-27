@@ -7,7 +7,7 @@ CPMAddPackage("gh:catchorg/Catch2#v2.x")
 add_executable(
 	${PROJECT_NAME}-Tests
 	"main.cpp"
-	"concepts/operators.cpp"
+	"concepts/shift_operators.cpp"
 )
 
 target_link_libraries(
