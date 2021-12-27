@@ -235,7 +235,7 @@ namespace
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"right_shiftable_with(_r) should determine if two types can be used within an operator >> expression.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
 	(right_shiftable_with_testable, right_shiftable_with_r_testable),
 	(
@@ -257,7 +257,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"right_shiftable(_r) should determine if a type can be used within an operator >> expression.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class T, bool VExpected), T, VExpected),
 	(right_shiftable_testable, right_shiftable_r_testable),
 	(
@@ -277,7 +277,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"left_shiftable_with(_r) should determine if two types can be used within an operator << expression.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
 	(left_shiftable_with_testable, left_shiftable_with_r_testable),
 	(
@@ -299,7 +299,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"left_shiftable(_r) should determine if a type can be used within an operator << expression.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class T, bool VExpected), T, VExpected),
 	(left_shiftable_testable, left_shiftable_r_testable),
 	(
@@ -319,7 +319,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"bidirectional_shiftable_with(_r) should determine if two types can be used within operator << and operator >> expressions.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
 	(bidirectional_shiftable_with_testable, bidirectional_shiftable_with_r_testable),
 	(
@@ -341,7 +341,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"bidirectional_shiftable(_r) should determine if a type can be used within operator << and operator >> expressions.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class T, bool VExpected), T, VExpected),
 	(bidirectional_shiftable_testable, bidirectional_shiftable_r_testable),
 	(
@@ -362,7 +362,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"right_shift_assignable_with(_r) should determine if two types can be used within an operator >>= expression.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
 	(right_shift_assignable_with_testable, right_shift_assignable_with_r_testable),
 	(
@@ -384,7 +384,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"right_shift_assignable(_r) should determine if a type can be used within an operator >>= expression.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class T, bool VExpected), T, VExpected),
 	(right_shift_assignable_testable, right_shift_assignable_r_testable),
 	(
@@ -404,7 +404,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"left_shift_assignable_with(_r) should determine if two types can be used within an operator <<= expression.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
 	(left_shift_assignable_with_testable, left_shift_assignable_with_r_testable),
 	(
@@ -426,7 +426,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"left_shift_assignable(_r) should determine if a type can be used within an operator <<= expression.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class T, bool VExpected), T, VExpected),
 	(left_shift_assignable_testable, left_shift_assignable_r_testable),
 	(
@@ -446,7 +446,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"bidirectional_shift_assignable_with(_r) should determine if two types can be used within operator <<= and operator >>= expressions.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
 	(bidirectional_shift_assignable_with_testable, bidirectional_shift_assignable_with_r_testable),
 	(
@@ -468,7 +468,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"bidirectional_shift_assignable(_r) should determine if a type can be used within operator <<= and operator =>> expressions.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class T, bool VExpected), T, VExpected),
 	(bidirectional_shift_assignable_testable, bidirectional_shift_assignable_r_testable),
 	(
@@ -489,7 +489,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"fully_shiftable_with(_r) should determine if two types can be used within all shift operator expressions.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
 	(fully_shiftable_with_testable, fully_shiftable_with_r_testable),
 	(
@@ -513,7 +513,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"fully_shiftable(_r) should determine if a type can be used within all shift operator expressions.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class T, bool VExpected), T, VExpected),
 	(fully_shiftable_testable, fully_shiftable_r_testable),
 	(
@@ -536,7 +536,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"(right|left|bidirectional)_shiftable_with_r should determine if return type satisfies expectations.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected, class TReturn), TLhs, TRhs, VExpected, TReturn),
 	(right_shiftable_with_r_testable, left_shiftable_with_r_testable, bidirectional_shiftable_with_r_testable),
 	(
@@ -563,7 +563,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"(right|left|bidirectional)_shift_r should determine if return type satisfies expectations.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class T, bool VExpected, class TReturn), T, VExpected, TReturn),
 	(right_shiftable_r_testable, left_shiftable_r_testable, bidirectional_shiftable_r_testable),
 	(
@@ -584,7 +584,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"(right|left|bidirectional)_shift_assignable_with_r should determine if return type satisfies expectations.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class TLhs, class TRhs, bool VExpected, class TReturn), TLhs, TRhs, VExpected, TReturn),
 	(right_shift_assignable_with_r_testable, left_shift_assignable_with_r_testable, bidirectional_shift_assignable_with_r_testable),
 	(
@@ -613,7 +613,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"(right|left|bidirectional)_shift_assignable_r should determine if return type satisfies expectations.",
-	"[concepts][operators]",
+	"[concepts][operators][shift]",
 	((class T, bool VExpected, class TReturn), T, VExpected, TReturn),
 	(right_shift_assignable_r_testable, left_shift_assignable_r_testable, bidirectional_shift_assignable_r_testable),
 	(
