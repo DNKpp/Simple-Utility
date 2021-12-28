@@ -33,7 +33,7 @@ jobs:
         CXX: ${{ matrix.compiler.exe }}
       run: |
         cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON -S . -B build
-        cmake -j 4 --build build
+        cmake --build build -j 4
     - name: Run tests
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
@@ -58,7 +58,7 @@ jobs:
     - name: Compile tests
       run: |
         cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON ${{ matrix.toolset_option }} -S . -B build
-        cmake -j 4 --build build
+        cmake --build build -j 4
     - name: Run tests
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
