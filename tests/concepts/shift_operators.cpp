@@ -135,7 +135,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(int, float, false),
 		(shift_target<right>, int, true),
 		(const shift_target<right>, int, true),
-		(shift_target<right>, empty_t, false),
+		(shift_target<right>, fail_t, false),
 		(shift_target<>, int, false)
 	)
 )
@@ -177,7 +177,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(int, float, false),
 		(shift_target<left>, int, true),
 		(const shift_target<left>, int, true),
-		(shift_target<left>, empty_t, false),
+		(shift_target<left>, fail_t, false),
 		(shift_target<>, int, false)
 	)
 )
@@ -262,7 +262,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(int, float, false),
 		(shift_target<right_assign>, int, true),
 		(const shift_target<right_assign>, int, false),
-		(shift_target<right_assign>, empty_t, false),
+		(shift_target<right_assign>, fail_t, false),
 		(shift_target<>, int, false)
 	)
 )
@@ -304,7 +304,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(int, float, false),
 		(shift_target<left_assign>, int, true),
 		(const shift_target<left_assign>, int, false),
-		(shift_target<left_assign>, empty_t, false),
+		(shift_target<left_assign>, fail_t, false),
 		(shift_target<>, int, false)
 	)
 )
@@ -484,7 +484,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(int, int, true, int&),
 		(int, int, true, const int&),
 		(int, int, false, int&&),
-		(int, int, false, empty_t),
+		(int, int, false, fail_t),
 		(int, int, false, shift_target<>), // explicit ctor
 		(shift_target<fully>, int, true, shift_target<fully>),
 		(shift_target<fully>, int, true, const shift_target<fully>),
@@ -492,7 +492,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(shift_target<fully>, int, true, shift_target<fully>&),
 		(shift_target<fully>, int, true, const shift_target<fully>&),
 		(shift_target<fully>, int, false, shift_target<fully>&&),
-		(shift_target<fully>, int, false, empty_t)
+		(shift_target<fully>, int, false, fail_t)
 	)
 )
 #pragma warning(default: 26444)
@@ -514,7 +514,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(int, true, const int&),
 		(int, false, int&&),
 		(int, false, shift_target<>), // explicit ctor
-		(int, false, empty_t)
+		(int, false, fail_t)
 	)
 )
 #pragma warning(default: 26444)
