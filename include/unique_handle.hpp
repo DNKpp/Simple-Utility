@@ -17,6 +17,11 @@ namespace sl
 	class unique_handle
 	{
 	public:
+		constexpr unique_handle() noexcept = default;
+
+		unique_handle(const unique_handle&) = delete;
+		unique_handle& operator =(const unique_handle&) = delete;
+
 		[[nodiscard]]
 		constexpr explicit operator bool() const noexcept { return m_Value.has_value(); }
 

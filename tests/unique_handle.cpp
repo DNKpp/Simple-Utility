@@ -11,14 +11,20 @@ using namespace sl;
 
 TEST_CASE("unique_handle should be default constructible.", "[unique_handle]")
 {
-	unique_handle<int> handle{};
+	constexpr unique_handle<int> handle{};
 
 	// nothing to check here
 }
 
+TEST_CASE("unique_handle should neither be copy constructible nor assignable.", "[unique_handle]")
+{
+	REQUIRE(!std::copy_constructible<unique_handle<int>>);
+	REQUIRE(!std::assignable_from<unique_handle<int>&, const unique_handle<int>&>);
+}
+
 TEST_CASE("default constructed unique_handle should not contain a value.", "[unique_handle]")
 {
-	const unique_handle<int> handle{};
+	constexpr unique_handle<int> handle{};
 
 	REQUIRE(!handle.has_value());
 	REQUIRE(!handle);
