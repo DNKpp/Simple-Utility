@@ -29,3 +29,11 @@ TEST_CASE("default constructed unique_handle should not contain a value.", "[uni
 	REQUIRE(!handle.has_value());
 	REQUIRE(!handle);
 }
+
+TEST_CASE("unique_handle should be explicitly null constructible by nullhandle.", "[unique_handle]")
+{
+	constexpr unique_handle<int> handle{ nullhandle };
+
+	REQUIRE(!handle.has_value());
+	REQUIRE(!handle);
+}

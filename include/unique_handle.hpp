@@ -13,11 +13,24 @@
 
 namespace sl
 {
+	// ReSharper disable once IdentifierTypo
+	struct nullhandle_t
+	{
+	};
+
+	// ReSharper disable once IdentifierTypo
+	constexpr nullhandle_t nullhandle{};
+
 	template <std::movable T>
 	class unique_handle
 	{
 	public:
 		constexpr unique_handle() noexcept = default;
+
+		constexpr unique_handle(nullhandle_t) noexcept
+			: m_Value{ std::nullopt }
+		{
+		}
 
 		unique_handle(const unique_handle&) = delete;
 		unique_handle& operator =(const unique_handle&) = delete;
