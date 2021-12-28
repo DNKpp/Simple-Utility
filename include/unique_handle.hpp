@@ -26,6 +26,7 @@ namespace sl
 	{
 	public:
 		constexpr unique_handle() noexcept = default;
+		constexpr ~unique_handle() noexcept = default;
 
 		constexpr unique_handle(nullhandle_t) noexcept
 			: m_Value{ std::nullopt }
