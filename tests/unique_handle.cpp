@@ -98,3 +98,19 @@ TEST_CASE("unique_handle's operator * should expose a const reference of its val
 
 	STATIC_REQUIRE(ref == 42);
 }
+
+TEST_CASE("unique_handle's operator -> const overload should expose a const pointer to its value.", "[unique_handle]")
+{
+	constexpr auto access_via_ptr = []<template<class> class THandle>()
+	{
+		THandle<int> handle{ 1337 };
+		auto* ptr = handle.operator ->();
+		return *ptr;
+	};
+
+	constexpr int non_const_result = access_via_ptr.operator()<unique_handle>();
+	constexpr int const_result = access_via_ptr.operator()<const unique_handle>();
+
+	STATIC_REQUIRE(non_const_result == 1337);
+	STATIC_REQUIRE(const_result == 1337);
+}
