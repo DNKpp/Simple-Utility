@@ -27,7 +27,7 @@ namespace sl::concepts
 
 	/**
 	 * \brief Checks whether the left-hand-side type is unequal to the right-hand-side type.
-	 * \detail This is the inverted counterpart of ``std::same_as`` concept.
+	 * \details This is the inverted counterpart of ``std::same_as`` concept.
 	 * \tparam TLhs The source type handed over to the target
 	 * \tparam TRhs The target type to check
 	 */
@@ -36,7 +36,7 @@ namespace sl::concepts
 
 	/**
 	 * \brief Checks whether the target type is constructible from the source type.
-	 * \detail This is the symmetrical counterpart of ``std::constructible_from`` concept with a single constructor argument.
+	 * \details This is the symmetrical counterpart of ``std::constructible_from`` concept with a single constructor argument.
 	 * \tparam TSource The source type handed over to the constructor of the target
 	 * \tparam TTarget The target type to check
 	 */
@@ -45,7 +45,7 @@ namespace sl::concepts
 
 	/**
 	 * \brief Checks whether the target type is assignable from the source type.
-	 * \detail This is the symmetrical counterpart of ``std::assignable_from`` concept.
+	 * \details This is the symmetrical counterpart of ``std::assignable_from`` concept.
 	 * \tparam TSource The source type handed over to the target
 	 * \tparam TTarget The target type to check
 	 */
