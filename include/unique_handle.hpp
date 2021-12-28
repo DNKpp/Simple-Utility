@@ -13,6 +13,13 @@
 
 #include "Simple-Utility/concepts/stl_counterparts.hpp"
 
+// some of the std::optional interface hasn't declared constexpr before
+#if __cpp_lib_optional >= 202106
+#define SL_UNIQUE_HANDLE_FULL_CONSTEXPR constexpr
+#else
+#define SL_UNIQUE_HANDLE_FULL_CONSTEXPR
+#endif
+
 namespace sl
 {
 	// ReSharper disable once IdentifierTypo
@@ -38,6 +45,12 @@ namespace sl
 		constexpr unique_handle(nullhandle_t) noexcept
 			: m_Value{ std::nullopt }
 		{
+		}
+
+		SL_UNIQUE_HANDLE_FULL_CONSTEXPR unique_handle& operator =(nullhandle_t) noexcept
+		{
+			m_Value = std::nullopt;
+			return *this;
 		}
 
 		template <concepts::constructs<T> T2>

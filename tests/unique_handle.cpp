@@ -38,6 +38,20 @@ TEST_CASE("unique_handle should be explicitly null constructible by nullhandle."
 	REQUIRE(!handle);
 }
 
+TEST_CASE("unique_handle should be assignable by nullhandle.", "[unique_handle]")
+{
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR const unique_handle<int> handle = []
+	{
+		// ReSharper disable once CppInitializedValueIsAlwaysRewritten
+		unique_handle<int> temp{};
+		temp = nullhandle;
+		return temp;
+	}();
+
+	REQUIRE(!handle.has_value());
+	REQUIRE(!handle);
+}
+
 TEST_CASE("unique_handle should be constructible by value.", "[unique_handle]")
 {
 	constexpr unique_handle<int> handle{ 42 };
