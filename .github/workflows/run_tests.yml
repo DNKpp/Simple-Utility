@@ -32,12 +32,12 @@ jobs:
       env:
         CXX: ${{ matrix.compiler.exe }}
       run: |
-        cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON .
-        cmake --build . -j 4
+        cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON -S . -B build
+        cmake -j 4 --build build
     - name: Run tests
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
-      run: ctest --timeout 30 -C Debug -j4
+      run: cmake --build build --target test
 
   windows:
     runs-on: windows-latest
@@ -57,12 +57,12 @@ jobs:
     - uses: actions/checkout@v2
     - name: Compile tests
       run: |
-        cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON ${{ matrix.toolset_option }} .
-        cmake --build . -j 4
+        cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON ${{ matrix.toolset_option }} -S . -B build
+        cmake -j 4 --build build
     - name: Run tests
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
-      run: ctest --timeout 30 -C Debug -j4
+      run: cmake --build build --target test
 
 #  macos:
 #    timeout-minutes: 10
