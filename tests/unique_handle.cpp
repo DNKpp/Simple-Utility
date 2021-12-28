@@ -26,7 +26,7 @@ TEST_CASE("default constructed unique_handle should not contain a value.", "[uni
 {
 	constexpr unique_handle<int> handle{};
 
-	STATIC_REQUIRE(!handle.has_value());
+	STATIC_REQUIRE(!handle.is_valid());
 	STATIC_REQUIRE(!handle);
 }
 
@@ -34,7 +34,7 @@ TEST_CASE("unique_handle should be explicitly null constructible by nullhandle."
 {
 	constexpr unique_handle<int> handle{ nullhandle };
 
-	STATIC_REQUIRE(!handle.has_value());
+	STATIC_REQUIRE(!handle.is_valid());
 	STATIC_REQUIRE(!handle);
 }
 
@@ -48,7 +48,7 @@ TEST_CASE("unique_handle should be assignable by nullhandle.", "[unique_handle]"
 		return temp;
 	}();
 
-	REQUIRE(!handle.has_value());
+	REQUIRE(!handle.is_valid());
 	REQUIRE(!handle);
 }
 
@@ -56,7 +56,7 @@ TEST_CASE("unique_handle should be constructible by value.", "[unique_handle]")
 {
 	constexpr unique_handle<int> handle{ 42 };
 
-	STATIC_REQUIRE(handle.has_value());
+	STATIC_REQUIRE(handle.is_valid());
 	STATIC_REQUIRE(handle);
 }
 
@@ -70,7 +70,7 @@ TEST_CASE("unique_handle should be assignable by value.", "[unique_handle]")
 		return temp;
 	}();
 
-	STATIC_REQUIRE(handle.has_value());
+	STATIC_REQUIRE(handle.is_valid());
 	STATIC_REQUIRE(handle);
 }
 
@@ -113,4 +113,17 @@ TEST_CASE("unique_handle's operator -> const overload should expose a const poin
 
 	STATIC_REQUIRE(non_const_result == 1337);
 	STATIC_REQUIRE(const_result == 1337);
+}
+
+TEST_CASE("unique_handle::reset should reset to a nullhandle.", "[unique_handle]")
+{
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
+	const unique_handle<int> handle = []
+	{
+		unique_handle<int> temp{ 42 };
+		temp.reset();
+		return temp;
+	}();
+
+	REQUIRE(!handle);
 }

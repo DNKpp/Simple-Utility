@@ -102,7 +102,13 @@ namespace sl
 		constexpr explicit operator bool() const noexcept { return m_Value.has_value(); }
 
 		[[nodiscard]]
-		constexpr bool has_value() const noexcept { return m_Value.has_value(); }
+		constexpr bool is_valid() const noexcept { return m_Value.has_value(); }
+
+		[[nodiscard]]
+		SL_UNIQUE_HANDLE_FULL_CONSTEXPR void reset() noexcept
+		{
+			m_Value.reset();
+		}
 
 	private:
 		std::optional<T> m_Value{};
