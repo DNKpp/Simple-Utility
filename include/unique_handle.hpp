@@ -32,14 +32,47 @@ namespace sl
 
 	using bad_handle_access = std::bad_optional_access;
 
-	template <std::movable T>
+	template <class T>
+	struct default_delete_action
+	{
+		constexpr void operator ()(T&) const noexcept
+		{
+		}
+	};
+
+	template <std::movable T, std::invocable<T&> TDeleteAction = default_delete_action<T>>
+		requires std::copyable<TDeleteAction>
 	class unique_handle
 	{
 	public:
+		using element_type = T;
+		using delete_action_type = TDeleteAction;
+
 		constexpr unique_handle() noexcept = default;
-		constexpr ~unique_handle() noexcept = default;
-		constexpr unique_handle(unique_handle&&) noexcept = default;
-		constexpr unique_handle& operator =(unique_handle&&) noexcept = default;
+
+		constexpr ~unique_handle() noexcept
+		{
+			invoke_delete_action_if_necessary();
+		}
+
+		SL_UNIQUE_HANDLE_FULL_CONSTEXPR unique_handle(unique_handle&& other) noexcept
+			: m_Value{ std::exchange(other.m_Value, std::nullopt) },
+			m_DeleteAction{ other.m_DeleteAction }
+		{
+			other.m_Value.reset();
+		}
+
+		SL_UNIQUE_HANDLE_FULL_CONSTEXPR unique_handle& operator =(unique_handle&& other) noexcept
+		{
+			if (this != &other)
+			{
+				invoke_delete_action_if_necessary();
+
+				m_Value = std::exchange(other.m_Value, std::nullopt);
+				m_DeleteAction = other.m_DeleteAction;
+			}
+			return *this;
+		}
 
 		unique_handle(const unique_handle&) = delete;
 		unique_handle& operator =(const unique_handle&) = delete;
@@ -51,6 +84,8 @@ namespace sl
 
 		SL_UNIQUE_HANDLE_FULL_CONSTEXPR unique_handle& operator =(nullhandle_t) noexcept
 		{
+			invoke_delete_action_if_necessary();
+
 			m_Value = std::nullopt;
 			return *this;
 		}
@@ -67,9 +102,11 @@ namespace sl
 		template <concepts::assignable_to<T&> T2>
 			requires concepts::not_same_as<std::remove_cvref_t<T2>, unique_handle>
 					&& concepts::not_same_as<std::remove_cvref_t<T2>, nullhandle_t>
-					&& concepts::constructs<std::remove_cvref_t<T2>, nullhandle_t>
+					&& concepts::constructs<std::remove_cvref_t<T2>, T>
 		constexpr unique_handle& operator =(T2&& value)
 		{
+			invoke_delete_action_if_necessary();
+
 			m_Value = std::forward<T2>(value);
 			return *this;
 		}
@@ -107,11 +144,34 @@ namespace sl
 		[[nodiscard]]
 		SL_UNIQUE_HANDLE_FULL_CONSTEXPR void reset() noexcept
 		{
+			invoke_delete_action_if_necessary();
+
 			m_Value.reset();
+		}
+
+		[[nodiscard]]
+		constexpr delete_action_type& delete_action() noexcept
+		{
+			return m_DeleteAction;
+		}
+
+		[[nodiscard]]
+		constexpr const delete_action_type& delete_action() const noexcept
+		{
+			return m_DeleteAction;
 		}
 
 	private:
 		std::optional<T> m_Value{};
+
+		[[no_unique_address]]
+		TDeleteAction m_DeleteAction{};
+
+		constexpr void invoke_delete_action_if_necessary() noexcept
+		{
+			if (m_Value)
+				std::invoke(m_DeleteAction, *m_Value);
+		}
 	};
 }
 
