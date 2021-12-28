@@ -16,6 +16,7 @@ namespace
 	struct target_t
 	{
 		target_t() = default;
+
 		target_t(int)
 		{
 		}
@@ -58,3 +59,18 @@ TEMPLATE_TEST_CASE_SIG
 	REQUIRE(assignable_to<TSource, TTarget> == VExpected);
 }
 
+#pragma warning(disable: 26444)
+TEMPLATE_TEST_CASE_SIG
+(
+	"not_same_as should behave as the inverted counterpart of std::same_as.",
+	"[concepts][stl_ext]",
+	((class TSource, class TTarget, bool VExpected), TSource, TTarget, VExpected),
+	(int, int, false),
+	(int, target_t, true),
+	(target_t&, target_t, true),
+	(const target_t&, const target_t&, false)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(not_same_as<TSource, TTarget> == VExpected);
+}
