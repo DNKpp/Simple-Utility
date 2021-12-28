@@ -13,9 +13,7 @@ using namespace sl;
 
 TEST_CASE("unique_handle should be default constructible.", "[unique_handle]")
 {
-	constexpr unique_handle<int> handle{};
-
-	// nothing to check here
+	STATIC_REQUIRE(std::default_initializable<unique_handle<int>>);
 }
 
 TEST_CASE("unique_handle should neither be copy constructible nor assignable.", "[unique_handle]")
