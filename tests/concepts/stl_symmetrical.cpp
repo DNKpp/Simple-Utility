@@ -11,6 +11,22 @@
 
 using namespace sl::concepts;
 
+namespace
+{
+	struct target_t
+	{
+		target_t() = default;
+		target_t(int)
+		{
+		}
+
+		target_t& operator =(int)
+		{
+			return *this;
+		}
+	};
+}
+
 #pragma warning(disable: 26444)
 TEMPLATE_TEST_CASE_SIG
 (
@@ -18,11 +34,27 @@ TEMPLATE_TEST_CASE_SIG
 	"[concepts][stl_ext]",
 	((class TSource, class TTarget, bool VExpected), TSource, TTarget, VExpected),
 	(int, int, true),
-	(fail_t, int, false),
-	(int, fail_t, false),
-	(int, float, true)
+	(int, target_t, true),
+	(target_t, int, false)
 )
 #pragma warning(default: 26444)
 {
 	REQUIRE(constructs<TSource, TTarget> == VExpected);
 }
+
+#pragma warning(disable: 26444)
+TEMPLATE_TEST_CASE_SIG
+(
+	"assignable_to should behave as the symmetrical counterpart of std::assignable_from.",
+	"[concepts][stl_ext]",
+	((class TSource, class TTarget, bool VExpected), TSource, TTarget, VExpected),
+	(int, int&, true),
+	(int, target_t&, true),
+	(int, target_t, false),
+	(target_t, int&, false)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(assignable_to<TSource, TTarget> == VExpected);
+}
+

@@ -34,6 +34,16 @@ namespace sl::concepts
 	template <class TSource, class TTarget>
 	concept constructs = std::constructible_from<TTarget, TSource>;
 
+
+	/**
+	 * \brief Checks whether the target type is assignable from the source type.
+	 * \detail This is the symmetrical counterpart of ``std::assignable_from`` concept.
+	 * \tparam TSource The source type handed over to the target
+	 * \tparam TTarget The target type to check
+	 */
+	template <class TSource, class TTarget>
+	concept assignable_to = std::assignable_from<TTarget, TSource>;
+
 	/** @} */
 	/** @} */
 }
