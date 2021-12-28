@@ -176,6 +176,20 @@ TEST_CASE("unique_handle should be move assignable and receive the value of othe
 	REQUIRE(result);
 }
 
+TEST_CASE("unique_handle should be swapable.", "[unique_handle]")
+{
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
+	const bool result = []
+	{
+		test_handle lhs{ 1337 };
+		test_handle rhs{ 42 };
+		lhs.swap(rhs);
+		return *lhs == 42 && *rhs == 1337;
+	}();
+
+	REQUIRE(result);
+}
+
 TEST_CASE("unique_handle::raw should expose a const reference of its value.", "[unique_handle]")
 {
 	constexpr test_handle handle{ 1337 };

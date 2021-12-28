@@ -74,6 +74,21 @@ namespace sl
 			return *this;
 		}
 
+		constexpr void swap
+		(
+			unique_handle& other
+		)
+		noexcept(noexcept(std::is_nothrow_move_constructible_v<T>
+						&& std::is_nothrow_swappable_v<T>
+						&& std::is_nothrow_move_constructible_v<TDeleteAction>
+						&& std::is_nothrow_swappable_v<TDeleteAction>))
+		{
+			using std::swap;
+
+			swap(m_Value, other.m_Value);
+			swap(m_DeleteAction, other.m_DeleteAction);
+		}
+
 		unique_handle(const unique_handle&) = delete;
 		unique_handle& operator =(const unique_handle&) = delete;
 
