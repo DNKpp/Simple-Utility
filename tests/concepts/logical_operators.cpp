@@ -221,13 +221,13 @@ namespace
 
 	// fully logically
 
-	TESTABLE_UNARY_CONCEPT(fully_logically);
+	TESTABLE_UNARY_CONCEPT(fully_logical);
 
-	TESTABLE_UNARY_CONCEPT_R_R(fully_logically_r);
+	TESTABLE_UNARY_CONCEPT_R_R(fully_logical_r);
 
-	TESTABLE_BINARY_CONCEPT(fully_logically_with);
+	TESTABLE_BINARY_CONCEPT(fully_logical_with);
 
-	TESTABLE_BINARY_CONCEPT_R_R(fully_logically_with_r);
+	TESTABLE_BINARY_CONCEPT_R_R(fully_logical_with_r);
 }
 
 #pragma warning(disable: 26444)
@@ -708,10 +708,10 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 #pragma warning(disable: 26444)
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
-	"fully_logically_with(_r) should determine if two types can be used within operator ~, !, &, |, ^, &=, |= and ^= expressions.",
+	"fully_logical_with(_r) should determine if two types can be used within operator ~, !, &, |, ^, &=, |= and ^= expressions.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(testable_fully_logically_with, testable_fully_logically_with_r),
+	(testable_fully_logical_with, testable_fully_logical_with_r),
 	(
 		(int, int, true),
 		(int, float, false),
@@ -735,11 +735,11 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 #pragma warning(disable: 26444)
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
-	"fully_logically_with_r should determine if the return types of each expression can be converted to the expected one.",
+	"fully_logical_with_r should determine if the return types of each expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected, class TCombineResult, class TAssignResult),
 		TLhs, TRhs, VExpected, TCombineResult, TAssignResult),
-	(testable_fully_logically_with_r),
+	(testable_fully_logical_with_r),
 	(
 		(int, int, true, int, int&),
 		(int, int, false, int, int&&),
@@ -756,10 +756,10 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 #pragma warning(disable: 26444)
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
-	"fully_logically(_r) should determine a type can be used within operator ~, !, &, |, ^, &=, |= and ^= expressions.",
+	"fully_logical(_r) should determine a type can be used within operator ~, !, &, |, ^, &=, |= and ^= expressions.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
-	(testable_fully_logically, testable_fully_logically_r),
+	(testable_fully_logical, testable_fully_logical_r),
 	(
 		(int, true),
 		(float, false),
@@ -783,10 +783,10 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 #pragma warning(disable: 26444)
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
-	"fully_logically_r should determine if the return types of each expression can be converted to the expected one.",
+	"fully_logical_r should determine if the return types of each expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected, class TCombineResult, class TAssignResult), T, VExpected, TCombineResult, TAssignResult),
-	(testable_fully_logically_r),
+	(testable_fully_logical_r),
 	(
 		(int, true, int, int&),
 		(int, false, int, int&&),
