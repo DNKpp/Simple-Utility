@@ -11,6 +11,8 @@
 #include <concepts>
 #include <optional>
 
+#include "Simple-Utility/concepts/stl_counterparts.hpp"
+
 namespace sl
 {
 	// ReSharper disable once IdentifierTypo
@@ -27,14 +29,35 @@ namespace sl
 	public:
 		constexpr unique_handle() noexcept = default;
 		constexpr ~unique_handle() noexcept = default;
+		constexpr unique_handle(unique_handle&&) noexcept = default;
+		constexpr unique_handle& operator =(unique_handle&&) noexcept = default;
+
+		unique_handle(const unique_handle&) = delete;
+		unique_handle& operator =(const unique_handle&) = delete;
 
 		constexpr unique_handle(nullhandle_t) noexcept
 			: m_Value{ std::nullopt }
 		{
 		}
 
-		unique_handle(const unique_handle&) = delete;
-		unique_handle& operator =(const unique_handle&) = delete;
+		template <concepts::constructs<T> T2>
+			requires concepts::not_same_as<std::remove_cvref_t<T2>, unique_handle>
+					&& concepts::not_same_as<std::remove_cvref_t<T2>, nullhandle_t>
+		explicit (!std::convertible_to<T2&&, T>)
+		constexpr unique_handle(T2&& value)
+			: m_Value{ std::forward<T2>(value) }
+		{
+		}
+
+		template <concepts::assignable_to<T&> T2>
+			requires concepts::not_same_as<std::remove_cvref_t<T2>, unique_handle>
+					&& concepts::not_same_as<std::remove_cvref_t<T2>, nullhandle_t>
+					&& concepts::constructs<std::remove_cvref_t<T2>, nullhandle_t>
+		constexpr unique_handle& operator =(T2&& value)
+		{
+			m_Value = std::forward<T2>(value);
+			return *this;
+		}
 
 		[[nodiscard]]
 		constexpr explicit operator bool() const noexcept { return m_Value.has_value(); }
