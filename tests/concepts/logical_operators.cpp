@@ -221,14 +221,13 @@ namespace
 
 	// fully logically
 
-	//TESTABLE_UNARY_CONCEPT(fully_logically);
+	TESTABLE_UNARY_CONCEPT(fully_logically);
 
-	//TESTABLE_UNARY_CONCEPT_R(fully_logically_r);
+	TESTABLE_UNARY_CONCEPT_R_R(fully_logically_r);
 
 	TESTABLE_BINARY_CONCEPT(fully_logically_with);
 
 	TESTABLE_BINARY_CONCEPT_R_R(fully_logically_with_r);
-
 }
 
 #pragma warning(disable: 26444)
@@ -747,6 +746,53 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(logical_target<fully>, int, true, logical_target<fully>, logical_target<fully>&),
 		(logical_target<fully>, int, false, int, logical_target<fully>&),
 		(logical_target<fully>, int, false, logical_target<fully>, logical_target<fully>&&)
+	)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(TestType::value);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_PRODUCT_TEST_CASE_SIG
+(
+	"fully_logically(_r) should determine a type can be used within operator ~, !, &, |, ^, &=, |= and ^= expressions.",
+	"[concepts][operators][logically]",
+	((class T, bool VExpected), T, VExpected),
+	(testable_fully_logically, testable_fully_logically_r),
+	(
+		(int, true),
+		(float, false),
+		(fail_t, false),
+		(logical_target<fully>, true),
+		(logical_target<fully ^ invert_op>, false),
+		(logical_target<fully ^ complement_op>, false),
+		(logical_target<fully ^ conjunctive_op>, false),
+		(logical_target<fully ^ disjunctive_op>, false),
+		(logical_target<fully ^ ex_disjunctive_op>, false),
+		(logical_target<fully ^ conjunctive_assign_op>, false),
+		(logical_target<fully ^ disjunctive_assign_op>, false),
+		(logical_target<fully ^ ex_disjunctive_assign_op>, false)
+	)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(TestType::value);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_PRODUCT_TEST_CASE_SIG
+(
+	"fully_logically_r should determine if the return types of each expression can be converted to the expected one.",
+	"[concepts][operators][logically]",
+	((class T, bool VExpected, class TCombineResult, class TAssignResult), T, VExpected, TCombineResult, TAssignResult),
+	(testable_fully_logically_r),
+	(
+		(int, true, int, int&),
+		(int, false, int, int&&),
+		(logical_target<fully>, true, logical_target<fully>, logical_target<fully>&),
+		(logical_target<fully>, false, int, logical_target<fully>&),
+		(logical_target<fully>, false, logical_target<fully>, logical_target<fully>&&)
 	)
 )
 #pragma warning(default: 26444)

@@ -481,6 +481,16 @@ namespace sl::concepts
 									&& logically_combinable_with_r<TLhs, TRhs, TCombineResult>
 									&& logically_assignable_with_r<TLhs, TRhs, TAssignResult>;
 
+	template <class T>
+	concept fully_logically = invertible<T> && complemented<T>
+							&& logically_combinable<T>
+							&& logically_assignable<T>;
+
+	template <class T, class TCombineResult = std::remove_cvref_t<T>, class TAssignResult = std::remove_cvref_t<T>&>
+	concept fully_logically_r = invertible_r<T, TCombineResult> && complemented_r<T, TCombineResult>
+								&& logically_combinable_r<T, TCombineResult>
+								&& logically_assignable_r<T, TAssignResult>;
+
 	/** @} */
 	/** @} */
 }
