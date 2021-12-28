@@ -10,6 +10,7 @@ add_executable(
 	"concepts/shift_operators.cpp"
 	"concepts/logical_arithmetic_operators.cpp"
 	"unique_handle.cpp"
+	"concepts/stl_symmetrical.cpp"
 )
 
 target_link_libraries(
