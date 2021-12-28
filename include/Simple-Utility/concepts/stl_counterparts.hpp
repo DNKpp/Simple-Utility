@@ -20,8 +20,8 @@ namespace sl::concepts
 	*/
 
 	/**
-	* \defgroup stl_symmetrical stl symmetrical
-	* \brief This group offers symmetrical counterparts concepts to already existing stl concepts.
+	* \defgroup stl_counterpart_concepts stl counterparts
+	* \brief This group offers counterpart concepts for existing stl concepts.
 	* @{
 	*/
 
