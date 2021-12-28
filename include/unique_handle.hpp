@@ -81,6 +81,12 @@ namespace sl
 		}
 
 		[[nodiscard]]
+		constexpr const T& operator *() const
+		{
+			return *m_Value;
+		}
+
+		[[nodiscard]]
 		constexpr explicit operator bool() const noexcept { return m_Value.has_value(); }
 
 		[[nodiscard]]

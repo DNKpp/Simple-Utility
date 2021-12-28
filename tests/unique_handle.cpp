@@ -89,3 +89,12 @@ TEST_CASE("unique_handle::raw should throw bad_handle_access if no value is hold
 
 	REQUIRE_THROWS_AS(handle.raw(), bad_handle_access);
 }
+
+TEST_CASE("unique_handle's operator * should expose a const reference of its value.", "[unique_handle]")
+{
+	constexpr unique_handle<int> handle{ 42 };
+
+	constexpr const int& ref{ *handle };
+
+	STATIC_REQUIRE(ref == 42);
+}
