@@ -29,15 +29,17 @@ jobs:
         sudo apt-get update
         sudo apt-get install ${{ matrix.compiler.pkg }} -y
     - name: Compile tests
+      working-directory: out
       env:
         CXX: ${{ matrix.compiler.exe }}
       run: |
-        cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON -S . -B build
-        cmake --build build -j 4
+        cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON -S ..
+        make -j4
     - name: Run tests
+      working-directory: out/tests
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
-      run: cmake --build build --target test
+      run: ctest --timeout 30 -C Debug -j4
 
   windows:
     runs-on: windows-latest
@@ -56,25 +58,32 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Compile tests
+      working-directory: out
       run: |
-        cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON ${{ matrix.toolset_option }} -S . -B build
-        cmake --build build -j 4
+        cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON ${{ matrix.toolset_option }} ..
+        cmake --build . -j 4
     - name: Run tests
+      working-directory: out/tests
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
-      run: cmake --build build --target test
+      run: ctest --timeout 30 -C Debug -j4
 
-#  macos:
-#    timeout-minutes: 10
-#    runs-on: macOS-latest
-#
-#    steps:
-#    - uses: actions/checkout@v2
-#    - name: Compile tests
-#      run: |
-#        cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON .
-#        cmake --build . -j 4
-#    - name: Run tests
-#      env:
-#        CTEST_OUTPUT_ON_FAILURE: 1
-#      run: ctest --timeout 30 -C Debug -j4
+  macos:
+    runs-on: macOS-latest
+    timeout-minutes: 10
+    
+    strategy:
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Compile tests
+      working-directory: out
+      run: |
+        cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON ..
+        make -j4
+    - name: Run tests
+      working-directory: out/tests
+      env:
+        CTEST_OUTPUT_ON_FAILURE: 1
+      run: ctest --timeout 30 -C Debug -j4
