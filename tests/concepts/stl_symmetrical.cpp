@@ -14,7 +14,7 @@ using namespace sl::concepts;
 #pragma warning(disable: 26444)
 TEMPLATE_TEST_CASE_SIG
 (
-	"constructible_by should behave like std::constructible_from with one constructor argument",
+	"constructs should behave as the symmetrical counterpart of std::constructible_from with one constructor argument",
 	"[concepts][stl_ext]",
 	((class TSource, class TTarget, bool VExpected), TSource, TTarget, VExpected),
 	(int, int, true),
@@ -24,5 +24,5 @@ TEMPLATE_TEST_CASE_SIG
 )
 #pragma warning(default: 26444)
 {
-	REQUIRE(constructible_by<TSource, TTarget> == VExpected);
+	REQUIRE(constructs<TSource, TTarget> == VExpected);
 }
