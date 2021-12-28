@@ -296,171 +296,370 @@ namespace sl::concepts
 	* @{
 	*/
 
+	/**
+	 * \brief Determines whether a type can be used in operator ~ expression.
+	 * \tparam T The type to check
+	 */
 	template <class T>
 	concept complemented = requires(T t)
 	{
 		{ ~t };
 	};
 
+	/**
+	 * \brief Determines whether a type can be used in operator ~ expression and if the return type is convertible
+	 * to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
 	template <class T, class TResult = std::remove_cvref_t<T>>
 	concept complemented_r = requires(T t)
 	{
 		{ ~t } -> std::convertible_to<TResult>;
 	};
 
+	/**
+	 * \brief Determines whether two types can be used in operator & expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
 	template <class TLhs, class TRhs>
 	concept conjunctive_with = requires(TLhs lhs, TRhs rhs)
 	{
 		{ lhs & rhs };
 	};
 
+	/**
+	 * \brief Determines whether two types can be used in operator & expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
 	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>>
 	concept conjunctive_with_r = requires(TLhs lhs, TRhs rhs)
 	{
 		{ lhs & rhs } -> std::convertible_to<TResult>;
 	};
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator & expressions.
+	 * \tparam T The type to check
+	 */
 	template <class T>
 	concept conjunctive = conjunctive_with<T, T>;
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator & expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
 	template <class T, class TResult = std::remove_cvref_t<T>>
 	concept conjunctive_r = conjunctive_with_r<T, T, TResult>;
 
+	/**
+	 * \brief Determines whether two types can be used in operator &= expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
 	template <class TLhs, class TRhs>
 	concept conjunctive_assign_with = requires(TLhs lhs, TRhs rhs)
 	{
 		{ lhs &= rhs };
 	};
 
+	/**
+	 * \brief Determines whether two types can be used in operator &= expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
 	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>&>
 	concept conjunctive_assign_with_r = requires(TLhs lhs, TRhs rhs)
 	{
 		{ lhs &= rhs } -> std::convertible_to<TResult>;
 	};
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator &= expressions.
+	 * \tparam T The type to check
+	 */
 	template <class T>
 	concept conjunctive_assign = conjunctive_assign_with<T, T>;
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator &= expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
 	template <class T, class TResult = std::remove_cvref_t<T>&>
 	concept conjunctive_assign_r = conjunctive_assign_with_r<T, T, TResult>;
 
+	/**
+	 * \brief Determines whether two types can be used in operator | expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
 	template <class TLhs, class TRhs>
 	concept disjunctive_with = requires(TLhs lhs, TRhs rhs)
 	{
 		{ lhs | rhs };
 	};
 
+	/**
+	 * \brief Determines whether two types can be used in operator | expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
 	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>>
 	concept disjunctive_with_r = requires(TLhs lhs, TRhs rhs)
 	{
 		{ lhs | rhs } -> std::convertible_to<TResult>;
 	};
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator | expressions.
+	 * \tparam T The type to check
+	 */
 	template <class T>
 	concept disjunctive = disjunctive_with<T, T>;
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator | expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
 	template <class T, class TResult = std::remove_cvref_t<T>>
 	concept disjunctive_r = disjunctive_with_r<T, T, TResult>;
 
+	/**
+	 * \brief Determines whether two types can be used in operator |= expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
 	template <class TLhs, class TRhs>
 	concept disjunctive_assign_with = requires(TLhs lhs, TRhs rhs)
 	{
 		{ lhs |= rhs };
 	};
 
+	/**
+	 * \brief Determines whether two types can be used in operator |= expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
 	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>&>
 	concept disjunctive_assign_with_r = requires(TLhs lhs, TRhs rhs)
 	{
 		{ lhs |= rhs } -> std::convertible_to<TResult>;
 	};
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator |= expressions.
+	 * \tparam T The type to check
+	 */
 	template <class T>
 	concept disjunctive_assign = disjunctive_assign_with<T, T>;
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator |= expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
 	template <class T, class TResult = std::remove_cvref_t<T>&>
 	concept disjunctive_assign_r = disjunctive_assign_with_r<T, T, TResult>;
 
+	/**
+	 * \brief Determines whether two types can be used in operator ^ expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
 	template <class TLhs, class TRhs>
 	concept exclusive_disjunctive_with = requires(TLhs lhs, TRhs rhs)
 	{
 		{ lhs ^ rhs };
 	};
 
+	/**
+	 * \brief Determines whether two types can be used in operator ^ expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
 	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>>
 	concept exclusive_disjunctive_with_r = requires(TLhs lhs, TRhs rhs)
 	{
 		{ lhs ^ rhs } -> std::convertible_to<TResult>;
 	};
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator ^ expressions.
+	 * \tparam T The type to check
+	 */
 	template <class T>
 	concept exclusive_disjunctive = exclusive_disjunctive_with<T, T>;
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator ^ expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
 	template <class T, class TResult = std::remove_cvref_t<T>>
 	concept exclusive_disjunctive_r = exclusive_disjunctive_with_r<T, T, TResult>;
 
+	/**
+	 * \brief Determines whether two types can be used in operator ^= expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
 	template <class TLhs, class TRhs>
 	concept exclusive_disjunctive_assign_with = requires(TLhs lhs, TRhs rhs)
 	{
 		{ lhs ^= rhs };
 	};
 
+	/**
+	 * \brief Determines whether two types can be used in operator ^= expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
 	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>&>
 	concept exclusive_disjunctive_assign_with_r = requires(TLhs lhs, TRhs rhs)
 	{
 		{ lhs ^= rhs } -> std::convertible_to<TResult>;
 	};
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator ^= expressions.
+	 * \tparam T The type to check
+	 */
 	template <class T>
 	concept exclusive_disjunctive_assign = exclusive_disjunctive_assign_with<T, T>;
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator ^= expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
 	template <class T, class TResult = std::remove_cvref_t<T>&>
 	concept exclusive_disjunctive_assign_r = exclusive_disjunctive_assign_with_r<T, T, TResult>;
 
+	/**
+	 * \brief Determines whether two types can be used in operator &, | amd ^ expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
 	template <class TLhs, class TRhs>
 	concept logically_combinable_with = conjunctive_with<TLhs, TRhs>
 										&& disjunctive_with<TLhs, TRhs>
 										&& exclusive_disjunctive_with<TLhs, TRhs>;
 
+	/**
+	 * \brief Determines whether two types can be used in operator &, | amd ^ expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
 	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>>
 	concept logically_combinable_with_r = conjunctive_with_r<TLhs, TRhs, TResult>
 										&& disjunctive_with_r<TLhs, TRhs, TResult>
 										&& exclusive_disjunctive_with_r<TLhs, TRhs, TResult>;
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator &, | and ^ expressions.
+	 * \tparam T The type to check
+	 */
 	template <class T>
 	concept logically_combinable = conjunctive<T>
 									&& disjunctive<T>
 									&& exclusive_disjunctive<T>;
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator &, | and ^ expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
 	template <class T, class TResult = std::remove_cvref_t<T>>
 	concept logically_combinable_r = conjunctive_r<T, TResult>
 									&& disjunctive_r<T, TResult>
 									&& exclusive_disjunctive_r<T, TResult>;
 
+	/**
+	 * \brief Determines whether two types can be used in operator &=, |= and ^= expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
 	template <class TLhs, class TRhs>
 	concept logically_assignable_with = conjunctive_assign_with<TLhs, TRhs>
 										&& disjunctive_assign_with<TLhs, TRhs>
 										&& exclusive_disjunctive_assign_with<TLhs, TRhs>;
 
+	/**
+	 * \brief Determines whether two types can be used in operator &=, |= and ^= expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
 	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>&>
 	concept logically_assignable_with_r = conjunctive_assign_with_r<TLhs, TRhs, TResult>
 										&& disjunctive_assign_with_r<TLhs, TRhs, TResult>
 										&& exclusive_disjunctive_assign_with_r<TLhs, TRhs, TResult>;
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator &=, |= and ^= expressions.
+	 * \tparam T The type to check
+	 */
 	template <class T>
 	concept logically_assignable = conjunctive_assign<T>
 									&& disjunctive_assign<T>
 									&& exclusive_disjunctive_assign<T>;
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator &=, |= and ^= expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
 	template <class T, class TResult = std::remove_cvref_t<T>&>
 	concept logically_assignable_r = conjunctive_assign_r<T, TResult>
 									&& disjunctive_assign_r<T, TResult>
 									&& exclusive_disjunctive_assign_r<T, TResult>;
 
+	/**
+	 * \brief Determines whether two types can be used in operator &, |, ^, &=, |=, ^= and ~ expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
 	template <class TLhs, class TRhs>
 	concept fully_logical_with = complemented<TLhs>
 								&& logically_combinable_with<TLhs, TRhs>
 								&& logically_assignable_with<TLhs, TRhs>;
 
+	/**
+	 * \brief Determines whether two types can be used in operator &, |, ^, &=, |=, ^= and ~ expressions and if the return types
+	 * are convertible to the expected ones.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TCombineResult The expected return type of combining operations
+	 * \tparam TAssignResult The expected return type of assigning operations
+	 */
 	template <class TLhs,
 			class TRhs,
 			class TCombineResult = std::remove_cvref_t<TLhs>,
@@ -469,18 +668,28 @@ namespace sl::concepts
 									&& logically_combinable_with_r<TLhs, TRhs, TCombineResult>
 									&& logically_assignable_with_r<TLhs, TRhs, TAssignResult>;
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator &, |, ^, &=, |=, ^= and ~ expressions.
+	 * \tparam T The type to check
+	 */
 	template <class T>
 	concept fully_logical = complemented<T>
 							&& logically_combinable<T>
 							&& logically_assignable<T>;
 
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator &, |, ^, &=, |=, ^= and ~ expressions and if the
+	 * return types are convertible to the expected ones.
+	 * \tparam T The type to check
+	 * \tparam TCombineResult The expected return type of combining operations
+	 * \tparam TAssignResult The expected return type of assigning operations
+	 */
 	template <class T, class TCombineResult = std::remove_cvref_t<T>, class TAssignResult = std::remove_cvref_t<T>&>
 	concept fully_logical_r = complemented_r<T, TCombineResult>
 							&& logically_combinable_r<T, TCombineResult>
 							&& logically_assignable_r<T, TAssignResult>;
 
 	/** @} */
-
 
 	template <class T>
 	concept invertible = requires(T t)
