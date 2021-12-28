@@ -17,7 +17,6 @@ namespace
 	{
 		none = 0,
 		complement_op = 1 << 1,
-		invert_op = 1 << 2,
 
 		conjunctive_op = 1 << 3,
 		disjunctive_op = 1 << 4,
@@ -35,7 +34,7 @@ namespace
 		disjunctive_assign_with_op = 1 << 13,
 		ex_disjunctive_assign_with_op = 1 << 14,
 
-		fully = complement_op | invert_op
+		fully = complement_op
 				| conjunctive_op | disjunctive_op | ex_disjunctive_op
 				| conjunctive_with_op | disjunctive_with_op | ex_disjunctive_with_op
 				| conjunctive_assign_op | disjunctive_assign_op | ex_disjunctive_assign_op
@@ -53,12 +52,6 @@ namespace
 
 		logical_target operator ~() const
 			requires ((VLogical & complement_op) != 0)
-		{
-			return {};
-		}
-
-		logical_target operator !() const
-			requires ((VLogical & invert_op) != 0)
 		{
 			return {};
 		}
@@ -140,11 +133,6 @@ namespace
 	TESTABLE_UNARY_CONCEPT(complemented);
 
 	TESTABLE_UNARY_CONCEPT_R(complemented_r);
-
-	// invertible
-	TESTABLE_UNARY_CONCEPT(invertible);
-
-	TESTABLE_UNARY_CONCEPT_R(invertible_r);
 
 	// conjunctive
 	TESTABLE_UNARY_CONCEPT(conjunctive);
@@ -250,44 +238,21 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 }
 
 #pragma warning(disable: 26444)
-TEMPLATE_PRODUCT_TEST_CASE_SIG
+TEMPLATE_TEST_CASE_SIG
 (
-	"invertible(_r) should determine if a type can be used within an operator ! expression.",
-	"[concepts][operators][logically]",
-	((class T, bool VExpected), T, VExpected),
-	(testable_invertible, testable_invertible_r),
-	(
-		(int, true),
-		(float, true),
-		(fail_t, false),
-		(logical_target<invert_op>, true),
-		(logical_target<fully ^ invert_op>, false)
-	)
-)
-#pragma warning(default: 26444)
-{
-	REQUIRE(TestType::value);
-}
-
-#pragma warning(disable: 26444)
-TEMPLATE_PRODUCT_TEST_CASE_SIG
-(
-	"unary logically _r concepts should determine if a return type of an expression can be converted to the expected one.",
+	"complemented_r should determine if a return type of the expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected, class TResult), T, VExpected, TResult),
-	(testable_complemented_r, testable_invertible_r),
-	(
-		(int, true, int),
-		(int, true, float),
-		(int, false, int&),
-		(int, false, fail_t),
-		(logical_target<fully>, true, logical_target<fully>),
-		(logical_target<fully>, false, int)
-	)
+	(int, true, int),
+	(int, true, float),
+	(int, false, int&),
+	(int, false, fail_t),
+	(logical_target<fully>, true, logical_target<fully>),
+	(logical_target<fully>, false, int)
 )
 #pragma warning(default: 26444)
 {
-	REQUIRE(TestType::value);
+	REQUIRE(testable_complemented_r<T, VExpected, TResult>::value);
 }
 
 #pragma warning(disable: 26444)
@@ -717,7 +682,6 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(int, float, false),
 		(int, fail_t, false),
 		(logical_target<fully>, int, true),
-		(logical_target<fully ^ invert_op>, int, false),
 		(logical_target<fully ^ complement_op>, int, false),
 		(logical_target<fully ^ conjunctive_with_op>, int, false),
 		(logical_target<fully ^ disjunctive_with_op>, int, false),
@@ -765,7 +729,6 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(float, false),
 		(fail_t, false),
 		(logical_target<fully>, true),
-		(logical_target<fully ^ invert_op>, false),
 		(logical_target<fully ^ complement_op>, false),
 		(logical_target<fully ^ conjunctive_op>, false),
 		(logical_target<fully ^ disjunctive_op>, false),
