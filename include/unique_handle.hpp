@@ -30,6 +30,8 @@ namespace sl
 	// ReSharper disable once IdentifierTypo
 	constexpr nullhandle_t nullhandle{};
 
+	using bad_handle_access = std::bad_optional_access;
+
 	template <std::movable T>
 	class unique_handle
 	{
@@ -70,6 +72,12 @@ namespace sl
 		{
 			m_Value = std::forward<T2>(value);
 			return *this;
+		}
+
+		[[nodiscard]]
+		constexpr const T& raw() const
+		{
+			return m_Value.value();
 		}
 
 		[[nodiscard]]

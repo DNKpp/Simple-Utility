@@ -73,3 +73,19 @@ TEST_CASE("unique_handle should be assignable by value.", "[unique_handle]")
 	STATIC_REQUIRE(handle.has_value());
 	STATIC_REQUIRE(handle);
 }
+
+TEST_CASE("unique_handle::raw should expose a const reference of its value.", "[unique_handle]")
+{
+	constexpr unique_handle<int> handle{ 1337 };
+
+	constexpr const int& ref{ handle.raw() };
+
+	STATIC_REQUIRE(ref == 1337);
+}
+
+TEST_CASE("unique_handle::raw should throw bad_handle_access if no value is hold.", "[unique_handle]")
+{
+	constexpr unique_handle<int> handle{};
+
+	REQUIRE_THROWS_AS(handle.raw(), bad_handle_access);
+}
