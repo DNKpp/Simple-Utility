@@ -467,6 +467,20 @@ namespace sl::concepts
 	concept logically_assignable_r = conjunctive_assign_r<T, TResult>
 									&& disjunctive_assign_r<T, TResult>
 									&& exclusive_disjunctive_assign_r<T, TResult>;
+
+	template <class TLhs, class TRhs>
+	concept fully_logically_with = invertible<TLhs> && complemented<TLhs>
+									&& logically_combinable_with<TLhs, TRhs>
+									&& logically_assignable_with<TLhs, TRhs>;
+
+	template <class TLhs,
+			class TRhs,
+			class TCombineResult = std::remove_cvref_t<TLhs>,
+			class TAssignResult = std::remove_cvref_t<TLhs>&>
+	concept fully_logically_with_r = invertible_r<TLhs, TCombineResult> && complemented_r<TLhs, TCombineResult>
+									&& logically_combinable_with_r<TLhs, TRhs, TCombineResult>
+									&& logically_assignable_with_r<TLhs, TRhs, TAssignResult>;
+
 	/** @} */
 	/** @} */
 }

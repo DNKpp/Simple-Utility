@@ -218,6 +218,17 @@ namespace
 	TESTABLE_BINARY_CONCEPT(logically_assignable_with);
 
 	TESTABLE_BINARY_CONCEPT_R(logically_assignable_with_r);
+
+	// fully logically
+
+	//TESTABLE_UNARY_CONCEPT(fully_logically);
+
+	//TESTABLE_UNARY_CONCEPT_R(fully_logically_r);
+
+	TESTABLE_BINARY_CONCEPT(fully_logically_with);
+
+	TESTABLE_BINARY_CONCEPT_R_R(fully_logically_with_r);
+
 }
 
 #pragma warning(disable: 26444)
@@ -688,6 +699,54 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 		(logical_target<fully ^ conjunctive_assign_with_op>, int, false),
 		(logical_target<fully ^ disjunctive_assign_with_op>, int, false),
 		(logical_target<fully ^ ex_disjunctive_assign_with_op>, int, false)
+	)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(TestType::value);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_PRODUCT_TEST_CASE_SIG
+(
+	"fully_logically_with(_r) should determine if two types can be used within operator ~, !, &, |, ^, &=, |= and ^= expressions.",
+	"[concepts][operators][logically]",
+	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
+	(testable_fully_logically_with, testable_fully_logically_with_r),
+	(
+		(int, int, true),
+		(int, float, false),
+		(int, fail_t, false),
+		(logical_target<fully>, int, true),
+		(logical_target<fully ^ invert_op>, int, false),
+		(logical_target<fully ^ complement_op>, int, false),
+		(logical_target<fully ^ conjunctive_with_op>, int, false),
+		(logical_target<fully ^ disjunctive_with_op>, int, false),
+		(logical_target<fully ^ ex_disjunctive_with_op>, int, false),
+		(logical_target<fully ^ conjunctive_assign_with_op>, int, false),
+		(logical_target<fully ^ disjunctive_assign_with_op>, int, false),
+		(logical_target<fully ^ ex_disjunctive_assign_with_op>, int, false)
+	)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(TestType::value);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_PRODUCT_TEST_CASE_SIG
+(
+	"fully_logically_with_r should determine if the return types of each expression can be converted to the expected one.",
+	"[concepts][operators][logically]",
+	((class TLhs, class TRhs, bool VExpected, class TCombineResult, class TAssignResult),
+		TLhs, TRhs, VExpected, TCombineResult, TAssignResult),
+	(testable_fully_logically_with_r),
+	(
+		(int, int, true, int, int&),
+		(int, int, false, int, int&&),
+		(logical_target<fully>, int, true, logical_target<fully>, logical_target<fully>&),
+		(logical_target<fully>, int, false, int, logical_target<fully>&),
+		(logical_target<fully>, int, false, logical_target<fully>, logical_target<fully>&&)
 	)
 )
 #pragma warning(default: 26444)
