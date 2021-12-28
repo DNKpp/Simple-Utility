@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef SL_UNIQUE_HANDLE_HPP
-#define SL_UNIQUE_HANDLE_HPP
+#ifndef SL_STL_SYMMETRICAL_HPP
+#define SL_STL_SYMMETRICAL_HPP
 
 #pragma once
 
