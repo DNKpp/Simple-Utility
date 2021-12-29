@@ -176,6 +176,19 @@ TEST_CASE("unique_handle should be move assignable and receive the value of othe
 	REQUIRE(result);
 }
 
+TEST_CASE("moving unique_handle with itself should change nothing.", "[unique_handle]")
+{
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
+	const bool result = []
+	{
+		test_handle handle{ 1337 };
+		handle = std::move(handle);
+		return handle.is_valid() && *handle == 1337;
+	}();
+
+	REQUIRE(result);
+}
+
 TEST_CASE("unique_handle should be swapable.", "[unique_handle]")
 {
 	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
