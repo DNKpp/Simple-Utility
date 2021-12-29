@@ -12,6 +12,7 @@
 #include <concepts>
 #include <optional>
 
+#include "Simple-Utility/concepts/operators.hpp"
 #include "Simple-Utility/concepts/stl_counterparts.hpp"
 
 // some of the std::optional interface hasn't been declared constexpr before
@@ -525,6 +526,29 @@ namespace sl
 	//}
 
 	/** @} */
+	[[nodiscard]]
+	constexpr decltype(auto) value_unchecked(concepts::dereferencable auto&& closure) noexcept
+	{
+		return *closure;
+	}
+
+	template <class TClosure>
+		requires requires(TClosure c)
+		{
+			{ c.has_value() } -> std::convertible_to<bool>;
+		}
+	[[nodiscard]]
+	constexpr bool has_value(const TClosure& closure) noexcept
+	{
+		return closure.has_value();
+	}
+
+	template <class T, class TDeleteAction>
+	[[nodiscard]]
+	constexpr bool has_value(const unique_handle<T, TDeleteAction>& handle) noexcept
+	{
+		return handle.is_valid();
+	}
 }
 
 #endif
