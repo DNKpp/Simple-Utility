@@ -5,6 +5,7 @@
 
 #include <catch2/catch.hpp>
 
+#include "Simple-Utility/conditional_algorithms.hpp"
 #include "Simple-Utility/unique_handle.hpp"
 
 #include <optional>
@@ -29,11 +30,18 @@ namespace
 	}
 }
 
+template <>
+struct sl::conditional_traits<target_t>
+{
+	using value_type = int;
+	constexpr static auto null{ target_t{ 0 } };
+};
+
 #pragma warning(disable: 26444)
 TEMPLATE_TEST_CASE_SIG
 (
 	"has_value should use the expected overload",
-	"[algorithm][unique_handle]",
+	"[algorithm]",
 	((class T, auto VInit, bool VExpected), T, VInit, VExpected),
 	(sl::unique_handle<int>, sl::nullhandle, false),
 	(sl::unique_handle<int>, 42, true),
@@ -53,8 +61,10 @@ TEMPLATE_TEST_CASE_SIG
 TEMPLATE_TEST_CASE
 (
 	"value_unchecked should use the expected overload",
-	"[algorithm][unique_handle]",
-	sl::unique_handle<int>, std::optional<int>, target_t
+	"[algorithm]",
+	sl::unique_handle<int>,
+	std::optional<int>,
+	target_t
 )
 #pragma warning(default: 26444)
 {
@@ -69,7 +79,7 @@ TEMPLATE_TEST_CASE
 TEMPLATE_TEST_CASE_SIG
 (
 	"has_value should use the expected overload",
-	"[algorithm][unique_handle]",
+	"[algorithm]",
 	((class T, auto VInit, auto VAlt, auto VExpectedValue), T, VInit, VAlt, VExpectedValue),
 	(sl::unique_handle<int>, sl::nullhandle, 42, 42),
 	(sl::unique_handle<int>, 1337, 42, 1337),

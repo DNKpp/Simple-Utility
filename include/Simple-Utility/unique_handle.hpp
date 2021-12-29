@@ -12,7 +12,6 @@
 #include <concepts>
 #include <optional>
 
-#include "Simple-Utility/concepts/operators.hpp"
 #include "Simple-Utility/concepts/stl_counterparts.hpp"
 
 // some of the std::optional interface hasn't been declared constexpr before
@@ -526,42 +525,6 @@ namespace sl
 	//}
 
 	/** @} */
-	[[nodiscard]]
-	constexpr decltype(auto) value_unchecked(concepts::dereferencable auto&& closure) noexcept
-	{
-		return *closure;
-	}
-
-	template <class TClosure>
-	[[nodiscard]]
-	constexpr bool has_value(const TClosure& closure) noexcept
-		requires requires { static_cast<bool>(closure); }
-	{
-		return static_cast<bool>(closure);
-	}
-
-	template <class TClosure, class T>
-	[[nodiscard]]
-	constexpr auto value_or(TClosure&& closure, T&& alternative)
-		requires requires { closure.value_or(std::forward<T>(alternative)); }
-	{
-		// let existing implementations handle the errors; don't want to over-constraint this
-		return closure.value_or(std::forward<T>(alternative));
-	}
-
-	template <class TClosure, class T>
-	[[nodiscard]]
-	constexpr auto value_or(TClosure&& closure, T&& alternative)
-	{
-		using value_t = std::remove_cvref_t<decltype(value_unchecked(std::forward<TClosure>(closure)))>;
-		static_assert(std::convertible_to<T, value_t>, "alternative must be convertible to the actual value type.");
-
-		if (has_value(closure))
-		{
-			return value_unchecked(std::forward<TClosure>(closure));
-		}
-		return std::forward<T>(alternative);
-	}
 }
 
 #endif
