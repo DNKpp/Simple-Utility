@@ -12,7 +12,7 @@ add_executable(
 	"concepts/logical_arithmetic_operators.cpp"
 	"unique_handle.cpp"
 	"concepts/stl_counterparts.cpp"
-	"unique_handle_algorithms.cpp"
+	"conditional_algorithms.cpp"
 )
 
 target_link_libraries(
