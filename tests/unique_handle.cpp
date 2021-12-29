@@ -218,11 +218,14 @@ TEST_CASE("unique_handle should be swapable.", "[unique_handle]")
 
 TEST_CASE("unique_handle::raw should expose a const reference of its value.", "[unique_handle]")
 {
-	constexpr test_handle handle{ 1337 };
+	constexpr bool result = []
+	{
+		test_handle handle{ 1337 };
+		const int& ref{ handle.raw() };
+		return ref == 1337;
+	}();
 
-	constexpr const int& ref{ handle.raw() };
-
-	STATIC_REQUIRE(ref == 1337);
+	STATIC_REQUIRE(result);
 }
 
 TEST_CASE("unique_handle::raw should throw bad_handle_access if no value is hold.", "[unique_handle]")
@@ -234,27 +237,32 @@ TEST_CASE("unique_handle::raw should throw bad_handle_access if no value is hold
 
 TEST_CASE("unique_handle's operator * should expose a const reference of its value.", "[unique_handle]")
 {
-	constexpr test_handle handle{ 42 };
+	constexpr bool result = []
+	{
+		test_handle handle{ 42 };
+		const int& ref{ *handle };
+		return ref == 42;
+	}();
 
-	constexpr const int& ref{ *handle };
-
-	STATIC_REQUIRE(ref == 42);
+	REQUIRE(result);
 }
 
-TEST_CASE("unique_handle's operator -> const overload should expose a const pointer to its value.", "[unique_handle]")
+TEMPLATE_TEST_CASE
+(
+	"unique_handle's operator -> overload should expose a pointer to its value.",
+	"[unique_handle]",
+	test_handle,
+	const test_handle
+)
 {
-	constexpr auto access_via_ptr = []<template<class...> class THandle>()
+	constexpr bool result = []
 	{
-		THandle<int> handle{ 1337 };
+		TestType handle{ 1337 };
 		auto* ptr = handle.operator ->();
-		return *ptr;
-	};
+		return *ptr == 1337;
+	}();
 
-	constexpr int non_const_result = access_via_ptr.operator()<unique_handle>();
-	constexpr int const_result = access_via_ptr.operator()<const unique_handle>();
-
-	STATIC_REQUIRE(non_const_result == 1337);
-	STATIC_REQUIRE(const_result == 1337);
+	STATIC_REQUIRE(result);
 }
 
 TEST_CASE("unique_handle::reset should reset to a nullhandle.", "[unique_handle]")
