@@ -543,23 +543,24 @@ namespace sl
 	template <class TClosure, class T>
 	[[nodiscard]]
 	constexpr auto value_or(TClosure&& closure, T&& alternative)
+		requires requires { closure.value_or(std::forward<T>(alternative)); }
 	{
-		if constexpr (requires { closure.value_or(std::forward<T>(alternative)); })
-		{
-			// let existing implementations handle the errors; don't want to over-constraint this
-			return closure.value_or(std::forward<T>(alternative));
-		}
-		else
-		{
-			using value_t = std::remove_cvref_t<decltype(value_unchecked(std::forward<TClosure>(closure)))>;
-			static_assert(std::convertible_to<T, value_t>, "alternative must be convertible to the actual value type.");
+		// let existing implementations handle the errors; don't want to over-constraint this
+		return closure.value_or(std::forward<T>(alternative));
+	}
 
-			if (has_value(closure))
-			{
-				return value_unchecked(std::forward<TClosure>(closure));
-			}
-			return std::forward<T>(alternative);
+	template <class TClosure, class T>
+	[[nodiscard]]
+	constexpr auto value_or(TClosure&& closure, T&& alternative)
+	{
+		using value_t = std::remove_cvref_t<decltype(value_unchecked(std::forward<TClosure>(closure)))>;
+		static_assert(std::convertible_to<T, value_t>, "alternative must be convertible to the actual value type.");
+
+		if (has_value(closure))
+		{
+			return value_unchecked(std::forward<TClosure>(closure));
 		}
+		return std::forward<T>(alternative);
 	}
 }
 
