@@ -146,13 +146,13 @@ namespace sl
 		constexpr const T& raw() const { return m_Value.value(); }
 
 		[[nodiscard]]
-		constexpr const T& operator *() const { return *m_Value; }
+		constexpr const T& operator *() const noexcept { return *m_Value; }
 
 		[[nodiscard]]
-		constexpr T* operator ->() { return &*m_Value; }
+		constexpr T* operator ->() noexcept { return &*m_Value; }
 
 		[[nodiscard]]
-		constexpr const T* operator ->() const { return &*m_Value; }
+		constexpr const T* operator ->() const noexcept { return &*m_Value; }
 
 		[[nodiscard]]
 		constexpr explicit operator bool() const noexcept { return m_Value.has_value(); }
