@@ -445,28 +445,12 @@ TEMPLATE_TEST_CASE_SIG
 	REQUIRE(result == VExpected);
 }
 
-#pragma warning(disable: 26444)
-TEMPLATE_TEST_CASE_SIG
-(
-	"unique_handle should be three-way-comparable with unqiue_handle of same type.",
-	"[unique_handle]",
-	((auto VLhs, auto VRhs, auto VResult), VLhs, VRhs, VResult),
-	(nullhandle, nullhandle, std::strong_ordering::equal),
-	(nullhandle, 42, std::strong_ordering::less),
-	(42, nullhandle, std::strong_ordering::greater),
-	(42, 1337, std::strong_ordering::less)
-)
-#pragma warning(disable: 26444)
+TEST_CASE("unique_handle should be three-way-comparable with unqiue_handle of same type.", "[unique_handle]")
 {
-	constexpr auto result = []
-	{
-		const test_handle lhs{ VLhs };
-		const test_handle rhs{ VRhs };
-
-		return lhs <=> rhs;
-	}();
-
-	STATIC_REQUIRE(result == VResult);
+	STATIC_REQUIRE((test_handle{} <=> test_handle{}) == std::strong_ordering::equal);
+	STATIC_REQUIRE((test_handle{} <=> test_handle{ 42 }) == std::strong_ordering::less);
+	STATIC_REQUIRE((test_handle{42 } <=> test_handle{}) == std::strong_ordering::greater);
+	STATIC_REQUIRE((test_handle{42 } <=> test_handle{1337}) == std::strong_ordering::less);
 }
 
 TEST_CASE("unique_handle should be three-way-comparable with nullhandle.", "[unique_handle]")
