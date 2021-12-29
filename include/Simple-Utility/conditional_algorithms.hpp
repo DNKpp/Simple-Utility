@@ -7,6 +7,7 @@
 #define SL_UTILITY_CONDITIONAL_ALGORITHMS_HPP
 
 #include <optional>
+#include <memory>
 
 #include "Simple-Utility/unique_handle.hpp"
 #include "Simple-Utility/concepts/operators.hpp"
@@ -36,6 +37,28 @@ namespace sl
 	{
 		using value_type = typename std::optional<TArgs...>::value_type;
 		constexpr static auto null{ std::nullopt };
+	};
+
+	template <class... TArgs>
+	struct conditional_traits<std::unique_ptr<TArgs...>>
+	{
+		using value_type = typename std::unique_ptr<TArgs...>::element_type;
+		constexpr static std::nullptr_t null{ nullptr };
+	};
+
+	template <class... TArgs>
+	struct conditional_traits<std::shared_ptr<TArgs...>>
+	{
+		using value_type = typename std::shared_ptr<TArgs...>::element_type;
+		constexpr static std::nullptr_t null{ nullptr };
+	};
+
+	template <class T>
+		requires std::is_pointer_v<T>
+	struct conditional_traits<T>
+	{
+		using value_type = std::remove_pointer_t<T>;
+		constexpr static std::nullptr_t null{ nullptr };
 	};
 
 	[[nodiscard]]
