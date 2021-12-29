@@ -101,8 +101,9 @@ namespace sl
 		unique_handle(const unique_handle&) = delete;
 		unique_handle& operator =(const unique_handle&) = delete;
 
-		constexpr unique_handle(nullhandle_t) noexcept
-			: m_Value{ std::nullopt }
+		constexpr unique_handle(nullhandle_t, const delete_action_type& deleteAction = delete_action_type()) noexcept
+			: m_Value{ std::nullopt },
+			m_DeleteAction{ deleteAction }
 		{
 		}
 
@@ -188,9 +189,6 @@ namespace sl
 
 		[[nodiscard]]
 		constexpr bool is_valid() const noexcept { return m_Value.has_value(); }
-
-		[[nodiscard]]
-		constexpr delete_action_type& delete_action() noexcept { return m_DeleteAction; }
 
 		[[nodiscard]]
 		constexpr const delete_action_type& delete_action() const noexcept { return m_DeleteAction; }

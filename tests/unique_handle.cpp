@@ -74,6 +74,19 @@ TEST_CASE("unique_handle should be explicitly null constructible by nullhandle."
 	STATIC_REQUIRE(!handle);
 }
 
+TEST_CASE("unique_handle should be empty constructible by nullhandle and deleteAction.", "[unique_handle]")
+{
+	constexpr bool result = []
+	{
+		int testValue = 1337;
+		const test_handle handle{ nullhandle, delete_action_mock{ &testValue } };
+
+		return !handle && *handle.delete_action().invoke_counter == 1337;
+	}();
+
+	REQUIRE(result);
+}
+
 TEST_CASE("unique_handle should be assignable by nullhandle.", "[unique_handle]")
 {
 	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
@@ -195,8 +208,7 @@ TEMPLATE_TEST_CASE_SIG
 	const bool result = []
 	{
 		int counter{};
-		test_handle temp{ VInit };
-		temp.delete_action() = delete_action_mock{ .invoke_counter = &counter };
+		test_handle temp{ VInit, delete_action_mock{ .invoke_counter = &counter } };
 		temp = VAssign;
 		return counter == 1;
 	}();
@@ -390,8 +402,7 @@ TEMPLATE_TEST_CASE_SIG
 	const bool result = []
 	{
 		int counter{};
-		test_handle temp{ VInit };
-		temp.delete_action() = delete_action_mock{ .invoke_counter = &counter };
+		test_handle temp{ VInit, delete_action_mock{ .invoke_counter = &counter } };
 		temp.reset();
 		return counter == 1;
 	}();
@@ -426,8 +437,7 @@ TEMPLATE_TEST_CASE_SIG
 	{
 		int counter{};
 		{
-			test_handle temp{ VInit };
-			temp.delete_action() = delete_action_mock{ .invoke_counter = &counter };
+			const test_handle temp{ VInit,  delete_action_mock{ .invoke_counter = &counter } };
 		}
 		return counter == 1;
 	}();
