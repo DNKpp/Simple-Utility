@@ -114,12 +114,19 @@ namespace sl
 			return *this;
 		}
 
+		constexpr unique_handle(const delete_action_type& deleteAction) noexcept
+			: m_Value{ std::nullopt },
+			m_DeleteAction{ deleteAction }
+		{
+		}
+
 		template <concepts::constructs<T> T2>
 			requires concepts::not_same_as<std::remove_cvref_t<T2>, unique_handle>
 					&& concepts::not_same_as<std::remove_cvref_t<T2>, nullhandle_t>
 		explicit (!std::convertible_to<T2&&, T>)
-		constexpr unique_handle(T2&& value)
-			: m_Value{ std::forward<T2>(value) }
+		constexpr unique_handle(T2&& value, const delete_action_type& deleteAction = delete_action_type{})
+			: m_Value{ std::forward<T2>(value) },
+			m_DeleteAction{ deleteAction }
 		{
 		}
 
@@ -139,6 +146,14 @@ namespace sl
 			requires std::constructible_from<T, TArgs...>
 		constexpr explicit unique_handle(std::in_place_t, TArgs&&... args)
 			: m_Value{ std::in_place, std::forward<TArgs>(args)... }
+		{
+		}
+
+		template <class... TArgs>
+			requires std::constructible_from<T, TArgs...>
+		constexpr explicit unique_handle(std::in_place_t, const delete_action_type& deleteAction, TArgs&&... args)
+			: m_Value{ std::in_place, std::forward<TArgs>(args)... },
+			m_DeleteAction{ deleteAction }
 		{
 		}
 

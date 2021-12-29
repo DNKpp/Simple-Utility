@@ -89,6 +89,19 @@ TEST_CASE("unique_handle should be assignable by nullhandle.", "[unique_handle]"
 	REQUIRE(!handle);
 }
 
+TEST_CASE("unique_handle should be empty constructible by deleteAction.", "[unique_handle]")
+{
+	constexpr bool result = []
+	{
+		int testValue = 1337;
+		const test_handle handle{ delete_action_mock{ &testValue } };
+
+		return !handle && *handle.delete_action().invoke_counter == 1337;
+	}();
+
+	REQUIRE(result);
+}
+
 TEST_CASE("unique_handle should be constructible by value.", "[unique_handle]")
 {
 	constexpr test_handle handle{ 42 };
@@ -97,22 +110,14 @@ TEST_CASE("unique_handle should be constructible by value.", "[unique_handle]")
 	STATIC_REQUIRE(handle);
 }
 
-TEST_CASE("unique_handle should be explicitly in-place construct value when std::in_place token is used.", "[unique_handle]")
+TEST_CASE("unique_handle should be constructible by value and deleteAction.", "[unique_handle]")
 {
-	constexpr unique_handle<value_t> handle{ std::in_place, 42, 1337 };
-
-	STATIC_REQUIRE(handle->a == 42);
-	STATIC_REQUIRE(handle->z == 1337);
-}
-
-TEST_CASE("unique_handle::emplace constructs value in place.", "[unique_handle]")
-{
-	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
-	const bool result = []
+	constexpr bool result = []
 	{
-		unique_handle<value_t> handle{};
-		handle.emplace(1337, 42);
-		return handle->a == 1337 && handle->z == 42;
+		int testValue = 1337;
+		const test_handle handle{ 42, delete_action_mock{ &testValue } };
+
+		return *handle == 42 && *handle.delete_action().invoke_counter == 1337;
 	}();
 
 	REQUIRE(result);
@@ -131,6 +136,46 @@ TEST_CASE("unique_handle should be assignable by value.", "[unique_handle]")
 
 	REQUIRE(handle.is_valid());
 	REQUIRE(handle);
+}
+
+TEST_CASE("unique_handle should be explicitly in-place construct value when std::in_place token is used.", "[unique_handle]")
+{
+	constexpr unique_handle<value_t> handle{ std::in_place, 42, 1337 };
+
+	STATIC_REQUIRE(handle->a == 42);
+	STATIC_REQUIRE(handle->z == 1337);
+}
+
+TEST_CASE
+(
+	"unique_handle should be explicitly in-place construct value and deleteAction when std::in_place token is used.",
+	"[unique_handle]"
+)
+{
+	constexpr bool result = []
+	{
+		int testValue = 1337;
+		const unique_handle<value_t, delete_action_mock> handle{ std::in_place, delete_action_mock{ &testValue }, 42, -1 };
+
+		return handle->a == 42
+				&& handle->z == -1
+				&& *handle.delete_action().invoke_counter == 1337;
+	}();
+
+	REQUIRE(result);
+}
+
+TEST_CASE("unique_handle::emplace constructs value in place.", "[unique_handle]")
+{
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
+	const bool result = []
+	{
+		unique_handle<value_t> handle{};
+		handle.emplace(1337, 42);
+		return handle->a == 1337 && handle->z == 42;
+	}();
+
+	REQUIRE(result);
 }
 
 #pragma warning(disable: 26444)
