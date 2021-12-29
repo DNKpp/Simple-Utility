@@ -205,6 +205,39 @@ namespace sl
 				std::invoke(m_DeleteAction, *m_Value);
 		}
 	};
+
+	template <class T, class TDeleteAction>
+	[[nodiscard]]
+	constexpr std::compare_three_way_result_t<T> operator <=>
+	(
+		const unique_handle<T, TDeleteAction>& lhs,
+		const unique_handle<T, TDeleteAction>& rhs
+	)
+	{
+		if (lhs && rhs)
+		{
+			return *lhs <=> *rhs;
+		}
+		return lhs.is_valid() <=> rhs.is_valid();
+	}
+
+	template <class T, class TDeleteAction>
+	[[nodiscard]]
+	constexpr std::compare_three_way_result_t<T> operator <=>(const unique_handle<T, TDeleteAction>& lhs, const T& rhs)
+	{
+		if (lhs)
+		{
+			return *lhs <=> rhs;
+		}
+		return std::compare_three_way_result_t<T>::less;
+	}
+
+	template <class T, class TDeleteAction>
+	[[nodiscard]]
+	constexpr std::strong_ordering operator <=>(const unique_handle<T, TDeleteAction>& lhs, nullhandle_t) noexcept
+	{
+		return lhs.is_valid() <=> false;
+	}
 }
 
 #endif
