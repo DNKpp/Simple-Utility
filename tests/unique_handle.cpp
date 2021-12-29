@@ -121,7 +121,7 @@ TEST_CASE("unique_handle::emplace constructs value in place.", "[unique_handle]"
 TEST_CASE("unique_handle should be assignable by value.", "[unique_handle]")
 {
 	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
-	test_handle handle = []
+	const test_handle handle = []
 	{
 		// ReSharper disable once CppInitializedValueIsAlwaysRewritten
 		test_handle temp{};
@@ -164,9 +164,8 @@ TEST_CASE("unique_handle should be move constructible and invalidate the source.
 	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
 	const bool result = []
 	{
-		// ReSharper disable once CppInitializedValueIsAlwaysRewritten
 		test_handle source{ 42 };
-		test_handle target{ std::move(source) };
+		const test_handle target{ std::move(source) };
 		return !source.is_valid() && target.is_valid();
 	}();
 
