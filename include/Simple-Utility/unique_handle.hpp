@@ -221,9 +221,9 @@ namespace sl
 		return lhs.is_valid() <=> rhs.is_valid();
 	}
 
-	template <class T, class TDeleteAction>
+	template <class T, class TDeleteAction, std::three_way_comparable_with<T> T2>
 	[[nodiscard]]
-	constexpr std::compare_three_way_result_t<T> operator <=>(const unique_handle<T, TDeleteAction>& lhs, const T& rhs)
+	constexpr std::compare_three_way_result_t<T, T2> operator <=>(const unique_handle<T, TDeleteAction>& lhs, const T2& rhs)
 	{
 		if (lhs)
 		{
