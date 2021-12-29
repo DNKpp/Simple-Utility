@@ -64,3 +64,25 @@ TEMPLATE_TEST_CASE
 
 	STATIC_REQUIRE(value_unchecked(object) == 42);
 }
+
+#pragma warning(disable: 26444)
+TEMPLATE_TEST_CASE_SIG
+(
+	"has_value should use the expected overload",
+	"[algorithm][unique_handle]",
+	((class T, auto VInit, auto VAlt, auto VExpectedValue), T, VInit, VAlt, VExpectedValue),
+	(sl::unique_handle<int>, sl::nullhandle, 42, 42),
+	(sl::unique_handle<int>, 1337, 42, 1337),
+	(std::optional<int>, std::nullopt, 42, 42),
+	(target_t, 1337, 42, 1337)
+)
+#pragma warning(default: 26444)
+{
+	constexpr auto value = []
+	{
+		T object{ VInit };
+		return sl::value_or(std::move(object), VAlt);
+	}();
+
+	REQUIRE(value == VExpectedValue);
+}
