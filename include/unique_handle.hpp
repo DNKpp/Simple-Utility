@@ -135,6 +135,13 @@ namespace sl
 			return *this;
 		}
 
+		SL_UNIQUE_HANDLE_FULL_CONSTEXPR void reset() noexcept
+		{
+			invoke_delete_action_if_necessary();
+
+			m_Value.reset();
+		}
+
 		[[nodiscard]]
 		constexpr const T& raw() const { return m_Value.value(); }
 
@@ -152,14 +159,6 @@ namespace sl
 
 		[[nodiscard]]
 		constexpr bool is_valid() const noexcept { return m_Value.has_value(); }
-
-		[[nodiscard]]
-		SL_UNIQUE_HANDLE_FULL_CONSTEXPR void reset() noexcept
-		{
-			invoke_delete_action_if_necessary();
-
-			m_Value.reset();
-		}
 
 		[[nodiscard]]
 		constexpr delete_action_type& delete_action() noexcept { return m_DeleteAction; }
