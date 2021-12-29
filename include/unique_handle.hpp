@@ -136,28 +136,16 @@ namespace sl
 		}
 
 		[[nodiscard]]
-		constexpr const T& raw() const
-		{
-			return m_Value.value();
-		}
+		constexpr const T& raw() const { return m_Value.value(); }
 
 		[[nodiscard]]
-		constexpr const T& operator *() const
-		{
-			return *m_Value;
-		}
+		constexpr const T& operator *() const { return *m_Value; }
 
 		[[nodiscard]]
-		constexpr T* operator ->()
-		{
-			return &*m_Value;
-		}
+		constexpr T* operator ->() { return &*m_Value; }
 
 		[[nodiscard]]
-		constexpr const T* operator ->() const
-		{
-			return &*m_Value;
-		}
+		constexpr const T* operator ->() const { return &*m_Value; }
 
 		[[nodiscard]]
 		constexpr explicit operator bool() const noexcept { return m_Value.has_value(); }
@@ -174,16 +162,10 @@ namespace sl
 		}
 
 		[[nodiscard]]
-		constexpr delete_action_type& delete_action() noexcept
-		{
-			return m_DeleteAction;
-		}
+		constexpr delete_action_type& delete_action() noexcept { return m_DeleteAction; }
 
 		[[nodiscard]]
-		constexpr const delete_action_type& delete_action() const noexcept
-		{
-			return m_DeleteAction;
-		}
+		constexpr const delete_action_type& delete_action() const noexcept { return m_DeleteAction; }
 
 	private:
 		std::optional<T> m_Value{};
