@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <compare>
 #include <concepts>
 #include <optional>
 
