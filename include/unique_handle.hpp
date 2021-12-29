@@ -55,14 +55,24 @@ namespace sl
 			invoke_delete_action_if_necessary();
 		}
 
-		SL_UNIQUE_HANDLE_FULL_CONSTEXPR unique_handle(unique_handle&& other) noexcept
+		SL_UNIQUE_HANDLE_FULL_CONSTEXPR unique_handle
+		(
+			unique_handle&& other
+		) noexcept(noexcept(std::is_nothrow_move_constructible_v<T>
+							&& std::is_nothrow_copy_constructible_v<TDeleteAction>))
 			: m_Value{ std::exchange(other.m_Value, std::nullopt) },
 			m_DeleteAction{ other.m_DeleteAction }
 		{
 			other.m_Value.reset();
 		}
 
-		SL_UNIQUE_HANDLE_FULL_CONSTEXPR unique_handle& operator =(unique_handle&& other) noexcept
+		SL_UNIQUE_HANDLE_FULL_CONSTEXPR unique_handle& operator =
+		(
+			unique_handle&& other
+		) noexcept(noexcept(std::is_nothrow_move_constructible_v<T>
+							&& std::is_nothrow_move_assignable_v<T>
+							&& std::is_nothrow_copy_constructible_v<TDeleteAction>
+							&& std::is_nothrow_copy_assignable_v<TDeleteAction>))
 		{
 			if (this != &other)
 			{
@@ -77,11 +87,10 @@ namespace sl
 		constexpr void swap
 		(
 			unique_handle& other
-		)
-		noexcept(noexcept(std::is_nothrow_move_constructible_v<T>
-						&& std::is_nothrow_swappable_v<T>
-						&& std::is_nothrow_move_constructible_v<TDeleteAction>
-						&& std::is_nothrow_swappable_v<TDeleteAction>))
+		) noexcept(noexcept(std::is_nothrow_move_constructible_v<T>
+							&& std::is_nothrow_swappable_v<T>
+							&& std::is_nothrow_move_constructible_v<TDeleteAction>
+							&& std::is_nothrow_swappable_v<TDeleteAction>))
 		{
 			using std::swap;
 
