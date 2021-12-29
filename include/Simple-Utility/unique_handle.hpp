@@ -549,6 +549,24 @@ namespace sl
 	{
 		return handle.is_valid();
 	}
+
+	template <class TClosure, class T>
+	[[nodiscard]]
+	constexpr auto value_or(TClosure&& closure, T&& alternative)
+	{
+		if constexpr (requires { closure.value_or(std::forward<T>(alternative)); })
+		{
+			return closure.value_or(std::forward<T>(alternative));
+		}
+		else
+		{
+			if (has_value(closure))
+			{
+				return value_unchecked(std::forward<TClosure>(closure));
+			}
+			return std::forward<T>(alternative);
+		}
+	}
 }
 
 #endif
