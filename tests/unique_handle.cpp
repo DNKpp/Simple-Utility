@@ -13,6 +13,26 @@ using namespace sl;
 
 namespace
 {
+	struct value_t
+	{
+		int a{};
+		int z{};
+
+		constexpr value_t(int a)
+			: a{ a }
+		{
+		}
+
+		constexpr value_t(int a, int z)
+			: a{ a },
+			z{ z }
+		{
+		}
+
+		constexpr value_t(value_t&&) noexcept = default;
+		constexpr value_t& operator =(value_t&&) noexcept = default;
+	};
+
 	struct delete_action_mock
 	{
 		int* invoke_counter{};
@@ -75,6 +95,27 @@ TEST_CASE("unique_handle should be constructible by value.", "[unique_handle]")
 
 	STATIC_REQUIRE(handle.is_valid());
 	STATIC_REQUIRE(handle);
+}
+
+TEST_CASE("unique_handle should be explicitly in-place construct value when std::in_place token is used.", "[unique_handle]")
+{
+	constexpr unique_handle<value_t> handle{ std::in_place, 42, 1337 };
+
+	STATIC_REQUIRE(handle->a == 42);
+	STATIC_REQUIRE(handle->z == 1337);
+}
+
+TEST_CASE("unique_handle::emplace constructs value in place.", "[unique_handle]")
+{
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
+	const bool result = []
+	{
+		unique_handle<value_t> handle{};
+		handle.emplace(1337, 42);
+		return handle->a == 1337 && handle->z == 42;
+	}();
+
+	REQUIRE(result);
 }
 
 TEST_CASE("unique_handle should be assignable by value.", "[unique_handle]")

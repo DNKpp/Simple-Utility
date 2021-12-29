@@ -135,6 +135,20 @@ namespace sl
 			return *this;
 		}
 
+		template <class... TArgs>
+			requires std::constructible_from<T, TArgs...>
+		constexpr explicit unique_handle(std::in_place_t, TArgs&&... args)
+			: m_Value{ std::in_place, std::forward<TArgs>(args)... }
+		{
+		}
+
+		template <class... TArgs>
+			requires std::constructible_from<T, TArgs...>
+		SL_UNIQUE_HANDLE_FULL_CONSTEXPR T& emplace(TArgs&&... args)
+		{
+			return m_Value.emplace(std::forward<TArgs>(args)...);
+		}
+
 		SL_UNIQUE_HANDLE_FULL_CONSTEXPR void reset() noexcept
 		{
 			invoke_delete_action_if_necessary();
