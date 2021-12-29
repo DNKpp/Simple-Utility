@@ -533,21 +533,11 @@ namespace sl
 	}
 
 	template <class TClosure>
-		requires requires(TClosure c)
-		{
-			{ c.has_value() } -> std::convertible_to<bool>;
-		}
 	[[nodiscard]]
 	constexpr bool has_value(const TClosure& closure) noexcept
+		requires requires { static_cast<bool>(closure); }
 	{
-		return closure.has_value();
-	}
-
-	template <class T, class TDeleteAction>
-	[[nodiscard]]
-	constexpr bool has_value(const unique_handle<T, TDeleteAction>& handle) noexcept
-	{
-		return handle.is_valid();
+		return static_cast<bool>(closure);
 	}
 
 	template <class TClosure, class T>
