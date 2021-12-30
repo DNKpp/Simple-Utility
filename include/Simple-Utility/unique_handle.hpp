@@ -110,7 +110,7 @@ namespace sl
 	 *		// no cleanup necessary
 	 *	}
 	 *	```
-	 * Of course, at a first glance this is quite more verbose, but in the long term nobody has to care about that entity anymore. This is what ``RAII`` is about.
+	 * Of course, at a first glance this seems quite more verbose, but in the long term nobody has to care about that entity anymore. This is what ``RAII`` is about.
 	 * Note that ``unique_handles`` also can be stored as a member, then they really begin to shine, because if one would like to bind that entity to the lifetime of
 	 * an other object that would of course lead to custom move constructor, assignment operator and destructor and explicitly deleted copy. With a
 	 * ``unique_handle`` none of this is necessary (and this is in fact the main reason why I decided to implement this).
