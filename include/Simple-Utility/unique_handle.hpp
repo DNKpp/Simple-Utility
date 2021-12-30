@@ -155,7 +155,7 @@ namespace sl
 
 		/**
 		 * \brief Move assignment, which relocates the ownership of the value to the target and resets the source. Delete actions will be copied.
-		 * \param other  The source object which will lose ownership, if it has any.
+		 * \param other The source object which will lose ownership, if it has any.
 		 * \return A reference to the target object
 		 */
 		SL_UNIQUE_HANDLE_FULL_CONSTEXPR unique_handle& operator =
@@ -176,6 +176,10 @@ namespace sl
 			return *this;
 		}
 
+		/**
+		 * \brief Swaps the target and the source in a more efficient way.
+		 * \param other The source object
+		 */
 		constexpr void swap
 		(
 			unique_handle& other
@@ -190,15 +194,30 @@ namespace sl
 			swap(m_DeleteAction, other.m_DeleteAction);
 		}
 
+		/**
+		 * \brief Explicitly deleted copy constructor.
+		 */
 		unique_handle(const unique_handle&) = delete;
+		/**
+		 * \brief Explicitly deleted copy assignment.
+		 * \return nothing
+		 */
 		unique_handle& operator =(const unique_handle&) = delete;
 
+		/**
+		 * \brief Explicitly does not initialize the value. This overload is mainly used for convenience when returning
+		 * a nullhandle.
+		 * \param deleteAction The provided delete action object
+		 */
 		constexpr unique_handle(nullhandle_t, const delete_action_type& deleteAction = delete_action_type()) noexcept
 			: m_Value{ std::nullopt },
 			m_DeleteAction{ deleteAction }
 		{
 		}
 
+		/**
+		 * \brief Explicitly resets the value and invokes the delete action if value was initialized.
+		 */
 		SL_UNIQUE_HANDLE_FULL_CONSTEXPR unique_handle& operator =(nullhandle_t) noexcept
 		{
 			invoke_delete_action_if_necessary();
@@ -207,12 +226,22 @@ namespace sl
 			return *this;
 		}
 
+		/**
+		 * \brief Constructor overload for explicitly providing a delete action.
+		 * \param deleteAction The provided delete action object
+		 */
 		constexpr unique_handle(const delete_action_type& deleteAction) noexcept
 			: m_Value{ std::nullopt },
 			m_DeleteAction{ deleteAction }
 		{
 		}
 
+		/**
+		 * \brief Constructor overload for initializing the value.
+		 * \tparam T2 Type of the provided value. Must be convertible to ``T``.
+		 * \param value Used object to initialize the value
+		 * \param deleteAction The provided delete action object
+		 */
 		template <concepts::constructs<T> T2>
 			requires concepts::not_same_as<std::remove_cvref_t<T2>, unique_handle>
 					&& concepts::not_same_as<std::remove_cvref_t<T2>, nullhandle_t>
@@ -223,6 +252,12 @@ namespace sl
 		{
 		}
 
+		/**
+		 * \brief Assignment operator overload for assigning the value.
+		 * \tparam T2 Type of the provided value. Must be convertible to ``T``.
+		 * \param value Used object to assign the value
+		 * \return A reference to this
+		 */
 		template <concepts::assignable_to<T&> T2>
 			requires concepts::not_same_as<std::remove_cvref_t<T2>, unique_handle>
 					&& concepts::not_same_as<std::remove_cvref_t<T2>, nullhandle_t>
@@ -235,6 +270,11 @@ namespace sl
 			return *this;
 		}
 
+		/**
+		 * \brief Constructor overload for directly initializing the value with a set of arguments.
+		 * \tparam TArgs Type of the provided arguments.
+		 * \param args Used arguments to initialize the value
+		 */
 		template <class... TArgs>
 			requires std::constructible_from<T, TArgs...>
 		constexpr explicit unique_handle(std::in_place_t, TArgs&&... args)
@@ -242,6 +282,13 @@ namespace sl
 		{
 		}
 
+		/**
+		 * \brief Constructor overload for directly initializing the value with a set of arguments and also initializing
+		 * the delete action.
+		 * \tparam TArgs Type of the provided arguments.
+		 * \param deleteAction The provided delete action object
+		 * \param args Used arguments to initialize the value
+		 */
 		template <class... TArgs>
 			requires std::constructible_from<T, TArgs...>
 		constexpr explicit unique_handle(std::in_place_t, const delete_action_type& deleteAction, TArgs&&... args)
@@ -250,6 +297,11 @@ namespace sl
 		{
 		}
 
+		/**
+		 * \brief Constructor overload for directly initializing the value with a set of arguments.
+		 * \tparam TArgs Type of the provided arguments.
+		 * \param args Used arguments to initialize the value
+		 */
 		template <class... TArgs>
 			requires std::constructible_from<T, TArgs...>
 		SL_UNIQUE_HANDLE_FULL_CONSTEXPR T& emplace(TArgs&&... args)
