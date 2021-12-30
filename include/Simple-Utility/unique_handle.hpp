@@ -131,7 +131,13 @@ namespace sl
 	class unique_handle
 	{
 	public:
-		using element_type = T;
+		/**
+		 * \brief Type of the stored value
+		 */
+		using value_type = T;
+		/**
+		 * \brief Type of the used delete action
+		 */
 		using delete_action_type = TDeleteAction;
 
 		/**
