@@ -304,9 +304,9 @@ namespace sl
 		 */
 		template <class... TArgs>
 			requires std::constructible_from<T, TArgs...>
-		SL_UNIQUE_HANDLE_FULL_CONSTEXPR T& emplace(TArgs&&... args)
+		SL_UNIQUE_HANDLE_FULL_CONSTEXPR void emplace(TArgs&&... args)
 		{
-			return m_Value.emplace(std::forward<TArgs>(args)...);
+			m_Value.emplace(std::forward<TArgs>(args)...);
 		}
 
 		SL_UNIQUE_HANDLE_FULL_CONSTEXPR void reset() noexcept
