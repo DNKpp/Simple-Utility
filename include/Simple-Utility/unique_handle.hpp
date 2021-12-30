@@ -126,8 +126,9 @@ namespace sl
 	 * \tparam T The type of the stored value
 	 * \tparam TDeleteAction Type of the used delete action
 	 */
-	template <std::movable T, std::invocable<T&> TDeleteAction = default_delete_action<T>>
+	template <std::movable T, class TDeleteAction = default_delete_action<T>>
 		requires std::copyable<TDeleteAction>
+				&& std::invocable<TDeleteAction, T&> // constraint has to be placed here, because in template argument list CTAD fails
 	class unique_handle
 	{
 	public:
