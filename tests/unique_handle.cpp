@@ -155,7 +155,16 @@ TEST_CASE("unique_handle should automatically deduct its template arguments when
 {
 	constexpr unique_handle handle{ 42, delete_action_mock{} };
 
-	// nothing to check, just compiling
+	STATIC_REQUIRE(std::same_as<int, decltype(handle)::value_type>);
+	STATIC_REQUIRE(std::same_as<delete_action_mock, decltype(handle)::delete_action_type>);
+}
+
+TEST_CASE("unique_handle should automatically deduct its template arguments when constructed by value.", "[unique_handle]")
+{
+	constexpr unique_handle handle{ 42 };
+
+	STATIC_REQUIRE(std::same_as<decltype(handle)::value_type, int>);
+	STATIC_REQUIRE(std::same_as<decltype(handle)::delete_action_type, default_delete_action>);
 }
 
 TEST_CASE("unique_handle should be explicitly in-place construct value when std::in_place token is used.", "[unique_handle]")
