@@ -2,6 +2,7 @@
 
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/ffee59527a4d43f09b5aeabbac1eaa52)](https://www.codacy.com/gh/DNKpp/Simple-Utility/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DNKpp/Simple-Utility&amp;utm_campaign=Badge_Grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/ffee59527a4d43f09b5aeabbac1eaa52)](https://www.codacy.com/gh/DNKpp/Simple-Utility/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DNKpp/Simple-Utility&amp;utm_campaign=Badge_Coverage)
+[![codecov](https://codecov.io/gh/DNKpp/Simple-Utility/branch/master/graph/badge.svg?token=R5ZUSJPZ57)](https://codecov.io/gh/DNKpp/Simple-Utility)
 [![Documentation](https://img.shields.io/badge/docs-docsforge-blue)](https://simple-utility.docsforge.com/)
 
 ## Author
