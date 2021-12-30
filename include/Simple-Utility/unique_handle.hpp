@@ -129,6 +129,7 @@ namespace sl
 	template <std::movable T, class TDeleteAction = default_delete_action<T>>
 		requires std::copyable<TDeleteAction>
 				&& std::invocable<TDeleteAction, T&> // constraint has to be placed here, because in template argument list CTAD fails
+				&& concepts::not_same_as<T, nullhandle_t>
 	class unique_handle
 	{
 	public:
