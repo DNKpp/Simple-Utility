@@ -24,74 +24,77 @@
 namespace sl
 {
 	/**
-	* \defgroup unique_handle_module unique_handle
-	* @{
+	* @defgroup unique_handle_module unique_handle
 	*
-	 * \details The class \ref unique_handle is in fact a wrapper around a ``std::optional``, thus has at least the overhead of that. Additionally it adds two
-	 * important aspects:
-	 *		-# it resets its internal value after it got moved.
-	 *		-# it invokes its delete action every time when the internal value switches its state from initialized to uninitialized.
-	 *
-	 * The latter happens when the value is in an initialized state and the \ref unique_handle gets
-	 *		- moved,
-	 *		- destructed or
-	 *		- assigned
-	 *
-	 * This is very similar to the behaviour of a ``std::unique_ptr``, hence the name.
-	 * This behaviour is useful in cases when one has an identifier to a resource, which isn't stored on the heap (thus a ``std::unique_ptr`` is not
-	 * a good option), and this identifier should have the responsibility as an owner over that resource, but the resource itself is not bound to the
-	 * lifetime of that identifier. This might sound quite abstract, thus let us visit a simple example.
-	 *
-	 * Here some entities are stored in a simple ``std::list``. Imagine this entities are accessible from many places in your program, thus something
-	 * like this can easily happen.
-	 *
-	 * \code{.cpp}
-	 *	std::list<Entity> entities{};
-	 *
-	 *	{
-	 *		entities.emplace_front();
-	 *		auto entity_id = entities.begin();
-	 *
-	 *		// do some actions with entity and other stuff
-	 *
-	 *		// entity should now be erased. Not actually c++-ig, is it?
-	 *		entities.erase(entity_id);
-	 *	}
-	 * \endcode
-	 *
-	 * This is clearly no ``memory leak`` but if one forgets to erase the entity, it exists until the list is cleared.
-	 *	With \ref unique_handle one can do this.
-	 *
-	 * \code{.cpp}
-	 *	struct list_delete_action
-	 *	{
-	 *		std::list<Entity>* list{};  // pointer here, because a delete action must be move and copyable
-	 *
-	 *		void operator ()(const std::list<Entity>::iterator& itr) { list->erase(itr); }
-	 *	};
-	 *	std::list<Entity> entities{};
-	 *
-	 *	{
-	 *		entities.emplace_front();
-	 *		sl::unique_handle entity_id{ entities.begin(), list_delete_action{ &entities } };
-	 *
-	 *		// do some actions with entity and other stuff
-	 *
-	 *		// no cleanup necessary
-	 *	}
-	 * \endcode
-	 *
-	 * Of course, at a first glance this seems quite more verbose, but in the long term nobody has to care about that entity anymore. This is what ``RAII`` is about.
-	 * Note that ``unique_handles`` also can be stored as a member, then they really begin to shine, because if one would like to bind that entity to the lifetime of
-	 * an other object that would of course lead to custom move constructor, assignment operator and destructor and explicitly deleted copy. With a
-	 * \ref unique_handle none of this is necessary (and this is in fact the main reason why I decided to implement this).
-	 *
-	 * \note As using lambdas as delete action is usually fine, using capturing lambdas will fail to compile because they are non-copy-assignable. Use a old-school
-	 * invokable struct as in the example instead.
-	 *
-	 * \see https://en.cppreference.com/w/cpp/utility/optional
-	 * \see https://en.cppreference.com/w/cpp/memory/unique_ptr
-	 * \see https://en.cppreference.com/w/cpp/language/lambda
+	* \brief A helper type, which acts as a nullable resource handle with self-cleanup support.
+	*
+	* \details The class \ref unique_handle is in fact a wrapper around a ``std::optional``, thus has at least the overhead of that. Additionally it adds two
+	* important aspects:
+	*		-# it resets its internal value after it got moved.
+	*		-# it invokes its delete action every time when the internal value switches its state from initialized to uninitialized.
+	*
+	* The latter happens when the value is in an initialized state and the \ref unique_handle gets
+	*		- moved,
+	*		- destructed or
+	*		- assigned
+	*
+	* This is very similar to the behaviour of a ``std::unique_ptr``, hence the name.
+	* This behaviour is useful in cases when one has an identifier to a resource, which isn't stored on the heap (thus a ``std::unique_ptr`` is not
+	* a good option), and this identifier should have the responsibility as an owner over that resource, but the resource itself is not bound to the
+	* lifetime of that identifier. This might sound quite abstract, thus let us visit a simple example.
+	*
+	* Here some entities are stored in a simple ``std::list``. Imagine this entities are accessible from many places in your program, thus something
+	* like this can easily happen.
+	*
+	* \code{.cpp}
+	*	std::list<Entity> entities{};
+	*
+	*	{
+	*		entities.emplace_front();
+	*		auto entity_id = entities.begin();
+	*
+	*		// do some actions with entity and other stuff
+	*
+	*		// entity should now be erased. Not actually c++-ig, is it?
+	*		entities.erase(entity_id);
+	*	}
+	* \endcode
+	*
+	* This is clearly no ``memory leak`` but if one forgets to erase the entity, it exists until the list is cleared.
+	*	With \ref unique_handle one can do this.
+	*
+	* \code{.cpp}
+	*	struct list_delete_action
+	*	{
+	*		std::list<Entity>* list{};  // pointer here, because a delete action must be move and copyable
+	*
+	*		void operator ()(const std::list<Entity>::iterator& itr) { list->erase(itr); }
+	*	};
+	*	std::list<Entity> entities{};
+	*
+	*	{
+	*		entities.emplace_front();
+	*		sl::unique_handle entity_id{ entities.begin(), list_delete_action{ &entities } };
+	*
+	*		// do some actions with entity and other stuff
+	*
+	*		// no cleanup necessary
+	*	}
+	* \endcode
+	*
+	* Of course, at a first glance this seems quite more verbose, but in the long term nobody has to care about that entity anymore. This is what ``RAII`` is about.
+	* Note that ``unique_handles`` also can be stored as a member, then they really begin to shine, because if one would like to bind that entity to the lifetime of
+	* an other object that would of course lead to custom move constructor, assignment operator and destructor and explicitly deleted copy. With a
+	* \ref unique_handle none of this is necessary (and this is in fact the main reason why I decided to implement this).
+	*
+	* \note As using lambdas as delete action is usually fine, using capturing lambdas will fail to compile because they are non-copy-assignable. Use a old-school
+	* invokable struct as in the example instead.
+	*
+	* \see https://en.cppreference.com/w/cpp/utility/optional
+	* \see https://en.cppreference.com/w/cpp/memory/unique_ptr
+	* \see https://en.cppreference.com/w/cpp/language/lambda
+	*
+	* @{
 	*/
 
 	/**

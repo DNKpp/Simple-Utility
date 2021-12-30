@@ -15,13 +15,15 @@
 namespace sl::concepts
 {
 	/**
-	* \addtogroup concepts
+	* @addtogroup concepts
+	*
 	* @{
 	*/
 
 	/**
-	* \defgroup stl_counterpart_concepts stl counterparts
-	* \brief This group offers counterpart concepts for existing stl concepts.
+	* @defgroup stl_counterpart_concepts stl counterparts
+	*
+	* \brief Contains several counterpart concepts for existing stl concepts.
 	* @{
 	*/
 

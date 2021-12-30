@@ -14,12 +14,16 @@
 namespace sl::concepts
 {
 	/**
-	* \defgroup concepts concepts
+	* @defgroup concepts concepts
+	*
+	* \brief Contains concepts for different purposes.
 	* @{
 	*/
 
 	/**
-	* \defgroup shift_operators shift operators
+	* @defgroup shift_operator_concepts shift operators
+	*
+	* \brief Contains concepts which determines whether a type is usable in operator <<, <<=, >> and >>= expressions.
 	* @{
 	*/
 
@@ -292,7 +296,9 @@ namespace sl::concepts
 	/** @} */
 
 	/**
-	* \defgroup logical_arithmetic_operators logical arithmetic operators
+	* @defgroup logical_arithmetic_operator_concepts logical arithmetic operators
+	*
+	* \brief Contains concepts which determines whether a type is usable in operator &, &=, |, |=, ^, ^= and ~  expressions.
 	* @{
 	*/
 
