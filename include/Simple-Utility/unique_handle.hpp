@@ -334,10 +334,6 @@ namespace sl
 		[[nodiscard]]
 		constexpr const T& operator *() const noexcept { return *m_Value; }
 
-
-		[[nodiscard]]
-		constexpr T* operator ->() noexcept { return &*m_Value; }
-
 		/**
 		 * \brief Immutable access to the value. No checks will be performed.
 		 * \return A const pointer to the value
