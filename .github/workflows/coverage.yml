@@ -42,7 +42,7 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2.1.0
         with:
-          project-token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage.info
           name: Simple-Utility
           fail_ci_if_error: true
