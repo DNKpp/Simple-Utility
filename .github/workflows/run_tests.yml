@@ -68,22 +68,22 @@ jobs:
         CTEST_OUTPUT_ON_FAILURE: 1
       run: ctest --timeout 30 -C Debug -j4
 
-  macos:
-    runs-on: macOS-latest
-    timeout-minutes: 10
-    
-    strategy:
-      fail-fast: false
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Compile tests
-      working-directory: out
-      run: |
-        cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON ..
-        make -j4
-    - name: Run tests
-      working-directory: out/tests
-      env:
-        CTEST_OUTPUT_ON_FAILURE: 1
-      run: ctest --timeout 30 -C Debug -j4
+#  macos:
+#    runs-on: macOS-latest
+#    timeout-minutes: 10
+#    
+#    strategy:
+#      fail-fast: false
+#
+#    steps:
+#    - uses: actions/checkout@v2
+#    - name: Compile tests
+#      working-directory: out
+#      run: |
+#        cmake -DSIMPLE_UTILITY_BUILD_TESTS=ON ..
+#        make -j4
+#    - name: Run tests
+#      working-directory: out/tests
+#      env:
+#        CTEST_OUTPUT_ON_FAILURE: 1
+#      run: ctest --timeout 30 -C Debug -j4
