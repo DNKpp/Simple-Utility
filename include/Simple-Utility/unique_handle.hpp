@@ -309,6 +309,9 @@ namespace sl
 			m_Value.emplace(std::forward<TArgs>(args)...);
 		}
 
+		/**
+		 * \brief Resets the value and invokes the delete action if value was initialized.
+		 */
 		SL_UNIQUE_HANDLE_FULL_CONSTEXPR void reset() noexcept
 		{
 			invoke_delete_action_if_necessary();
@@ -316,15 +319,29 @@ namespace sl
 			m_Value.reset();
 		}
 
+		/**
+		 * \brief Immutable access to the value. No checks will be performed.
+		 * \exception Throws bad_handle_access if value is uninitialized.
+		 * \return A const reference to the value
+		 */
 		[[nodiscard]]
 		constexpr const T& raw() const { return m_Value.value(); }
 
+		/**
+		 * \brief Immutable access to the value. No checks will be performed.
+		 * \return A const reference to the value
+		 */
 		[[nodiscard]]
 		constexpr const T& operator *() const noexcept { return *m_Value; }
+
 
 		[[nodiscard]]
 		constexpr T* operator ->() noexcept { return &*m_Value; }
 
+		/**
+		 * \brief Immutable access to the value. No checks will be performed.
+		 * \return A const pointer to the value
+		 */
 		[[nodiscard]]
 		constexpr const T* operator ->() const noexcept { return &*m_Value; }
 
