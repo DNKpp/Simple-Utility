@@ -151,7 +151,6 @@ namespace sl
 			: m_Value{ std::exchange(other.m_Value, std::nullopt) },
 			m_DeleteAction{ other.m_DeleteAction }
 		{
-			other.m_Value.reset();
 		}
 
 		/**
