@@ -23,16 +23,34 @@
 
 namespace sl
 {
+	/**
+	* \defgroup unique_handle unique_handle
+	* @{
+	*/
+
+	/**
+	 * \brief helper type for indicating unique_handles with uninitialized state
+	 */
 	// ReSharper disable once IdentifierTypo
 	struct nullhandle_t
 	{
 	};
 
+	/**
+	 * \brief an object of type nullhandle_t
+	 */
 	// ReSharper disable once IdentifierTypo
 	constexpr nullhandle_t nullhandle{};
 
+	/**
+	 * \brief exception type which indicates checked access to an uninitialized value
+	 */
 	using bad_handle_access = std::bad_optional_access;
 
+	/**
+	 * \brief default delete action for unique_handle with an empty operator ()
+	 * \tparam T type to operate on
+	 */
 	template <class T>
 	struct default_delete_action
 	{
@@ -41,6 +59,65 @@ namespace sl
 		}
 	};
 
+	/**
+	 * \brief This type models some kind of ``std::optional`` behaviour but resets itself on move
+	 * \details This type is in fact a wrapper around a ``std::optional``, thus has at least the overhead of that. Additionally it adds two
+	 * important aspects:
+	 *		-# it resets its internal value after it got moved.
+	 *		-# it invokes its delete action every time when the internal value switches its state from initialized to uninitialized.
+	 *
+	 * The latter happens when the value is in an initialized state and the ``unique_handle`` gets
+	 *		- moved,
+	 *		- destructed or
+	 *		- assigned
+	 *
+	 * This behaviour is useful in cases when one has an identifier to a resource, which isn't stored on the heap (thus a ``std::unique_ptr`` is not
+	 * a good option), and this identifier should have the responsibility as an owner over that resource, but the resource itself is not bound to the
+	 * lifetime of that identifier. This might sound quite abstract, thus let us visit a simple example.
+	 *
+	 * Here some entities are stored in a simple ``std::list``. Imagine this entities are accessible from many places in your program, thus something
+	 * like this can easily happen.
+	 *	```cpp
+	 *	std::list<Entity> entities{};
+	 *
+	 *	{
+	 *		entities.emplace_front();
+	 *		auto entity_id = entities.begin();
+	 *
+	 *		// do some actions with entity and other stuff
+	 *
+	 *		// entity should now be erased. Not actually c++-ig, is it?
+	 *		entities.erase(entity_id);
+	 *	}
+	 *	```
+	 * This is clearly no ``memory leak`` but if one forgets to erase the entity, it exists until the list is cleared.
+	 *	With ``unique_handle`` one can do this.
+	 *	```cpp
+	 *	struct list_delete_action
+	 *	{
+	 *		std::list<Entity>* list{};  // pointer here, because a delete action must be move and copyable
+	 *
+	 *		void operator ()(const std::list<Entity>::iterator& itr) { list->erase(itr); }
+	 *	};
+	 *	std::list<Entity> entities{};
+	 *
+	 *	{
+	 *		entities.emplace_front();
+	 *		sl::unique_handle entity_id{ entities.begin(), list_delete_action{ &entities } };
+	 *
+	 *		// do some actions with entity and other stuff
+	 *
+	 *		// no cleanup necessary
+	 *	}
+	 *	```
+	 * Of course, at a first glance this is quite more verbose, but in the long term nobody has to care about that entity anymore. This is what ``RAII`` is about.
+	 * Note that ``unique_handles`` also can be stored as a member, then they really begin to shine, because if one would like to bind that entity to the lifetime of
+	 * an other object that would of course lead to custom move constructor, assignment operator and destructor and explicitly deleted copy. With a
+	 * ``unique_handle`` none of this is necessary (and this is in fact the main reason why I decided to implement this).
+	 *
+	 * \tparam T The type of the stored value
+	 * \tparam TDeleteAction Type of the used delete action
+	 */
 	template <std::movable T, std::invocable<T&> TDeleteAction = default_delete_action<T>>
 		requires std::copyable<TDeleteAction>
 	class unique_handle
@@ -49,13 +126,23 @@ namespace sl
 		using element_type = T;
 		using delete_action_type = TDeleteAction;
 
+		/**
+		 * \brief Default constructor. The value will be in an uninitialized stated and the delete action gets default constructed.
+		 */
 		constexpr unique_handle() noexcept = default;
 
+		/**
+		 * \brief Destruct. Does invoke the delete action if the value is in an initialized state.
+		 */
 		constexpr ~unique_handle() noexcept
 		{
 			invoke_delete_action_if_necessary();
 		}
 
+		/**
+		 * \brief Move constructor, which relocates the ownership of the value to the target and resets the source. Delete actions will be copied.
+		 * \param other The source object which will lose ownership, if it has any.
+		 */
 		SL_UNIQUE_HANDLE_FULL_CONSTEXPR unique_handle
 		(
 			unique_handle&& other
@@ -67,6 +154,11 @@ namespace sl
 			other.m_Value.reset();
 		}
 
+		/**
+		 * \brief Move assignment, which relocates the ownership of the value to the target and resets the source. Delete actions will be copied.
+		 * \param other  The source object which will lose ownership, if it has any.
+		 * \return A reference to the target object
+		 */
 		SL_UNIQUE_HANDLE_FULL_CONSTEXPR unique_handle& operator =
 		(
 			unique_handle&& other
@@ -239,6 +331,8 @@ namespace sl
 	{
 		return lhs.is_valid() <=> false;
 	}
+
+	/** @} */
 }
 
 #endif
