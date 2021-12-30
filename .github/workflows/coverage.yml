@@ -17,7 +17,7 @@ jobs:
       - name: Install compiler
         run: |
             sudo apt-get update
-            sudo apt-get install gxx-${{ env.GXX_VERSION }} -y
+            sudo apt-get install g++-${{ env.GXX_VERSION }} -y
             sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${{ env.GXX_VERSION }} ${{ env.GXX_VERSION }}00 --slave /usr/bin/gcc gcc /usr/bin/gcc-${{ env.GXX_VERSION }}
             sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-${{ env.GXX_VERSION }} ${{ env.GXX_VERSION }}00
 
