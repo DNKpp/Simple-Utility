@@ -110,12 +110,10 @@ namespace sl
 
 	/**
 	 * \brief default delete action for unique_handle with an empty operator ()
-	 * \tparam T type to operate on
 	 */
-	template <class T>
 	struct default_delete_action
 	{
-		constexpr void operator ()(T&) const noexcept
+		constexpr void operator ()(auto&) const noexcept
 		{
 		}
 	};
@@ -126,7 +124,7 @@ namespace sl
 	 * \tparam T The type of the stored value
 	 * \tparam TDeleteAction Type of the used delete action
 	 */
-	template <std::movable T, class TDeleteAction = default_delete_action<T>>
+	template <std::movable T, class TDeleteAction = default_delete_action>
 		requires std::copyable<TDeleteAction>
 				&& std::invocable<TDeleteAction, T&> // constraint has to be placed here, because in template argument list CTAD fails
 				&& concepts::not_same_as<T, nullhandle_t>
