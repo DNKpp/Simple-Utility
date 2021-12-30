@@ -86,7 +86,12 @@ namespace sl
 	 * an other object that would of course lead to custom move constructor, assignment operator and destructor and explicitly deleted copy. With a
 	 * \ref unique_handle none of this is necessary (and this is in fact the main reason why I decided to implement this).
 	 *
-	 * \see https://en.cppreference.com/w/cpp/utility/optional https://en.cppreference.com/w/cpp/memory/unique_ptr
+	 * \note As using lambdas as delete action is usually fine, using capturing lambdas will fail to compile because they are non-copy-assignable. Use a old-school
+	 * invokable struct as in the example instead.
+	 *
+	 * \see https://en.cppreference.com/w/cpp/utility/optional
+	 * \see https://en.cppreference.com/w/cpp/memory/unique_ptr
+	 * \see https://en.cppreference.com/w/cpp/language/lambda
 	*/
 
 	/**
@@ -118,16 +123,46 @@ namespace sl
 		}
 	};
 
+	/** @} */
+
+	namespace detail
+	{
+		template <class T>
+		struct value_validator
+		{
+			static_assert(std::movable<T>, "The value type must be movable.");
+			static_assert(concepts::not_same_as<std::remove_cvref_t<T>, nullhandle_t>, "The value type must not be sl::nullhandle_t.");
+
+			using type = T;
+		};
+
+		template <class T, class TDeleteAction>
+		struct delete_action_validator
+		{
+			static_assert(std::copyable<TDeleteAction>, "The delete action object must be copyable (capturing lambdas are not).");
+			static_assert(std::invocable<TDeleteAction, T&>, "The delete action object must be invokable by T&.");
+
+			using type = TDeleteAction;
+		};
+
+		template <class T>
+		using type_t = typename T::type;
+	}
+
+	/**
+	* \addtogroup unique_handle_module
+	* @{
+	*/
+
 	/**
 	 * \brief This type models some kind of ``std::optional`` behaviour but resets itself on move operations.
 	 * \details For more details and information about related components go to \ref unique_handle_module "unique_handle module page".
 	 * \tparam T The type of the stored value
 	 * \tparam TDeleteAction Type of the used delete action
 	 */
-	template <std::movable T, class TDeleteAction = default_delete_action>
-		requires std::copyable<TDeleteAction>
-				&& std::invocable<TDeleteAction, T&> // constraint has to be placed here, because in template argument list CTAD fails
-				&& concepts::not_same_as<T, nullhandle_t>
+	template <std::movable T, std::invocable<T&> TDeleteAction = default_delete_action>
+		requires concepts::not_same_as<T, nullhandle_t>
+				&& std::copyable<TDeleteAction>
 	class unique_handle
 	{
 	public:
@@ -395,7 +430,11 @@ namespace sl
 	 * \tparam TDeleteAction Delete action type
 	 */
 	template <class T, class TDeleteAction>
-	unique_handle(T, TDeleteAction) -> unique_handle<T, TDeleteAction>;
+	unique_handle
+	(
+		T,
+		TDeleteAction
+	) -> unique_handle<detail::type_t<detail::value_validator<T>>, detail::type_t<detail::delete_action_validator<T, TDeleteAction>>>;
 
 	/**
 	 * \brief Deduction guide for \ref unique_handle class
