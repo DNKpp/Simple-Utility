@@ -218,13 +218,14 @@ namespace
 	TESTABLE_BINARY_CONCEPT_R_R(fully_logical_with_r);
 }
 
+
 #pragma warning(disable: 26444)
 TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"complemented(_r) should determine if a type can be used within an operator ~ expression.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
-	(testable_complemented, testable_complemented_r),
+	(is_complemented, is_complemented_r),
 	(
 		(int, true),
 		(float, false),
@@ -242,17 +243,17 @@ TEMPLATE_TEST_CASE_SIG
 (
 	"complemented_r should determine if a return type of the expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
-	((class T, bool VExpected, class TResult), T, VExpected, TResult),
-	(int, true, int),
-	(int, true, float),
-	(int, false, int&),
-	(int, false, fail_t),
-	(logical_target<fully>, true, logical_target<fully>),
-	(logical_target<fully>, false, int)
+	((class T, class TResult, bool VExpected), T, TResult, VExpected),
+	(int, int, true),
+	(int, float, true),
+	(int, int&, false),
+	(int, fail_t, false),
+	(logical_target<fully>, logical_target<fully>, true),
+	(logical_target<fully>, int, false)
 )
 #pragma warning(default: 26444)
 {
-	REQUIRE(testable_complemented_r<T, VExpected, TResult>::value);
+	REQUIRE(is_r_complemented_r<T, TResult,VExpected>::value);
 }
 
 #pragma warning(disable: 26444)
@@ -261,7 +262,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"conjunctive_with(_r) should determine if two types can be used within an operator & expression.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(testable_conjunctive_with, testable_conjunctive_with_r),
+	(is_conjunctive_with, is_conjunctive_with_r),
 	(
 		(int, int, true),
 		(int, float, false),
@@ -281,7 +282,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"conjunctive_assign_with(_r) should determine if two types can be used within an operator &= expression.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(testable_conjunctive_assign_with, testable_conjunctive_assign_with_r),
+	(is_conjunctive_assign_with, is_conjunctive_assign_with_r),
 	(
 		(int, int, true),
 		(int, float, false),
@@ -301,7 +302,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"disjunctive_with(_r) should determine if two types can be used within an operator | expression.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(testable_disjunctive_with, testable_disjunctive_with_r),
+	(is_disjunctive_with, is_disjunctive_with_r),
 	(
 		(int, int, true),
 		(int, float, false),
@@ -321,7 +322,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"disjunctive_assign_with(_r) should determine if two types can be used within an operator |= expression.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(testable_disjunctive_assign_with, testable_disjunctive_assign_with_r),
+	(is_disjunctive_assign_with, is_disjunctive_assign_with_r),
 	(
 		(int, int, true),
 		(int, float, false),
@@ -341,7 +342,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"exclusive_disjunctive_with(_r) should determine if two types can be used within an operator ^ expression.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(testable_exclusive_disjunctive_with, testable_exclusive_disjunctive_with_r),
+	(is_exclusive_disjunctive_with, is_exclusive_disjunctive_with_r),
 	(
 		(int, int, true),
 		(int, float, false),
@@ -361,7 +362,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"exclusive_disjunctive_assign_with(_r) should determine if two types can be used within an operator ^= expression.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(testable_exclusive_disjunctive_assign_with, testable_exclusive_disjunctive_assign_with_r),
+	(is_exclusive_disjunctive_assign_with, is_exclusive_disjunctive_assign_with_r),
 	(
 		(int, int, true),
 		(int, float, false),
@@ -381,7 +382,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"conjunctive(_r) should determine if a type can be used within an operator & expression.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
-	(testable_conjunctive, testable_conjunctive_r),
+	(is_conjunctive, is_conjunctive_r),
 	(
 		(int, true),
 		(float, false),
@@ -401,7 +402,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"conjunctive_assign(_r) should determine if a type can be used within an operator &= expression.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
-	(testable_conjunctive_assign, testable_conjunctive_assign_r),
+	(is_conjunctive_assign, is_conjunctive_assign_r),
 	(
 		(int, true),
 		(float, false),
@@ -421,7 +422,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"disjunctive(_r) should determine if a type can be used within an operator | expression.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
-	(testable_disjunctive, testable_disjunctive_r),
+	(is_disjunctive, is_disjunctive_r),
 	(
 		(int, true),
 		(float, false),
@@ -441,7 +442,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"disjunctive_assign(_r) should determine if a type can be used within an operator |= expression.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
-	(testable_disjunctive_assign, testable_disjunctive_assign_r),
+	(is_disjunctive_assign, is_disjunctive_assign_r),
 	(
 		(int, true),
 		(float, false),
@@ -461,7 +462,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"exclusive_disjunctive(_r) should determine if a type can be used within an operator ^ expression.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
-	(testable_exclusive_disjunctive, testable_exclusive_disjunctive_r),
+	(is_exclusive_disjunctive, is_exclusive_disjunctive_r),
 	(
 		(int, true),
 		(float, false),
@@ -481,7 +482,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"exclusive_disjunctive_assign(_r) should determine if a type can be used within an operator ^= expression.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
-	(testable_exclusive_disjunctive_assign, testable_exclusive_disjunctive_assign_r),
+	(is_exclusive_disjunctive_assign, is_exclusive_disjunctive_assign_r),
 	(
 		(int, true),
 		(float, false),
@@ -500,15 +501,15 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"binary logically _r concepts should determine if a return type of an expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
-	((class T, bool VExpected, class TResult), T, VExpected, TResult),
-	(testable_conjunctive_r, testable_disjunctive_r, testable_exclusive_disjunctive_r, testable_logically_combinable_r),
+	((class T, class TResult, bool VExpected), T, TResult, VExpected),
+	(is_r_conjunctive_r, is_r_disjunctive_r, is_r_exclusive_disjunctive_r, is_r_logically_combinable_r),
 	(
-		(int, true, int),
-		(int, true, float),
-		(int, false, int&),
-		(int, false, fail_t),
-		(logical_target<fully>, true, logical_target<fully>),
-		(logical_target<fully>, false, int)
+		(int, int, true),
+		(int, float, true),
+		(int, int&, false),
+		(int, fail_t, false),
+		(logical_target<fully>, logical_target<fully>, true),
+		(logical_target<fully>, int, false)
 	)
 )
 #pragma warning(default: 26444)
@@ -521,16 +522,16 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"binary logically with_r concepts should determine if a return type of an expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
-	((class TLhs, class TRhs, bool VExpected, class TResult), TLhs, TRhs, VExpected, TResult),
-	(testable_conjunctive_with_r, testable_disjunctive_with_r, testable_exclusive_disjunctive_with_r,
-		testable_logically_combinable_with_r),
+	((class TLhs, class TRhs, class TResult, bool VExpected), TLhs, TRhs, TResult, VExpected),
+	(is_r_conjunctive_with_r, is_r_disjunctive_with_r, is_r_exclusive_disjunctive_with_r,
+		is_r_logically_combinable_with_r),
 	(
-		(int, int, true, int),
-		(int, int, true, float),
-		(int, int, false, int&),
-		(int, int, false, fail_t),
-		(logical_target<fully>, int, true, logical_target<fully>),
-		(logical_target<fully>, int, false, int)
+		(int, int, int, true),
+		(int, int, float, true),
+		(int, int, int&, false),
+		(int, int, fail_t, false),
+		(logical_target<fully>, int, logical_target<fully>, true),
+		(logical_target<fully>, int, int, false)
 	)
 )
 #pragma warning(default: 26444)
@@ -543,16 +544,16 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"binary logically assign_r concepts should determine if a return type of an expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
-	((class T, bool VExpected, class TResult), T, VExpected, TResult),
-	(testable_conjunctive_assign_r, testable_disjunctive_assign_r, testable_exclusive_disjunctive_assign_r,
-		testable_logically_assignable_r),
+	((class T, class TResult, bool VExpected), T, TResult, VExpected),
+	(is_r_conjunctive_assign_r, is_r_disjunctive_assign_r, is_r_exclusive_disjunctive_assign_r,
+		is_r_logically_assignable_r),
 	(
-		(int, true, int),
-		(int, true, float),
-		(int, true, int&),
-		(int, false, fail_t),
-		(logical_target<fully>, true, logical_target<fully>&),
-		(logical_target<fully>, false, int)
+		(int, int, true),
+		(int, float, true),
+		(int, int&, true),
+		(int, fail_t, false),
+		(logical_target<fully>, logical_target<fully>&, true),
+		(logical_target<fully>, int, false)
 	)
 )
 #pragma warning(default: 26444)
@@ -565,16 +566,16 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"binary logically assign_with_r concepts should determine if a return type of an expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
-	((class TLhs, class TRhs, bool VExpected, class TResult), TLhs, TRhs, VExpected, TResult),
-	(testable_conjunctive_assign_with_r, testable_disjunctive_assign_with_r, testable_exclusive_disjunctive_assign_with_r,
-		testable_logically_assignable_with_r),
+	((class TLhs, class TRhs, class TResult, bool VExpected), TLhs, TRhs, TResult, VExpected),
+	(is_r_conjunctive_assign_with_r, is_r_disjunctive_assign_with_r, is_r_exclusive_disjunctive_assign_with_r,
+		is_r_logically_assignable_with_r),
 	(
-		(int, int, true, int),
-		(int, int, true, float),
-		(int, int, true, int&),
-		(int, int, false, fail_t),
-		(logical_target<fully>, int, true, logical_target<fully>&),
-		(logical_target<fully>, int, false, int)
+		(int, int, int, true),
+		(int, int, float, true),
+		(int, int, int&, true),
+		(int, int, fail_t, false),
+		(logical_target<fully>, int, logical_target<fully>&, true),
+		(logical_target<fully>, int, int, false)
 	)
 )
 #pragma warning(default: 26444)
@@ -588,7 +589,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"logically_combinable(_r) should determine if a type can be used within operator &, | and ^ expressions.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
-	(testable_logically_combinable, testable_logically_combinable_r),
+	(is_logically_combinable, is_logically_combinable_r),
 	(
 		(int, true),
 		(float, false),
@@ -610,7 +611,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"logically_combinable_with(_r) should determine if two types can be used within operator &, | and ^ expressions.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(testable_logically_combinable_with, testable_logically_combinable_with_r),
+	(is_logically_combinable_with, is_logically_combinable_with_r),
 	(
 		(int, int, true),
 		(int, float, false),
@@ -632,7 +633,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"logically_assignable(_r) should determine if a type can be used within operator &=, |= and ^= expressions.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
-	(testable_logically_assignable, testable_logically_assignable_r),
+	(is_logically_assignable, is_logically_assignable_r),
 	(
 		(int, true),
 		(float, false),
@@ -654,7 +655,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"logically_assignable_with(_r) should determine if two types can be used within operator &=, |= and ^= expressions.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(testable_logically_assignable_with, testable_logically_assignable_with_r),
+	(is_logically_assignable_with, is_logically_assignable_with_r),
 	(
 		(int, int, true),
 		(int, float, false),
@@ -676,7 +677,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"fully_logical_with(_r) should determine if two types can be used within operator ~, !, &, |, ^, &=, |= and ^= expressions.",
 	"[concepts][operators][logically]",
 	((class TLhs, class TRhs, bool VExpected), TLhs, TRhs, VExpected),
-	(testable_fully_logical_with, testable_fully_logical_with_r),
+	(is_fully_logical_with, is_fully_logical_with_r),
 	(
 		(int, int, true),
 		(int, float, false),
@@ -701,15 +702,15 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"fully_logical_with_r should determine if the return types of each expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
-	((class TLhs, class TRhs, bool VExpected, class TCombineResult, class TAssignResult),
-		TLhs, TRhs, VExpected, TCombineResult, TAssignResult),
-	(testable_fully_logical_with_r),
+	((class TLhs, class TRhs, class TCombineResult, class TAssignResult, bool VExpected),
+		TLhs, TRhs, TCombineResult, TAssignResult, VExpected),
+	(is_rr_fully_logical_with_r),
 	(
-		(int, int, true, int, int&),
-		(int, int, false, int, int&&),
-		(logical_target<fully>, int, true, logical_target<fully>, logical_target<fully>&),
-		(logical_target<fully>, int, false, int, logical_target<fully>&),
-		(logical_target<fully>, int, false, logical_target<fully>, logical_target<fully>&&)
+		(int, int, int, int&, true),
+		(int, int, int, int&&, false),
+		(logical_target<fully>, int, logical_target<fully>, logical_target<fully>&, true),
+		(logical_target<fully>, int, int, logical_target<fully>&, false),
+		(logical_target<fully>, int, logical_target<fully>, logical_target<fully>&&, false)
 	)
 )
 #pragma warning(default: 26444)
@@ -723,7 +724,7 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 	"fully_logical(_r) should determine a type can be used within operator ~, !, &, |, ^, &=, |= and ^= expressions.",
 	"[concepts][operators][logically]",
 	((class T, bool VExpected), T, VExpected),
-	(testable_fully_logical, testable_fully_logical_r),
+	(is_fully_logical, is_fully_logical_r),
 	(
 		(int, true),
 		(float, false),
@@ -748,14 +749,14 @@ TEMPLATE_PRODUCT_TEST_CASE_SIG
 (
 	"fully_logical_r should determine if the return types of each expression can be converted to the expected one.",
 	"[concepts][operators][logically]",
-	((class T, bool VExpected, class TCombineResult, class TAssignResult), T, VExpected, TCombineResult, TAssignResult),
-	(testable_fully_logical_r),
+	((class T, class TCombineResult, class TAssignResult, bool VExpected), T, TCombineResult, TAssignResult, VExpected),
+	(is_rr_fully_logical_r),
 	(
-		(int, true, int, int&),
-		(int, false, int, int&&),
-		(logical_target<fully>, true, logical_target<fully>, logical_target<fully>&),
-		(logical_target<fully>, false, int, logical_target<fully>&),
-		(logical_target<fully>, false, logical_target<fully>, logical_target<fully>&&)
+		(int, int, int&, true),
+		(int, int, int&&, false),
+		(logical_target<fully>, logical_target<fully>, logical_target<fully>&, true),
+		(logical_target<fully>, int, logical_target<fully>&, false),
+		(logical_target<fully>, logical_target<fully>, logical_target<fully>&&, false)
 	)
 )
 #pragma warning(default: 26444)
