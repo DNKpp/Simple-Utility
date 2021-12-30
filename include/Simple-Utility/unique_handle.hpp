@@ -14,7 +14,7 @@
 
 #include "Simple-Utility/concepts/stl_counterparts.hpp"
 
-// some of the std::optional interface hasn't declared constexpr before
+// some of the std::optional interface hasn't been declared constexpr before
 #if __cpp_lib_optional >= 202106
 #define SL_UNIQUE_HANDLE_FULL_CONSTEXPR constexpr
 #else
@@ -341,12 +341,24 @@ namespace sl
 		[[nodiscard]]
 		constexpr const T* operator ->() const noexcept { return &*m_Value; }
 
+		/**
+		 * \brief Checks whether the value is initialized.
+		 * \return True if value is initialized
+		 */
 		[[nodiscard]]
 		constexpr explicit operator bool() const noexcept { return m_Value.has_value(); }
 
+		/**
+		 * \brief Checks whether the value is initialized.
+		 * \return True if value is initialized
+		 */
 		[[nodiscard]]
 		constexpr bool is_valid() const noexcept { return m_Value.has_value(); }
 
+		/**
+		 * \brief Immutable access to the delete action.
+		 * \return A const reference to the delete action
+		 */
 		[[nodiscard]]
 		constexpr const delete_action_type& delete_action() const noexcept { return m_DeleteAction; }
 
@@ -363,6 +375,15 @@ namespace sl
 		}
 	};
 
+	/**
+	 * \brief Three-way-comparison operator overload for two ``unique_handles``.
+	 * \tparam T Value type of the handles
+	 * \tparam TDeleteAction Delete action type of the handles
+	 * \param lhs left-hand-side of the operation
+	 * \param rhs right-hand-side of the operation
+	 * \return If both handles have initialized values, both values will be compared. Otherwise they will be compared in accordance
+	 * to the result of ``is_valid()``.
+	 */
 	template <class T, class TDeleteAction>
 	[[nodiscard]]
 	constexpr std::compare_three_way_result_t<T> operator <=>
@@ -378,6 +399,15 @@ namespace sl
 		return lhs.is_valid() <=> rhs.is_valid();
 	}
 
+	/**
+	 * \brief Three-way-comparison operator overload for comparison of ``unique_handle`` and a value.
+	 * \tparam T Value type of the handles
+	 * \tparam TDeleteAction Delete action type of the handles
+	 * \tparam T2 Type of right-hand-side. Must be three-way-comparable to ``T``
+	 * \param lhs left-hand-side of the operation
+	 * \param rhs right-hand-side of the operation
+	 * \return If the handle's value is initialized, both values will be compared. Otherwise handle is less.
+	 */
 	template <class T, class TDeleteAction, std::three_way_comparable_with<T> T2>
 	[[nodiscard]]
 	constexpr std::compare_three_way_result_t<T, T2> operator <=>(const unique_handle<T, TDeleteAction>& lhs, const T2& rhs)
@@ -389,6 +419,13 @@ namespace sl
 		return std::compare_three_way_result_t<T>::less;
 	}
 
+	/**
+	 * \brief Three-way-comparison operator overload for comparison of ``unique_handle`` and ``nullhandle_t``
+	 * \tparam T Value type of the handles
+	 * \tparam TDeleteAction Delete action type of the handles
+	 * \param lhs left-hand-side of the operation
+	 * \return Returns ``std::strong_ordering::equal`` if handle's value is uninitialized, otherwise ``std::strong_ordering::greater``.
+	 */
 	template <class T, class TDeleteAction>
 	[[nodiscard]]
 	constexpr std::strong_ordering operator <=>(const unique_handle<T, TDeleteAction>& lhs, nullhandle_t) noexcept
