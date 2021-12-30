@@ -24,8 +24,69 @@
 namespace sl
 {
 	/**
-	* \defgroup unique_handle unique_handle
+	* \defgroup unique_handle_module unique_handle
 	* @{
+	*
+	 * \details The class \ref unique_handle is in fact a wrapper around a ``std::optional``, thus has at least the overhead of that. Additionally it adds two
+	 * important aspects:
+	 *		-# it resets its internal value after it got moved.
+	 *		-# it invokes its delete action every time when the internal value switches its state from initialized to uninitialized.
+	 *
+	 * The latter happens when the value is in an initialized state and the \ref unique_handle gets
+	 *		- moved,
+	 *		- destructed or
+	 *		- assigned
+	 *
+	 * This is very similar to the behaviour of a ``std::unique_ptr``, hence the name.
+	 * This behaviour is useful in cases when one has an identifier to a resource, which isn't stored on the heap (thus a ``std::unique_ptr`` is not
+	 * a good option), and this identifier should have the responsibility as an owner over that resource, but the resource itself is not bound to the
+	 * lifetime of that identifier. This might sound quite abstract, thus let us visit a simple example.
+	 *
+	 * Here some entities are stored in a simple ``std::list``. Imagine this entities are accessible from many places in your program, thus something
+	 * like this can easily happen.
+	 *
+	 * \code{.cpp}
+	 *	std::list<Entity> entities{};
+	 *
+	 *	{
+	 *		entities.emplace_front();
+	 *		auto entity_id = entities.begin();
+	 *
+	 *		// do some actions with entity and other stuff
+	 *
+	 *		// entity should now be erased. Not actually c++-ig, is it?
+	 *		entities.erase(entity_id);
+	 *	}
+	 * \endcode
+	 *
+	 * This is clearly no ``memory leak`` but if one forgets to erase the entity, it exists until the list is cleared.
+	 *	With \ref unique_handle one can do this.
+	 *
+	 * \code{.cpp}
+	 *	struct list_delete_action
+	 *	{
+	 *		std::list<Entity>* list{};  // pointer here, because a delete action must be move and copyable
+	 *
+	 *		void operator ()(const std::list<Entity>::iterator& itr) { list->erase(itr); }
+	 *	};
+	 *	std::list<Entity> entities{};
+	 *
+	 *	{
+	 *		entities.emplace_front();
+	 *		sl::unique_handle entity_id{ entities.begin(), list_delete_action{ &entities } };
+	 *
+	 *		// do some actions with entity and other stuff
+	 *
+	 *		// no cleanup necessary
+	 *	}
+	 * \endcode
+	 *
+	 * Of course, at a first glance this seems quite more verbose, but in the long term nobody has to care about that entity anymore. This is what ``RAII`` is about.
+	 * Note that ``unique_handles`` also can be stored as a member, then they really begin to shine, because if one would like to bind that entity to the lifetime of
+	 * an other object that would of course lead to custom move constructor, assignment operator and destructor and explicitly deleted copy. With a
+	 * \ref unique_handle none of this is necessary (and this is in fact the main reason why I decided to implement this).
+	 *
+	 * \see https://en.cppreference.com/w/cpp/utility/optional https://en.cppreference.com/w/cpp/memory/unique_ptr
 	*/
 
 	/**
@@ -60,61 +121,8 @@ namespace sl
 	};
 
 	/**
-	 * \brief This type models some kind of ``std::optional`` behaviour but resets itself on move
-	 * \details This type is in fact a wrapper around a ``std::optional``, thus has at least the overhead of that. Additionally it adds two
-	 * important aspects:
-	 *		-# it resets its internal value after it got moved.
-	 *		-# it invokes its delete action every time when the internal value switches its state from initialized to uninitialized.
-	 *
-	 * The latter happens when the value is in an initialized state and the ``unique_handle`` gets
-	 *		- moved,
-	 *		- destructed or
-	 *		- assigned
-	 *
-	 * This behaviour is useful in cases when one has an identifier to a resource, which isn't stored on the heap (thus a ``std::unique_ptr`` is not
-	 * a good option), and this identifier should have the responsibility as an owner over that resource, but the resource itself is not bound to the
-	 * lifetime of that identifier. This might sound quite abstract, thus let us visit a simple example.
-	 *
-	 * Here some entities are stored in a simple ``std::list``. Imagine this entities are accessible from many places in your program, thus something
-	 * like this can easily happen.
-	 *	```cpp
-	 *	std::list<Entity> entities{};
-	 *
-	 *	{
-	 *		entities.emplace_front();
-	 *		auto entity_id = entities.begin();
-	 *
-	 *		// do some actions with entity and other stuff
-	 *
-	 *		// entity should now be erased. Not actually c++-ig, is it?
-	 *		entities.erase(entity_id);
-	 *	}
-	 *	```
-	 * This is clearly no ``memory leak`` but if one forgets to erase the entity, it exists until the list is cleared.
-	 *	With ``unique_handle`` one can do this.
-	 *	```cpp
-	 *	struct list_delete_action
-	 *	{
-	 *		std::list<Entity>* list{};  // pointer here, because a delete action must be move and copyable
-	 *
-	 *		void operator ()(const std::list<Entity>::iterator& itr) { list->erase(itr); }
-	 *	};
-	 *	std::list<Entity> entities{};
-	 *
-	 *	{
-	 *		entities.emplace_front();
-	 *		sl::unique_handle entity_id{ entities.begin(), list_delete_action{ &entities } };
-	 *
-	 *		// do some actions with entity and other stuff
-	 *
-	 *		// no cleanup necessary
-	 *	}
-	 *	```
-	 * Of course, at a first glance this seems quite more verbose, but in the long term nobody has to care about that entity anymore. This is what ``RAII`` is about.
-	 * Note that ``unique_handles`` also can be stored as a member, then they really begin to shine, because if one would like to bind that entity to the lifetime of
-	 * an other object that would of course lead to custom move constructor, assignment operator and destructor and explicitly deleted copy. With a
-	 * ``unique_handle`` none of this is necessary (and this is in fact the main reason why I decided to implement this).
-	 *
+	 * \brief This type models some kind of ``std::optional`` behaviour but resets itself on move operations.
+	 * \details For more details and information about related components go to \ref unique_handle_module "unique_handle module page".
 	 * \tparam T The type of the stored value
 	 * \tparam TDeleteAction Type of the used delete action
 	 */
@@ -206,7 +214,7 @@ namespace sl
 
 		/**
 		 * \brief Explicitly does not initialize the value. This overload is mainly used for convenience when returning
-		 * a nullhandle.
+		 * a \ref nullhandle.
 		 * \param deleteAction The provided delete action object
 		 */
 		constexpr unique_handle(nullhandle_t, const delete_action_type& deleteAction = delete_action_type()) noexcept
@@ -376,7 +384,7 @@ namespace sl
 	};
 
 	/**
-	 * \brief Three-way-comparison operator overload for two ``unique_handles``.
+	 * \brief Three-way-comparison operator overload between two \ref unique_handle "unique_handles".
 	 * \tparam T Value type of the handles
 	 * \tparam TDeleteAction Delete action type of the handles
 	 * \param lhs left-hand-side of the operation
@@ -400,7 +408,7 @@ namespace sl
 	}
 
 	/**
-	 * \brief Three-way-comparison operator overload for comparison of ``unique_handle`` and a value.
+	 * \brief Three-way-comparison operator overload for comparison between a \ref unique_handle and a value.
 	 * \tparam T Value type of the handles
 	 * \tparam TDeleteAction Delete action type of the handles
 	 * \tparam T2 Type of right-hand-side. Must be three-way-comparable to ``T``
@@ -420,7 +428,7 @@ namespace sl
 	}
 
 	/**
-	 * \brief Three-way-comparison operator overload for comparison of ``unique_handle`` and ``nullhandle_t``
+	 * \brief Three-way-comparison operator overload for comparison of \ref unique_handle and \ref nullhandle_t
 	 * \tparam T Value type of the handles
 	 * \tparam TDeleteAction Delete action type of the handles
 	 * \param lhs left-hand-side of the operation
