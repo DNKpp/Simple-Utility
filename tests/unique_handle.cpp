@@ -212,11 +212,11 @@ TEMPLATE_TEST_CASE_SIG
 (
 	"delete action on assignment must only be invoked if unique_handle holds a value.",
 	"[unique_handle]",
-	((auto VInit, auto VAssign, bool VExpected), VInit, VAssign, VExpected),
-	(42, 1337, true),
-	(42, nullhandle, true),
-	(nullhandle, 1337, false),
-	(nullhandle, nullhandle, false)
+	((class TInit, class TAssign, bool VExpected), TInit, TAssign, VExpected),
+	(int, int, true),
+	(int, nullhandle_t, true),
+	(nullhandle_t, int, false),
+	(nullhandle_t, nullhandle_t, false)
 )
 #pragma warning(disable: 26444)
 {
@@ -224,8 +224,8 @@ TEMPLATE_TEST_CASE_SIG
 	const bool result = []
 	{
 		int counter{};
-		test_handle temp{ VInit, delete_action_mock{ .invoke_counter = &counter } };
-		temp = VAssign;
+		test_handle temp{ TInit{}, delete_action_mock{ .invoke_counter = &counter } };
+		temp = TAssign{};
 		return counter == 1;
 	}();
 
@@ -408,9 +408,9 @@ TEMPLATE_TEST_CASE_SIG
 (
 	"delete action on reset must only be invoked if unique_handle holds a value.",
 	"[unique_handle]",
-	((auto VInit, bool VExpected), VInit, VExpected),
-	(42, true),
-	(nullhandle, false)
+	((class TInit, bool VExpected), TInit, VExpected),
+	(int, true),
+	(nullhandle_t, false)
 )
 #pragma warning(disable: 26444)
 {
@@ -418,7 +418,7 @@ TEMPLATE_TEST_CASE_SIG
 	const bool result = []
 	{
 		int counter{};
-		test_handle temp{ VInit, delete_action_mock{ .invoke_counter = &counter } };
+		test_handle temp{ TInit{}, delete_action_mock{ .invoke_counter = &counter } };
 		temp.reset();
 		return counter == 1;
 	}();
@@ -443,9 +443,9 @@ TEMPLATE_TEST_CASE_SIG
 (
 	"delete action on destruction must only be invoked if unique_handle holds a value.",
 	"[unique_handle]",
-	((auto VInit, bool VExpected), VInit, VExpected),
-	(42, true),
-	(nullhandle, false)
+	((class TInit, bool VExpected), TInit, VExpected),
+	(int, true),
+	(nullhandle_t, false)
 )
 #pragma warning(disable: 26444)
 {
@@ -453,7 +453,7 @@ TEMPLATE_TEST_CASE_SIG
 	{
 		int counter{};
 		{
-			const test_handle temp{ VInit, delete_action_mock{ .invoke_counter = &counter } };
+			const test_handle temp{ TInit{}, delete_action_mock{ .invoke_counter = &counter } };
 		}
 		return counter == 1;
 	}();
