@@ -24,7 +24,7 @@
 namespace sl
 {
 	/**
-	* @defgroup unique_handle_module unique_handle
+	* \defgroup GROUP_UNIQUE_HANDLE unique_handle
 	*
 	* \brief A helper type, which acts as a nullable resource handle with self-cleanup support.
 	*
@@ -121,6 +121,9 @@ namespace sl
 	 */
 	struct default_delete_action
 	{
+		/**
+		 * \brief Empty invoke operator
+		 */
 		constexpr void operator ()(auto&) const noexcept
 		{
 		}
@@ -153,13 +156,13 @@ namespace sl
 	}
 
 	/**
-	* \addtogroup unique_handle_module
+	* \addtogroup GROUP_UNIQUE_HANDLE
 	* @{
 	*/
 
 	/**
 	 * \brief This type models some kind of ``std::optional`` behaviour but resets itself on move operations.
-	 * \details For more details and information about related components go to \ref unique_handle_module "unique_handle module page".
+	 * \details For more details and information about related components go to \ref GROUP_UNIQUE_HANDLE "unique_handle group page".
 	 * \tparam T The type of the stored value
 	 * \tparam TDeleteAction Type of the used delete action
 	 */

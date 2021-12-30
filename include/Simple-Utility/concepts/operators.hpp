@@ -14,16 +14,16 @@
 namespace sl::concepts
 {
 	/**
-	* @defgroup concepts concepts
+	* \defgroup GROUP_CONCEPTS concepts
 	*
 	* \brief Contains concepts for different purposes.
-	* @{
-	*/
+	**/
 
 	/**
-	* @defgroup shift_operator_concepts shift operators
+	* \defgroup GROUP_SHIFT_OPERATOR_CONCEPTS shift operators
 	*
 	* \brief Contains concepts which determines whether a type is usable in operator <<, <<=, >> and >>= expressions.
+	* \ingroup GROUP_CONCEPTS
 	* @{
 	*/
 
@@ -296,9 +296,10 @@ namespace sl::concepts
 	/** @} */
 
 	/**
-	* @defgroup logical_arithmetic_operator_concepts logical arithmetic operators
+	* \defgroup GROUP_LOGICAL_ARITHMETIC_OPERATOR_CONCEPTS logical arithmetic operators
 	*
 	* \brief Contains concepts which determines whether a type is usable in operator &, &=, |, |=, ^, ^= and ~  expressions.
+	* \ingroup GROUP_CONCEPTS
 	* @{
 	*/
 
@@ -708,7 +709,6 @@ namespace sl::concepts
 	{
 		{ !t } -> std::convertible_to<TResult>;
 	};
-	/** @} */
 }
 
 #endif

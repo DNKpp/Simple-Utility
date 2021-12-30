@@ -15,15 +15,10 @@
 namespace sl::concepts
 {
 	/**
-	* @addtogroup concepts
-	*
-	* @{
-	*/
-
-	/**
-	* @defgroup stl_counterpart_concepts stl counterparts
+	* \defgroup GROUP_STL_COUNTERPART_CONCEPTS stl counterparts
 	*
 	* \brief Contains several counterpart concepts for existing stl concepts.
+	* \ingroup GROUP_CONCEPTS
 	* @{
 	*/
 
@@ -54,7 +49,6 @@ namespace sl::concepts
 	template <class TSource, class TTarget>
 	concept assignable_to = std::assignable_from<TTarget, TSource>;
 
-	/** @} */
 	/** @} */
 }
 
