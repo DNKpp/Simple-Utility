@@ -50,7 +50,7 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2.1.0
         with:
-          name: ${{ GITHUB_REPOSITORY }}
+          name: $GITHUB_REPOSITORY
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ${{ env.COVERAGE_FILE }}
           fail_ci_if_error: true
