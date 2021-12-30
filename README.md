@@ -63,4 +63,3 @@ include(CPM.cmake) # or include(get_cpm.cmake)
 CPMAddPackage("gh:DNKpp/Simple-Utility#master")
 # do not forget linking via target_link_libraries as shown above
 ```
-
