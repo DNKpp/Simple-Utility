@@ -151,6 +151,13 @@ TEST_CASE("unique_handle should be assignable by value.", "[unique_handle]")
 	REQUIRE(handle);
 }
 
+TEST_CASE("unique_handle should automatically deduct its template arguments when constructed by value and deleteAction.", "[unique_handle]")
+{
+	constexpr unique_handle handle{ 42, delete_action_mock{} };
+
+	// nothing to check, just compiling
+}
+
 TEST_CASE("unique_handle should be explicitly in-place construct value when std::in_place token is used.", "[unique_handle]")
 {
 	constexpr unique_handle<value_t> handle{ std::in_place, 42, 1337 };

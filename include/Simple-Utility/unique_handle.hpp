@@ -384,6 +384,14 @@ namespace sl
 	};
 
 	/**
+	 * \brief Deduction guide for \ref unique_handle class
+	 * \tparam T Value type
+	 * \tparam TDeleteAction Delete action type
+	 */
+	template <class T, class TDeleteAction>
+	unique_handle(T, TDeleteAction) -> unique_handle<T, TDeleteAction>;
+
+	/**
 	 * \brief Three-way-comparison operator overload between two \ref unique_handle "unique_handles".
 	 * \tparam T Value type of the handles
 	 * \tparam TDeleteAction Delete action type of the handles
