@@ -1,16 +1,17 @@
 name: coverage
 
+env:
+    GXX_VERSION: 11
+    TESTS_DIR: out/tests
+    COVERAGE_FILE: coverage.info
+    TEST_BUILD_FLAG: SIMPLE_UTILITY_BUILD_TESTS
+
 on: [push, pull_request]
 
 jobs:
   coverage-reporter:
     timeout-minutes: 10
     runs-on: ubuntu-latest
-    env:
-        GXX_VERSION: 11
-        TESTS_DIR: out/tests
-        COVERAGE_FILE: coverage.info
-        TEST_BUILD_FLAG: SIMPLE_UTILITY_BUILD_TESTS
 
     steps:
       - uses: actions/checkout@v2

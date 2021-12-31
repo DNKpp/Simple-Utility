@@ -1,5 +1,9 @@
 name: publish docs
 
+env:
+    DOXYFILE: docs/Doxyfile
+    HTML_DIR: ./out/docs/html
+
 on:
   release:
     types: [released]
@@ -7,9 +11,6 @@ on:
 jobs:
   docs:
     runs-on: ubuntu-latest
-    env:
-      DOXYFILE: docs/Doxyfile
-      HTML_DIR: ./out/docs/html
 
     steps:
     - uses: actions/checkout@v2
