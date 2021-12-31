@@ -152,7 +152,6 @@ namespace sl
 		using type_t = typename T::type;
 	}
 
-
 	/**
 	 * \brief This type models some kind of ``std::optional`` behaviour but resets itself on move operations.
 	 * \details For more details and information about related components go to \ref GROUP_UNIQUE_HANDLE "unique_handle group page".
@@ -410,6 +409,72 @@ namespace sl
 		[[nodiscard]]
 		constexpr const delete_action_type& delete_action() const noexcept { return m_DeleteAction; }
 
+		/**
+		 * \brief Equality-comparison operator overload between two \ref unique_handle "unique_handles". operator != is implicitly defined.
+		 * \param other The object to compare with
+		 * \return Both sides compare equal if both handles contain uninitialized values or both value are initialized and compare equal.
+		 * Otherwise ``false`` is returned.
+		 */
+		[[nodiscard]]
+		constexpr bool operator ==(const unique_handle& other) const
+		{
+			return m_Value == other.m_Value;
+		}
+
+		/**
+		 * \brief Three-way-comparison operator overload between two \ref unique_handle "unique_handles".
+		 * \param other The object to compare with
+		 * \return If both handles have initialized values, both values will be compared. Otherwise they will be compared in accordance
+		 * to the result of ``is_valid()``.
+		 */
+		[[nodiscard]]
+		constexpr std::compare_three_way_result_t<T> operator <=>(const unique_handle& other) const
+		{
+			return m_Value <=> other.m_Value;
+		}
+
+		/**
+		 * \brief Three-way-comparison operator overload for comparison between a \ref unique_handle and a value.
+		 * \tparam T2 Type of right-hand-side. Must be three-way-comparable to ``T``
+		 * \param other The object to compare with
+		 * \return If the handle's value is initialized, both values will be compared. Otherwise handle is less.
+		 */
+		template <class T2>
+			requires concepts::not_same_as<std::remove_cvref_t<T2>, unique_handle>
+					// do not move into template arg list, as this will result in a template cycle
+					&& std::three_way_comparable_with<T, T2>
+		[[nodiscard]]
+		constexpr std::compare_three_way_result_t<T, T2> operator <=>(const T2& other) const
+		{
+			return m_Value <=> other;
+		}
+
+		/**
+		 * \brief Equality-comparison operator overload for comparison between a \ref unique_handle and a value. operator != is implicitly defined.
+		 * \tparam T2 Type of right-hand-side. Must be equality-comparable to ``T``
+		 * \param other The object to compare with
+		 * \return Returns ``true`` if handle is valid and value compares equal equal to rhs. Otherwise ``false``.
+		 */
+		template <class T2>
+			requires concepts::not_same_as<std::remove_cvref_t<T2>, unique_handle>
+					// do not move into template arg list, as this will result in a template cycle
+					&& std::equality_comparable_with<T, T2>
+		[[nodiscard]]
+		constexpr bool operator ==(const T2& other) const
+		{
+			return m_Value == other;
+		}
+
+		/**
+		 * \brief Three-way-comparison operator overload for comparison of \ref unique_handle and \ref nullhandle_t.
+		 * \return Returns ``std::strong_ordering::equal`` if handle's value is uninitialized, otherwise ``std::strong_ordering::greater``.
+		 */
+		[[nodiscard]]
+		constexpr std::strong_ordering operator <=>(nullhandle_t) const noexcept
+		{
+			return is_valid() <=> false;
+		}
+
 	private:
 		std::optional<T> m_Value{};
 
@@ -444,66 +509,20 @@ namespace sl
 	template <class T>
 	unique_handle(T) -> unique_handle<T>;
 
-	/**
-	 * \brief Three-way-comparison operator overload between two \ref unique_handle "unique_handles".
-	 * \relatesalso unique_handle
-	 * \tparam T Value type of the handles
-	 * \tparam TDeleteAction Delete action type of the handles
-	 * \param lhs left-hand-side of the operation
-	 * \param rhs right-hand-side of the operation
-	 * \return If both handles have initialized values, both values will be compared. Otherwise they will be compared in accordance
-	 * to the result of ``is_valid()``.
-	 */
-	template <class T, class TDeleteAction>
-	[[nodiscard]]
-	constexpr std::compare_three_way_result_t<T> operator <=>
-	(
-		const unique_handle<T, TDeleteAction>& lhs,
-		const unique_handle<T, TDeleteAction>& rhs
-	)
-	{
-		if (lhs && rhs)
-		{
-			return *lhs <=> *rhs;
-		}
-		return lhs.is_valid() <=> rhs.is_valid();
-	}
-
-	/**
-	 * \brief Three-way-comparison operator overload for comparison between a \ref unique_handle and a value.
-	 * \relatesalso unique_handle
-	 * \tparam T Value type of the handles
-	 * \tparam TDeleteAction Delete action type of the handles
-	 * \tparam T2 Type of right-hand-side. Must be three-way-comparable to ``T``
-	 * \param lhs left-hand-side of the operation
-	 * \param rhs right-hand-side of the operation
-	 * \return If the handle's value is initialized, both values will be compared. Otherwise handle is less.
-	 */
-	template <class T, class TDeleteAction, std::three_way_comparable_with<T> T2>
-	[[nodiscard]]
-	constexpr std::compare_three_way_result_t<T, T2> operator <=>(const unique_handle<T, TDeleteAction>& lhs, const T2& rhs)
-	{
-		if (lhs)
-		{
-			return *lhs <=> rhs;
-		}
-		return std::compare_three_way_result_t<T>::less;
-	}
-
-	/**
-	 * \brief Three-way-comparison operator overload for comparison of \ref unique_handle and \ref nullhandle_t.
-	 * \relatesalso unique_handle
-	 * \tparam T Value type of the handles
-	 * \tparam TDeleteAction Delete action type of the handles
-	 * \param lhs left-hand-side of the operation
-	 * \return Returns ``std::strong_ordering::equal`` if handle's value is uninitialized, otherwise ``std::strong_ordering::greater``.
-	 */
-	template <class T, class TDeleteAction>
-	[[nodiscard]]
-	constexpr std::strong_ordering operator <=>(const unique_handle<T, TDeleteAction>& lhs, nullhandle_t) noexcept
-	{
-		return lhs.is_valid() <=> false;
-	}
+	///**
+	// * \brief Equality operator overload for comparison of \ref unique_handle and \ref nullhandle_t. operator != is implicitly defined.
+	// * \relatesalso unique_handle
+	// * \tparam T Value type of the handles
+	// * \tparam TDeleteAction Delete action type of the handles
+	// * \param lhs left-hand-side of the operation
+	// * \return Returns ``true`` if handle is invalid.
+	// */
+	//template <class T, class TDeleteAction>
+	//[[nodiscard]]
+	//constexpr std::strong_ordering operator ==(const unique_handle<T, TDeleteAction>& lhs, nullhandle_t) noexcept
+	//{
+	//	return !lhs.is_valid();
+	//}
 
 	/** @} */
 }

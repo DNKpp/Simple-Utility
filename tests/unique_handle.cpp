@@ -31,6 +31,8 @@ namespace
 
 		constexpr value_t(value_t&&) noexcept = default;
 		constexpr value_t& operator =(value_t&&) noexcept = default;
+
+		constexpr auto operator <=>(const value_t&) const = default;
 	};
 
 	struct delete_action_mock
@@ -489,4 +491,17 @@ TEST_CASE("unique_handle should be three-way-comparable with value type.", "[uni
 
 	STATIC_REQUIRE((42 <=> test_handle{ 42 }) == std::strong_ordering::equal);
 	STATIC_REQUIRE((test_handle{ 42 } <=> 42) == std::strong_ordering::equal);
+}
+
+TEST_CASE("unique_handle should be equality-comparable with specific types.", "[unique_handle]")
+{
+	STATIC_REQUIRE(1337 != test_handle{});
+	STATIC_REQUIRE(1337 == test_handle{ 1337 });
+
+	STATIC_REQUIRE(test_handle{ 1337 } != test_handle{});
+	STATIC_REQUIRE(test_handle{ 1337 } != test_handle{ 42 });
+	STATIC_REQUIRE(test_handle{ 1337 } == test_handle{ 1337 });
+
+	STATIC_REQUIRE(nullhandle == test_handle{});
+	STATIC_REQUIRE(nullhandle != test_handle{ 42 });
 }
