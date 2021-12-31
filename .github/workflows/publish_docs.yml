@@ -7,14 +7,20 @@ on:
 jobs:
   docs:
     runs-on: ubuntu-latest
+    env:
+      DOXYFILE: docs/Doxyfile
+      HTML_DIR: ./out/docs/html
+
     steps:
     - uses: actions/checkout@v2
 
     - name: Run Doxygen
       uses: mattnotmitt/doxygen-action@v1
+      with:
+        doxyfile-path: ${{ env.DOXYFILE }}
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out/docs/html
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ${{ env.HTML_DIR }}
