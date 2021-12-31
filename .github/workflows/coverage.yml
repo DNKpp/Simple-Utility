@@ -13,7 +13,7 @@ jobs:
         TEST_BUILD_FLAG: SIMPLE_UTILITY_BUILD_TESTS
 
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v2
       - name: Install compiler
         run: |
             sudo apt-get update
@@ -42,13 +42,13 @@ jobs:
           lcov -l ${{ env.COVERAGE_FILE }}
 
       - name: Upload coverage to Codacy
-        uses: codacy/codacy-coverage-reporter-action@v1.1.0
+        uses: codacy/codacy-coverage-reporter-action@v1
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN  }}
           coverage-reports: ${{ env.COVERAGE_FILE }}
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2.1.0
+        uses: codecov/codecov-action@v2
         with:
           name: $GITHUB_REPOSITORY
           token: ${{ secrets.CODECOV_TOKEN }}
