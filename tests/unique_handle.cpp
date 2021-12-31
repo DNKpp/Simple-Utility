@@ -153,7 +153,11 @@ TEST_CASE("unique_handle should be assignable by value.", "[unique_handle]")
 	REQUIRE(handle);
 }
 
-TEST_CASE("unique_handle should automatically deduct its template arguments when constructed by value and deleteAction.", "[unique_handle]")
+TEST_CASE
+(
+	"unique_handle should automatically deduct its template arguments when constructed by value and deleteAction.",
+	"[unique_handle]"
+)
 {
 	constexpr unique_handle handle{ 42, delete_action_mock{} };
 
@@ -335,7 +339,7 @@ TEST_CASE("unique_handle::raw should expose a const reference of its value.", "[
 {
 	constexpr bool result = []
 	{
-		test_handle handle{ 1337 };
+		const test_handle handle{ 1337 };
 		const int& ref{ handle.raw() };
 		return ref == 1337;
 	}();
@@ -354,7 +358,7 @@ TEST_CASE("unique_handle's operator * should expose a const reference of its val
 {
 	constexpr bool result = []
 	{
-		test_handle handle{ 42 };
+		const test_handle handle{ 42 };
 		const int& ref{ *handle };
 		return ref == 42;
 	}();
