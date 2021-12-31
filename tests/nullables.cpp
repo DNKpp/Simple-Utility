@@ -31,7 +31,7 @@ namespace
 }
 
 template <>
-struct sl::nullables::conditional_traits<target_t>
+struct sl::nullables::nullable_traits<target_t>
 {
 	using value_type = int;
 	constexpr static auto null{ target_t{ 0 } };
