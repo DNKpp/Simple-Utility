@@ -38,7 +38,7 @@ namespace sl::concepts
 	 * \tparam TTarget The target type to check
 	 */
 	template <class TSource, class TTarget>
-	concept constructs = std::constructible_from<TTarget, TSource>;
+	concept initializes = std::constructible_from<TTarget, TSource>;
 
 	/**
 	 * \brief Checks whether the target type is assignable from the source type.

@@ -23,8 +23,7 @@
 
 namespace sl
 {
-	/**
-	* \defgroup GROUP_UNIQUE_HANDLE unique_handle
+	/*! \defgroup GROUP_UNIQUE_HANDLE unique_handle
 	*
 	* \brief A helper type, which acts as a nullable resource handle with self-cleanup support.
 	*
@@ -129,8 +128,6 @@ namespace sl
 		}
 	};
 
-	/** @} */
-
 	namespace detail
 	{
 		template <class T>
@@ -155,10 +152,6 @@ namespace sl
 		using type_t = typename T::type;
 	}
 
-	/**
-	* \addtogroup GROUP_UNIQUE_HANDLE
-	* @{
-	*/
 
 	/**
 	 * \brief This type models some kind of ``std::optional`` behaviour but resets itself on move operations.
@@ -297,7 +290,7 @@ namespace sl
 		 * \param value Used object to initialize the value
 		 * \param deleteAction The provided delete action object
 		 */
-		template <concepts::constructs<T> T2>
+		template <concepts::initializes<T> T2>
 			requires concepts::not_same_as<std::remove_cvref_t<T2>, unique_handle>
 					&& concepts::not_same_as<std::remove_cvref_t<T2>, nullhandle_t>
 		explicit (!std::convertible_to<T2&&, T>)
@@ -316,7 +309,7 @@ namespace sl
 		template <concepts::assignable_to<T&> T2>
 			requires concepts::not_same_as<std::remove_cvref_t<T2>, unique_handle>
 					&& concepts::not_same_as<std::remove_cvref_t<T2>, nullhandle_t>
-					&& concepts::constructs<std::remove_cvref_t<T2>, T>
+					&& concepts::initializes<std::remove_cvref_t<T2>, T>
 		constexpr unique_handle& operator =(T2&& value)
 		{
 			invoke_delete_action_if_necessary();
@@ -432,6 +425,7 @@ namespace sl
 
 	/**
 	 * \brief Deduction guide for \ref unique_handle class
+	 * \relatesalso unique_handle
 	 * \tparam T Value type
 	 * \tparam TDeleteAction Delete action type
 	 */
@@ -444,6 +438,7 @@ namespace sl
 
 	/**
 	 * \brief Deduction guide for \ref unique_handle class
+	 * \relatesalso unique_handle
 	 * \tparam T Value type
 	 */
 	template <class T>
@@ -451,6 +446,7 @@ namespace sl
 
 	/**
 	 * \brief Three-way-comparison operator overload between two \ref unique_handle "unique_handles".
+	 * \relatesalso unique_handle
 	 * \tparam T Value type of the handles
 	 * \tparam TDeleteAction Delete action type of the handles
 	 * \param lhs left-hand-side of the operation
@@ -475,6 +471,7 @@ namespace sl
 
 	/**
 	 * \brief Three-way-comparison operator overload for comparison between a \ref unique_handle and a value.
+	 * \relatesalso unique_handle
 	 * \tparam T Value type of the handles
 	 * \tparam TDeleteAction Delete action type of the handles
 	 * \tparam T2 Type of right-hand-side. Must be three-way-comparable to ``T``
@@ -494,7 +491,8 @@ namespace sl
 	}
 
 	/**
-	 * \brief Three-way-comparison operator overload for comparison of \ref unique_handle and \ref nullhandle_t
+	 * \brief Three-way-comparison operator overload for comparison of \ref unique_handle and \ref nullhandle_t.
+	 * \relatesalso unique_handle
 	 * \tparam T Value type of the handles
 	 * \tparam TDeleteAction Delete action type of the handles
 	 * \param lhs left-hand-side of the operation

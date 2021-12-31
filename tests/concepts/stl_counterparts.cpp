@@ -31,7 +31,7 @@ namespace
 #pragma warning(disable: 26444)
 TEMPLATE_TEST_CASE_SIG
 (
-	"constructs should behave as the symmetrical counterpart of std::constructible_from with one constructor argument",
+	"initializes should behave as the symmetrical counterpart of std::constructible_from with one constructor argument",
 	"[concepts][stl_ext]",
 	((class TSource, class TTarget, bool VExpected), TSource, TTarget, VExpected),
 	(int, int, true),
@@ -40,7 +40,7 @@ TEMPLATE_TEST_CASE_SIG
 )
 #pragma warning(default: 26444)
 {
-	REQUIRE(constructs<TSource, TTarget> == VExpected);
+	REQUIRE(initializes<TSource, TTarget> == VExpected);
 }
 
 #pragma warning(disable: 26444)
