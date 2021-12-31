@@ -6,8 +6,9 @@
 #ifndef SL_UTILITY_CONDITIONAL_ALGORITHMS_HPP
 #define SL_UTILITY_CONDITIONAL_ALGORITHMS_HPP
 
-#include <optional>
+#include <concepts>
 #include <memory>
+#include <optional>
 
 #include "Simple-Utility/unique_handle.hpp"
 #include "Simple-Utility/concepts/operators.hpp"
@@ -24,6 +25,14 @@ namespace sl::nullables
 
 	template <class T>
 	constexpr static auto nullable_null_v{ nullable_traits<T>::null };
+
+	template <class T>
+	concept nullable = requires
+						{
+							typename nullable_value_t<T>;
+							nullable_null_v<T>;
+						}
+						&& std::equality_comparable_with<std::remove_cvref_t<T>, nullable_value_t<T>>;
 
 	template <class... TArgs>
 	struct nullable_traits<unique_handle<TArgs...>>
