@@ -77,9 +77,6 @@ var namespacesl =
     [ "default_delete_action", "df/d4b/structsl_1_1default__delete__action.html", "df/d4b/structsl_1_1default__delete__action" ],
     [ "unique_handle", "da/da9/classsl_1_1unique__handle.html", "da/da9/classsl_1_1unique__handle" ],
     [ "bad_handle_access", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga4ba9c826372bfbb9f9cc169eef579271", null ],
-    [ "operator<=>", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#gadd73bb8dd97b38016fba3bac7581dd06", null ],
-    [ "operator<=>", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga7b260327ced3f476885c06d78d04d106", null ],
-    [ "operator<=>", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga53234054795bebe639184f9eb7786463", null ],
     [ "unique_handle", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga11e70248f3089b94985e679de58130a1", null ],
     [ "unique_handle", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga73af8e5f5cf6641bdab66ea34f293152", null ],
     [ "nullhandle", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga3351a5e5ccde1cbc9cfd3d4a819e5995", null ]

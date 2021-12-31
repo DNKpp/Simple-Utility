@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Simple-Utility
-   &#160;<span id="projectnumber">v1.0.0</span>
+   &#160;<span id="projectnumber">v1.0.2</span>
    </div>
   </td>
  </tr>
@@ -178,6 +178,23 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a862bda113ce7af53421f304bdcbd56a1"><td class="memItemLeft" align="right" valign="top">constexpr const <a class="el" href="../../da/da9/classsl_1_1unique__handle.html#a183294b4430bd2aec199aedf2bfae33d">delete_action_type</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da9/classsl_1_1unique__handle.html#a862bda113ce7af53421f304bdcbd56a1">delete_action</a> () const noexcept</td></tr>
 <tr class="memdesc:a862bda113ce7af53421f304bdcbd56a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Immutable access to the delete action.  <a href="../../da/da9/classsl_1_1unique__handle.html#a862bda113ce7af53421f304bdcbd56a1">More...</a><br /></td></tr>
 <tr class="separator:a862bda113ce7af53421f304bdcbd56a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02aeedd01c11e96c93dc540981e99365"><td class="memItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da9/classsl_1_1unique__handle.html#a02aeedd01c11e96c93dc540981e99365">operator==</a> (const <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> &amp;other) const</td></tr>
+<tr class="memdesc:a02aeedd01c11e96c93dc540981e99365"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equality-comparison operator overload between two <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handles</a>. operator != is implicitly defined.  <a href="../../da/da9/classsl_1_1unique__handle.html#a02aeedd01c11e96c93dc540981e99365">More...</a><br /></td></tr>
+<tr class="separator:a02aeedd01c11e96c93dc540981e99365"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c9ce0570898c034369c33c3f6ea612b"><td class="memItemLeft" align="right" valign="top">constexpr std::compare_three_way_result_t&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da9/classsl_1_1unique__handle.html#a6c9ce0570898c034369c33c3f6ea612b">operator&lt;=&gt;</a> (const <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> &amp;other) const</td></tr>
+<tr class="memdesc:a6c9ce0570898c034369c33c3f6ea612b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Three-way-comparison operator overload between two <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handles</a>.  <a href="../../da/da9/classsl_1_1unique__handle.html#a6c9ce0570898c034369c33c3f6ea612b">More...</a><br /></td></tr>
+<tr class="separator:a6c9ce0570898c034369c33c3f6ea612b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7345b78e533de3271667f29af828a4dd"><td class="memTemplParams" colspan="2">template&lt;class T2 &gt; </td></tr>
+<tr class="memitem:a7345b78e533de3271667f29af828a4dd"><td class="memTemplItemLeft" align="right" valign="top">requires <a class="el" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889">concepts::not_same_as</a>&lt; std::remove_cvref_t&lt; T2 &gt;, <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> &gt; &amp;&amp;constexpr std::three_way_comparable_with&lt; T, T2 &gt; std::compare_three_way_result_t&lt; T, T2 &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/da9/classsl_1_1unique__handle.html#a7345b78e533de3271667f29af828a4dd">operator&lt;=&gt;</a> (const T2 &amp;other) const</td></tr>
+<tr class="memdesc:a7345b78e533de3271667f29af828a4dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Three-way-comparison operator overload for comparison between a <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> and a value.  <a href="../../da/da9/classsl_1_1unique__handle.html#a7345b78e533de3271667f29af828a4dd">More...</a><br /></td></tr>
+<tr class="separator:a7345b78e533de3271667f29af828a4dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa48e5560f5b317042a48793543827169"><td class="memTemplParams" colspan="2">template&lt;class T2 &gt; </td></tr>
+<tr class="memitem:aa48e5560f5b317042a48793543827169"><td class="memTemplItemLeft" align="right" valign="top">requires <a class="el" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889">concepts::not_same_as</a>&lt; std::remove_cvref_t&lt; T2 &gt;, <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> &gt; &amp;&amp;constexpr std::equality_comparable_with&lt; T, T2 &gt; bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/da9/classsl_1_1unique__handle.html#aa48e5560f5b317042a48793543827169">operator==</a> (const T2 &amp;other) const</td></tr>
+<tr class="memdesc:aa48e5560f5b317042a48793543827169"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equality-comparison operator overload for comparison between a <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> and a value. operator != is implicitly defined.  <a href="../../da/da9/classsl_1_1unique__handle.html#aa48e5560f5b317042a48793543827169">More...</a><br /></td></tr>
+<tr class="separator:aa48e5560f5b317042a48793543827169"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2430f32a657d572e3c3d5762d9b6158d"><td class="memItemLeft" align="right" valign="top">constexpr std::strong_ordering&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da9/classsl_1_1unique__handle.html#a2430f32a657d572e3c3d5762d9b6158d">operator&lt;=&gt;</a> (<a class="el" href="../../d9/db6/structsl_1_1nullhandle__t.html">nullhandle_t</a>) const noexcept</td></tr>
+<tr class="memdesc:a2430f32a657d572e3c3d5762d9b6158d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Three-way-comparison operator overload for comparison of <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> and <a class="el" href="../../d9/db6/structsl_1_1nullhandle__t.html">nullhandle_t</a>.  <a href="../../da/da9/classsl_1_1unique__handle.html#a2430f32a657d572e3c3d5762d9b6158d">More...</a><br /></td></tr>
+<tr class="separator:a2430f32a657d572e3c3d5762d9b6158d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -196,18 +213,6 @@ Related Functions</h2></td></tr>
 <tr class="memitem:ga11e70248f3089b94985e679de58130a1"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga11e70248f3089b94985e679de58130a1">unique_handle</a> (T) -&gt; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&lt; T &gt;</td></tr>
 <tr class="memdesc:ga11e70248f3089b94985e679de58130a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deduction guide for <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> class.  <a href="../../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga11e70248f3089b94985e679de58130a1">More...</a><br /></td></tr>
 <tr class="separator:ga11e70248f3089b94985e679de58130a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad26c08fe2141dee543118564dd722693"><td class="memTemplParams" colspan="2">template&lt;class T , class TDeleteAction &gt; </td></tr>
-<tr class="memitem:gad26c08fe2141dee543118564dd722693"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::compare_three_way_result_t&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#gad26c08fe2141dee543118564dd722693">operator</a> (const <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&lt; T, TDeleteAction &gt; &amp;lhs, const <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&lt; T, TDeleteAction &gt; &amp;rhs)</td></tr>
-<tr class="memdesc:gad26c08fe2141dee543118564dd722693"><td class="mdescLeft">&#160;</td><td class="mdescRight">Three-way-comparison operator overload between two <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handles</a>.  <a href="../../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#gad26c08fe2141dee543118564dd722693">More...</a><br /></td></tr>
-<tr class="separator:gad26c08fe2141dee543118564dd722693"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga09df683406117fb5541ddc2e0269f64c"><td class="memTemplParams" colspan="2">template&lt;class T , class TDeleteAction , std::three_way_comparable_with&lt; T &gt; T2&gt; </td></tr>
-<tr class="memitem:ga09df683406117fb5541ddc2e0269f64c"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::compare_three_way_result_t&lt; T, T2 &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga09df683406117fb5541ddc2e0269f64c">operator</a> (const <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&lt; T, TDeleteAction &gt; &amp;lhs, const T2 &amp;rhs)</td></tr>
-<tr class="memdesc:ga09df683406117fb5541ddc2e0269f64c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Three-way-comparison operator overload for comparison between a <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> and a value.  <a href="../../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga09df683406117fb5541ddc2e0269f64c">More...</a><br /></td></tr>
-<tr class="separator:ga09df683406117fb5541ddc2e0269f64c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga10fe00ce478cb3c3894448e4e4255813"><td class="memTemplParams" colspan="2">template&lt;class T , class TDeleteAction &gt; </td></tr>
-<tr class="memitem:ga10fe00ce478cb3c3894448e4e4255813"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::strong_ordering&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga10fe00ce478cb3c3894448e4e4255813">operator</a> (const <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&lt; T, TDeleteAction &gt; &amp;lhs, <a class="el" href="../../d9/db6/structsl_1_1nullhandle__t.html">nullhandle_t</a>) noexcept</td></tr>
-<tr class="memdesc:ga10fe00ce478cb3c3894448e4e4255813"><td class="mdescLeft">&#160;</td><td class="mdescRight">Three-way-comparison operator overload for comparison of <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> and <a class="el" href="../../d9/db6/structsl_1_1nullhandle__t.html">nullhandle_t</a>.  <a href="../../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga10fe00ce478cb3c3894448e4e4255813">More...</a><br /></td></tr>
-<tr class="separator:ga10fe00ce478cb3c3894448e4e4255813"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;std::movable T, std::invocable&lt; T &amp; &gt; TDeleteAction = default_delete_action&gt;<br />
@@ -742,7 +747,7 @@ template&lt;std::movable T, std::invocable&lt; T &amp; &gt; TDeleteAction = defa
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::<a class="el" href="../../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#gad26c08fe2141dee543118564dd722693">operator</a> bool </td>
+          <td class="memname">constexpr <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::operator bool </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -772,7 +777,7 @@ template&lt;std::movable T, std::invocable&lt; T &amp; &gt; TDeleteAction = defa
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr const T&amp; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::<a class="el" href="../../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#gad26c08fe2141dee543118564dd722693">operator</a>* </td>
+          <td class="memname">constexpr const T&amp; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::operator* </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -802,7 +807,7 @@ template&lt;std::movable T, std::invocable&lt; T &amp; &gt; TDeleteAction = defa
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr const T* <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::<a class="el" href="../../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#gad26c08fe2141dee543118564dd722693">operator</a>-&gt; </td>
+          <td class="memname">constexpr const T* <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::operator-&gt; </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -820,6 +825,119 @@ template&lt;std::movable T, std::invocable&lt; T &amp; &gt; TDeleteAction = defa
 
 </div>
 </div>
+<a id="a7345b78e533de3271667f29af828a4dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7345b78e533de3271667f29af828a4dd">&#9670;&nbsp;</a></span>operator&lt;=&gt;() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::movable T, std::invocable&lt; T &amp; &gt; TDeleteAction = default_delete_action&gt; </div>
+<div class="memtemplate">
+template&lt;class T2 &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">requires <a class="el" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889">concepts::not_same_as</a>&lt;std::remove_cvref_t&lt;T2&gt;, <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&gt;&amp;&amp; constexpr std::three_way_comparable_with&lt;T, T2&gt; std::compare_three_way_result_t&lt;T, T2&gt; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::operator&lt;=&gt; </td>
+          <td>(</td>
+          <td class="paramtype">const T2 &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Three-way-comparison operator overload for comparison between a <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> and a value. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T2</td><td>Type of right-hand-side. Must be three-way-comparable to <code>T</code> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>The object to compare with </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>If the handle's value is initialized, both values will be compared. Otherwise handle is less. </dd></dl>
+
+</div>
+</div>
+<a id="a6c9ce0570898c034369c33c3f6ea612b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c9ce0570898c034369c33c3f6ea612b">&#9670;&nbsp;</a></span>operator&lt;=&gt;() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::movable T, std::invocable&lt; T &amp; &gt; TDeleteAction = default_delete_action&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr std::compare_three_way_result_t&lt;T&gt; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::operator&lt;=&gt; </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&lt; T, TDeleteAction &gt; &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Three-way-comparison operator overload between two <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handles</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>The object to compare with </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>If both handles have initialized values, both values will be compared. Otherwise they will be compared in accordance to the result of <code><a class="el" href="../../da/da9/classsl_1_1unique__handle.html#a8f2246509b25463c6d0f23202858aa7d" title="Checks whether the value is initialized.">is_valid()</a></code>. </dd></dl>
+
+</div>
+</div>
+<a id="a2430f32a657d572e3c3d5762d9b6158d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2430f32a657d572e3c3d5762d9b6158d">&#9670;&nbsp;</a></span>operator&lt;=&gt;() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::movable T, std::invocable&lt; T &amp; &gt; TDeleteAction = default_delete_action&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr std::strong_ordering <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::operator&lt;=&gt; </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d9/db6/structsl_1_1nullhandle__t.html">nullhandle_t</a>&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Three-way-comparison operator overload for comparison of <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> and <a class="el" href="../../d9/db6/structsl_1_1nullhandle__t.html">nullhandle_t</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd>Returns <code>std::strong_ordering::equal</code> if handle's value is uninitialized, otherwise <code>std::strong_ordering::greater</code>. </dd></dl>
+
+</div>
+</div>
 <a id="aec5c29cdd95190bc3261cf4e05c2bf30"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aec5c29cdd95190bc3261cf4e05c2bf30">&#9670;&nbsp;</a></span>operator=() <span class="overload">[1/4]</span></h2>
 
@@ -832,7 +950,7 @@ template&lt;std::movable T, std::invocable&lt; T &amp; &gt; TDeleteAction = defa
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&amp; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::<a class="el" href="../../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#gad26c08fe2141dee543118564dd722693">operator</a>= </td>
+          <td class="memname"><a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&amp; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::operator= </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&lt; T, TDeleteAction &gt; &amp;&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -863,7 +981,7 @@ template&lt;std::movable T, std::invocable&lt; T &amp; &gt; TDeleteAction = defa
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d0/d0f/unique__handle_8hpp.html#a885c6eef0f993ed52fc1ad165c32550e">SL_UNIQUE_HANDLE_FULL_CONSTEXPR</a> <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&amp; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::<a class="el" href="../../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#gad26c08fe2141dee543118564dd722693">operator</a>= </td>
+          <td class="memname"><a class="el" href="../../d0/d0f/unique__handle_8hpp.html#a885c6eef0f993ed52fc1ad165c32550e">SL_UNIQUE_HANDLE_FULL_CONSTEXPR</a> <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&amp; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::operator= </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="../../d9/db6/structsl_1_1nullhandle__t.html">nullhandle_t</a>&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -893,7 +1011,7 @@ template&lt;std::movable T, std::invocable&lt; T &amp; &gt; TDeleteAction = defa
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">requires <a class="el" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889">concepts::not_same_as</a>&lt;std::remove_cvref_t&lt;T2&gt;, <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&gt; const <a class="el" href="../../da/da9/classsl_1_1unique__handle.html#a183294b4430bd2aec199aedf2bfae33d">delete_action_type</a> <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&amp;&amp; <a class="el" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889">concepts::not_same_as</a>&lt;std::remove_cvref_t&lt;T2&gt;, <a class="el" href="../../d9/db6/structsl_1_1nullhandle__t.html">nullhandle_t</a>&gt;&amp;&amp; constexpr <a class="el" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga6d88f2f46efbfef9ebca08d17acce7b0">concepts::initializes</a>&lt;std::remove_cvref_t&lt;T2&gt;, T&gt; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&amp; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::<a class="el" href="../../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#gad26c08fe2141dee543118564dd722693">operator</a>= </td>
+          <td class="memname">requires <a class="el" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889">concepts::not_same_as</a>&lt;std::remove_cvref_t&lt;T2&gt;, <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&gt; const <a class="el" href="../../da/da9/classsl_1_1unique__handle.html#a183294b4430bd2aec199aedf2bfae33d">delete_action_type</a> <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&amp;&amp; <a class="el" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889">concepts::not_same_as</a>&lt;std::remove_cvref_t&lt;T2&gt;, <a class="el" href="../../d9/db6/structsl_1_1nullhandle__t.html">nullhandle_t</a>&gt;&amp;&amp; constexpr <a class="el" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga6d88f2f46efbfef9ebca08d17acce7b0">concepts::initializes</a>&lt;std::remove_cvref_t&lt;T2&gt;, T&gt; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&amp; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::operator= </td>
           <td>(</td>
           <td class="paramtype">T2 &amp;&amp;&#160;</td>
           <td class="paramname"><em>value</em></td><td>)</td>
@@ -921,7 +1039,7 @@ template&lt;std::movable T, std::invocable&lt; T &amp; &gt; TDeleteAction = defa
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d0/d0f/unique__handle_8hpp.html#a885c6eef0f993ed52fc1ad165c32550e">SL_UNIQUE_HANDLE_FULL_CONSTEXPR</a> <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&amp; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::<a class="el" href="../../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#gad26c08fe2141dee543118564dd722693">operator</a>= </td>
+          <td class="memname"><a class="el" href="../../d0/d0f/unique__handle_8hpp.html#a885c6eef0f993ed52fc1ad165c32550e">SL_UNIQUE_HANDLE_FULL_CONSTEXPR</a> <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&amp; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::operator= </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&lt; T, TDeleteAction &gt; &amp;&amp;&#160;</td>
           <td class="paramname"><em>other</em></td><td>)</td>
@@ -943,6 +1061,88 @@ template&lt;std::movable T, std::invocable&lt; T &amp; &gt; TDeleteAction = defa
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>A reference to the target object </dd></dl>
+
+</div>
+</div>
+<a id="aa48e5560f5b317042a48793543827169"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa48e5560f5b317042a48793543827169">&#9670;&nbsp;</a></span>operator==() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::movable T, std::invocable&lt; T &amp; &gt; TDeleteAction = default_delete_action&gt; </div>
+<div class="memtemplate">
+template&lt;class T2 &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">requires <a class="el" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889">concepts::not_same_as</a>&lt;std::remove_cvref_t&lt;T2&gt;, <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&gt;&amp;&amp; constexpr std::equality_comparable_with&lt;T, T2&gt; bool <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const T2 &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Equality-comparison operator overload for comparison between a <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> and a value. operator != is implicitly defined. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T2</td><td>Type of right-hand-side. Must be equality-comparable to <code>T</code> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>The object to compare with </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns <code>true</code> if handle is valid and value compares equal equal to rhs. Otherwise <code>false</code>. </dd></dl>
+
+</div>
+</div>
+<a id="a02aeedd01c11e96c93dc540981e99365"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02aeedd01c11e96c93dc540981e99365">&#9670;&nbsp;</a></span>operator==() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;std::movable T, std::invocable&lt; T &amp; &gt; TDeleteAction = default_delete_action&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&lt; T, TDeleteAction &gt; &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Equality-comparison operator overload between two <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handles</a>. operator != is implicitly defined. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>The object to compare with </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Both sides compare equal if both handles contain uninitialized values or both value are initialized and compare equal. Otherwise <code>false</code> is returned. </dd></dl>
 
 </div>
 </div>
@@ -1070,8 +1270,8 @@ template&lt;std::movable T, std::invocable&lt; T &amp; &gt; TDeleteAction = defa
 <div class="line">        </div>
 <div class="line">        <span class="keyword">template</span> &lt;concepts::assignable_to&lt;T&amp;&gt; T2&gt;</div>
 <div class="line">            requires concepts::not_same_as&lt;std::remove_cvref_t&lt;T2&gt;</div>
-<div class="ttc" id="aclasssl_1_1unique__handle_html_a183294b4430bd2aec199aedf2bfae33d"><div class="ttname"><a href="../../da/da9/classsl_1_1unique__handle.html#a183294b4430bd2aec199aedf2bfae33d">sl::unique_handle::delete_action_type</a></div><div class="ttdeci">TDeleteAction delete_action_type</div><div class="ttdoc">Type of the used delete action.</div><div class="ttdef"><b>Definition:</b> unique_handle.hpp:175</div></div>
-<div class="ttc" id="aclasssl_1_1unique__handle_html_af6120989042eb836b50b1e6735e75937"><div class="ttname"><a href="../../da/da9/classsl_1_1unique__handle.html#af6120989042eb836b50b1e6735e75937">sl::unique_handle::deleteAction</a></div><div class="ttdeci">requires concepts::not_same_as&lt; std::remove_cvref_t&lt; T2 &gt;, unique_handle &gt; const delete_action_type &amp; deleteAction</div><div class="ttdef"><b>Definition:</b> unique_handle.hpp:297</div></div>
+<div class="ttc" id="aclasssl_1_1unique__handle_html_a183294b4430bd2aec199aedf2bfae33d"><div class="ttname"><a href="../../da/da9/classsl_1_1unique__handle.html#a183294b4430bd2aec199aedf2bfae33d">sl::unique_handle::delete_action_type</a></div><div class="ttdeci">TDeleteAction delete_action_type</div><div class="ttdoc">Type of the used delete action.</div><div class="ttdef"><b>Definition:</b> unique_handle.hpp:174</div></div>
+<div class="ttc" id="aclasssl_1_1unique__handle_html_af6120989042eb836b50b1e6735e75937"><div class="ttname"><a href="../../da/da9/classsl_1_1unique__handle.html#af6120989042eb836b50b1e6735e75937">sl::unique_handle::deleteAction</a></div><div class="ttdeci">requires concepts::not_same_as&lt; std::remove_cvref_t&lt; T2 &gt;, unique_handle &gt; const delete_action_type &amp; deleteAction</div><div class="ttdef"><b>Definition:</b> unique_handle.hpp:296</div></div>
 </div><!-- fragment -->
 </div>
 </div>
