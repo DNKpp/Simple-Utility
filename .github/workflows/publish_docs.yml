@@ -1,8 +1,8 @@
 name: publish docs
 
 env:
-    DOXYFILE: docs/Doxyfile
-    HTML_DIR: ./out/docs/html
+    DOXYFILE: ./docs/Doxyfile
+    BUILD_DIR: ./docs/build
 
 on:
   release:
@@ -24,4 +24,4 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ${{ env.HTML_DIR }}
+        publish_dir: ${{ env.BUILD_DIR }}/html
