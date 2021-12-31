@@ -101,7 +101,7 @@ TEMPLATE_TEST_CASE_SIG
 TEMPLATE_TEST_CASE
 (
 	"value_unchecked should use the expected overload",
-	"[algorithm]",
+	"[nullables]",
 	sl::unique_handle<int>,
 	std::optional<int>,
 	target_t
@@ -115,6 +115,70 @@ TEMPLATE_TEST_CASE
 	STATIC_REQUIRE(value_unchecked(object) == 42);
 }
 
+TEST_CASE("or_else should return the expected object when received as rvalue ref", "[nullables][algorithm]")
+{
+	using sl::nullables::or_else;
+
+	constexpr auto func = [] { return 1337; };
+	sl::unique_handle<int> handle{};
+
+	SECTION("when handle is empty, the invoke result should be returned")
+	{
+		handle = std::move(handle) | or_else{ func };
+		REQUIRE(handle == 1337);
+	}
+
+	SECTION("when handle is non-empty, the handle itself should be returned")
+	{
+		handle = 42;
+		handle = std::move(handle) | or_else{ func };
+		REQUIRE(handle == 42);
+	}
+}
+
+TEST_CASE("or_else should return the expected object when received as const lvalue ref", "[nullables][algorithm]")
+{
+	using sl::nullables::or_else;
+
+	constexpr auto func = [] { return 1337; };
+	std::optional<int> opt{};
+
+	SECTION("when optional is empty, the invoke result should be returned")
+	{
+		opt = std::as_const(opt) | or_else{ func };
+		REQUIRE(opt == 1337);
+	}
+
+	SECTION("when optional is non-empty, the optional itself should be returned")
+	{
+		opt = 42;
+		opt = std::as_const(opt) | or_else{ func };
+		REQUIRE(opt == 42);
+	}
+}
+
+TEST_CASE("or_else should return the expected object when used in a chain", "[nullables][algorithm]")
+{
+	using sl::nullables::or_else;
+	std::optional<int> opt{};
+
+	SECTION("when optional is empty, the first non empty invoke result should be returned")
+	{
+		opt = opt | or_else{ [] { return std::nullopt; } }
+			| or_else{ [] { return 42; } };
+
+		REQUIRE(opt == 42);
+	}
+
+	SECTION("when optional is non-empty, the optional itself should be returned")
+	{
+		opt = 1337;
+		opt = opt | or_else{ [] { return std::nullopt; } }
+			| or_else{ [] { return 42; } };
+
+		REQUIRE(opt == 1337);
+	}
+}
 //
 //#pragma warning(disable: 26444)
 //TEMPLATE_TEST_CASE_SIG
