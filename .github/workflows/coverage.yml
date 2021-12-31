@@ -3,7 +3,7 @@ name: coverage
 on: [push, pull_request]
 
 jobs:
-  codacy-coverage-reporter:
+  coverage-reporter:
     timeout-minutes: 10
     runs-on: ubuntu-latest
     env:
