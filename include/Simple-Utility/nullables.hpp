@@ -103,6 +103,24 @@ namespace sl::nullables
 		}
 		return std::forward<T>(alternative);
 	}
+
+	template <std::invocable TFunc>
+	struct or_else
+	{
+		template <nullable TNullable>
+		friend constexpr std::decay_t<TNullable> operator |(TNullable&& closure, or_else&& orElse)
+			requires std::constructible_from<std::decay_t<TNullable>, TNullable>
+					&& std::constructible_from<std::decay_t<TNullable>, std::invoke_result_t<TFunc>>
+		{
+			if (closure != nullable_null_v<TNullable>)
+			{
+				return std::forward<TNullable>(closure);
+			}
+			return std::invoke(orElse.func);
+		}
+
+		TFunc func;
+	};
 }
 
 #endif
