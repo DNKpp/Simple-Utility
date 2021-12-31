@@ -1,7 +1,8 @@
 name: publish docs
 
 env:
-    DOXYFILE: ./docs/Doxyfile
+    WORKING_DIR: ./docs
+    DOXYFILE: Doxyfile
     BUILD_DIR: ./docs/build
 
 on:
@@ -18,6 +19,7 @@ jobs:
     - name: Run Doxygen
       uses: mattnotmitt/doxygen-action@v1
       with:
+        working-directory: ${{ env.WORKING_DIR }}
         doxyfile-path: ${{ env.DOXYFILE }}
 
     - name: Deploy
