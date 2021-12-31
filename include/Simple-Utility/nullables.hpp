@@ -32,7 +32,7 @@ namespace sl::nullables
 							typename nullable_value_t<T>;
 							nullable_null_v<T>;
 						}
-						&& std::equality_comparable_with<std::remove_cvref_t<T>, nullable_value_t<T>>;
+						&& std::equality_comparable_with<T, decltype(nullable_null_v<T>)>;
 
 	template <class... TArgs>
 	struct nullable_traits<unique_handle<TArgs...>>
