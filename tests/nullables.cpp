@@ -97,8 +97,6 @@ TEMPLATE_TEST_CASE_SIG
 	REQUIRE(nullable<T> == VExpectedResult);
 }
 
-
-
 #pragma warning(disable: 26444)
 TEMPLATE_TEST_CASE
 (
@@ -116,7 +114,6 @@ TEMPLATE_TEST_CASE
 
 	STATIC_REQUIRE(value_unchecked(object) == 42);
 }
-
 
 //
 //#pragma warning(disable: 26444)

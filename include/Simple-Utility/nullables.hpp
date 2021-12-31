@@ -92,14 +92,12 @@ namespace sl::nullables
 		return closure.value_or(std::forward<T>(alternative));
 	}
 
-	//template <nullable TNullable, std::convertible_to<nullable_value_t<TNullable>> T>
-	template <nullable TNullable, class T>
+	template <nullable TNullable, std::convertible_to<nullable_value_t<TNullable>> T>
 	[[nodiscard]]
 	constexpr auto value_or(TNullable&& closure, T&& alternative)
 		requires (!requires { closure.value_or(std::forward<T>(alternative)); })
 	{
-		//if ((closure <=> nullable_null_v<TNullable>) == std::strong_ordering::equal)
-		if (closure > sl::nullhandle_t{})
+		if (closure != nullable_null_v<TNullable>)
 		{
 			return value_unchecked(std::forward<TNullable>(closure));
 		}
