@@ -21,10 +21,10 @@ namespace sl::nullables
 	};
 
 	template <class T>
-	using nullable_value_t = typename nullable_traits<T>::value_type;
+	using nullable_value_t = typename nullable_traits<std::remove_cvref_t<T>>::value_type;
 
 	template <class T>
-	constexpr static auto nullable_null_v{ nullable_traits<T>::null };
+	constexpr static auto nullable_null_v{ nullable_traits<std::remove_cvref_t<T>>::null };
 
 	template <class T>
 	concept nullable = requires
