@@ -22,12 +22,6 @@ namespace
 	{
 		return target.x;
 	}
-
-	[[nodiscard]]
-	constexpr bool has_value(const target_t& target) noexcept
-	{
-		return target.x != 0;
-	}
 }
 
 template <>
@@ -36,26 +30,6 @@ struct sl::nullables::nullable_traits<target_t>
 	using value_type = int;
 	constexpr static auto null{ target_t{ 0 } };
 };
-
-#pragma warning(disable: 26444)
-TEMPLATE_TEST_CASE_SIG
-(
-	"has_value should use the expected overload",
-	"[algorithm]",
-	((class T, auto VInit, bool VExpected), T, VInit, VExpected),
-	(sl::unique_handle<int>, sl::nullhandle, false),
-	(sl::unique_handle<int>, 42, true),
-	(std::optional<int>, std::nullopt, false),
-	(target_t, 42, true)
-)
-#pragma warning(default: 26444)
-{
-	using sl::nullables::has_value;
-
-	constexpr T object{ VInit };
-
-	STATIC_REQUIRE(has_value(object) == VExpected);
-}
 
 #pragma warning(disable: 26444)
 TEMPLATE_TEST_CASE
@@ -82,13 +56,12 @@ TEMPLATE_TEST_CASE_SIG
 	"[algorithm]",
 	((class T, auto VInit, auto VAlt, auto VExpectedValue), T, VInit, VAlt, VExpectedValue),
 	(sl::unique_handle<int>, sl::nullhandle, 42, 42),
-	(sl::unique_handle<int>, 1337, 42, 1337),
-	(std::optional<int>, std::nullopt, 42, 42),
-	(target_t, 1337, 42, 1337)
+	(sl::unique_handle<int>, 1337, 42, 1337)/*,
+	(std::optional<int>, std::nullopt, 42, 42)*/
 )
 #pragma warning(default: 26444)
 {
-	constexpr auto value = []
+	auto value = []
 	{
 		T object{ VInit };
 		return sl::nullables::value_or(std::move(object), VAlt);
