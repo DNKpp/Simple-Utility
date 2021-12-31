@@ -38,7 +38,7 @@ namespace sl::nullables
 	struct nullable_traits<unique_handle<TArgs...>>
 	{
 		using value_type = typename unique_handle<TArgs...>::value_type;
-		constexpr static auto null{ nullhandle };
+		constexpr static nullhandle_t null{};
 	};
 
 	template <class... TArgs>
@@ -76,14 +76,6 @@ namespace sl::nullables
 		return *closure;
 	}
 
-	template <class TClosure>
-	[[nodiscard]]
-	constexpr bool has_value(const TClosure& closure) noexcept
-		requires requires { static_cast<bool>(closure); }
-	{
-		return static_cast<bool>(closure);
-	}
-
 	template <class TClosure, class T>
 	[[nodiscard]]
 	constexpr auto value_or(TClosure&& closure, T&& alternative)
@@ -93,14 +85,16 @@ namespace sl::nullables
 		return closure.value_or(std::forward<T>(alternative));
 	}
 
-	template <class TClosure, std::convertible_to<nullable_value_t<TClosure>> T>
+	//template <nullable TNullable, std::convertible_to<nullable_value_t<TNullable>> T>
+	template <nullable TNullable, class T>
 	[[nodiscard]]
-	constexpr auto value_or(TClosure&& closure, T&& alternative)
-		requires !requires { closure.value_or(std::forward<T>(alternative)); }
+	constexpr auto value_or(TNullable&& closure, T&& alternative)
+		requires (!requires { closure.value_or(std::forward<T>(alternative)); })
 	{
-		if (has_value(closure))
+		//if ((closure <=> nullable_null_v<TNullable>) == std::strong_ordering::equal)
+		if (closure > sl::nullhandle_t{})
 		{
-			return value_unchecked(std::forward<TClosure>(closure));
+			return value_unchecked(std::forward<TNullable>(closure));
 		}
 		return std::forward<T>(alternative);
 	}
