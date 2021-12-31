@@ -1,0 +1,58 @@
+name: coverage
+
+env:
+    GXX_VERSION: 11
+    TESTS_DIR: out/tests
+    COVERAGE_FILE: coverage.info
+    TEST_BUILD_FLAG: SIMPLE_UTILITY_BUILD_TESTS
+
+on: [push, pull_request]
+
+jobs:
+  coverage-reporter:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install compiler
+        run: |
+            sudo apt-get update
+            sudo apt-get install g++-${{ env.GXX_VERSION }} -y
+            sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${{ env.GXX_VERSION }} ${{ env.GXX_VERSION }}00 --slave /usr/bin/gcc gcc /usr/bin/gcc-${{ env.GXX_VERSION }}
+            sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-${{ env.GXX_VERSION }} ${{ env.GXX_VERSION }}00
+
+      - name: Compile tests
+        env:
+          CXXFLAGS: "--coverage -fno-inline"
+          CC: gcc
+          CXX: g++
+        run: |
+          cmake -D${{ env.TEST_BUILD_FLAG }}=ON -B ${{ env.TESTS_DIR }}/.. -S .
+          cmake --build ${{ env.TESTS_DIR }}/.. -j4
+
+      - name: Run tests
+        env:
+          CTEST_OUTPUT_ON_FAILURE: 1
+        run: ctest --test-dir ${{ env.TESTS_DIR }} --timeout 30 -C Debug -j4
+
+      - name: Collect data
+        run: |
+          sudo apt-get install lcov -y
+          lcov -c -d ${{ env.TESTS_DIR }} -o ${{ env.COVERAGE_FILE }}
+          lcov -l ${{ env.COVERAGE_FILE }}
+
+      - name: Upload coverage to Codacy
+        uses: codacy/codacy-coverage-reporter-action@v1
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN  }}
+          coverage-reports: ${{ env.COVERAGE_FILE }}
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          name: $GITHUB_REPOSITORY
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ${{ env.COVERAGE_FILE }}
+          fail_ci_if_error: true
+          verbose: true

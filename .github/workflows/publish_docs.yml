@@ -1,0 +1,27 @@
+name: publish docs
+
+env:
+    DOXYFILE: ./docs/Doxyfile
+    BUILD_DIR: ./docs/build
+
+on:
+  release:
+    types: [released]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Run Doxygen
+      uses: mattnotmitt/doxygen-action@v1
+      with:
+        doxyfile-path: ${{ env.DOXYFILE }}
+
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ${{ env.BUILD_DIR }}/html
