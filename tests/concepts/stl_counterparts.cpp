@@ -17,6 +17,7 @@ namespace
 	{
 		target_t() = default;
 
+		// ReSharper disable once CppNonExplicitConvertingConstructor
 		target_t(int)
 		{
 		}
