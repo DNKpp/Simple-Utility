@@ -5,7 +5,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "Simple-Utility/conditional_algorithms.hpp"
+#include "Simple-Utility/nullables.hpp"
 #include "Simple-Utility/unique_handle.hpp"
 
 #include <optional>
@@ -31,7 +31,7 @@ namespace
 }
 
 template <>
-struct sl::conditional_traits<target_t>
+struct sl::nullables::conditional_traits<target_t>
 {
 	using value_type = int;
 	constexpr static auto null{ target_t{ 0 } };
@@ -50,7 +50,7 @@ TEMPLATE_TEST_CASE_SIG
 )
 #pragma warning(default: 26444)
 {
-	using sl::has_value;
+	using sl::nullables::has_value;
 
 	constexpr T object{ VInit };
 
@@ -68,7 +68,7 @@ TEMPLATE_TEST_CASE
 )
 #pragma warning(default: 26444)
 {
-	using sl::value_unchecked;
+	using sl::nullables::value_unchecked;
 
 	constexpr TestType object{ 42 };
 
@@ -91,7 +91,7 @@ TEMPLATE_TEST_CASE_SIG
 	constexpr auto value = []
 	{
 		T object{ VInit };
-		return sl::value_or(std::move(object), VAlt);
+		return sl::nullables::value_or(std::move(object), VAlt);
 	}();
 
 	REQUIRE(value == VExpectedValue);

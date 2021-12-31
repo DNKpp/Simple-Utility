@@ -12,7 +12,7 @@
 #include "Simple-Utility/unique_handle.hpp"
 #include "Simple-Utility/concepts/operators.hpp"
 
-namespace sl
+namespace sl::nullables
 {
 	template <class T>
 	struct conditional_traits
@@ -28,7 +28,7 @@ namespace sl
 	template <class... TArgs>
 	struct conditional_traits<unique_handle<TArgs...>>
 	{
-		using value_type = typename unique_handle<TArgs...>::element_type;
+		using value_type = typename unique_handle<TArgs...>::value_type;
 		constexpr static auto null{ nullhandle };
 	};
 
