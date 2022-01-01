@@ -10,6 +10,7 @@
 #include "Simple-Utility/nullables.hpp"
 #include "Simple-Utility/unique_handle.hpp"
 
+#include <iostream>
 #include <memory>
 #include <optional>
 #include <string>
@@ -50,12 +51,15 @@ namespace
 	}
 }
 
+//! [nullables custom type traits]
 template <>
 struct sl::nullables::nullable_traits<target_t>
 {
 	using value_type = int;
 	constexpr static empty_t null{};
 };
+
+//! [nullables custom type traits]
 
 #pragma warning(disable: 26444)
 TEMPLATE_TEST_CASE_SIG
@@ -451,13 +455,7 @@ TEST_CASE("nullable algorithms should be usable with raw ptrs", "[nullables][alg
 	}
 }
 
-#pragma warning(disable: 26444)
-TEST_CASE
-(
-	"artifically more advanced example",
-	"[nullables][algorithm]"
-)
-#pragma warning(default: 26444)
+TEST_CASE("artifically more advanced example", "[nullables][algorithm]")
 {
 	using namespace sl::nullables;
 
@@ -492,5 +490,146 @@ TEST_CASE
 							| or_else{ oneAndOnlyTruth }
 							| value_or{ -42 };
 		REQUIRE(result == 1337 * 1337);
+	}
+}
+
+TEST_CASE("or_else usage example with copyable types", "[nullables][algorithm][example]")
+{
+	SECTION("or_else forwards the nullable if its valid.")
+	{
+		//! [or_else valid copyable]
+		namespace sn = sl::nullables;
+
+		std::optional<int> opt{ 42 };
+		const std::optional<int> result = opt | sn::or_else{ [] { return 1337; } };
+
+		REQUIRE(result == 42);
+		//! [or_else valid copyable]
+	}
+
+	SECTION("or_else executes the function and returns its returned value in a new nullable.")
+	{
+		//! [or_else invalid value non-void return copyable]
+		namespace sn = sl::nullables;
+
+		std::optional<int> opt{ std::nullopt };
+		const std::optional<int> result = opt | sn::or_else{ [] { return 1337; } };
+
+		REQUIRE(result == 1337);
+		//! [or_else invalid value non-void return copyable]
+	}
+
+	SECTION("or_else executes the function and returns its returned value in a new nullable.")
+	{
+		//! [or_else invalid value void return copyable]
+		namespace sn = sl::nullables;
+
+		std::optional<int> opt{ std::nullopt };
+		const std::optional<int> result = opt | sn::or_else{ [] { std::cout << "optional was invalid."; } };
+
+		REQUIRE(result == std::nullopt);
+		//! [or_else invalid value void return copyable]
+	}
+}
+
+TEST_CASE("and_then usage example with copyable types", "[nullables][algorithm][example]")
+{
+	SECTION("and_then returns the null-object if the nullable is invalid.")
+	{
+		//! [and_then invalid copyable]
+		namespace sn = sl::nullables;
+
+		std::optional<int> opt{ std::nullopt };
+		const std::optional<std::string> result = opt | sn::and_then
+												{
+													[](int& value) -> std::optional<std::string>
+													{
+														return std::to_string(value);
+													}
+												};
+
+		REQUIRE(result == std::nullopt);
+		//! [and_then invalid copyable]
+	}
+
+	SECTION("and_then returns the null-object if the nullable is invalid.")
+	{
+		//! [and_then valid copyable]
+		namespace sn = sl::nullables;
+
+		std::optional<int> opt{ 1337 };
+		const std::optional<std::string> result = opt | sn::and_then
+												{
+													[](int& value) -> std::optional<std::string>
+													{
+														return std::to_string(value);
+													}
+												};
+
+		REQUIRE(result == "1337");
+		//! [and_then valid copyable]
+	}
+}
+
+TEST_CASE("value_or usage example with copyable types", "[nullables][algorithm][example]")
+{
+	SECTION("value_or returns the alternative if the nullable is invalid.")
+	{
+		//! [value_or invalid copyable]
+		namespace sn = sl::nullables;
+
+		std::optional<int> opt{ std::nullopt };
+		const int result = opt | sn::value_or{ 42 };
+
+		REQUIRE(result == 42);
+		//! [value_or invalid copyable]
+	}
+
+	SECTION("value_or returns the value if the nullable is invalid.")
+	{
+		//! [value_or valid copyable]
+		namespace sn = sl::nullables;
+
+		std::optional<int> opt{ 1337 };
+		const int result = opt | sn::value_or{ 42 };
+
+		REQUIRE(result == 1337);
+		//! [value_or valid copyable]
+	}
+}
+
+namespace
+{
+	sl::unique_handle<int> exec_transaction(std::string key)
+	{
+		return 42;
+	}
+}
+
+TEST_CASE("chain usage example with movable type", "[nullables][algorithm][example]")
+{
+	SECTION("value_or returns the alternative if the nullable is invalid.")
+	{
+		//! [nullables algorithm chain movable]
+		namespace sn = sl::nullables;
+
+		std::unique_ptr ptr{ std::make_unique<std::string>("someImportantTransaction") };
+
+		const std::string transactionId = std::move(ptr)
+										| sn::and_then
+										{
+											[](std::string& transaction) -> sl::unique_handle<int>
+											{
+												// some faky transaction; returns 42 wrapped in a sl::unique_handle<int> here
+												return exec_transaction(std::move(transaction));
+											}
+										}
+										| sn::or_else([] { std::cout << "Unspecified database error occurred.\n"; })
+										// pay attention for the nullable type in the next line
+										| sn::and_then([](int id) { return std::optional{ std::to_string(id) }; })
+										| sn::value_or("invalid transaction id");
+		//! [nullables algorithm chain movable]
+
+		REQUIRE(transactionId == "42");
 	}
 }

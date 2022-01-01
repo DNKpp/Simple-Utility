@@ -16,7 +16,44 @@ namespace sl::nullables
 	/**
 	 * \defgroup GROUP_NULLABLES nullables
 	 *
-	 * \brief 
+	 * \brief This library offers some simple algorithms for convenient working with \ref sl::nullables::nullable "nullable" types.
+	 * \details
+	 * ## General
+	 * The algorithms may be chained in arbitrary combination and deepness, as long as it makes sense to the compiler. Such a
+	 * chain may involve multiple different \ref sl::nullables::nullable "nullable" types. Of this library explicitly supported types are:
+	 * - \ref sl::unique_handle
+	 * - [std::optional](https://en.cppreference.com/w/cpp/utility/optional)
+	 * - [std::unique_ptr](https://en.cppreference.com/w/cpp/memory/unique_ptr)
+	 * - [std::shared_ptr](https://en.cppreference.com/w/cpp/memory/shared_ptr)
+	 * - and ``raw pointers``
+	 *
+	 * The general idea is making the handling with types e.g. ``std::optional`` less verbose and more enjoyable. The syntax is inspired by
+	 * the ``std::ranges`` library.
+	 * If you would like to learn more about an algorithm, just visit the specific sub-page:
+	 *	- \ref sl::nullables::or_else "or_else"
+	 *	- \ref sl::nullables::and_then "and_then"
+	 *	- \ref sl::nullables::value_or "value_or"
+	 *
+	 * ## Working with movable types
+	 * If you have an object which you would like to move into the algorithm chain, either because its non-copyable or its simply more performant,
+	 * its totally fine to do so. But, as the library assumes taking over the ownership of objects received as ``rvalue ref`` use the remaining
+	 * object with care, as it might have or might have not been moved. Simply the same rules for moved object as usual apply.
+	 * \snippet nullables.cpp nullables algorithm chain movable
+	 *
+	 * ## Using custom types
+	 * Well, that depends which interface your type offers. If it's already dereferencable via ``operator *`` than you are in a good position.
+	 * Otherwise you may specialize the \ref sl::nullables::value_unchecked "value_unchecked" function or simply adjust your interface (if possible).
+	 *
+	 * If that's done, you should specialize the \ref sl::nullables::nullable_traits "nullable_traits":
+	 * \snippet nullables.cpp nullables custom type traits
+	 *
+	 * After that everything is already setup.
+	 *
+	 * Additionally if there is an actual need for that step, you may also specialize the algorithm implementations. Have a look at these members:
+	 *	- \ref sl::nullables::value_or_func_t "value_or_func_t"
+	 *	- \ref sl::nullables::value_or_func_t "and_then_func_t"
+	 *	- \ref sl::nullables::value_or_func_t "or_else_func_t"
+	 *
 	 * @{
 	 */
 
@@ -154,25 +191,7 @@ namespace sl::nullables
 	 * \defgroup GROUP_NULLABLES_ALGORITHMS algorithms
 	 *
 	 * \brief These algorithms are designed to work with any type which satisfies the \ref sl::nullables::nullable "nullable" concept.
-	 * \details
-	 * ## General
-	 * These algorithms may be chained in arbitrary combination and deepness, as long as it makes sense to the compiler. Such a
-	 * chain may involve multiple different \ref sl::nullables::nullable "nullable" types. Of this library explicitly supported types are:
-	 * - \ref sl::unique_handle
-	 * - [std::optional](https://en.cppreference.com/w/cpp/utility/optional)
-	 * - [std::unique_ptr](https://en.cppreference.com/w/cpp/memory/unique_ptr)
-	 * - [std::shared_ptr](https://en.cppreference.com/w/cpp/memory/shared_ptr)
-	 * - and ``raw pointers``
-	 *
-	 * The general idea is making the handling with types e.g. ``std::optional`` less verbose and more enjoyable. The syntax is inspired by
-	 * the ``std::ranges`` library.
-	 * If you would like to learn more about an algorithm, just step to the specific sub-page.
-	 *
-	 * ## Working with movable types
-	 * If you have an object which you would like to move into the algorithm chain, either because its non-copyable or its simply more performant,
-	 * its totally fine to do so. But, as the library assumes taking over the ownership of objects received as ``rvalue ref`` use the remaining
-	 * object with care, as it might have or might have not been moved. Simply the same rules for moved object applies as always.
-	 *
+	 * \details For further read, visit any algorithms sub-page.
 	 * @{
 	 */
 
@@ -327,11 +346,11 @@ namespace sl::nullables
 	 * \note In the following examples the outcome is always presented within the ``REQUIRE()`` statement.
 	 *
 	 * This example shows what happens when a valid \ref sl::nullables::nullable "nullable" is used in a ``value_or`` expression.
-	 * \snippet ../tests/nullables.cpp value_or valid copyable
+	 * \snippet nullables.cpp value_or valid copyable
 	 *
 	 *
 	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``value_or`` expression.
-	 * \snippet ../tests/nullables.cpp value_or invalid copyable
+	 * \snippet nullables.cpp value_or invalid copyable
 	 */
 	template <class T>
 	class value_or
@@ -390,12 +409,12 @@ namespace sl::nullables
 	 * \note In the following examples the outcome is always presented within the ``REQUIRE()`` statement.
 	 *
 	 * This example shows what happens when a valid \ref sl::nullables::nullable "nullable" is used in a ``and_then`` expression.
-	 * \snippet ../tests/nullables.cpp and_then valid copyable
+	 * \snippet nullables.cpp and_then valid copyable
 	 *
 	 *
 	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression.
 	 * Note that the resulting \ref sl::nullables::nullable "nullable" type changes differs from the starting one.
-	 * \snippet ../tests/nullables.cpp and_then invalid copyable
+	 * \snippet nullables.cpp and_then invalid copyable
 	 */
 	template <class TFunc>
 	class and_then
@@ -450,17 +469,17 @@ namespace sl::nullables
 	 * \note In the following examples the outcome is always presented within the ``REQUIRE()`` statement.
 	 * 
 	 * This example shows what happens when a valid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression.
-	 * \snippet ../tests/nullables.cpp or_else valid copyable
+	 * \snippet nullables.cpp or_else valid copyable
 	 * \---
 	 * 
 	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression and the functional has a
 	 * return type other than ``void``.
-	 * \snippet ../tests/nullables.cpp or_else invalid value non-void return copyable
+	 * \snippet nullables.cpp or_else invalid value non-void return copyable
 	 * \---
 	 * 
 	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression and the functional doesn't
 	 * return anything.
-	 * \snippet ../tests/nullables.cpp or_else invalid value void return copyable
+	 * \snippet nullables.cpp or_else invalid value void return copyable
 	 */
 	template <std::invocable TFunc>
 	class or_else
