@@ -215,6 +215,21 @@ TEST_CASE("or_else should return the expected object when used in a chain", "[nu
 	}
 }
 
+TEST_CASE("or_else may also return void", "[nullables][algorithm]")
+{
+	using sl::nullables::or_else;
+	std::optional<int> opt{};
+
+	SECTION("when optional is empty, or_else branch must be executed and std::nullopt gets returned.")
+	{
+		int or_else_counter = 0;
+		opt = opt | or_else{ [&or_else_counter] { ++or_else_counter; } };
+
+		REQUIRE(opt == std::nullopt);
+		REQUIRE(or_else_counter == 1);
+	}
+}
+
 TEST_CASE("and_then should return the expected value", "[nullables][algorithm]")
 {
 	using sl::nullables::and_then;
@@ -381,7 +396,7 @@ TEMPLATE_TEST_CASE
 #pragma warning(disable: 26444)
 TEST_CASE
 (
-	"artifically example",
+	"artifically more advanced example",
 	"[nullables][algorithm]"
 )
 #pragma warning(default: 26444)

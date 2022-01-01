@@ -155,16 +155,31 @@ namespace sl::nullables
 
 	template <nullable TNullable, std::invocable TFunc>
 		requires std::constructible_from<std::remove_cvref_t<TNullable>, TNullable>
-				&& std::constructible_from<std::remove_cvref_t<TNullable>, std::invoke_result_t<TFunc>>
 	struct or_else_func_t<TNullable, TFunc>
 	{
 		constexpr std::remove_cvref_t<TNullable> operator()(TNullable&& closure, TFunc func)
 		{
+			static_assert
+			(
+				std::constructible_from<std::remove_cvref_t<TNullable>, std::invoke_result_t<TFunc>>
+				|| std::same_as<void, std::invoke_result_t<TFunc>>,
+				"Func return type must be either void or initialize the std::remove_cvref_t<TNullable> type."
+			);
+
 			if (closure != nullable_null_v<TNullable>)
 			{
 				return std::forward<TNullable>(closure);
 			}
-			return std::invoke(func);
+
+			if constexpr (std::same_as<void, std::invoke_result_t<TFunc>>)
+			{
+				std::invoke(func);
+				return nullable_null_v<TNullable>;
+			}
+			else
+			{
+				return std::invoke(func);
+			}
 		}
 	};
 
