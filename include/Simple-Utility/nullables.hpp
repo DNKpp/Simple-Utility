@@ -78,6 +78,12 @@ namespace sl::nullables
 		return *std::forward<TNullable>(closure);
 	}
 
+	namespace detail
+	{
+		template <nullable TNullable>
+		using dereference_type_t = decltype(value_unchecked(std::declval<TNullable>()));
+	}
+
 	template <class TNullable, class T>
 	struct value_or_func_t
 	{
@@ -204,19 +210,20 @@ namespace sl::nullables
 	{
 	};
 
-	template <nullable TNullable, std::invocable<nullable_value_t<TNullable>> TFunc>
-		requires nullable<std::invoke_result_t<TFunc, nullable_value_t<TNullable>>>
+	template <nullable TNullable, std::invocable<detail::dereference_type_t<TNullable>> TFunc>
 	struct and_then_func_t<TNullable, TFunc>
 	{
-		constexpr std::invoke_result_t<TFunc, nullable_value_t<TNullable>> operator()(TNullable&& closure, TFunc func)
+		using return_t = std::invoke_result_t<TFunc, detail::dereference_type_t<TNullable>>;
+
+		static_assert(nullable<return_t>, "TFunc must return a nullable type.");
+
+		constexpr return_t operator()(TNullable&& closure, TFunc func)
 		{
 			if (closure != nullable_null_v<TNullable>)
 			{
 				return std::invoke(func, value_unchecked(std::forward<TNullable>(closure)));
 			}
-			return nullable_null_v<
-				std::invoke_result_t<TFunc, nullable_value_t<TNullable>>
-			>;
+			return nullable_null_v<return_t>;
 		}
 	};
 
@@ -230,7 +237,12 @@ namespace sl::nullables
 		}
 
 		template <nullable TNullable>
-		friend constexpr std::invoke_result_t<TFunc, nullable_value_t<TNullable>> operator |(TNullable&& closure, and_then&& andThen)
+		friend constexpr
+		std::invoke_result_t<TFunc, detail::dereference_type_t<TNullable>> operator |
+		(
+			TNullable&& closure,
+			and_then&& andThen
+		)
 		{
 			return and_then_func_t<TNullable, std::reference_wrapper<TFunc>>{}
 			(
