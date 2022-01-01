@@ -241,6 +241,31 @@ TEST_CASE("and_then should return the expected value when with mixed nullable ty
 	}
 }
 
+TEST_CASE("and_then should be usable in chains", "[nullables][algorithm]")
+{
+	using sl::nullables::and_then;
+
+	constexpr auto toString = [](const auto& value) -> sl::unique_handle<std::string> { return std::to_string(value); };
+	constexpr auto strToInt = [](const auto& str) -> std::optional<int> { return std::stoi(str); };
+
+	sl::unique_handle<int> handle{};
+
+	SECTION("when handle is empty, the last nullable object should be returned")
+	{
+		const std::optional<int> result = handle | and_then{ toString }
+												| and_then{ strToInt };
+		REQUIRE(result == std::nullopt);
+	}
+
+	SECTION("when handle is non-empty, the final invoke result should be returned")
+	{
+		handle = 1337;
+		const std::optional<int> result = handle | and_then{ toString }
+												| and_then{ strToInt };
+		REQUIRE(result == 1337);
+	}
+}
+
 //
 //#pragma warning(disable: 26444)
 //TEMPLATE_TEST_CASE_SIG
