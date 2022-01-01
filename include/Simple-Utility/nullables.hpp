@@ -123,7 +123,11 @@ namespace sl::nullables
 			requires std::constructible_from<nullable_value_t<TNullable>, T>
 		friend constexpr nullable_value_t<TNullable> operator |(TNullable&& closure, value_or&& valueOr)
 		{
-			return value_or_func_t<TNullable, T>{}(std::forward<TNullable>(closure), std::forward<T>(valueOr.m_Alternative));
+			return value_or_func_t<TNullable, T>{}
+			(
+				std::forward<TNullable>(closure),
+				std::forward<T>(valueOr.m_Alternative)
+			);
 		}
 
 	private:
@@ -162,7 +166,7 @@ namespace sl::nullables
 	{
 	public:
 		explicit constexpr or_else(TFunc func) noexcept
-			: m_Func{ std::ref(func) }
+			: m_Func{ std::move(func) }
 		{
 		}
 
@@ -170,11 +174,15 @@ namespace sl::nullables
 		[[nodiscard]]
 		friend constexpr std::remove_cvref_t<TNullable> operator |(TNullable&& closure, or_else&& orElse)
 		{
-			return or_else_func_t<TNullable, std::reference_wrapper<TFunc>>{}(std::forward<TNullable>(closure), orElse.m_Func);
+			return or_else_func_t<TNullable, std::reference_wrapper<TFunc>>{}
+			(
+				std::forward<TNullable>(closure),
+				std::ref(orElse.m_Func)
+			);
 		}
 
 	private:
-		std::reference_wrapper<TFunc> m_Func;
+		TFunc m_Func;
 	};
 
 	template <class TNullable, class TFunc>
@@ -207,18 +215,22 @@ namespace sl::nullables
 	{
 	public:
 		explicit constexpr and_then(TFunc func) noexcept
-			: m_Func{ std::ref(func) }
+			: m_Func{ std::move(func) }
 		{
 		}
 
 		template <nullable TNullable>
 		friend constexpr std::invoke_result_t<TFunc, nullable_value_t<TNullable>> operator |(TNullable&& closure, and_then&& andThen)
 		{
-			return and_then_func_t<TNullable, std::reference_wrapper<TFunc>>{}(std::forward<TNullable>(closure), andThen.m_Func);
+			return and_then_func_t<TNullable, std::reference_wrapper<TFunc>>{}
+			(
+				std::forward<TNullable>(closure),
+				std::ref(andThen.m_Func)
+			);
 		}
 
 	private:
-		std::reference_wrapper<TFunc> m_Func;
+		TFunc m_Func;
 	};
 }
 
