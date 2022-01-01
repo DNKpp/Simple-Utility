@@ -324,3 +324,84 @@ TEST_CASE("nullable algorithms should be usable in chains", "[nullables][algorit
 		REQUIRE(result == "fail");
 	}
 }
+
+#pragma warning(disable: 26444)
+TEMPLATE_TEST_CASE
+(
+	"nullable algorithms should be usable with std::unique_ptr",
+	"[nullables][algorithm]",
+	std::unique_ptr<int>&,
+	const std::unique_ptr<int>&,
+	std::unique_ptr<int>&&,
+	const std::unique_ptr<int>&&
+)
+#pragma warning(default: 26444)
+{
+	using namespace sl::nullables;
+
+	constexpr auto square = [](const auto& value) { return std::make_unique<int>(value * value); };
+	constexpr auto oneAndOnlyTruth = [] { return std::make_unique<int>(42); };
+
+	std::unique_ptr<int> ptr{};
+
+	SECTION("when ptr is empty, the result of the or_else algorithm should be returned")
+	{
+		const int result = static_cast<TestType>(ptr) | and_then{ square }
+							| or_else{ oneAndOnlyTruth }
+							| value_or(-42);
+		REQUIRE(result == 42);
+	}
+
+	SECTION("when ptr is not empty, the result of the and_then algorithm should be returned")
+	{
+		ptr = std::make_unique<int>(1337);
+		const int result = static_cast<TestType>(ptr) | and_then{ square }
+							| or_else{ oneAndOnlyTruth }
+							| value_or(-42);
+		REQUIRE(result == 1337 * 1337);
+	}
+}
+
+#pragma warning(disable: 26444)
+TEST_CASE
+(
+	"artifically example",
+	"[nullables][algorithm]"
+)
+#pragma warning(default: 26444)
+{
+	using namespace sl::nullables;
+
+	std::optional<std::unique_ptr<int>> opt{};
+
+	SECTION("let's just chain the optional through")
+	{
+		constexpr auto square = []<class T>(T&& value) -> std::optional<std::unique_ptr<int>>
+		{
+			*value *= *value;
+			return std::forward<T>(value);
+		};
+		constexpr auto oneAndOnlyTruth = [] { return std::make_unique<int>(42); };
+
+		const std::unique_ptr<int> result = std::move(opt) | and_then{ square }
+											| or_else{ oneAndOnlyTruth }
+											| value_or(std::make_unique<int>(-42));
+		REQUIRE(*result == 42);
+	}
+
+	SECTION("unwrap the optional and forward the contained unique_ptr")
+	{
+		constexpr auto square = []<class T>(T&& value)
+		{
+			*value *= *value;
+			return std::forward<T>(value);
+		};
+		constexpr auto oneAndOnlyTruth = [] { return std::make_unique<int>(42); };
+
+		opt = std::make_unique<int>(1337);
+		const int result = std::move(opt) | and_then{ square }
+							| or_else{ oneAndOnlyTruth }
+							| value_or{ -42 };
+		REQUIRE(result == 1337 * 1337);
+	}
+}
