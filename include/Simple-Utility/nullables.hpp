@@ -133,6 +133,30 @@ namespace sl::nullables
 	template <class T>
 	value_or(T&&) -> value_or<T&&>;
 
+	template <class TNullable, class TFunc>
+	struct or_else_func_t
+	{
+		constexpr or_else_func_t()
+		{
+			static_assert(false, "None of the specialized versions of or_else_func_t could handle the passed arguments");
+		}
+	};
+
+	template <nullable TNullable, std::invocable TFunc>
+		requires std::constructible_from<std::remove_cvref_t<TNullable>, TNullable>
+				&& std::constructible_from<std::remove_cvref_t<TNullable>, std::invoke_result_t<TFunc>>
+	struct or_else_func_t<TNullable, TFunc>
+	{
+		constexpr std::remove_cvref_t<TNullable> operator()(TNullable&& closure, TFunc func)
+		{
+			if (closure != nullable_null_v<TNullable>)
+			{
+				return std::forward<TNullable>(closure);
+			}
+			return std::invoke(func);
+		}
+	};
+
 	template <std::invocable TFunc>
 	class or_else
 	{
@@ -143,15 +167,10 @@ namespace sl::nullables
 		}
 
 		template <nullable TNullable>
+		[[nodiscard]]
 		friend constexpr std::remove_cvref_t<TNullable> operator |(TNullable&& closure, or_else&& orElse)
-			requires std::constructible_from<std::remove_cvref_t<TNullable>, TNullable>
-					&& std::constructible_from<std::remove_cvref_t<TNullable>, std::invoke_result_t<TFunc>>
 		{
-			if (closure != nullable_null_v<TNullable>)
-			{
-				return std::forward<TNullable>(closure);
-			}
-			return std::invoke(orElse.m_Func);
+			return or_else_func_t<TNullable, std::reference_wrapper<TFunc>>{}(std::forward<TNullable>(closure), orElse.m_Func);
 		}
 
 	private:
