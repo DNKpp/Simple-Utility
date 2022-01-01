@@ -92,7 +92,7 @@ TEMPLATE_TEST_CASE_SIG
 {
 	using sl::nullables::nullable_null_v;
 
-	REQUIRE(std::same_as<std::decay_t<decltype(nullable_null_v<TNullable>)>, TExpectedNullType>);
+	REQUIRE(std::same_as<std::remove_cvref_t<decltype(nullable_null_v<TNullable>)>, TExpectedNullType>);
 }
 
 #pragma warning(disable: 26444)

@@ -19,10 +19,10 @@ namespace sl::nullables
 	};
 
 	template <class T>
-	using nullable_value_t = typename nullable_traits<std::decay_t<T>>::value_type;
+	using nullable_value_t = typename nullable_traits<std::remove_cvref_t<T>>::value_type;
 
 	template <class T>
-	constexpr static auto nullable_null_v{ nullable_traits<std::decay_t<T>>::null };
+	constexpr static auto nullable_null_v{ nullable_traits<std::remove_cvref_t<T>>::null };
 
 	template <class T>
 	concept nullable = requires
@@ -105,9 +105,9 @@ namespace sl::nullables
 		}
 
 		template <nullable TNullable>
-		friend constexpr std::decay_t<TNullable> operator |(TNullable&& closure, or_else&& orElse)
-			requires std::constructible_from<std::decay_t<TNullable>, TNullable>
-					&& std::constructible_from<std::decay_t<TNullable>, std::invoke_result_t<TFunc>>
+		friend constexpr std::remove_cvref_t<TNullable> operator |(TNullable&& closure, or_else&& orElse)
+			requires std::constructible_from<std::remove_cvref_t<TNullable>, TNullable>
+					&& std::constructible_from<std::remove_cvref_t<TNullable>, std::invoke_result_t<TFunc>>
 		{
 			if (closure != nullable_null_v<TNullable>)
 			{
