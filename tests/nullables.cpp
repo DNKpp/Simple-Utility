@@ -393,6 +393,64 @@ TEMPLATE_TEST_CASE
 	}
 }
 
+TEST_CASE("nullable algorithms should be usable with raw ptrs", "[nullables][algorithm]")
+{
+	using namespace sl::nullables;
+
+	auto square = [](int& value)
+	{
+		value *= value;
+		return &value;
+	};
+	int onlyTruth{ 42 };
+	auto oneAndOnlyTruth = [&onlyTruth]() { return &onlyTruth; };
+
+	int* ptr = nullptr;
+
+	SECTION("when ptr is empty, the result of the or_else algorithm should be returned")
+	{
+		const int* result = ptr | or_else{ oneAndOnlyTruth };
+		REQUIRE(*result == 42);
+	}
+
+	SECTION("when ptr is empty, and or_else returns void, result should be null")
+	{
+		int* result = ptr | or_else
+					{
+						[]
+						{
+						}
+					};
+
+		REQUIRE(result == nullptr);
+	}
+
+	SECTION("when ptr is empty the value_or branch should be executed")
+	{
+		const int result = ptr | value_or{ 42 };
+
+		REQUIRE(result == 42);
+	}
+
+	SECTION("when ptr is non-empty, its value should be returned.")
+	{
+		int value = 1337;
+		ptr = &value;
+		const int result = ptr | value_or{ 42 };
+
+		REQUIRE(result == 1337);
+	}
+
+	SECTION("when ptr is not empty, the result of the and_then algorithm should be returned")
+	{
+		int value = 1337;
+		ptr = &value;
+		const int* result = ptr | and_then{ square };
+
+		REQUIRE(*result == 1337 * 1337);
+	}
+}
+
 #pragma warning(disable: 26444)
 TEST_CASE
 (
