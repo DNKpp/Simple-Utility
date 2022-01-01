@@ -96,6 +96,7 @@ namespace sl::nullables
 		}
 	struct value_or_func_t<TNullable, T>
 	{
+		[[nodiscard]]
 		constexpr nullable_value_t<TNullable> operator()(TNullable&& closure, T&& alternative)
 		{
 			return std::forward<TNullable>(closure).value_or(std::forward<T>(alternative));
@@ -109,6 +110,7 @@ namespace sl::nullables
 		})
 	struct value_or_func_t<TNullable, T>
 	{
+		[[nodiscard]]
 		constexpr nullable_value_t<TNullable> operator()(TNullable&& closure, T&& alternative)
 		{
 			if (closure != nullable_null_v<TNullable>)
@@ -130,6 +132,7 @@ namespace sl::nullables
 
 		template <nullable TNullable>
 			requires std::constructible_from<nullable_value_t<TNullable>, T>
+		[[nodiscard]]
 		friend constexpr nullable_value_t<TNullable> operator |(TNullable&& closure, value_or&& valueOr)
 		{
 			return value_or_func_t<TNullable, T>{}
@@ -155,6 +158,7 @@ namespace sl::nullables
 		requires std::constructible_from<std::remove_cvref_t<TNullable>, TNullable>
 	struct or_else_func_t<TNullable, TFunc>
 	{
+		[[nodiscard]]
 		constexpr std::remove_cvref_t<TNullable> operator()(TNullable&& closure, TFunc func)
 		{
 			static_assert
@@ -217,6 +221,7 @@ namespace sl::nullables
 
 		static_assert(nullable<return_t>, "TFunc must return a nullable type.");
 
+		[[nodiscard]]
 		constexpr return_t operator()(TNullable&& closure, TFunc func)
 		{
 			if (closure != nullable_null_v<TNullable>)
@@ -238,6 +243,7 @@ namespace sl::nullables
 
 		template <nullable TNullable>
 		friend constexpr
+		[[nodiscard]]
 		std::invoke_result_t<TFunc, detail::dereference_type_t<TNullable>> operator |
 		(
 			TNullable&& closure,
