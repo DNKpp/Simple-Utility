@@ -75,3 +75,18 @@ TEMPLATE_TEST_CASE_SIG
 {
 	REQUIRE(not_same_as<TSource, TTarget> == VExpected);
 }
+
+#pragma warning(disable: 26444)
+TEMPLATE_TEST_CASE_SIG
+(
+	"weakly_equality_comparable_with Checks whether a symmetrical set of operators == and != to compare both types with each other exists.",
+	"[concepts][stl_ext]",
+	((class T1, class T2, bool VExpected), T1, T2, VExpected),
+	(target_t, int, false),
+	(int, int, true)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(weakly_equality_comparable_with<T1, T2> == VExpected);
+	REQUIRE(weakly_equality_comparable_with<T2, T1> == VExpected);
+}

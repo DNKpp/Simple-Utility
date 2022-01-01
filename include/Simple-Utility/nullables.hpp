@@ -30,14 +30,7 @@ namespace sl::nullables
 							typename nullable_value_t<T>;
 							nullable_null_v<T>;
 						}
-						// custom std::equality_comparable_with, because its too strict
-						&& requires(T t)
-						{
-							{ t == nullable_null_v<T> } -> std::convertible_to<bool>;
-							{ t != nullable_null_v<T> } -> std::convertible_to<bool>;
-							{ nullable_null_v<T> == t } -> std::convertible_to<bool>;
-							{ nullable_null_v<T> != t } -> std::convertible_to<bool>;
-						};
+						&& concepts::weakly_equality_comparable_with<T, decltype(nullable_null_v<T>)>;
 
 	template <class... TArgs>
 	struct nullable_traits<unique_handle<TArgs...>>
