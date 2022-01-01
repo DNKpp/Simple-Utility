@@ -114,7 +114,7 @@ namespace sl::nullables
 			{
 				return std::forward<TNullable>(closure);
 			}
-			return std::invoke(orElse.func);
+			return std::invoke(std::move(orElse.func));
 		}
 
 		TFunc func;
@@ -129,7 +129,7 @@ namespace sl::nullables
 		{
 			if (closure != nullable_null_v<TNullable>)
 			{
-				return std::invoke(andThen.func, value_unchecked(std::forward<TNullable>(closure)));
+				return std::invoke(std::move(andThen.func), value_unchecked(std::forward<TNullable>(closure)));
 			}
 			return nullable_null_v<
 				std::invoke_result_t<TFunc, nullable_value_t<TNullable>>
