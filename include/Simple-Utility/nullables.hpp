@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef SL_UTILITY_CONDITIONAL_ALGORITHMS_HPP
-#define SL_UTILITY_CONDITIONAL_ALGORITHMS_HPP
+#ifndef SL_UTILITY_NULLABLES_HPP
+#define SL_UTILITY_NULLABLES_HPP
 
 #include <concepts>
 
