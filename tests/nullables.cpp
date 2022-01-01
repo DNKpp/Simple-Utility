@@ -296,6 +296,17 @@ TEMPLATE_TEST_CASE
 	}
 }
 
+TEST_CASE("value_or should favor member function of std::optional", "[nullables][algorithm]")
+{
+	using namespace sl::nullables;
+
+	std::optional<std::string> opt{ "test" };
+
+	std::string result = std::move(opt) | value_or{ "empty" };
+
+	// Don't know how to actually test if overload has been taken, thus it's simply a compile check for now
+}
+
 TEST_CASE("nullable algorithms should be usable in chains", "[nullables][algorithm]")
 {
 	using namespace sl::nullables;

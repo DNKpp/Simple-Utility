@@ -74,6 +74,42 @@ namespace sl::nullables
 		return *closure;
 	}
 
+	template <class TNullable, class T>
+	struct value_or_func_t
+	{
+		// purposely empty
+	};
+
+	template <nullable TNullable, class T>
+		requires requires(TNullable n, T a)
+		{
+			{ n.value_or(a) } -> std::convertible_to<nullable_value_t<TNullable>>;
+		}
+	struct value_or_func_t<TNullable, T>
+	{
+		constexpr nullable_value_t<TNullable> operator()(TNullable&& closure, T&& alternative)
+		{
+			return std::forward<TNullable>(closure).value_or(std::forward<T>(alternative));
+		}
+	};
+
+	template <nullable TNullable, concepts::initializes<nullable_value_t<TNullable>> T>
+		requires (!requires(TNullable n, T a)
+		{
+			{ n.value_or(a) } -> std::convertible_to<nullable_value_t<TNullable>>;
+		})
+	struct value_or_func_t<TNullable, T>
+	{
+		constexpr nullable_value_t<TNullable> operator()(TNullable&& closure, T&& alternative)
+		{
+			if (closure != nullable_null_v<TNullable>)
+			{
+				return value_unchecked(std::forward<TNullable>(closure));
+			}
+			return std::forward<T>(alternative);
+		}
+	};
+
 	template <class T>
 	class value_or
 	{
@@ -87,11 +123,7 @@ namespace sl::nullables
 			requires std::constructible_from<nullable_value_t<TNullable>, T>
 		friend constexpr nullable_value_t<TNullable> operator |(TNullable&& closure, value_or&& valueOr)
 		{
-			if (closure != nullable_null_v<TNullable>)
-			{
-				return value_unchecked(std::forward<TNullable>(closure));
-			}
-			return std::forward<T>(valueOr.m_Alternative);
+			return value_or_func_t<TNullable, T>{}(std::forward<TNullable>(closure), std::forward<T>(valueOr.m_Alternative));
 		}
 
 	private:
