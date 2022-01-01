@@ -12,6 +12,7 @@
 
 #include <memory>
 #include <optional>
+#include <string>
 
 namespace
 {
@@ -133,7 +134,7 @@ TEMPLATE_TEST_CASE
 	STATIC_REQUIRE(value_unchecked(object) == 42);
 }
 
-TEST_CASE("or_else should return the expected object when received as rvalue ref","[nullables][algorithm]")
+TEST_CASE("or_else should return the expected object when received as rvalue ref", "[nullables][algorithm]")
 {
 	using sl::nullables::or_else;
 
@@ -195,6 +196,48 @@ TEST_CASE("or_else should return the expected object when used in a chain", "[nu
 			| or_else{ [] { return 42; } };
 
 		REQUIRE(opt == 1337);
+	}
+}
+
+TEST_CASE("and_then should return the expected value", "[nullables][algorithm]")
+{
+	using sl::nullables::and_then;
+
+	constexpr auto func = [](const auto& value)-> sl::unique_handle<std::string> { return std::to_string(value); };
+	sl::unique_handle<int> handle{};
+
+	SECTION("when handle is empty, a null object should be returned")
+	{
+		const sl::unique_handle<std::string> result = handle | and_then{ func };
+		REQUIRE(result == sl::nullhandle);
+	}
+
+	SECTION("when handle is non-empty, the invoke result should be returned")
+	{
+		handle = 42;
+		const sl::unique_handle<std::string> result = handle | and_then{ func };
+		REQUIRE(result == "42");
+	}
+}
+
+TEST_CASE("and_then should return the expected value when with mixed nullable types", "[nullables][algorithm]")
+{
+	using sl::nullables::and_then;
+
+	constexpr auto func = [](const auto& value)-> std::optional<std::string> { return std::to_string(value); };
+	sl::unique_handle<int> handle{};
+
+	SECTION("when handle is empty, a null object should be returned")
+	{
+		const std::optional<std::string> result = handle | and_then{ func };
+		REQUIRE(result == std::nullopt);
+	}
+
+	SECTION("when handle is non-empty, the invoke result should be returned")
+	{
+		handle = 42;
+		const std::optional<std::string> result = handle | and_then{ func };
+		REQUIRE(result == "42");
 	}
 }
 
