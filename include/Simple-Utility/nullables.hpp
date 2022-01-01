@@ -103,8 +103,14 @@ namespace sl::nullables
 	}
 
 	template <std::invocable TFunc>
-	struct or_else
+	class or_else
 	{
+	public:
+		explicit constexpr or_else(TFunc func) noexcept
+			: m_Func{ std::ref(func) }
+		{
+		}
+
 		template <nullable TNullable>
 		friend constexpr std::decay_t<TNullable> operator |(TNullable&& closure, or_else&& orElse)
 			requires std::constructible_from<std::decay_t<TNullable>, TNullable>
@@ -114,29 +120,37 @@ namespace sl::nullables
 			{
 				return std::forward<TNullable>(closure);
 			}
-			return std::invoke(std::move(orElse.func));
+			return std::invoke(orElse.m_Func);
 		}
 
-		TFunc func;
+	private:
+		std::reference_wrapper<TFunc> m_Func;
 	};
 
 	template <class TFunc>
-	struct and_then
+	class and_then
 	{
+	public:
+		explicit constexpr and_then(TFunc func) noexcept
+			: m_Func{ std::ref(func) }
+		{
+		}
+
 		template <nullable TNullable>
 		friend constexpr std::invoke_result_t<TFunc, nullable_value_t<TNullable>> operator |(TNullable&& closure, and_then&& andThen)
 			requires nullable<std::invoke_result_t<TFunc, nullable_value_t<TNullable>>>
 		{
 			if (closure != nullable_null_v<TNullable>)
 			{
-				return std::invoke(std::move(andThen.func), value_unchecked(std::forward<TNullable>(closure)));
+				return std::invoke(andThen.m_Func, value_unchecked(std::forward<TNullable>(closure)));
 			}
 			return nullable_null_v<
 				std::invoke_result_t<TFunc, nullable_value_t<TNullable>>
 			>;
 		}
 
-		TFunc func;
+	private:
+		std::reference_wrapper<TFunc> m_Func;
 	};
 }
 
