@@ -13,17 +13,52 @@
 
 namespace sl::nullables
 {
+	/**
+	 * \defgroup GROUP_NULLABLES nullables
+	 *
+	 * \brief 
+	 * @{
+	 */
+
+	/**
+	 * \defgroup GROUP_NULLABLES_TRAITS traits
+	 *
+	 * \brief These traits are used by the \ref GROUP_NULLABLES_ALGORITHMS "algorithms" and my be extended by users.
+	 * @{
+	 */
+
+	/**
+	 * \brief The main trait, which may be specialized from.
+	 * \tparam T The type to query
+	 */
 	template <class T>
 	struct nullable_traits
 	{
 	};
 
+	/**
+	 * \brief Convenience alias retrieving the value type of a \ref sl::nullables::nullable "nullable" type
+	 * \tparam T The type to query
+	 */
 	template <class T>
 	using nullable_value_t = typename nullable_traits<std::remove_cvref_t<T>>::value_type;
 
+	/**
+	 * \brief Convenience constant retrieving the null object of a \ref sl::nullables::nullable "nullable" type
+	 * \tparam T  The type to query
+	 */
 	template <class T>
 	constexpr static auto nullable_null_v{ nullable_traits<std::remove_cvref_t<T>>::null };
 
+	/**
+	 * \brief Checks whether a type is \ref sl::nullables::nullable "nullable".
+	 * \details A type is considered as \ref sl::nullables::nullable "nullable" if:
+	 *		- ``nullable_traits`` is found which exposes the ``value_type`` and ``null``-object,
+	 *		- it satisfies the \ref sl::concepts::weakly_equality_comparable_with "weakly_equality_comparable_with" concept with its ``null``-object,
+	 *		- it is initializable by its ``null``-object and
+	 *		- it is assignable by its ``null``-object.
+	 * \tparam T Type to check
+	 */
 	template <class T>
 	concept nullable = requires
 						{
@@ -34,6 +69,10 @@ namespace sl::nullables
 						&& concepts::initializes<std::remove_cvref_t<decltype(nullable_null_v<T>)>, std::remove_cvref_t<T>>
 						&& std::is_assignable_v<std::remove_cvref_t<T>&, decltype(nullable_null_v<T>)>;
 
+	/**
+	 * \brief Specialization for sl::unique_handle
+	 * \tparam TArgs Arguments of sl::unique_handle
+	 */
 	template <class... TArgs>
 	struct nullable_traits<unique_handle<TArgs...>>
 	{
@@ -41,13 +80,21 @@ namespace sl::nullables
 		constexpr static nullhandle_t null{};
 	};
 
+	/**
+	 * \brief Specialization for std::optional
+	 * \tparam TArgs Arguments of std::optional
+	 */
 	template <class... TArgs>
 	struct nullable_traits<std::optional<TArgs...>>
 	{
 		using value_type = typename std::optional<TArgs...>::value_type;
-		constexpr static auto null{ std::nullopt };
+		constexpr static std::nullopt_t null{ std::nullopt };
 	};
 
+	/**
+	 * \brief Specialization for std::unique_ptr
+	 * \tparam TArgs Arguments of std::unique_ptr
+	 */
 	template <class... TArgs>
 	struct nullable_traits<std::unique_ptr<TArgs...>>
 	{
@@ -55,6 +102,10 @@ namespace sl::nullables
 		constexpr static std::nullptr_t null{ nullptr };
 	};
 
+	/**
+	 * \brief Specialization for std::shared_ptr
+	 * \tparam TArgs Arguments of std::shared_ptr
+	 */
 	template <class... TArgs>
 	struct nullable_traits<std::shared_ptr<TArgs...>>
 	{
@@ -62,6 +113,10 @@ namespace sl::nullables
 		constexpr static std::nullptr_t null{ nullptr };
 	};
 
+	/**
+	 * \brief Specialization for raw pointers
+	 * \tparam T Pointer type
+	 */
 	template <class T>
 		requires std::is_pointer_v<T>
 	struct nullable_traits<T>
@@ -70,6 +125,17 @@ namespace sl::nullables
 		constexpr static std::nullptr_t null{ nullptr };
 	};
 
+	/** @} */
+
+	/**
+	 * \brief Returns the internal value of the \ref sl::nullables::nullable "nullable" object. Must not throw.
+	 * \details This function will be utilized by the \ref sl::nullables::nullable "nullable" algorithms. It is only called
+	 * when the \ref sl::nullables::nullable "nullable" != its null-object and should therefore not perform any additional
+	 * security checks.
+	 * \tparam TNullable The \ref sl::nullables::nullable "nullable" type
+	 * \param closure The \ref sl::nullables::nullable "nullable" object
+	 * \return Returns the value as is
+	 */
 	template <nullable TNullable>
 		requires concepts::dereferencable<TNullable>
 	[[nodiscard]]
@@ -84,11 +150,55 @@ namespace sl::nullables
 		using dereference_type_t = decltype(value_unchecked(std::declval<TNullable>()));
 	}
 
+	/**
+	 * \defgroup GROUP_NULLABLES_ALGORITHMS algorithms
+	 *
+	 * \brief These algorithms are designed to work with any type which satisfies the \ref sl::nullables::nullable "nullable" concept.
+	 * \details
+	 * ## General
+	 * These algorithms may be chained in arbitrary combination and deepness, as long as it makes sense to the compiler. Such a
+	 * chain may involve multiple different \ref sl::nullables::nullable "nullable" types. Of this library explicitly supported types are:
+	 * - \ref sl::unique_handle
+	 * - [std::optional](https://en.cppreference.com/w/cpp/utility/optional)
+	 * - [std::unique_ptr](https://en.cppreference.com/w/cpp/memory/unique_ptr)
+	 * - [std::shared_ptr](https://en.cppreference.com/w/cpp/memory/shared_ptr)
+	 * - and ``raw pointers``
+	 *
+	 * The general idea is making the handling with types e.g. ``std::optional`` less verbose and more enjoyable. The syntax is inspired by
+	 * the ``std::ranges`` library.
+	 * If you would like to learn more about an algorithm, just step to the specific sub-page.
+	 *
+	 * ## Working with movable types
+	 * If you have an object which you would like to move into the algorithm chain, either because its non-copyable or its simply more performant,
+	 * its totally fine to do so. But, as the library assumes taking over the ownership of objects received as ``rvalue ref`` use the remaining
+	 * object with care, as it might have or might have not been moved. Simply the same rules for moved object applies as always.
+	 *
+	 * @{
+	 */
+
+	/**
+	 * \defgroup GROUP_NULLABLES_ALGORITHMS_IMPL implementation
+	 *
+	 * \brief These are the implementations of the \ref GROUP_NULLABLES_ALGORITHMS "nullable algorithms". Users may
+	 * specialize them for custom types, but shouldn't explicitly used in code.
+	 * @{
+	 */
+
+	/**
+	 * \brief Base type for the ``value_or`` algorithms. May be specialized.
+	 * \tparam TNullable Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam T Type of the alternative.
+	 */
 	template <class TNullable, class T>
 	struct value_or_func_t
 	{
 	};
 
+	/**
+	 * \brief Specialization which will be used instead if the ``value_or`` functions is present as a member of ``TNullable`` type.
+	 * \tparam TNullable Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam T Type of the alternative.
+	 */
 	template <nullable TNullable, class T>
 		requires requires(TNullable n, T a)
 		{
@@ -103,6 +213,11 @@ namespace sl::nullables
 		}
 	};
 
+	/**
+	 * \brief General algorithm implementation. May be specialized by users if necessary.
+	 * \tparam TNullable Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam T Type of the alternative. Must initialize ``nullable_value_t<TNullable>``
+	 */
 	template <nullable TNullable, concepts::initializes<nullable_value_t<TNullable>> T>
 		requires (!requires(TNullable n, T a)
 		{
@@ -121,39 +236,21 @@ namespace sl::nullables
 		}
 	};
 
-	template <class T>
-	class value_or
-	{
-	public:
-		explicit constexpr value_or(T&& alternative) noexcept
-			: m_Alternative{ std::forward<T>(alternative) }
-		{
-		}
-
-		template <nullable TNullable>
-			requires std::constructible_from<nullable_value_t<TNullable>, T>
-		[[nodiscard]]
-		friend constexpr nullable_value_t<TNullable> operator |(TNullable&& closure, value_or&& valueOr)
-		{
-			return value_or_func_t<TNullable, T>{}
-			(
-				std::forward<TNullable>(closure),
-				std::forward<T>(valueOr.m_Alternative)
-			);
-		}
-
-	private:
-		T m_Alternative;
-	};
-
-	template <class T>
-	value_or(T&&) -> value_or<T&&>;
-
+	/**
+	 * \brief Base type for the ``or_else`` algorithms. May be specialized.
+	 * \tparam TNullable  Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam TFunc Type of the passed function
+	 */
 	template <class TNullable, class TFunc>
 	struct or_else_func_t
 	{
 	};
 
+	/**
+	 * \brief General algorithm implementation. May be specialized by users if necessary.
+	 * \tparam TNullable Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam TFunc Type of the passed function.
+	 */
 	template <nullable TNullable, std::invocable TFunc>
 		requires std::constructible_from<std::remove_cvref_t<TNullable>, TNullable>
 	struct or_else_func_t<TNullable, TFunc>
@@ -185,35 +282,21 @@ namespace sl::nullables
 		}
 	};
 
-	template <std::invocable TFunc>
-	class or_else
-	{
-	public:
-		explicit constexpr or_else(TFunc func) noexcept
-			: m_Func{ std::move(func) }
-		{
-		}
-
-		template <nullable TNullable>
-		[[nodiscard]]
-		friend constexpr std::remove_cvref_t<TNullable> operator |(TNullable&& closure, or_else&& orElse)
-		{
-			return or_else_func_t<TNullable, std::reference_wrapper<TFunc>>{}
-			(
-				std::forward<TNullable>(closure),
-				std::ref(orElse.m_Func)
-			);
-		}
-
-	private:
-		TFunc m_Func;
-	};
-
+	/**
+	 * \brief Base type for the ``and_then`` algorithms. May be specialized.
+	 * \tparam TNullable  Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam TFunc Type of the passed function
+	 */
 	template <class TNullable, class TFunc>
 	struct and_then_func_t
 	{
 	};
 
+	/**
+	 * \brief General algorithm implementation. May be specialized by users if necessary.
+	 * \tparam TNullable Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam TFunc Type of the passed function.
+	 */
 	template <nullable TNullable, std::invocable<detail::dereference_type_t<TNullable>> TFunc>
 	struct and_then_func_t<TNullable, TFunc>
 	{
@@ -232,15 +315,109 @@ namespace sl::nullables
 		}
 	};
 
+	/** @} */
+
+	/**
+	 * \brief Retrieves the value of a \ref sl::nullables::nullable "nullable" if it's not equal to its ''null''-object.
+	 * Returns the alternative otherwise.
+	 * \tparam T Type of alternative. Must initialize ``nullable_value_t<TNullable>`` objects.
+	 *
+	 * \details This algorithm returns the alternative if the \ref sl::nullables::nullable "nullable" compares equal to its
+	 * ``null``-object. Otherwise the value of the \ref sl::nullables::nullable "nullable" is returned.
+	 * \note In the following examples the outcome is always presented within the ``REQUIRE()`` statement.
+	 *
+	 * This example shows what happens when a valid \ref sl::nullables::nullable "nullable" is used in a ``value_or`` expression.
+	 * \snippet ../tests/nullables.cpp value_or valid copyable
+	 *
+	 *
+	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``value_or`` expression.
+	 * \snippet ../tests/nullables.cpp value_or invalid copyable
+	 */
+	template <class T>
+	class value_or
+	{
+	public:
+		/**
+		 * \brief Constructor awaiting an alternative value
+		 * \param alternative The passed alternative value
+		 */
+		explicit constexpr value_or(T&& alternative) noexcept
+			: m_Alternative{ std::forward<T>(alternative) }
+		{
+		}
+
+		/**
+		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::nullable "nullable" on the left side.
+		 * \tparam TNullable The \ref sl::nullables::nullable "nullable" type
+		 * \param closure The \ref sl::nullables::nullable "nullable" object
+		 * \param valueOr The algorithm object
+		 * \return Returns either the value of the \ref sl::nullables::nullable "nullable" or the alternative.
+		 */
+		template <nullable TNullable>
+			requires std::constructible_from<nullable_value_t<TNullable>, T>
+		[[nodiscard]]
+		friend constexpr nullable_value_t<TNullable> operator |(TNullable&& closure, value_or&& valueOr)
+		{
+			return value_or_func_t<TNullable, T>{}
+			(
+				std::forward<TNullable>(closure),
+				std::forward<T>(valueOr.m_Alternative)
+			);
+		}
+
+	private:
+		T m_Alternative;
+	};
+
+	/**
+	 * \brief Deduction guide for \ref value_or
+	 * \tparam T The type of the alternative
+	 */
+	template <class T>
+	value_or(T&&) -> value_or<T&&>;
+
+	/**
+	 * \brief Passes the value of the \ref sl::nullables::nullable "nullable" to the function if it's not equal to its ``null``-object.
+	 * Returns the ``null``-object otherwise.
+	 * \tparam TFunc The type of the passed function. The function should be invokable with types returned by \ref sl::nullables::value_unchecked
+	 * "value_unchecked" and return a type which satisfies the \ref sl::nullables::nullable "nullable" concept (this type does not have to be
+	 * the same as the type already used in the expression).
+	 *
+	 * \details This algorithm uses the actual value of a nullable and passes it to the given functional. The functional should then return \b any
+	 * \ref sl::nullables::nullable "nullable" \b compatible \b type as desired.
+	 * Otherwise, if the \ref sl::nullables::nullable "nullable" compares equal to its ``null``-object, the ``null``-object is returned instead.
+	 *
+	 * \note In the following examples the outcome is always presented within the ``REQUIRE()`` statement.
+	 *
+	 * This example shows what happens when a valid \ref sl::nullables::nullable "nullable" is used in a ``and_then`` expression.
+	 * \snippet ../tests/nullables.cpp and_then valid copyable
+	 *
+	 *
+	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression.
+	 * Note that the resulting \ref sl::nullables::nullable "nullable" type changes differs from the starting one.
+	 * \snippet ../tests/nullables.cpp and_then invalid copyable
+	 */
 	template <class TFunc>
 	class and_then
 	{
 	public:
+		/**
+		 * \brief Constructor awaiting a function object
+		 * \param func The function object
+		 */
 		explicit constexpr and_then(TFunc func) noexcept
 			: m_Func{ std::move(func) }
 		{
 		}
 
+		/**
+		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::nullable "nullable" on the left side.
+		 * \tparam TNullable The \ref sl::nullables::nullable "nullable" type
+		 * \param closure The \ref sl::nullables::nullable "nullable" object
+		 * \param andThen The algorithm object
+		 * \return Returns either a ``null``-object (if \ref sl::nullables::nullable "nullable" compares equal to its ``null``-object)
+		 * or the invocation result of the passed function.
+		 */
 		template <nullable TNullable>
 		friend constexpr
 		[[nodiscard]]
@@ -260,6 +437,70 @@ namespace sl::nullables
 	private:
 		TFunc m_Func;
 	};
+
+	/**
+	 * \brief Returns the \ref sl::nullables::nullable "nullable" if it's not equal to its ''null''-object. Executes the passed function otherwise.
+	 * \tparam TFunc The type of the passed function. The return type must be either ```void`` or such that it can be
+	 * used to initialize a new object of type ``std::remove_cvref_t<TNullable>``.
+	 *
+	 * \details This algorithm simply forwards the \ref sl::nullables::nullable "nullable" if it compares unequal to its ``null``-object.
+	 * Otherwise the passed function will be called and the returned value initializes a new \ref sl::nullables::nullable "nullable"-object of the same type.
+	 * If the functions return type is ``void``, the ``null``-object of that \ref sl::nullables::nullable "nullable"-type will be returned instead.
+	 *
+	 * \note In the following examples the outcome is always presented within the ``REQUIRE()`` statement.
+	 * 
+	 * This example shows what happens when a valid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression.
+	 * \snippet ../tests/nullables.cpp or_else valid copyable
+	 * \---
+	 * 
+	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression and the functional has a
+	 * return type other than ``void``.
+	 * \snippet ../tests/nullables.cpp or_else invalid value non-void return copyable
+	 * \---
+	 * 
+	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression and the functional doesn't
+	 * return anything.
+	 * \snippet ../tests/nullables.cpp or_else invalid value void return copyable
+	 */
+	template <std::invocable TFunc>
+	class or_else
+	{
+	public:
+		/**
+		 * \brief Constructor awaiting a function object
+		 * \param func The function object
+		 */
+		explicit constexpr or_else(TFunc func) noexcept
+			: m_Func{ std::move(func) }
+		{
+		}
+
+		/**
+		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::nullable "nullable" on the left side.
+		 * \tparam TNullable The \ref sl::nullables::nullable "nullable" type
+		 * \param closure The \ref sl::nullables::nullable "nullable" object
+		 * \param orElse The algorithm object
+		 * \return Returns either the \ref sl::nullables::nullable "nullable" or the invocation result of the function. If the function has
+		 * a ``void`` return type then a the ``null``-object of the given \ref sl::nullables::nullable "nullable" will be returned.
+		 */
+		template <nullable TNullable>
+		[[nodiscard]]
+		friend constexpr std::remove_cvref_t<TNullable> operator |(TNullable&& closure, or_else&& orElse)
+		{
+			return or_else_func_t<TNullable, std::reference_wrapper<TFunc>>{}
+			(
+				std::forward<TNullable>(closure),
+				std::ref(orElse.m_Func)
+			);
+		}
+
+	private:
+		TFunc m_Func;
+	};
+
+	/** @} */
+
+	/** @} */
 }
 
 #endif
