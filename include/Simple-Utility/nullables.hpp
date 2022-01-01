@@ -81,10 +81,6 @@ namespace sl::nullables
 	template <class TNullable, class T>
 	struct value_or_func_t
 	{
-		constexpr value_or_func_t()
-		{
-			static_assert(false, "None of the specialized versions of value_or_func_t could handle the passed arguments");
-		}
 	};
 
 	template <nullable TNullable, class T>
@@ -147,10 +143,6 @@ namespace sl::nullables
 	template <class TNullable, class TFunc>
 	struct or_else_func_t
 	{
-		constexpr or_else_func_t()
-		{
-			static_assert(false, "None of the specialized versions of or_else_func_t could handle the passed arguments");
-		}
 	};
 
 	template <nullable TNullable, std::invocable TFunc>
@@ -210,10 +202,6 @@ namespace sl::nullables
 	template <class TNullable, class TFunc>
 	struct and_then_func_t
 	{
-		constexpr and_then_func_t()
-		{
-			static_assert(false, "None of the specialized versions of and_then_func_t could handle the passed arguments");
-		}
 	};
 
 	template <nullable TNullable, std::invocable<nullable_value_t<TNullable>> TFunc>
