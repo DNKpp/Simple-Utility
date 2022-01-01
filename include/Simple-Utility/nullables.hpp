@@ -74,26 +74,32 @@ namespace sl::nullables
 		return *closure;
 	}
 
-	template <class TClosure, class T>
-	[[nodiscard]]
-	constexpr auto value_or(TClosure&& closure, T&& alternative)
-		requires requires { closure.value_or(std::forward<T>(alternative)); }
+	template <class T>
+	class value_or
 	{
-		// let existing implementations handle the errors; don't want to over-constraint this
-		return closure.value_or(std::forward<T>(alternative));
-	}
-
-	template <nullable TNullable, std::convertible_to<nullable_value_t<TNullable>> T>
-	[[nodiscard]]
-	constexpr auto value_or(TNullable&& closure, T&& alternative)
-		requires (!requires { closure.value_or(std::forward<T>(alternative)); })
-	{
-		if (closure != nullable_null_v<TNullable>)
+	public:
+		explicit constexpr value_or(T&& alternative) noexcept
+			: m_Alternative{ std::forward<T>(alternative) }
 		{
-			return value_unchecked(std::forward<TNullable>(closure));
 		}
-		return std::forward<T>(alternative);
-	}
+
+		template <nullable TNullable>
+			requires std::constructible_from<nullable_value_t<TNullable>, T>
+		friend constexpr nullable_value_t<TNullable> operator |(TNullable&& closure, value_or&& valueOr)
+		{
+			if (closure != nullable_null_v<TNullable>)
+			{
+				return value_unchecked(std::forward<TNullable>(closure));
+			}
+			return std::forward<T>(valueOr.m_Alternative);
+		}
+
+	private:
+		T m_Alternative;
+	};
+
+	template <class T>
+	value_or(T&&) -> value_or<T&&>;
 
 	template <std::invocable TFunc>
 	class or_else
