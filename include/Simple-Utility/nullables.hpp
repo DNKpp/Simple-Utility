@@ -79,7 +79,10 @@ namespace sl::nullables
 	template <class TNullable, class T>
 	struct value_or_func_t
 	{
-		// purposely empty
+		constexpr value_or_func_t()
+		{
+			static_assert(false, "None of the specialized versions of value_or_func_t could handle the passed arguments");
+		}
 	};
 
 	template <nullable TNullable, class T>
