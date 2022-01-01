@@ -30,7 +30,9 @@ namespace sl::nullables
 							typename nullable_value_t<T>;
 							nullable_null_v<T>;
 						}
-						&& concepts::weakly_equality_comparable_with<T, decltype(nullable_null_v<T>)>;
+						&& concepts::weakly_equality_comparable_with<T, decltype(nullable_null_v<T>)>
+						&& concepts::initializes<std::remove_cvref_t<decltype(nullable_null_v<T>)>, std::remove_cvref_t<T>>
+						&& std::is_assignable_v<std::remove_cvref_t<T>&, decltype(nullable_null_v<T>)>;
 
 	template <class... TArgs>
 	struct nullable_traits<unique_handle<TArgs...>>

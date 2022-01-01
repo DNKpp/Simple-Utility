@@ -20,6 +20,22 @@ namespace
 	{
 		int x{};
 
+		constexpr target_t() noexcept = default;
+
+		constexpr target_t(empty_t) noexcept
+		{
+		}
+
+		constexpr target_t(int x) noexcept
+			: x{ x }
+		{
+		}
+
+		constexpr target_t& operator =(empty_t) noexcept
+		{
+			return *this;
+		}
+
 		[[nodiscard]]
 		constexpr bool operator ==(empty_t) const noexcept
 		{
