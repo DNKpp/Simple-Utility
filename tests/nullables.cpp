@@ -253,7 +253,7 @@ TEST_CASE("and_then should be usable in chains", "[nullables][algorithm]")
 	SECTION("when handle is empty, the last nullable object should be returned")
 	{
 		const std::optional<int> result = handle | and_then{ toString }
-												| and_then{ strToInt };
+										| and_then{ strToInt };
 		REQUIRE(result == std::nullopt);
 	}
 
@@ -261,29 +261,55 @@ TEST_CASE("and_then should be usable in chains", "[nullables][algorithm]")
 	{
 		handle = 1337;
 		const std::optional<int> result = handle | and_then{ toString }
-												| and_then{ strToInt };
+										| and_then{ strToInt };
 		REQUIRE(result == 1337);
 	}
 }
 
-//
-//#pragma warning(disable: 26444)
-//TEMPLATE_TEST_CASE_SIG
-//(
-//	"has_value should use the expected overload",
-//	"[algorithm]",
-//	((class T, auto VInit, auto VAlt, auto VExpectedValue), T, VInit, VAlt, VExpectedValue),
-//	(sl::unique_handle<int>, sl::nullhandle, 42, 42),
-//	(sl::unique_handle<int>, 1337, 42, 1337)/*,
-//	(std::optional<int>, std::nullopt, 42, 42)*/
-//)
-//#pragma warning(default: 26444)
-//{
-//	auto value = []
-//	{
-//		T object{ VInit };
-//		return sl::nullables::value_or(std::move(object), VAlt);
-//	}();
-//
-//	REQUIRE(value == VExpectedValue);
-//}
+#pragma warning(disable: 26444)
+TEMPLATE_TEST_CASE
+(
+	"value_or should return the expected object",
+	"[nullables][algorithm]",
+	sl::unique_handle<int>&,
+	const sl::unique_handle<int>&,
+	sl::unique_handle<int>&&,
+	const sl::unique_handle<int>&&
+)
+#pragma warning(default: 26444)
+{
+	using sl::nullables::value_or;
+
+	sl::unique_handle<int> handle{};
+
+	SECTION("when handle is empty, the alternative should be returned")
+	{
+		const int result = static_cast<TestType>(handle) | value_or{ 1337 };
+		REQUIRE(result == 1337);
+	}
+
+	SECTION("when handle is non-empty, the handle itself should be returned")
+	{
+		handle = 42;
+		const int result = static_cast<TestType>(handle) | value_or{ 1337 };
+		REQUIRE(result == 42);
+	}
+}
+
+TEST_CASE("nullable algorithms should be usable in chains", "[nullables][algorithm]")
+{
+	using namespace sl::nullables;
+
+	constexpr auto toString = [](const auto& value) -> sl::unique_handle<std::string> { return std::to_string(value); };
+	constexpr auto failString = []() -> std::string { return "fail"; };
+
+	sl::unique_handle<int> handle{};
+
+	SECTION("when handle is empty, the result of the or_else algorithm should be returned")
+	{
+		const std::string result = handle | and_then{ toString }
+									| or_else{ failString }
+									| value_or("value_or fail");
+		REQUIRE(result == "fail");
+	}
+}
