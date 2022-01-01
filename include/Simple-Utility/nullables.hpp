@@ -68,10 +68,12 @@ namespace sl::nullables
 		constexpr static std::nullptr_t null{ nullptr };
 	};
 
+	template <nullable TNullable>
+		requires concepts::dereferencable<TNullable>
 	[[nodiscard]]
-	constexpr decltype(auto) value_unchecked(concepts::dereferencable auto&& closure) noexcept
+	constexpr decltype(auto) value_unchecked(TNullable&& closure) noexcept
 	{
-		return *closure;
+		return *std::forward<TNullable>(closure);
 	}
 
 	template <class TNullable, class T>
