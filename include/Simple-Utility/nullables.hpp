@@ -177,6 +177,31 @@ namespace sl::nullables
 		std::reference_wrapper<TFunc> m_Func;
 	};
 
+	template <class TNullable, class TFunc>
+	struct and_then_func_t
+	{
+		constexpr and_then_func_t()
+		{
+			static_assert(false, "None of the specialized versions of and_then_func_t could handle the passed arguments");
+		}
+	};
+
+	template <nullable TNullable, std::invocable<nullable_value_t<TNullable>> TFunc>
+		requires nullable<std::invoke_result_t<TFunc, nullable_value_t<TNullable>>>
+	struct and_then_func_t<TNullable, TFunc>
+	{
+		constexpr std::invoke_result_t<TFunc, nullable_value_t<TNullable>> operator()(TNullable&& closure, TFunc func)
+		{
+			if (closure != nullable_null_v<TNullable>)
+			{
+				return std::invoke(func, value_unchecked(std::forward<TNullable>(closure)));
+			}
+			return nullable_null_v<
+				std::invoke_result_t<TFunc, nullable_value_t<TNullable>>
+			>;
+		}
+	};
+
 	template <class TFunc>
 	class and_then
 	{
@@ -188,15 +213,8 @@ namespace sl::nullables
 
 		template <nullable TNullable>
 		friend constexpr std::invoke_result_t<TFunc, nullable_value_t<TNullable>> operator |(TNullable&& closure, and_then&& andThen)
-			requires nullable<std::invoke_result_t<TFunc, nullable_value_t<TNullable>>>
 		{
-			if (closure != nullable_null_v<TNullable>)
-			{
-				return std::invoke(andThen.m_Func, value_unchecked(std::forward<TNullable>(closure)));
-			}
-			return nullable_null_v<
-				std::invoke_result_t<TFunc, nullable_value_t<TNullable>>
-			>;
+			return and_then_func_t<TNullable, std::reference_wrapper<TFunc>>{}(std::forward<TNullable>(closure), andThen.m_Func);
 		}
 
 	private:
