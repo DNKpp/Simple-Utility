@@ -345,6 +345,17 @@ TEST_CASE("and_then should be usable in chains", "[nullables][algorithm]")
 	}
 }
 
+TEST_CASE("value_or minimal requirements should be satisfied by input_nullable", "[nullables][algorithm]")
+{
+	using sl::nullables::value_or;
+
+	input_nullable_target_t target{};
+
+	const int result = target | value_or{ 42 };
+
+	REQUIRE(result == 0);
+}
+
 #pragma warning(disable: 26444)
 TEMPLATE_TEST_CASE
 (
