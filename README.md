@@ -30,9 +30,9 @@ The current main features are without doubt the ``sl::nullables`` namespace and 
 offers only a movable interface and guarantees resetting the internal value after a move happend, and is thus semantically closer at ``std::unique_ptr`` but holds its value still on the stack.
 
 The ``sl::nullables`` namespace offers three simple algorithms:
-* ``and_then``
-* ``or_else``
-* ``value_or``
+*   ``and_then``
+*   ``or_else``
+*   ``value_or``
 
 which are chainable and can be applied on objects which satisfy the ``nullable`` concept. What's a ``nullable`` you may ask? It's a type which has an explicit invalid state; e.g. ``std::optional``, ``std::unique_ptr`` or the ``sl::unique_handle``.
 Feel free to have a look into the docs pages.
