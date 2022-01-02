@@ -174,15 +174,15 @@ namespace sl::nullables
 	/** @} */
 
 	/**
-	 * \brief Returns the internal value of the \ref sl::nullables::nullable "nullable" object. Must not throw.
-	 * \details This function will be utilized by the \ref sl::nullables::nullable "nullable" algorithms. It is only called
-	 * when the \ref sl::nullables::nullable "nullable" != its null-object and should therefore not perform any additional
+	 * \brief Returns the internal value of the \ref sl::nullables::input_nullable "input_nullable" object. Must not throw.
+	 * \details This function will be utilized by the \ref sl::nullables::input_nullable "input_nullable" algorithms. It is only called
+	 * when the \ref sl::nullables::input_nullable "input_nullable" != its null-object and should therefore not perform any additional
 	 * security checks.
-	 * \tparam TNullable The \ref sl::nullables::nullable "nullable" type
-	 * \param closure The \ref sl::nullables::nullable "nullable" object
+	 * \tparam TNullable The \ref sl::nullables::input_nullable "input_nullable" type
+	 * \param closure The \ref sl::nullables::input_nullable "input_nullable" object
 	 * \return Returns the value as is
 	 */
-	template <nullable TNullable>
+	template <input_nullable TNullable>
 		requires concepts::dereferencable<TNullable>
 	[[nodiscard]]
 	constexpr decltype(auto) value_unchecked(TNullable&& closure) noexcept
@@ -192,7 +192,7 @@ namespace sl::nullables
 
 	namespace detail
 	{
-		template <nullable TNullable>
+		template <input_nullable TNullable>
 		using dereference_type_t = decltype(value_unchecked(std::declval<TNullable>()));
 	}
 
