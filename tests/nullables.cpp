@@ -10,9 +10,9 @@
 #include "Simple-Utility/nullables.hpp"
 #include "Simple-Utility/unique_handle.hpp"
 
-#include <iostream>
 #include <memory>
 #include <optional>
+#include <sstream>
 #include <string>
 
 namespace
@@ -358,6 +358,15 @@ TEST_CASE("nullable algorithms should be usable in chains", "[nullables][algorit
 									| value_or("value_or fail");
 		REQUIRE(result == "fail");
 	}
+
+	SECTION("when handle is non-empty, the result of the and_then algorithm should be returned")
+	{
+		handle = 42;
+		const std::string result = handle | and_then{ toString }
+									| or_else{ failString }
+									| value_or("value_or fail");
+		REQUIRE(result == "42");
+	}
 }
 
 #pragma warning(disable: 26444)
@@ -459,18 +468,15 @@ TEST_CASE("artifically more advanced example", "[nullables][algorithm]")
 {
 	using namespace sl::nullables;
 
+	constexpr auto oneAndOnlyTruth = [] { return std::make_unique<int>(42); };
+
 	std::optional<std::unique_ptr<int>> opt{};
 
 	SECTION("let's just chain the optional through")
 	{
-		constexpr auto square = []<class T>(T&& value) -> std::optional<std::unique_ptr<int>>
-		{
-			*value *= *value;
-			return std::forward<T>(value);
-		};
-		constexpr auto oneAndOnlyTruth = [] { return std::make_unique<int>(42); };
-
-		const std::unique_ptr<int> result = std::move(opt) | and_then{ square }
+		const std::unique_ptr<int> result = std::move(opt) |
+											/*not hit*/
+											and_then{ [](auto&&) -> std::optional<std::unique_ptr<int>> { return {}; } }
 											| or_else{ oneAndOnlyTruth }
 											| value_or(std::make_unique<int>(-42));
 		REQUIRE(*result == 42);
@@ -483,7 +489,6 @@ TEST_CASE("artifically more advanced example", "[nullables][algorithm]")
 			*value *= *value;
 			return std::forward<T>(value);
 		};
-		constexpr auto oneAndOnlyTruth = [] { return std::make_unique<int>(42); };
 
 		opt = std::make_unique<int>(1337);
 		const int result = std::move(opt) | and_then{ square }
@@ -521,11 +526,13 @@ TEST_CASE("or_else usage example with copyable types", "[nullables][algorithm][e
 
 	SECTION("or_else executes the function and returns its returned value in a new nullable.")
 	{
+		std::ostringstream logger{};
+
 		//! [or_else invalid value void return copyable]
 		namespace sn = sl::nullables;
 
 		std::optional<int> opt{ std::nullopt };
-		const std::optional<int> result = opt | sn::or_else{ [] { std::cout << "optional was invalid."; } };
+		const std::optional<int> result = opt | sn::or_else{ [&] { logger << "optional was invalid."; } };
 
 		REQUIRE(result == std::nullopt);
 		//! [or_else invalid value void return copyable]
@@ -534,19 +541,16 @@ TEST_CASE("or_else usage example with copyable types", "[nullables][algorithm][e
 
 TEST_CASE("and_then usage example with copyable types", "[nullables][algorithm][example]")
 {
+	constexpr auto toString = [](const int& value) -> std::optional<std::string> { return std::to_string(value); };
+
 	SECTION("and_then returns the null-object if the nullable is invalid.")
 	{
 		//! [and_then invalid copyable]
 		namespace sn = sl::nullables;
 
 		std::optional<int> opt{ std::nullopt };
-		const std::optional<std::string> result = opt | sn::and_then
-												{
-													[](int& value) -> std::optional<std::string>
-													{
-														return std::to_string(value);
-													}
-												};
+		const std::optional<std::string> result = opt
+												| sn::and_then{ toString }; // won't be hit, because opt is empty
 
 		REQUIRE(result == std::nullopt);
 		//! [and_then invalid copyable]
@@ -558,13 +562,8 @@ TEST_CASE("and_then usage example with copyable types", "[nullables][algorithm][
 		namespace sn = sl::nullables;
 
 		std::optional<int> opt{ 1337 };
-		const std::optional<std::string> result = opt | sn::and_then
-												{
-													[](int& value) -> std::optional<std::string>
-													{
-														return std::to_string(value);
-													}
-												};
+		const std::optional<std::string> result = opt
+												| sn::and_then{ toString }; // will be hit, because opt contains a value
 
 		REQUIRE(result == "1337");
 		//! [and_then valid copyable]
@@ -610,6 +609,8 @@ TEST_CASE("chain usage example with movable type", "[nullables][algorithm][examp
 {
 	SECTION("value_or returns the alternative if the nullable is invalid.")
 	{
+		std::ostringstream logger{};
+
 		//! [nullables algorithm chain movable]
 		namespace sn = sl::nullables;
 
@@ -624,7 +625,7 @@ TEST_CASE("chain usage example with movable type", "[nullables][algorithm][examp
 												return exec_transaction(std::move(transaction));
 											}
 										}
-										| sn::or_else([] { std::cout << "Unspecified database error occurred.\n"; })
+										| sn::or_else([&] { logger << "Unspecified database error occurred.\n"; })
 										// pay attention for the nullable type in the next line
 										| sn::and_then([](int id) { return std::optional{ std::to_string(id) }; })
 										| sn::value_or("invalid transaction id");
