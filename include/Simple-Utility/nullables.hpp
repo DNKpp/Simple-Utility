@@ -214,7 +214,7 @@ namespace sl::nullables
 
 	/**
 	 * \brief Base type for the ``value_or`` algorithms. May be specialized.
-	 * \tparam TNullable Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam TNullable Type of the \ref sl::nullables::input_nullable "input_nullable"
 	 * \tparam T Type of the alternative.
 	 */
 	template <class TNullable, class T>
@@ -224,10 +224,10 @@ namespace sl::nullables
 
 	/**
 	 * \brief Specialization which will be used instead if the ``value_or`` functions is present as a member of ``TNullable`` type.
-	 * \tparam TNullable Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam TNullable Type of the \ref sl::nullables::input_nullable "input_nullable"
 	 * \tparam T Type of the alternative.
 	 */
-	template <nullable TNullable, class T>
+	template <input_nullable TNullable, class T>
 		requires requires(TNullable n, T a)
 		{
 			{ n.value_or(a) } -> std::convertible_to<nullable_value_t<TNullable>>;
@@ -243,10 +243,10 @@ namespace sl::nullables
 
 	/**
 	 * \brief General algorithm implementation. May be specialized by users if necessary.
-	 * \tparam TNullable Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam TNullable Type of the \ref sl::nullables::input_nullable "input_nullable"
 	 * \tparam T Type of the alternative. Must initialize ``nullable_value_t<TNullable>``
 	 */
-	template <nullable TNullable, class T>
+	template <input_nullable TNullable, class T>
 		requires (!requires(TNullable n, T a)
 		{
 			{ n.value_or(a) } -> std::convertible_to<nullable_value_t<TNullable>>;
@@ -357,19 +357,19 @@ namespace sl::nullables
 	/** @} */
 
 	/**
-	 * \brief Retrieves the value of a \ref sl::nullables::nullable "nullable" if it's not equal to its ''null''-object.
+	 * \brief Retrieves the value of a \ref sl::nullables::input_nullable "input_nullable" if it's not equal to its ''null''-object.
 	 * Returns the alternative otherwise.
 	 * \tparam T Type of alternative. Must initialize ``nullable_value_t<TNullable>`` objects.
 	 *
-	 * \details This algorithm returns the alternative if the \ref sl::nullables::nullable "nullable" compares equal to its
-	 * ``null``-object. Otherwise the value of the \ref sl::nullables::nullable "nullable" is returned.
+	 * \details This algorithm returns the alternative if the \ref sl::nullables::input_nullable "input_nullable" compares equal to its
+	 * ``null``-object. Otherwise the value of the \ref sl::nullables::input_nullable "input_nullable" is returned.
 	 * \note In the following examples the outcome is always presented within the ``REQUIRE()`` statement.
 	 *
-	 * This example shows what happens when a valid \ref sl::nullables::nullable "nullable" is used in a ``value_or`` expression.
+	 * This example shows what happens when a valid \ref sl::nullables::input_nullable "input_nullable" is used in a ``value_or`` expression.
 	 * \snippet nullables.cpp value_or valid copyable
 	 *
 	 *
-	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``value_or`` expression.
+	 * This example shows what happens when an invalid \ref sl::nullables::input_nullable "input_nullable" is used in a ``value_or`` expression.
 	 * \snippet nullables.cpp value_or invalid copyable
 	 */
 	template <class T>
@@ -386,13 +386,13 @@ namespace sl::nullables
 		}
 
 		/**
-		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::nullable "nullable" on the left side.
-		 * \tparam TNullable The \ref sl::nullables::nullable "nullable" type
-		 * \param closure The \ref sl::nullables::nullable "nullable" object
+		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::input_nullable "input_nullable" on the left side.
+		 * \tparam TNullable The \ref sl::nullables::input_nullable "input_nullable" type
+		 * \param closure The \ref sl::nullables::input_nullable "input_nullable" object
 		 * \param valueOr The algorithm object
-		 * \return Returns either the value of the \ref sl::nullables::nullable "nullable" or the alternative.
+		 * \return Returns either the value of the \ref sl::nullables::input_nullable "input_nullable" or the alternative.
 		 */
-		template <nullable TNullable>
+		template <input_nullable TNullable>
 		[[nodiscard]]
 		friend constexpr nullable_value_t<TNullable> operator |(TNullable&& closure, value_or&& valueOr)
 		{
