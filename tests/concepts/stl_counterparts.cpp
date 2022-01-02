@@ -1,4 +1,4 @@
-//          Copyright Dominic Koepke 2019 - 2021.
+//          Copyright Dominic Koepke 2019 - 2022.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -74,4 +74,19 @@ TEMPLATE_TEST_CASE_SIG
 #pragma warning(default: 26444)
 {
 	REQUIRE(not_same_as<TSource, TTarget> == VExpected);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_TEST_CASE_SIG
+(
+	"weakly_equality_comparable_with Checks whether a symmetrical set of operators == and != to compare both types with each other exists.",
+	"[concepts][stl_ext]",
+	((class T1, class T2, bool VExpected), T1, T2, VExpected),
+	(target_t, int, false),
+	(int, int, true)
+)
+#pragma warning(default: 26444)
+{
+	REQUIRE(weakly_equality_comparable_with<T1, T2> == VExpected);
+	REQUIRE(weakly_equality_comparable_with<T2, T1> == VExpected);
 }

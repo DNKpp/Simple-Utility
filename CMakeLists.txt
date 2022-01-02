@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
 
 project(
 	Simple-Utility
-	VERSION 1.0.2
+	VERSION 1.1.0
 	LANGUAGES CXX
 )
 
@@ -30,3 +30,5 @@ if (SIMPLE_UTILITY_BUILD_TESTS)
 	add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tests")
 
 endif()
+
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/docs")

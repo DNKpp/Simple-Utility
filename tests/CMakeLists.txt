@@ -7,10 +7,12 @@ CPMAddPackage("gh:catchorg/Catch2@2.13.7")
 add_executable(
 	${PROJECT_NAME}-Tests
 	"main.cpp"
+	"concepts/access_operators.cpp"
 	"concepts/shift_operators.cpp"
 	"concepts/logical_arithmetic_operators.cpp"
 	"unique_handle.cpp"
 	"concepts/stl_counterparts.cpp"
+	"nullables.cpp"
 )
 
 target_link_libraries(

@@ -4,6 +4,7 @@ env:
     WORKING_DIR: ./docs
     DOXYFILE: Doxyfile
     BUILD_DIR: ./docs/build
+    CONFIGURE_DOXY_FLAG: SIMPLE_UTILITY_CONFIGURE_DOXYGEN
 
 on:
   release:
@@ -15,6 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
+    - name: Configure Doxygen
+      run: |
+        cmake -D${{ env.CONFIGURE_DOXY_FLAG }}=ON
 
     - name: Run Doxygen
       uses: mattnotmitt/doxygen-action@v1
