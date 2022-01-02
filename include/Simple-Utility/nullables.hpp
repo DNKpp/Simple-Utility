@@ -40,19 +40,41 @@ namespace sl::nullables
 	 * object with care, as it might have or might have not been moved. Simply the same rules for moved object as usual apply.
 	 * \snippet nullables.cpp nullables algorithm chain movable
 	 *
-	 * ## Using custom types
-	 * Well, that depends which interface your type offers. If it's already dereferencable via ``operator *`` than you are in a good position.
+	 * ## Using custom or third party types
+	 * Well, that depends which interface your type offers. If it's already dereferencable via ``operator *`` and it has an explicit ``null``-object,
+	 * which it can equality compared to, than you are in a good position.
 	 * Otherwise you may specialize the \ref sl::nullables::value_unchecked "value_unchecked" function or simply adjust your interface (if possible).
+	 * Either way, a explicit constant ``null``-object is mandatory and can not be avoided.
 	 *
 	 * If that's done, you should specialize the \ref sl::nullables::nullable_traits "nullable_traits":
 	 * \snippet nullables.cpp nullables custom type traits
 	 *
-	 * After that everything is already setup.
+	 * After that everything is already setup and your type can be at least used as a \ref sl::nullables::input_nullable "input_nullable" (which makes
+	 * it usable as input in \ref sl::nullables::and_then "and_then" and \ref sl::nullables::value_or "value_or" algorithms).
+	 * Making it actually a \ref sl::nullables::nullable "nullable" type, it must be assignable and constructible by its ``null``-object, which
+	 * might be achieved by overloading the conversion operator of the ``null``-type (which can't be declared explicit).
 	 *
 	 * Additionally if there is an actual need for that step, you may also specialize the algorithm implementations. Have a look at these members:
 	 *	- \ref sl::nullables::value_or_func_t "value_or_func_t"
 	 *	- \ref sl::nullables::value_or_func_t "and_then_func_t"
 	 *	- \ref sl::nullables::value_or_func_t "or_else_func_t"
+	 *
+	 *	#### Example: How to make a type ready as nullable
+	 *	Given a type which you can not adjust (here ``your_type``, which is quite similar to ``std::optional``), which you would like to use with
+	 *	these algorithms.
+	 *	\snippet nullables.cpp nullables your_type definition
+	 *
+	 *	Your first step should then defining a dedicated ``null``-type:
+	 *	\snippet nullables.cpp nullables your_type null-type
+	 *
+	 *	Second you need to specialize the \ref sl::nullables::value_unchecked "value_unchecked" function, because ``your_type`` can not dereferenced
+	 *	via ``operator *``.
+	 *	\snippet nullables.cpp nullables your_type value_unchecked
+	 *
+	 *	Last you need to specialize the type traits for that type:
+	 *	\snippet nullables.cpp nullables your_type traits
+	 *
+	 *	That's it. Now ``your_type`` is ready to be used as \ref sl::nullables::nullable "nullable" type.
 	 *
 	 * @{
 	 */
@@ -88,21 +110,30 @@ namespace sl::nullables
 	constexpr static auto nullable_null_v{ nullable_traits<std::remove_cvref_t<T>>::null };
 
 	/**
-	 * \brief Checks whether a type is \ref sl::nullables::nullable "nullable".
-	 * \details A type is considered as \ref sl::nullables::nullable "nullable" if:
+	 * \brief Checks whether a type is an \ref sl::nullables::input_nullable "input_nullable".
+	 * \details A type is considered as \ref sl::nullables::input_nullable "input_nullable" if:
 	 *		- ``nullable_traits`` is found which exposes the ``value_type`` and ``null``-object,
 	 *		- it satisfies the \ref sl::concepts::weakly_equality_comparable_with "weakly_equality_comparable_with" concept with its ``null``-object,
+	 * \tparam T Type to check
+	 */
+	template <class T>
+	concept input_nullable = requires
+							{
+								typename nullable_value_t<T>;
+								nullable_null_v<T>;
+							}
+							&& concepts::weakly_equality_comparable_with<T, decltype(nullable_null_v<T>)>;
+
+	/**
+	 * \brief Checks whether a type is \ref sl::nullables::nullable "nullable".
+	 * \details A type is considered as \ref sl::nullables::nullable "nullable" if:
+	 *		- it satisfies the \ref sl::nullables::input_nullable "input_nullable" concept
 	 *		- it is initializable by its ``null``-object and
 	 *		- it is assignable by its ``null``-object.
 	 * \tparam T Type to check
 	 */
 	template <class T>
-	concept nullable = requires
-						{
-							typename nullable_value_t<T>;
-							nullable_null_v<T>;
-						}
-						&& concepts::weakly_equality_comparable_with<T, decltype(nullable_null_v<T>)>
+	concept nullable = input_nullable<T>
 						&& concepts::initializes<std::remove_cvref_t<decltype(nullable_null_v<T>)>, std::remove_cvref_t<T>>
 						&& std::is_assignable_v<std::remove_cvref_t<T>&, decltype(nullable_null_v<T>)>;
 
@@ -165,15 +196,15 @@ namespace sl::nullables
 	/** @} */
 
 	/**
-	 * \brief Returns the internal value of the \ref sl::nullables::nullable "nullable" object. Must not throw.
-	 * \details This function will be utilized by the \ref sl::nullables::nullable "nullable" algorithms. It is only called
-	 * when the \ref sl::nullables::nullable "nullable" != its null-object and should therefore not perform any additional
+	 * \brief Returns the internal value of the \ref sl::nullables::input_nullable "input_nullable" object. Must not throw.
+	 * \details This function will be utilized by the \ref sl::nullables::input_nullable "input_nullable" algorithms. It is only called
+	 * when the \ref sl::nullables::input_nullable "input_nullable" != its null-object and should therefore not perform any additional
 	 * security checks.
-	 * \tparam TNullable The \ref sl::nullables::nullable "nullable" type
-	 * \param closure The \ref sl::nullables::nullable "nullable" object
+	 * \tparam TNullable The \ref sl::nullables::input_nullable "input_nullable" type
+	 * \param closure The \ref sl::nullables::input_nullable "input_nullable" object
 	 * \return Returns the value as is
 	 */
-	template <nullable TNullable>
+	template <input_nullable TNullable>
 		requires concepts::dereferencable<TNullable>
 	[[nodiscard]]
 	constexpr decltype(auto) value_unchecked(TNullable&& closure) noexcept
@@ -183,7 +214,7 @@ namespace sl::nullables
 
 	namespace detail
 	{
-		template <nullable TNullable>
+		template <input_nullable TNullable>
 		using dereference_type_t = decltype(value_unchecked(std::declval<TNullable>()));
 	}
 
@@ -205,7 +236,7 @@ namespace sl::nullables
 
 	/**
 	 * \brief Base type for the ``value_or`` algorithms. May be specialized.
-	 * \tparam TNullable Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam TNullable Type of the \ref sl::nullables::input_nullable "input_nullable"
 	 * \tparam T Type of the alternative.
 	 */
 	template <class TNullable, class T>
@@ -215,10 +246,10 @@ namespace sl::nullables
 
 	/**
 	 * \brief Specialization which will be used instead if the ``value_or`` functions is present as a member of ``TNullable`` type.
-	 * \tparam TNullable Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam TNullable Type of the \ref sl::nullables::input_nullable "input_nullable"
 	 * \tparam T Type of the alternative.
 	 */
-	template <nullable TNullable, class T>
+	template <input_nullable TNullable, class T>
 		requires requires(TNullable n, T a)
 		{
 			{ n.value_or(a) } -> std::convertible_to<nullable_value_t<TNullable>>;
@@ -234,10 +265,10 @@ namespace sl::nullables
 
 	/**
 	 * \brief General algorithm implementation. May be specialized by users if necessary.
-	 * \tparam TNullable Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam TNullable Type of the \ref sl::nullables::input_nullable "input_nullable"
 	 * \tparam T Type of the alternative. Must initialize ``nullable_value_t<TNullable>``
 	 */
-	template <nullable TNullable, class T>
+	template <input_nullable TNullable, class T>
 		requires (!requires(TNullable n, T a)
 		{
 			{ n.value_or(a) } -> std::convertible_to<nullable_value_t<TNullable>>;
@@ -309,7 +340,7 @@ namespace sl::nullables
 
 	/**
 	 * \brief Base type for the ``and_then`` algorithms. May be specialized.
-	 * \tparam TNullable  Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam TNullable  Type of the \ref sl::nullables::input_nullable "input_nullable"
 	 * \tparam TFunc Type of the passed function
 	 */
 	template <class TNullable, class TFunc>
@@ -319,10 +350,10 @@ namespace sl::nullables
 
 	/**
 	 * \brief General algorithm implementation. May be specialized by users if necessary.
-	 * \tparam TNullable Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam TNullable Type of the \ref sl::nullables::input_nullable "input_nullable"
 	 * \tparam TFunc Type of the passed function.
 	 */
-	template <nullable TNullable, class TFunc>
+	template <input_nullable TNullable, class TFunc>
 	struct and_then_func_t<TNullable, TFunc>
 	{
 		static_assert
@@ -348,19 +379,19 @@ namespace sl::nullables
 	/** @} */
 
 	/**
-	 * \brief Retrieves the value of a \ref sl::nullables::nullable "nullable" if it's not equal to its ''null''-object.
+	 * \brief Retrieves the value of a \ref sl::nullables::input_nullable "input_nullable" if it's not equal to its ''null''-object.
 	 * Returns the alternative otherwise.
 	 * \tparam T Type of alternative. Must initialize ``nullable_value_t<TNullable>`` objects.
 	 *
-	 * \details This algorithm returns the alternative if the \ref sl::nullables::nullable "nullable" compares equal to its
-	 * ``null``-object. Otherwise the value of the \ref sl::nullables::nullable "nullable" is returned.
+	 * \details This algorithm returns the alternative if the \ref sl::nullables::input_nullable "input_nullable" compares equal to its
+	 * ``null``-object. Otherwise the value of the \ref sl::nullables::input_nullable "input_nullable" is returned.
 	 * \note In the following examples the outcome is always presented within the ``REQUIRE()`` statement.
 	 *
-	 * This example shows what happens when a valid \ref sl::nullables::nullable "nullable" is used in a ``value_or`` expression.
+	 * This example shows what happens when a valid \ref sl::nullables::input_nullable "input_nullable" is used in a ``value_or`` expression.
 	 * \snippet nullables.cpp value_or valid copyable
 	 *
 	 *
-	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``value_or`` expression.
+	 * This example shows what happens when an invalid \ref sl::nullables::input_nullable "input_nullable" is used in a ``value_or`` expression.
 	 * \snippet nullables.cpp value_or invalid copyable
 	 */
 	template <class T>
@@ -377,13 +408,13 @@ namespace sl::nullables
 		}
 
 		/**
-		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::nullable "nullable" on the left side.
-		 * \tparam TNullable The \ref sl::nullables::nullable "nullable" type
-		 * \param closure The \ref sl::nullables::nullable "nullable" object
+		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::input_nullable "input_nullable" on the left side.
+		 * \tparam TNullable The \ref sl::nullables::input_nullable "input_nullable" type
+		 * \param closure The \ref sl::nullables::input_nullable "input_nullable" object
 		 * \param valueOr The algorithm object
-		 * \return Returns either the value of the \ref sl::nullables::nullable "nullable" or the alternative.
+		 * \return Returns either the value of the \ref sl::nullables::input_nullable "input_nullable" or the alternative.
 		 */
-		template <nullable TNullable>
+		template <input_nullable TNullable>
 		[[nodiscard]]
 		friend constexpr nullable_value_t<TNullable> operator |(TNullable&& closure, value_or&& valueOr)
 		{
@@ -406,24 +437,24 @@ namespace sl::nullables
 	value_or(T&&) -> value_or<T&&>;
 
 	/**
-	 * \brief Passes the value of the \ref sl::nullables::nullable "nullable" to the function if it's not equal to its ``null``-object.
+	 * \brief Passes the value of the \ref sl::nullables::input_nullable "input_nullable" to the function if it's not equal to its ``null``-object.
 	 * Returns the ``null``-object otherwise.
 	 * \tparam TFunc The type of the passed function. The function should be invokable with types returned by \ref sl::nullables::value_unchecked
 	 * "value_unchecked" and return a type which satisfies the \ref sl::nullables::nullable "nullable" concept (this type does not have to be
 	 * the same as the type already used in the expression).
 	 *
-	 * \details This algorithm uses the actual value of a nullable and passes it to the given functional. The functional should then return \b any
-	 * \ref sl::nullables::nullable "nullable" \b compatible \b type as desired.
-	 * Otherwise, if the \ref sl::nullables::nullable "nullable" compares equal to its ``null``-object, the ``null``-object is returned instead.
+	 * \details This algorithm uses the actual value of a \ref sl::nullables::input_nullable "input_nullable" and passes it to the given functional.
+	 * The functional should then return \b any \ref sl::nullables::nullable "nullable" \b compatible \b type as desired.
+	 * Otherwise, if the \ref sl::nullables::input_nullable "input_nullable" compares equal to its ``null``-object, the ``null``-object is returned instead.
 	 *
 	 * \note In the following examples the outcome is always presented within the ``REQUIRE()`` statement.
 	 *
-	 * This example shows what happens when a valid \ref sl::nullables::nullable "nullable" is used in a ``and_then`` expression.
+	 * This example shows what happens when a valid \ref sl::nullables::input_nullable "input_nullable" is used in a ``and_then`` expression.
 	 * \snippet nullables.cpp and_then valid copyable
 	 *
 	 *
-	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression.
-	 * Note that the resulting \ref sl::nullables::nullable "nullable" type changes differs from the starting one.
+	 * This example shows what happens when an invalid \ref sl::nullables::input_nullable "input_nullable" is used in a ``and_then`` expression.
+	 * Note that the resulting \ref sl::nullables::nullable "nullable" type differs from the starting one.
 	 * \snippet nullables.cpp and_then invalid copyable
 	 */
 	template <class TFunc>
@@ -440,14 +471,14 @@ namespace sl::nullables
 		}
 
 		/**
-		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::nullable "nullable" on the left side.
-		 * \tparam TNullable The \ref sl::nullables::nullable "nullable" type
-		 * \param closure The \ref sl::nullables::nullable "nullable" object
+		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::input_nullable "input_nullable" on the left side.
+		 * \tparam TNullable The \ref sl::nullables::input_nullable "input_nullable" type
+		 * \param closure The \ref sl::nullables::input_nullable "input_nullable" object
 		 * \param andThen The algorithm object
-		 * \return Returns either a ``null``-object (if \ref sl::nullables::nullable "nullable" compares equal to its ``null``-object)
+		 * \return Returns either a ``null``-object (if \ref sl::nullables::input_nullable "input_nullable" compares equal to its ``null``-object)
 		 * or the invocation result of the passed function.
 		 */
-		template <nullable TNullable>
+		template <input_nullable TNullable>
 		[[nodiscard]]
 		friend constexpr
 		std::invoke_result_t<TFunc, detail::dereference_type_t<TNullable>> operator |
