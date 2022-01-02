@@ -226,7 +226,7 @@ namespace sl::nullables
 	struct value_or_func_t<TNullable, T>
 	{
 		[[nodiscard]]
-		constexpr nullable_value_t<TNullable> operator()(TNullable&& closure, T&& alternative)
+		constexpr decltype(auto) operator()(TNullable&& closure, T&& alternative)
 		{
 			return std::forward<TNullable>(closure).value_or(std::forward<T>(alternative));
 		}
