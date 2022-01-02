@@ -10,6 +10,7 @@
 #include "Simple-Utility/nullables.hpp"
 #include "Simple-Utility/unique_handle.hpp"
 
+#include <cassert>
 #include <memory>
 #include <optional>
 #include <sstream>
@@ -17,70 +18,114 @@
 
 namespace
 {
-	struct target_t
+	struct input_nullable_target_t
 	{
 		int x{};
 
-		constexpr target_t() noexcept = default;
+		constexpr input_nullable_target_t() noexcept = default;
 
-		constexpr target_t(empty_t) noexcept
-		{
-		}
-
-		constexpr target_t(int x) noexcept
+		constexpr input_nullable_target_t(int x) noexcept
 			: x{ x }
 		{
 		}
 
-		constexpr target_t& operator =(empty_t) noexcept
-		{
-			return *this;
-		}
-
 		[[nodiscard]]
 		constexpr bool operator ==(empty_t) const noexcept
 		{
 			return false;
 		}
+
+		[[nodiscard]]
+		constexpr const int& operator *() const noexcept
+		{
+			return x;
+		}
 	};
 
-	[[nodiscard]]
-	constexpr const int& value_unchecked(const target_t& target) noexcept
+	//! [nullables your_type definition]
+	class your_type
 	{
-		return target.x;
+	public:
+		your_type() = default;
+
+		your_type(int value)
+			: m_IsSet{ true },
+			m_Value{ value }
+		{
+		}
+
+		[[nodiscard]]
+		int get_value() const
+		{
+			assert(m_IsSet && "Value is not set.");
+			return m_Value;
+		}
+
+		[[nodiscard]]
+		bool is_set() const
+		{
+			return m_IsSet;
+		}
+
+	private:
+		bool m_IsSet{ false };
+		int m_Value{};
+	};
+
+	//! [nullables your_type definition]
+
+	//! [nullables your_type null-type]
+	class null_your_type_t
+	{
+	public:
+		null_your_type_t() = default;
+
+		[[nodiscard]]
+		bool operator ==(const your_type& other) const
+		{
+			return !other.is_set();
+		}
+
+		// this is required if you want to use your_type as nullable.
+		// If you only want to satisfy input_nullable concept, this can be omitted.
+		[[nodiscard]]
+		operator your_type() const
+		{
+			return {};
+		}
+	};
+
+	//! [nullables your_type null-type]
+
+	//! [nullables your_type value_unchecked]
+	[[nodiscard]]
+	int value_unchecked(const your_type& target) noexcept
+	{
+		return target.get_value();
 	}
 
-	struct input_nullable_target_t
-	{
-		constexpr int operator *() const noexcept
-		{
-			return 0;
-		}
-
-		[[nodiscard]]
-		constexpr bool operator ==(empty_t) const noexcept
-		{
-			return false;
-		}
-	};
+	//! [nullables your_type value_unchecked]
 }
 
-//! [nullables custom type traits]
+//! [nullables your_type traits]
 template <>
-struct sl::nullables::nullable_traits<target_t>
+struct sl::nullables::nullable_traits<your_type>
 {
 	using value_type = int;
-	constexpr static empty_t null{};
+	constexpr static null_your_type_t null{};
 };
 
-//! [nullables custom type traits]
+//! [nullables your_type traits]
 
+//! [nullables custom type traits]
 template <>
 struct sl::nullables::nullable_traits<input_nullable_target_t>
 {
 	using value_type = int;
 	constexpr static empty_t null{};
 };
+
+//! [nullables custom type traits]
 
 #pragma warning(disable: 26444)
 TEMPLATE_TEST_CASE_SIG
@@ -100,7 +145,9 @@ TEMPLATE_TEST_CASE_SIG
 	(int*, int, false),
 	(std::unique_ptr<int>, int, false),
 	(std::shared_ptr<int>, int, false),
-	(target_t, int, false) // check for external customizability
+	// check for external customizability
+	(input_nullable_target_t, int, false),
+	(your_type, int, false)
 )
 #pragma warning(default: 26444)
 {
@@ -127,7 +174,9 @@ TEMPLATE_TEST_CASE_SIG
 	(int*, std::nullptr_t, false),
 	(std::unique_ptr<int>, std::nullptr_t, false),
 	(std::shared_ptr<int>, std::nullptr_t, false),
-	(target_t, empty_t, false) // check for external customizability
+	// check for external customizability
+	(input_nullable_target_t, empty_t, false),
+	(your_type, null_your_type_t, false)
 )
 #pragma warning(default: 26444)
 {
@@ -148,8 +197,8 @@ TEMPLATE_TEST_CASE_SIG
 	(std::optional<float>, true),
 	(std::unique_ptr<int>, true),
 	(std::shared_ptr<int>, true),
-	(target_t, true),
-	(input_nullable_target_t, true)
+	(input_nullable_target_t, true),
+	(your_type, true)
 )
 #pragma warning(default: 26444)
 {
@@ -170,8 +219,8 @@ TEMPLATE_TEST_CASE_SIG
 	(std::optional<float>, true),
 	(std::unique_ptr<int>, true),
 	(std::shared_ptr<int>, true),
-	(target_t, true),
-	(input_nullable_target_t, false)
+	(input_nullable_target_t, false),
+	(your_type, true)
 )
 #pragma warning(default: 26444)
 {
@@ -187,7 +236,7 @@ TEMPLATE_TEST_CASE
 	"[nullables]",
 	sl::unique_handle<int>,
 	std::optional<int>,
-	target_t
+	input_nullable_target_t
 )
 #pragma warning(default: 26444)
 {
@@ -282,11 +331,11 @@ TEST_CASE("and_then minimal requirements should be satisfied by input_nullable",
 {
 	using sl::nullables::and_then;
 
-	input_nullable_target_t target{};
+	input_nullable_target_t target{ 42 };
 
 	const sl::unique_handle result = target | and_then{ [](int value) { return sl::unique_handle{ value }; } };
 
-	REQUIRE(result == 0);
+	REQUIRE(result == 42);
 }
 
 TEST_CASE("and_then should return the expected value", "[nullables][algorithm]")
@@ -360,11 +409,11 @@ TEST_CASE("value_or minimal requirements should be satisfied by input_nullable",
 {
 	using sl::nullables::value_or;
 
-	input_nullable_target_t target{};
+	input_nullable_target_t target{ 1337 };
 
 	const int result = target | value_or{ 42 };
 
-	REQUIRE(result == 0);
+	REQUIRE(result == 1337);
 }
 
 #pragma warning(disable: 26444)
