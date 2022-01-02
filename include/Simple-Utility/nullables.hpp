@@ -438,8 +438,8 @@ namespace sl::nullables
 		 * or the invocation result of the passed function.
 		 */
 		template <nullable TNullable>
-		friend constexpr
 		[[nodiscard]]
+		friend constexpr
 		std::invoke_result_t<TFunc, detail::dereference_type_t<TNullable>> operator |
 		(
 			TNullable&& closure,
