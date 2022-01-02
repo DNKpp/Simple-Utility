@@ -199,7 +199,7 @@ namespace sl::nullables
 	 * \defgroup GROUP_NULLABLES_ALGORITHMS_IMPL implementation
 	 *
 	 * \brief These are the implementations of the \ref GROUP_NULLABLES_ALGORITHMS "nullable algorithms". Users may
-	 * specialize them for custom types, but shouldn't explicitly used in code.
+	 * specialize them for custom types, but should not explicitly used in code.
 	 * @{
 	 */
 
@@ -237,13 +237,19 @@ namespace sl::nullables
 	 * \tparam TNullable Type of the \ref sl::nullables::nullable "nullable"
 	 * \tparam T Type of the alternative. Must initialize ``nullable_value_t<TNullable>``
 	 */
-	template <nullable TNullable, concepts::initializes<nullable_value_t<TNullable>> T>
+	template <nullable TNullable, class T>
 		requires (!requires(TNullable n, T a)
 		{
 			{ n.value_or(a) } -> std::convertible_to<nullable_value_t<TNullable>>;
 		})
 	struct value_or_func_t<TNullable, T>
 	{
+		static_assert
+		(
+			concepts::initializes<T, nullable_value_t<TNullable>>,
+			"The alternative must be usable to initialize a nullable_value_t<TNullable> value."
+		);
+
 		[[nodiscard]]
 		constexpr nullable_value_t<TNullable> operator()(TNullable&& closure, T&& alternative)
 		{
@@ -316,11 +322,16 @@ namespace sl::nullables
 	 * \tparam TNullable Type of the \ref sl::nullables::nullable "nullable"
 	 * \tparam TFunc Type of the passed function.
 	 */
-	template <nullable TNullable, std::invocable<detail::dereference_type_t<TNullable>> TFunc>
+	template <nullable TNullable, class TFunc>
 	struct and_then_func_t<TNullable, TFunc>
 	{
-		using return_t = std::invoke_result_t<TFunc, detail::dereference_type_t<TNullable>>;
+		static_assert
+		(
+			std::invocable<TFunc, detail::dereference_type_t<TNullable>>,
+			"TFunc must accept the value returned by TNullables as parameter."
+		);
 
+		using return_t = std::invoke_result_t<TFunc, detail::dereference_type_t<TNullable>>;
 		static_assert(nullable<return_t>, "TFunc must return a nullable type.");
 
 		[[nodiscard]]
@@ -373,7 +384,6 @@ namespace sl::nullables
 		 * \return Returns either the value of the \ref sl::nullables::nullable "nullable" or the alternative.
 		 */
 		template <nullable TNullable>
-			requires std::constructible_from<nullable_value_t<TNullable>, T>
 		[[nodiscard]]
 		friend constexpr nullable_value_t<TNullable> operator |(TNullable&& closure, value_or&& valueOr)
 		{
@@ -477,7 +487,7 @@ namespace sl::nullables
 	 * \snippet nullables.cpp or_else invalid value non-void return copyable
 	 * \---
 	 * 
-	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression and the functional doesn't
+	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression and the functional does not
 	 * return anything.
 	 * \snippet nullables.cpp or_else invalid value void return copyable
 	 */
