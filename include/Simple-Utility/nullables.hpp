@@ -41,13 +41,18 @@ namespace sl::nullables
 	 * \snippet nullables.cpp nullables algorithm chain movable
 	 *
 	 * ## Using custom types
-	 * Well, that depends which interface your type offers. If it's already dereferencable via ``operator *`` than you are in a good position.
+	 * Well, that depends which interface your type offers. If it's already dereferencable via ``operator *`` and it has an explicit ``null``-object,
+	 * which it can equality compared to, than you are in a good position.
 	 * Otherwise you may specialize the \ref sl::nullables::value_unchecked "value_unchecked" function or simply adjust your interface (if possible).
+	 * Either way, a explicit constant ``null``-object is mandatory and can not be avoided.
 	 *
 	 * If that's done, you should specialize the \ref sl::nullables::nullable_traits "nullable_traits":
 	 * \snippet nullables.cpp nullables custom type traits
 	 *
-	 * After that everything is already setup.
+	 * After that everything is already setup and your type can be at least used as a \ref sl::nullables::input_nullable "input_nullable" (which makes
+	 * it usable as input in \ref sl::nullables::and_then "and_then" and \ref sl::nullables::value_or "value_or" algorithms).
+	 * Making it actually a \ref sl::nullables::nullable "nullable" type, it must be assignable and constructible by its ``null``-object, which
+	 * might be not possible if you can't adjust the actual interface.
 	 *
 	 * Additionally if there is an actual need for that step, you may also specialize the algorithm implementations. Have a look at these members:
 	 *	- \ref sl::nullables::value_or_func_t "value_or_func_t"
