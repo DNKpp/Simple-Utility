@@ -21,6 +21,7 @@ var namespacesl_1_1nullables =
     [ "requires", "dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gaef12e15ea458b62e7fe84929f927093e", null ],
     [ "value_or", "d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga04b76f157c85d0a8e7a5f47103761054", null ],
     [ "value_unchecked", "d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html#gae5ffbf5b70ce3b54cdd8d318c5679c51", null ],
+    [ "input_nullable", "dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b", null ],
     [ "nullable", "dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga38933bec8744d0cf232c2e77da5be331", null ],
     [ "nullable_null_v", "dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#gae6e1b97fc8c68cfd3435025dd14e76c3", null ],
     [ "T", "dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gab488fd28d33addf33460ff3d6b9363e5", null ]

@@ -22,6 +22,7 @@ var group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s =
       [ "null", "de/dc1/structsl_1_1nullables_1_1nullable__traits_3_01_t_01_4.html#a4d5ade3e02a59c0fc1eb869404283509", null ]
     ] ],
     [ "nullable_value_t", "dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga30b2386500938406f95e13450ffa7c7f", null ],
+    [ "input_nullable", "dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b", null ],
     [ "nullable", "dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga38933bec8744d0cf232c2e77da5be331", null ],
     [ "nullable_null_v", "dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#gae6e1b97fc8c68cfd3435025dd14e76c3", null ]
 ];

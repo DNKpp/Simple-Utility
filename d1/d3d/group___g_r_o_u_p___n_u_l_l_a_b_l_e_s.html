@@ -104,9 +104,9 @@ Modules</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gae5ffbf5b70ce3b54cdd8d318c5679c51"><td class="memTemplParams" colspan="2">template&lt;nullable TNullable&gt; </td></tr>
+<tr class="memitem:gae5ffbf5b70ce3b54cdd8d318c5679c51"><td class="memTemplParams" colspan="2">template&lt;input_nullable TNullable&gt; </td></tr>
 <tr class="memitem:gae5ffbf5b70ce3b54cdd8d318c5679c51"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gaef12e15ea458b62e7fe84929f927093e">requires</a> constexpr decltype(auto) <a class="el" href="../../de/dbe/group__access-operators.html#gac0a21e5845639b36b09a09318cc53233">concepts::dereferencable</a>&lt; TNullable &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html#gae5ffbf5b70ce3b54cdd8d318c5679c51">sl::nullables::value_unchecked</a> (TNullable &amp;&amp;closure) noexcept</td></tr>
-<tr class="memdesc:gae5ffbf5b70ce3b54cdd8d318c5679c51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the internal value of the <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga38933bec8744d0cf232c2e77da5be331">nullable</a> object. Must not throw.  <a href="../../d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html#gae5ffbf5b70ce3b54cdd8d318c5679c51">More...</a><br /></td></tr>
+<tr class="memdesc:gae5ffbf5b70ce3b54cdd8d318c5679c51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the internal value of the <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b">input_nullable</a> object. Must not throw.  <a href="../../d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html#gae5ffbf5b70ce3b54cdd8d318c5679c51">More...</a><br /></td></tr>
 <tr class="separator:gae5ffbf5b70ce3b54cdd8d318c5679c51"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -148,22 +148,88 @@ Working with movable types</h2>
 <div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_ga04b76f157c85d0a8e7a5f47103761054"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga04b76f157c85d0a8e7a5f47103761054">sl::nullables::value_or</a></div><div class="ttdeci">value_or(T &amp;&amp;) -&gt; value_or&lt; T &amp;&amp; &gt;</div><div class="ttdoc">Deduction guide for value_or.</div></div>
 <div class="ttc" id="anamespacesl_1_1nullables_html"><div class="ttname"><a href="../../d0/de0/namespacesl_1_1nullables.html">sl::nullables</a></div><div class="ttdef"><b>Definition:</b> nullables.hpp:15</div></div>
 </div><!-- fragment --> <h2><a class="anchor" id="autotoc_md2"></a>
-Using custom types</h2>
-<p>Well, that depends which interface your type offers. If it's already dereferencable via <code>operator *</code> than you are in a good position. Otherwise you may specialize the <a class="el" href="../../d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html#gae5ffbf5b70ce3b54cdd8d318c5679c51">value_unchecked</a> function or simply adjust your interface (if possible).</p>
+Using custom or third party types</h2>
+<p>Well, that depends which interface your type offers. If it's already dereferencable via <code>operator *</code> and it has an explicit <code>null</code>-object, which it can equality compared to, than you are in a good position. Otherwise you may specialize the <a class="el" href="../../d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html#gae5ffbf5b70ce3b54cdd8d318c5679c51">value_unchecked</a> function or simply adjust your interface (if possible). Either way, a explicit constant <code>null</code>-object is mandatory and can not be avoided.</p>
 <p>If that's done, you should specialize the <a class="el" href="../../db/dfb/structsl_1_1nullables_1_1nullable__traits.html">nullable_traits</a>: </p><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><span class="keyword">struct </span><a class="code" href="../../db/dfb/structsl_1_1nullables_1_1nullable__traits.html">sl::nullables::nullable_traits</a>&lt;target_t&gt;</div>
+<div class="line"><span class="keyword">struct </span><a class="code" href="../../db/dfb/structsl_1_1nullables_1_1nullable__traits.html">sl::nullables::nullable_traits</a>&lt;input_nullable_target_t&gt;</div>
 <div class="line">{</div>
 <div class="line">    <span class="keyword">using</span> value_type = int;</div>
 <div class="line">    constexpr <span class="keyword">static</span> empty_t <span class="keyword">null</span>{};</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="ttc" id="astructsl_1_1nullables_1_1nullable__traits_html"><div class="ttname"><a href="../../db/dfb/structsl_1_1nullables_1_1nullable__traits.html">sl::nullables::nullable_traits</a></div><div class="ttdoc">The main trait, which may be specialized from.</div><div class="ttdef"><b>Definition:</b> nullables.hpp:73</div></div>
-</div><!-- fragment --><p> After that everything is already setup.</p>
+<div class="ttc" id="astructsl_1_1nullables_1_1nullable__traits_html"><div class="ttname"><a href="../../db/dfb/structsl_1_1nullables_1_1nullable__traits.html">sl::nullables::nullable_traits</a></div><div class="ttdoc">The main trait, which may be specialized from.</div><div class="ttdef"><b>Definition:</b> nullables.hpp:95</div></div>
+</div><!-- fragment --><p> After that everything is already setup and your type can be at least used as a <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b">input_nullable</a> (which makes it usable as input in <a class="el" href="../../de/ddf/classsl_1_1nullables_1_1and__then.html">and_then</a> and <a class="el" href="../../d6/d6c/classsl_1_1nullables_1_1value__or.html">value_or</a> algorithms). Making it actually a <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga38933bec8744d0cf232c2e77da5be331">nullable</a> type, it must be assignable and constructible by its <code>null</code>-object, which might be achieved by overloading the conversion operator of the <code>null</code>-type (which can't be declared explicit).</p>
 <p>Additionally if there is an actual need for that step, you may also specialize the algorithm implementations. Have a look at these members:</p><ul>
 <li><a class="el" href="../../dc/d1e/structsl_1_1nullables_1_1value__or__func__t.html">value_or_func_t</a></li>
 <li><a class="el" href="../../dc/d1e/structsl_1_1nullables_1_1value__or__func__t.html">and_then_func_t</a></li>
-<li><a class="el" href="../../dc/d1e/structsl_1_1nullables_1_1value__or__func__t.html">or_else_func_t</a> </li>
+<li><a class="el" href="../../dc/d1e/structsl_1_1nullables_1_1value__or__func__t.html">or_else_func_t</a></li>
 </ul>
+<h4><a class="anchor" id="autotoc_md3"></a>
+Example: How to make a type ready as nullable</h4>
+<p>Given a type which you can not adjust (here <code>your_type</code>, which is quite similar to <code>std::optional</code>), which you would like to use with these algorithms. </p><div class="fragment"><div class="line">    <span class="keyword">class </span>your_type</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        your_type() = <span class="keywordflow">default</span>;</div>
+<div class="line"> </div>
+<div class="line">        your_type(<span class="keywordtype">int</span> value)</div>
+<div class="line">            : m_IsSet{ true },</div>
+<div class="line">            m_Value{ value }</div>
+<div class="line">        {</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">        [[nodiscard]]</div>
+<div class="line">        <span class="keywordtype">int</span> get_value()<span class="keyword"> const</span></div>
+<div class="line"><span class="keyword">        </span>{</div>
+<div class="line">            assert(m_IsSet &amp;&amp; <span class="stringliteral">&quot;Value is not set.&quot;</span>);</div>
+<div class="line">            <span class="keywordflow">return</span> m_Value;</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">        [[nodiscard]]</div>
+<div class="line">        <span class="keywordtype">bool</span> is_set()<span class="keyword"> const</span></div>
+<div class="line"><span class="keyword">        </span>{</div>
+<div class="line">            <span class="keywordflow">return</span> m_IsSet;</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">private</span>:</div>
+<div class="line">        <span class="keywordtype">bool</span> m_IsSet{ <span class="keyword">false</span> };</div>
+<div class="line">        <span class="keywordtype">int</span> m_Value{};</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+</div><!-- fragment --><p> Your first step should then defining a dedicated <code>null</code>-type: </p><div class="fragment"><div class="line">    <span class="keyword">class </span>null_your_type_t</div>
+<div class="line">    {</div>
+<div class="line">    <span class="keyword">public</span>:</div>
+<div class="line">        null_your_type_t() = <span class="keywordflow">default</span>;</div>
+<div class="line"> </div>
+<div class="line">        [[nodiscard]]</div>
+<div class="line">        <span class="keywordtype">bool</span> operator ==(<span class="keyword">const</span> your_type&amp; other)<span class="keyword"> const</span></div>
+<div class="line"><span class="keyword">        </span>{</div>
+<div class="line">            <span class="keywordflow">return</span> !other.is_set();</div>
+<div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">        <span class="comment">// this is required if you want to use your_type as nullable.</span></div>
+<div class="line">        <span class="comment">// If you only want to satisfy input_nullable concept, this can be omitted.</span></div>
+<div class="line">        [[nodiscard]]</div>
+<div class="line">        <span class="keyword">operator</span> your_type()<span class="keyword"> const</span></div>
+<div class="line"><span class="keyword">        </span>{</div>
+<div class="line">            <span class="keywordflow">return</span> {};</div>
+<div class="line">        }</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+</div><!-- fragment --><p> Second you need to specialize the <a class="el" href="../../d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html#gae5ffbf5b70ce3b54cdd8d318c5679c51">value_unchecked</a> function, because <code>your_type</code> can not dereferenced via <code>operator *</code>. </p><div class="fragment"><div class="line">    [[nodiscard]]</div>
+<div class="line">    <span class="keywordtype">int</span> <a class="code" href="../../d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html#gae5ffbf5b70ce3b54cdd8d318c5679c51">value_unchecked</a>(<span class="keyword">const</span> your_type&amp; target) noexcept</div>
+<div class="line">    {</div>
+<div class="line">        <span class="keywordflow">return</span> target.get_value();</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s_html_gae5ffbf5b70ce3b54cdd8d318c5679c51"><div class="ttname"><a href="../../d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html#gae5ffbf5b70ce3b54cdd8d318c5679c51">sl::nullables::value_unchecked</a></div><div class="ttdeci">requires constexpr decltype(auto) concepts::dereferencable&lt; TNullable &gt; value_unchecked(TNullable &amp;&amp;closure) noexcept</div><div class="ttdoc">Returns the internal value of the input_nullable object. Must not throw.</div><div class="ttdef"><b>Definition:</b> nullables.hpp:210</div></div>
+</div><!-- fragment --><p> Last you need to specialize the type traits for that type: </p><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><span class="keyword">struct </span><a class="code" href="../../db/dfb/structsl_1_1nullables_1_1nullable__traits.html">sl::nullables::nullable_traits</a>&lt;your_type&gt;</div>
+<div class="line">{</div>
+<div class="line">    <span class="keyword">using</span> value_type = int;</div>
+<div class="line">    constexpr <span class="keyword">static</span> null_your_type_t <span class="keyword">null</span>{};</div>
+<div class="line">};</div>
+<div class="line"> </div>
+</div><!-- fragment --><p> That's it. Now <code>your_type</code> is ready to be used as <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga38933bec8744d0cf232c2e77da5be331">nullable</a> type. </p>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="gae5ffbf5b70ce3b54cdd8d318c5679c51"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gae5ffbf5b70ce3b54cdd8d318c5679c51">&#9670;&nbsp;</a></span>value_unchecked()</h2>
@@ -171,7 +237,7 @@ Using custom types</h2>
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;nullable TNullable&gt; </div>
+template&lt;input_nullable TNullable&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -191,16 +257,16 @@ template&lt;nullable TNullable&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the internal value of the <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga38933bec8744d0cf232c2e77da5be331">nullable</a> object. Must not throw. </p>
-<p>This function will be utilized by the <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga38933bec8744d0cf232c2e77da5be331">nullable</a> algorithms. It is only called when the <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga38933bec8744d0cf232c2e77da5be331">nullable</a> != its null-object and should therefore not perform any additional security checks. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>Returns the internal value of the <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b">input_nullable</a> object. Must not throw. </p>
+<p>This function will be utilized by the <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b">input_nullable</a> algorithms. It is only called when the <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b">input_nullable</a> != its null-object and should therefore not perform any additional security checks. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">TNullable</td><td>The <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga38933bec8744d0cf232c2e77da5be331">nullable</a> type </td></tr>
+    <tr><td class="paramname">TNullable</td><td>The <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b">input_nullable</a> type </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">closure</td><td>The <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga38933bec8744d0cf232c2e77da5be331">nullable</a> object </td></tr>
+    <tr><td class="paramname">closure</td><td>The <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b">input_nullable</a> object </td></tr>
   </table>
   </dd>
 </dl>
