@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef SL_STL_SYMMETRICAL_HPP
-#define SL_STL_SYMMETRICAL_HPP
+#ifndef SL_UTILITY_CONCEPTS_STL_EXTENSIONSL_HPP
+#define SL_UTILITY_CONCEPTS_STL_EXTENSIONSL_HPP
 
 #pragma once
 
@@ -15,9 +15,9 @@
 namespace sl::concepts
 {
 	/**
-	* \defgroup GROUP_STL_COUNTERPART_CONCEPTS stl counterparts
+	* \defgroup GROUP_STL_EXTENSION_CONCEPTS stl extensions
 	*
-	* \brief Contains several counterpart concepts for existing stl concepts.
+	* \brief Contains several concept extensions for existing stl concepts.
 	* \ingroup GROUP_CONCEPTS
 	* @{
 	*/
