@@ -278,6 +278,17 @@ TEST_CASE("or_else may also return void", "[nullables][algorithm]")
 	}
 }
 
+TEST_CASE("and_then minimal requirements should be satisfied by input_nullable", "[nullables][algorithm]")
+{
+	using sl::nullables::and_then;
+
+	input_nullable_target_t target{};
+
+	const sl::unique_handle result = target | and_then{ [](int value) { return sl::unique_handle{ value }; } };
+
+	REQUIRE(result == 0);
+}
+
 TEST_CASE("and_then should return the expected value", "[nullables][algorithm]")
 {
 	using sl::nullables::and_then;
