@@ -318,7 +318,7 @@ namespace sl::nullables
 
 	/**
 	 * \brief Base type for the ``and_then`` algorithms. May be specialized.
-	 * \tparam TNullable  Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam TNullable  Type of the \ref sl::nullables::input_nullable "input_nullable"
 	 * \tparam TFunc Type of the passed function
 	 */
 	template <class TNullable, class TFunc>
@@ -328,10 +328,10 @@ namespace sl::nullables
 
 	/**
 	 * \brief General algorithm implementation. May be specialized by users if necessary.
-	 * \tparam TNullable Type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam TNullable Type of the \ref sl::nullables::input_nullable "input_nullable"
 	 * \tparam TFunc Type of the passed function.
 	 */
-	template <nullable TNullable, class TFunc>
+	template <input_nullable TNullable, class TFunc>
 	struct and_then_func_t<TNullable, TFunc>
 	{
 		static_assert
@@ -415,24 +415,24 @@ namespace sl::nullables
 	value_or(T&&) -> value_or<T&&>;
 
 	/**
-	 * \brief Passes the value of the \ref sl::nullables::nullable "nullable" to the function if it's not equal to its ``null``-object.
+	 * \brief Passes the value of the \ref sl::nullables::input_nullable "input_nullable" to the function if it's not equal to its ``null``-object.
 	 * Returns the ``null``-object otherwise.
 	 * \tparam TFunc The type of the passed function. The function should be invokable with types returned by \ref sl::nullables::value_unchecked
 	 * "value_unchecked" and return a type which satisfies the \ref sl::nullables::nullable "nullable" concept (this type does not have to be
 	 * the same as the type already used in the expression).
 	 *
-	 * \details This algorithm uses the actual value of a nullable and passes it to the given functional. The functional should then return \b any
-	 * \ref sl::nullables::nullable "nullable" \b compatible \b type as desired.
-	 * Otherwise, if the \ref sl::nullables::nullable "nullable" compares equal to its ``null``-object, the ``null``-object is returned instead.
+	 * \details This algorithm uses the actual value of a \ref sl::nullables::input_nullable "input_nullable" and passes it to the given functional.
+	 * The functional should then return \b any \ref sl::nullables::nullable "nullable" \b compatible \b type as desired.
+	 * Otherwise, if the \ref sl::nullables::input_nullable "input_nullable" compares equal to its ``null``-object, the ``null``-object is returned instead.
 	 *
 	 * \note In the following examples the outcome is always presented within the ``REQUIRE()`` statement.
 	 *
-	 * This example shows what happens when a valid \ref sl::nullables::nullable "nullable" is used in a ``and_then`` expression.
+	 * This example shows what happens when a valid \ref sl::nullables::input_nullable "input_nullable" is used in a ``and_then`` expression.
 	 * \snippet nullables.cpp and_then valid copyable
 	 *
 	 *
-	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression.
-	 * Note that the resulting \ref sl::nullables::nullable "nullable" type changes differs from the starting one.
+	 * This example shows what happens when an invalid \ref sl::nullables::input_nullable "input_nullable" is used in a ``and_then`` expression.
+	 * Note that the resulting \ref sl::nullables::nullable "nullable" type differs from the starting one.
 	 * \snippet nullables.cpp and_then invalid copyable
 	 */
 	template <class TFunc>
@@ -449,14 +449,14 @@ namespace sl::nullables
 		}
 
 		/**
-		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::nullable "nullable" on the left side.
-		 * \tparam TNullable The \ref sl::nullables::nullable "nullable" type
-		 * \param closure The \ref sl::nullables::nullable "nullable" object
+		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::input_nullable "input_nullable" on the left side.
+		 * \tparam TNullable The \ref sl::nullables::input_nullable "input_nullable" type
+		 * \param closure The \ref sl::nullables::input_nullable "input_nullable" object
 		 * \param andThen The algorithm object
-		 * \return Returns either a ``null``-object (if \ref sl::nullables::nullable "nullable" compares equal to its ``null``-object)
+		 * \return Returns either a ``null``-object (if \ref sl::nullables::input_nullable "input_nullable" compares equal to its ``null``-object)
 		 * or the invocation result of the passed function.
 		 */
-		template <nullable TNullable>
+		template <input_nullable TNullable>
 		[[nodiscard]]
 		friend constexpr
 		std::invoke_result_t<TFunc, detail::dereference_type_t<TNullable>> operator |
