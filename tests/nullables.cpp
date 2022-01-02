@@ -236,15 +236,16 @@ TEMPLATE_TEST_CASE
 	"[nullables]",
 	sl::unique_handle<int>,
 	std::optional<int>,
-	input_nullable_target_t
+	input_nullable_target_t,
+	your_type
 )
 #pragma warning(default: 26444)
 {
 	using sl::nullables::value_unchecked;
 
-	constexpr TestType object{ 42 };
+	TestType object{ 42 };
 
-	STATIC_REQUIRE(value_unchecked(object) == 42);
+	REQUIRE(value_unchecked(object) == 42);
 }
 
 TEST_CASE("or_else should return the expected object when received as rvalue ref", "[nullables][algorithm]")
