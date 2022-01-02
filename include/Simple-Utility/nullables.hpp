@@ -88,21 +88,30 @@ namespace sl::nullables
 	constexpr static auto nullable_null_v{ nullable_traits<std::remove_cvref_t<T>>::null };
 
 	/**
-	 * \brief Checks whether a type is \ref sl::nullables::nullable "nullable".
-	 * \details A type is considered as \ref sl::nullables::nullable "nullable" if:
+	 * \brief Checks whether a type is an \ref sl::nullables::input_nullable "input_nullable".
+	 * \details A type is considered as \ref sl::nullables::input_nullable "input_nullable" if:
 	 *		- ``nullable_traits`` is found which exposes the ``value_type`` and ``null``-object,
 	 *		- it satisfies the \ref sl::concepts::weakly_equality_comparable_with "weakly_equality_comparable_with" concept with its ``null``-object,
+	 * \tparam T Type to check
+	 */
+	template <class T>
+	concept input_nullable = requires
+							{
+								typename nullable_value_t<T>;
+								nullable_null_v<T>;
+							}
+							&& concepts::weakly_equality_comparable_with<T, decltype(nullable_null_v<T>)>;
+
+	/**
+	 * \brief Checks whether a type is \ref sl::nullables::nullable "nullable".
+	 * \details A type is considered as \ref sl::nullables::nullable "nullable" if:
+	 *		- it satisfies the \ref sl::nullables::input_nullable "input_nullable" concept
 	 *		- it is initializable by its ``null``-object and
 	 *		- it is assignable by its ``null``-object.
 	 * \tparam T Type to check
 	 */
 	template <class T>
-	concept nullable = requires
-						{
-							typename nullable_value_t<T>;
-							nullable_null_v<T>;
-						}
-						&& concepts::weakly_equality_comparable_with<T, decltype(nullable_null_v<T>)>
+	concept nullable = input_nullable<T>
 						&& concepts::initializes<std::remove_cvref_t<decltype(nullable_null_v<T>)>, std::remove_cvref_t<T>>
 						&& std::is_assignable_v<std::remove_cvref_t<T>&, decltype(nullable_null_v<T>)>;
 
