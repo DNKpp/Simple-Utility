@@ -49,6 +49,20 @@ namespace
 	{
 		return target.x;
 	}
+
+	struct input_nullable_target_t
+	{
+		constexpr int operator *() const noexcept
+		{
+			return 0;
+		}
+
+		[[nodiscard]]
+		constexpr bool operator ==(empty_t) const noexcept
+		{
+			return false;
+		}
+	};
 }
 
 //! [nullables custom type traits]
@@ -60,6 +74,13 @@ struct sl::nullables::nullable_traits<target_t>
 };
 
 //! [nullables custom type traits]
+
+template <>
+struct sl::nullables::nullable_traits<input_nullable_target_t>
+{
+	using value_type = int;
+	constexpr static empty_t null{};
+};
 
 #pragma warning(disable: 26444)
 TEMPLATE_TEST_CASE_SIG
@@ -118,6 +139,28 @@ TEMPLATE_TEST_CASE_SIG
 #pragma warning(disable: 26444)
 TEMPLATE_TEST_CASE_SIG
 (
+	"input_nullable should determine whether T is a input_nullable",
+	"[nullables]",
+	((class T, bool VExpectedResult), T, VExpectedResult),
+	(int, false),
+	(int*, true),
+	(sl::unique_handle<int>, true),
+	(std::optional<float>, true),
+	(std::unique_ptr<int>, true),
+	(std::shared_ptr<int>, true),
+	(target_t, true),
+	(input_nullable_target_t, true)
+)
+#pragma warning(default: 26444)
+{
+	using sl::nullables::input_nullable;
+
+	REQUIRE(input_nullable<T> == VExpectedResult);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_TEST_CASE_SIG
+(
 	"nullable should determine whether T is a nullable",
 	"[nullables]",
 	((class T, bool VExpectedResult), T, VExpectedResult),
@@ -127,7 +170,8 @@ TEMPLATE_TEST_CASE_SIG
 	(std::optional<float>, true),
 	(std::unique_ptr<int>, true),
 	(std::shared_ptr<int>, true),
-	(target_t, true)
+	(target_t, true),
+	(input_nullable_target_t, false)
 )
 #pragma warning(default: 26444)
 {
