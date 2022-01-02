@@ -711,7 +711,9 @@ namespace sl::concepts
 	};
 
 	/**
-	* \defgroup access-operators access operators
+	* \defgroup GROUP_ACCESS_OPERATOR_CONCEPTS access operators
+	*
+	* \ingroup GROUP_CONCEPTS
 	* @{
 	*/
 
