@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Simple-Utility
-   &#160;<span id="projectnumber">v1.0.2</span>
+   &#160;<span id="projectnumber">v1.1.0</span>
    </div>
   </td>
  </tr>
@@ -106,6 +106,10 @@ Variables</h2></td></tr>
 <tr class="memitem:ga06839fb251d8ad4b3f390d9d39e03ca0"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga06839fb251d8ad4b3f390d9d39e03ca0">sl::concepts::assignable_to</a> = std::assignable_from&lt;TTarget, TSource&gt;</td></tr>
 <tr class="memdesc:ga06839fb251d8ad4b3f390d9d39e03ca0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the target type is assignable from the source type.  <a href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga06839fb251d8ad4b3f390d9d39e03ca0">More...</a><br /></td></tr>
 <tr class="separator:ga06839fb251d8ad4b3f390d9d39e03ca0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga439237452668f6de8c858f2581a698c5"><td class="memTemplParams" colspan="2">template&lt;class T1 , class T2 &gt; </td></tr>
+<tr class="memitem:ga439237452668f6de8c858f2581a698c5"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga439237452668f6de8c858f2581a698c5">sl::concepts::weakly_equality_comparable_with</a></td></tr>
+<tr class="memdesc:ga439237452668f6de8c858f2581a698c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether a symmetrical set of operators == and != to compare both types with each other exists.  <a href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga439237452668f6de8c858f2581a698c5">More...</a><br /></td></tr>
+<tr class="separator:ga439237452668f6de8c858f2581a698c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Contains several counterpart concepts for existing stl concepts. </p>
@@ -179,6 +183,40 @@ template&lt;class TLhs , class TRhs &gt; </div>
   <table class="tparams">
     <tr><td class="paramname">TLhs</td><td>The source type handed over to the target </td></tr>
     <tr><td class="paramname">TRhs</td><td>The target type to check </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga439237452668f6de8c858f2581a698c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga439237452668f6de8c858f2581a698c5">&#9670;&nbsp;</a></span>weakly_equality_comparable_with</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T1 , class T2 &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept sl::concepts::weakly_equality_comparable_with</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= <a class="code" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gaef12e15ea458b62e7fe84929f927093e">requires</a>(<span class="keyword">const</span> std::remove_cvref_t&lt;T1&gt;&amp; t1, <span class="keyword">const</span> std::remove_cvref_t&lt;T2&gt;&amp; t2)</div>
+<div class="line">    {</div>
+<div class="line">        { t1 == t2 } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line">        { t1 != t2 } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line">        { t2 == t1 } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line">        { t2 != t1 } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line">    }</div>
+<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l_html_gaef12e15ea458b62e7fe84929f927093e"><div class="ttname"><a href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gaef12e15ea458b62e7fe84929f927093e">sl::nullables::requires</a></div><div class="ttdeci">requires requires(TNullable n, T a)</div><div class="ttdoc">Specialization which will be used instead if the value_or functions is present as a member of TNullab...</div><div class="ttdef"><b>Definition:</b> nullables.hpp:222</div></div>
+</div><!-- fragment -->
+<p>Checks whether a symmetrical set of operators == and != to compare both types with each other exists. </p>
+<p>This is a less restrictive version of the <code>std::equality_comparable_with</code> function. </p><dl class="section see"><dt>See also</dt><dd><a href="https://en.cppreference.com/w/cpp/concepts/equality_comparable">https://en.cppreference.com/w/cpp/concepts/equality_comparable</a> </dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T1</td><td>The first type to check </td></tr>
+    <tr><td class="paramname">T2</td><td>The second type to check </td></tr>
   </table>
   </dd>
 </dl>

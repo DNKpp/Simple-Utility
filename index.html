@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Simple-Utility
-   &#160;<span id="projectnumber">v1.0.2</span>
+   &#160;<span id="projectnumber">v1.1.0</span>
    </div>
   </td>
  </tr>
@@ -87,21 +87,29 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md__github_workspace_README"></a> <a href="https://www.codacy.com/gh/DNKpp/Simple-Utility/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DNKpp/Simple-Utility&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/ffee59527a4d43f09b5aeabbac1eaa52" alt="Codacy Badge" class="inline"/></a> <a href="https://www.codacy.com/gh/DNKpp/Simple-Utility/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DNKpp/Simple-Utility&amp;utm_campaign=Badge_Coverage"><img src="https://app.codacy.com/project/badge/Coverage/ffee59527a4d43f09b5aeabbac1eaa52" alt="Codacy Badge" class="inline"/></a> <a href="https://codecov.io/gh/DNKpp/Simple-Utility"><img src="https://codecov.io/gh/DNKpp/Simple-Utility/branch/master/graph/badge.svg?token=R5ZUSJPZ57" alt="codecov" style="pointer-events: none;" class="inline"/></a> <a href="https://simple-utility.docsforge.com/"><img src="https://img.shields.io/badge/docs-docsforge-blue" alt="Documentation" class="inline"/></a></p>
-<h1><a class="anchor" id="autotoc_md1"></a>
+<h1><a class="anchor" id="autotoc_md4"></a>
 Author</h1>
 <p>Dominic Koepke <br  />
  Mail: <a href="#" onclick="location.href='mai'+'lto:'+'dnk'+'pp'+'201'+'1@'+'gma'+'il'+'.co'+'m'; return false;">DNKpp2011@gmail.com</a></p>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md5"></a>
 License</h1>
 <p><a href="LICENSE_1_0.txt">BSL-1.0</a> (free, open source)</p>
-<div class="fragment"><div class="line">         Copyright Dominic Koepke 2019 - 2021.</div>
+<div class="fragment"><div class="line">         Copyright Dominic Koepke 2019 - 2022.</div>
 <div class="line">Distributed under the Boost Software License, Version 1.0.</div>
 <div class="line">   (See accompanying file LICENSE_1_0.txt or copy at</div>
 <div class="line">         https://www.boost.org/LICENSE_1_0.txt)</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md3"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md6"></a>
 Description</h1>
-<p>This library it merely a collection of useful utilities. It is not ment as an replacement for anything out there, it just couples things nicely into one library which doesn't relate closely to anything else but might be useful on future projects. All parts are well tested and the documentation can be found either on the gh-pages section or directly at <a href="https://simple-utility.docsforge.com/">docsforge.com</a>. If you run into any kind of bugs or have ideas for improvements, feel free to add an issue or even compile a pull-request.</p>
-<h1><a class="anchor" id="autotoc_md4"></a>
+<p>This library is merely a collection of useful utilities. It is not ment as an replacement for anything out there, it just couples things nicely into one library which doesn't relate closely to anything else but might be useful on future projects. All parts are well tested and the documentation can be found either on the gh-pages section or directly at <a href="https://simple-utility.docsforge.com/">docsforge.com</a>. If you run into any kind of bugs or have ideas for improvements, feel free to add an issue or even compile a pull-request.</p>
+<h2><a class="anchor" id="autotoc_md7"></a>
+nullables &amp; unique_handle</h2>
+<p>The current main features are without doubt the <code><a class="el" href="d0/de0/namespacesl_1_1nullables.html">sl::nullables</a></code> namespace and the <code><a class="el" href="da/da9/classsl_1_1unique__handle.html" title="This type models some kind of std::optional behaviour but resets itself on move operations.">sl::unique_handle</a></code> type, which benefit from each other. <code><a class="el" href="da/da9/classsl_1_1unique__handle.html" title="This type models some kind of std::optional behaviour but resets itself on move operations.">sl::unique_handle</a></code> is an optional like class (in fact it wraps currently an <code>std::optional</code>) but offers only a movable interface and guarantees resetting the internal value after a move happend, and is thus semanticall closer at <code>std::unique_ptr</code> but holds its value still on the stack.</p>
+<p>The <code><a class="el" href="d0/de0/namespacesl_1_1nullables.html">sl::nullables</a></code> namespace offers three simple algorithms:</p><ul>
+<li><code>and_then</code></li>
+<li><code>or_else</code></li>
+<li><code>value_or</code> which are chainable and can be applied on objects which satisfy the <code>nullable</code> concept. What's a <code>nullable</code> you may ask? It's a type which has an explicit invalid state; e.g. <code>std::optional</code>, <code>std::unique_ptr</code> or the <code><a class="el" href="da/da9/classsl_1_1unique__handle.html" title="This type models some kind of std::optional behaviour but resets itself on move operations.">sl::unique_handle</a></code>. Feel free to have a look into the docs pages.</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md8"></a>
 Installation with CMake</h1>
 <p>This library can easily be integrated into your project via CMake target_link_libraries command.</p>
 <div class="fragment"><div class="line">target_link_libraries(</div>
@@ -109,7 +117,7 @@ Installation with CMake</h1>
 <div class="line">    PRIVATE</div>
 <div class="line">    Simple-Utility::Simple-Utility</div>
 <div class="line">)</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md5"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md9"></a>
 FetchContent</h2>
 <p>It is possible fetching this library via CMakes FetchContent module.</p>
 <div class="fragment"><div class="line">include(FetchContent)</div>
@@ -117,18 +125,18 @@ FetchContent</h2>
 <div class="line">FetchContent_Declare(</div>
 <div class="line">    Simple-Utility</div>
 <div class="line">    GIT_REPOSITORY  https://github.com/DNKpp/Simple-Utility</div>
-<div class="line">    GIT_TAG     &quot;master&quot;</div>
+<div class="line">    GIT_TAG     &quot;v1.0.0&quot;    # or any other tag name</div>
 <div class="line">)</div>
 <div class="line"> </div>
 <div class="line">FetchContent_MakeAvailable(Simple-Utility)</div>
 <div class="line"># do not forget linking via target_link_libraries as shown above</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md6"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
 CPM</h2>
 <p>The <a href="https://github.com/cpm-cmake/CPM.cmake">CPM</a> CMake module is a featureful wrapper around the <code>FetchContent</code> module. To use it simply add <code>CPM.cmake</code> or <code>get_cmp.make</code> (which will pull <code>CPM.cmake</code> on the fly) from the latest release into your project folder and include it into your <code>CMakeLists.txt</code>.</p>
 <div class="fragment"><div class="line">include(CPM.cmake) # or include(get_cpm.cmake)</div>
 <div class="line"> </div>
 <div class="line"> </div>
-<div class="line">CPMAddPackage(&quot;gh:DNKpp/Simple-Utility#master&quot;)</div>
+<div class="line">CPMAddPackage(&quot;gh:DNKpp/Simple-Utility#v1.0.0&quot;) # or any other tag name</div>
 <div class="line"># do not forget linking via target_link_libraries as shown above</div>
 </div><!-- fragment --> </div></div><!-- PageDoc -->
 </div><!-- contents -->

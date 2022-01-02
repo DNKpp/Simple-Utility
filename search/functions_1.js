@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['delete_5faction_116',['delete_action',['../da/da9/classsl_1_1unique__handle.html#a862bda113ce7af53421f304bdcbd56a1',1,'sl::unique_handle']]]
+  ['not_5fsame_5fas_169',['not_same_as',['../da/da9/classsl_1_1unique__handle.html#ac567566c9fca31192dcb900ace64e4b6',1,'sl::unique_handle']]]
 ];

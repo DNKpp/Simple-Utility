@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Simple-Utility: stl_counterparts.hpp Source File</title>
+<title>Simple-Utility: /github/workspace/include/Simple-Utility/concepts/stl_counterparts.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Simple-Utility
-   &#160;<span id="projectnumber">v1.0.2</span>
+   &#160;<span id="projectnumber">v1.1.0</span>
    </div>
   </td>
  </tr>
@@ -86,7 +86,7 @@ $(document).ready(function(){initNavTree('d8/dc5/stl__counterparts_8hpp_source.h
 <div class="title">stl_counterparts.hpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="../../d8/dc5/stl__counterparts_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//          Copyright Dominic Koepke 2019 - 2021.</span></div>
+<a href="../../d8/dc5/stl__counterparts_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//          Copyright Dominic Koepke 2019 - 2022.</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// Distributed under the Boost Software License, Version 1.0.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">//    (See accompanying file LICENSE_1_0.txt or copy at</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">//          https://www.boost.org/LICENSE_1_0.txt)</span></div>
@@ -111,10 +111,21 @@ $(document).ready(function(){initNavTree('d8/dc5/stl__counterparts_8hpp_source.h
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> TSource, <span class="keyword">class</span> TTarget&gt;</div>
 <div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga06839fb251d8ad4b3f390d9d39e03ca0">   50</a></span>&#160;    concept <a class="code" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga06839fb251d8ad4b3f390d9d39e03ca0">assignable_to</a> = std::assignable_from&lt;TTarget, TSource&gt;;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;}</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> T1, <span class="keyword">class</span> T2&gt;</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga439237452668f6de8c858f2581a698c5">   60</a></span>&#160;    concept <a class="code" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga439237452668f6de8c858f2581a698c5">weakly_equality_comparable_with</a> = <a class="code" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gaef12e15ea458b62e7fe84929f927093e">requires</a>(<span class="keyword">const</span> std::remove_cvref_t&lt;T1&gt;&amp; t1, <span class="keyword">const</span> std::remove_cvref_t&lt;T2&gt;&amp; t2)</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    {</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        { t1 == t2 } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        { t1 != t2 } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;        { t2 == t1 } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;        { t2 != t1 } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    };</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160; </div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l_html_gaef12e15ea458b62e7fe84929f927093e"><div class="ttname"><a href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gaef12e15ea458b62e7fe84929f927093e">sl::nullables::requires</a></div><div class="ttdeci">requires requires(TNullable n, T a)</div><div class="ttdoc">Specialization which will be used instead if the value_or functions is present as a member of TNullab...</div><div class="ttdef"><b>Definition:</b> nullables.hpp:222</div></div>
 <div class="ttc" id="agroup___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s_html_ga06839fb251d8ad4b3f390d9d39e03ca0"><div class="ttname"><a href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga06839fb251d8ad4b3f390d9d39e03ca0">sl::concepts::assignable_to</a></div><div class="ttdeci">concept assignable_to</div><div class="ttdoc">Checks whether the target type is assignable from the source type.</div><div class="ttdef"><b>Definition:</b> stl_counterparts.hpp:50</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s_html_ga439237452668f6de8c858f2581a698c5"><div class="ttname"><a href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga439237452668f6de8c858f2581a698c5">sl::concepts::weakly_equality_comparable_with</a></div><div class="ttdeci">concept weakly_equality_comparable_with</div><div class="ttdoc">Checks whether a symmetrical set of operators == and != to compare both types with each other exists.</div><div class="ttdef"><b>Definition:</b> stl_counterparts.hpp:60</div></div>
 <div class="ttc" id="agroup___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s_html_ga6d88f2f46efbfef9ebca08d17acce7b0"><div class="ttname"><a href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga6d88f2f46efbfef9ebca08d17acce7b0">sl::concepts::initializes</a></div><div class="ttdeci">concept initializes</div><div class="ttdoc">Checks whether the target type is constructible from the source type.</div><div class="ttdef"><b>Definition:</b> stl_counterparts.hpp:41</div></div>
 <div class="ttc" id="agroup___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s_html_gaf618472341462fbaef7c51648221d889"><div class="ttname"><a href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889">sl::concepts::not_same_as</a></div><div class="ttdeci">concept not_same_as</div><div class="ttdoc">Checks whether the left-hand-side type is unequal to the right-hand-side type.</div><div class="ttdef"><b>Definition:</b> stl_counterparts.hpp:32</div></div>
 <div class="ttc" id="anamespacesl_1_1concepts_html"><div class="ttname"><a href="../../dd/d06/namespacesl_1_1concepts.html">sl::concepts</a></div><div class="ttdef"><b>Definition:</b> operators.hpp:15</div></div>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Simple-Utility: operators.hpp File Reference</title>
+<title>Simple-Utility: /github/workspace/include/Simple-Utility/concepts/operators.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Simple-Utility
-   &#160;<span id="projectnumber">v1.0.2</span>
+   &#160;<span id="projectnumber">v1.1.0</span>
    </div>
   </td>
  </tr>
@@ -372,6 +372,22 @@ Variables</h2></td></tr>
 <tr class="memitem:aecea0bf0a70bfef7c7717966051ad630"><td class="memTemplParams" colspan="2">template&lt;class T , class TResult  = std::remove_cvref_t&lt;T&gt;&gt; </td></tr>
 <tr class="memitem:aecea0bf0a70bfef7c7717966051ad630"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d06/namespacesl_1_1concepts.html#aecea0bf0a70bfef7c7717966051ad630">sl::concepts::invertible_r</a></td></tr>
 <tr class="separator:aecea0bf0a70bfef7c7717966051ad630"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac0a21e5845639b36b09a09318cc53233"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:gac0a21e5845639b36b09a09318cc53233"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/dbe/group__access-operators.html#gac0a21e5845639b36b09a09318cc53233">sl::concepts::dereferencable</a> = requires(T t) { *t; }</td></tr>
+<tr class="memdesc:gac0a21e5845639b36b09a09318cc53233"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether a type can be used in unary operator * expressions.  <a href="../../de/dbe/group__access-operators.html#gac0a21e5845639b36b09a09318cc53233">More...</a><br /></td></tr>
+<tr class="separator:gac0a21e5845639b36b09a09318cc53233"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa3b13483aacff822cf6c8ba59a425bde"><td class="memTemplParams" colspan="2">template&lt;class T , class TReturn &gt; </td></tr>
+<tr class="memitem:gaa3b13483aacff822cf6c8ba59a425bde"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/dbe/group__access-operators.html#gaa3b13483aacff822cf6c8ba59a425bde">sl::concepts::dereferencable_r</a></td></tr>
+<tr class="memdesc:gaa3b13483aacff822cf6c8ba59a425bde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether a type can be used in unary operator * expressions and if the return type is convertible to the expected one.  <a href="../../de/dbe/group__access-operators.html#gaa3b13483aacff822cf6c8ba59a425bde">More...</a><br /></td></tr>
+<tr class="separator:gaa3b13483aacff822cf6c8ba59a425bde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3f28c5bc64126919be41fa8f83dcd878"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ga3f28c5bc64126919be41fa8f83dcd878"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/dbe/group__access-operators.html#ga3f28c5bc64126919be41fa8f83dcd878">sl::concepts::arrow_dereferencable</a> = requires(T t) { t.operator -&gt;(); }</td></tr>
+<tr class="memdesc:ga3f28c5bc64126919be41fa8f83dcd878"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether a type can be used in operator -&gt; expressions.  <a href="../../de/dbe/group__access-operators.html#ga3f28c5bc64126919be41fa8f83dcd878">More...</a><br /></td></tr>
+<tr class="separator:ga3f28c5bc64126919be41fa8f83dcd878"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaffa70e4c7405be026b8481c75bfd3728"><td class="memTemplParams" colspan="2">template&lt;class T , class TReturn &gt; </td></tr>
+<tr class="memitem:gaffa70e4c7405be026b8481c75bfd3728"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/dbe/group__access-operators.html#gaffa70e4c7405be026b8481c75bfd3728">sl::concepts::arrow_dereferencable_r</a></td></tr>
+<tr class="memdesc:gaffa70e4c7405be026b8481c75bfd3728"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether a type can be used in unary operator -&gt; expressions and if the return type is convertible to the expected one.  <a href="../../de/dbe/group__access-operators.html#gaffa70e4c7405be026b8481c75bfd3728">More...</a><br /></td></tr>
+<tr class="separator:gaffa70e4c7405be026b8481c75bfd3728"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->

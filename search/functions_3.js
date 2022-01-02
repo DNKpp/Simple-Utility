@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['is_5fvalid_118',['is_valid',['../da/da9/classsl_1_1unique__handle.html#a8f2246509b25463c6d0f23202858aa7d',1,'sl::unique_handle']]]
+  ['emplace_171',['emplace',['../da/da9/classsl_1_1unique__handle.html#a16475995d0165aa0d5e7bfd5800f10d6',1,'sl::unique_handle']]]
 ];

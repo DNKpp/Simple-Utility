@@ -1,5 +1,7 @@
 var operators_8hpp =
 [
+    [ "arrow_dereferencable", "dd/dcd/operators_8hpp.html#ga3f28c5bc64126919be41fa8f83dcd878", null ],
+    [ "arrow_dereferencable_r", "dd/dcd/operators_8hpp.html#gaffa70e4c7405be026b8481c75bfd3728", null ],
     [ "bidirectional_shift_assignable", "dd/dcd/operators_8hpp.html#ga09d8c00769e83a4627b7a00342ab7f3b", null ],
     [ "bidirectional_shift_assignable_r", "dd/dcd/operators_8hpp.html#gab82cc2ace97b530ae87e32b7c50f57a4", null ],
     [ "bidirectional_shift_assignable_with", "dd/dcd/operators_8hpp.html#ga3175df5c2c5a811a740b0ff9437d6350", null ],
@@ -18,6 +20,8 @@ var operators_8hpp =
     [ "conjunctive_r", "dd/dcd/operators_8hpp.html#gaaf05bcfd5a2ea02588de4525dbfae51b", null ],
     [ "conjunctive_with", "dd/dcd/operators_8hpp.html#ga20f4aee21ca9a971f326bf349a53fc05", null ],
     [ "conjunctive_with_r", "dd/dcd/operators_8hpp.html#ga841e99dd11b179e20964a07b26642f1b", null ],
+    [ "dereferencable", "dd/dcd/operators_8hpp.html#gac0a21e5845639b36b09a09318cc53233", null ],
+    [ "dereferencable_r", "dd/dcd/operators_8hpp.html#gaa3b13483aacff822cf6c8ba59a425bde", null ],
     [ "disjunctive", "dd/dcd/operators_8hpp.html#gad4c0b07b7aef000206766abb988bf8c6", null ],
     [ "disjunctive_assign", "dd/dcd/operators_8hpp.html#ga84e51f32fa9aa5a41b653e255bd17534", null ],
     [ "disjunctive_assign_r", "dd/dcd/operators_8hpp.html#ga0472aac355b57e700ad639ab21a39f38", null ],

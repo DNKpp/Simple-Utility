@@ -1,0 +1,27 @@
+var namespacesl_1_1nullables =
+[
+    [ "nullable_traits", "db/dfb/structsl_1_1nullables_1_1nullable__traits.html", null ],
+    [ "nullable_traits< unique_handle< TArgs... > >", "d9/d48/structsl_1_1nullables_1_1nullable__traits_3_01unique__handle_3_01_t_args_8_8_8_01_4_01_4.html", "d9/d48/structsl_1_1nullables_1_1nullable__traits_3_01unique__handle_3_01_t_args_8_8_8_01_4_01_4" ],
+    [ "nullable_traits< std::optional< TArgs... > >", "db/dcf/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html", "db/dcf/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4" ],
+    [ "nullable_traits< std::unique_ptr< TArgs... > >", "da/d35/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html", "da/d35/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4" ],
+    [ "nullable_traits< std::shared_ptr< TArgs... > >", "da/d78/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html", "da/d78/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4" ],
+    [ "nullable_traits< T >", "de/dc1/structsl_1_1nullables_1_1nullable__traits_3_01_t_01_4.html", "de/dc1/structsl_1_1nullables_1_1nullable__traits_3_01_t_01_4" ],
+    [ "value_or_func_t", "dc/d1e/structsl_1_1nullables_1_1value__or__func__t.html", null ],
+    [ "value_or_func_t< TNullable, T >", "db/d20/structsl_1_1nullables_1_1value__or__func__t_3_01_t_nullable_00_01_t_01_4.html", "db/d20/structsl_1_1nullables_1_1value__or__func__t_3_01_t_nullable_00_01_t_01_4" ],
+    [ "or_else_func_t", "d2/dfa/structsl_1_1nullables_1_1or__else__func__t.html", null ],
+    [ "or_else_func_t< TNullable, TFunc >", "de/d98/structsl_1_1nullables_1_1or__else__func__t_3_01_t_nullable_00_01_t_func_01_4.html", "de/d98/structsl_1_1nullables_1_1or__else__func__t_3_01_t_nullable_00_01_t_func_01_4" ],
+    [ "and_then_func_t", "d7/d05/structsl_1_1nullables_1_1and__then__func__t.html", null ],
+    [ "and_then_func_t< TNullable, TFunc >", "d5/de9/structsl_1_1nullables_1_1and__then__func__t_3_01_t_nullable_00_01_t_func_01_4.html", "d5/de9/structsl_1_1nullables_1_1and__then__func__t_3_01_t_nullable_00_01_t_func_01_4" ],
+    [ "value_or", "d6/d6c/classsl_1_1nullables_1_1value__or.html", "d6/d6c/classsl_1_1nullables_1_1value__or" ],
+    [ "and_then", "de/ddf/classsl_1_1nullables_1_1and__then.html", "de/ddf/classsl_1_1nullables_1_1and__then" ],
+    [ "or_else", "d6/deb/classsl_1_1nullables_1_1or__else.html", "d6/deb/classsl_1_1nullables_1_1or__else" ],
+    [ "nullable_value_t", "dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga30b2386500938406f95e13450ffa7c7f", null ],
+    [ "operator()", "dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#ga00ed2bec51706202555492ab81f5ed3d", null ],
+    [ "requires", "dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#ga669fdec4e96311119f52333db2de03d4", null ],
+    [ "requires", "dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gaef12e15ea458b62e7fe84929f927093e", null ],
+    [ "value_or", "d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga04b76f157c85d0a8e7a5f47103761054", null ],
+    [ "value_unchecked", "d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html#gae5ffbf5b70ce3b54cdd8d318c5679c51", null ],
+    [ "nullable", "dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga38933bec8744d0cf232c2e77da5be331", null ],
+    [ "nullable_null_v", "dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#gae6e1b97fc8c68cfd3435025dd14e76c3", null ],
+    [ "T", "dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gab488fd28d33addf33460ff3d6b9363e5", null ]
+];

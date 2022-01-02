@@ -26,12 +26,14 @@ var NAVTREE =
 [
   [ "Simple-Utility", "index.html", [
     [ "Simple-Utility C++20 header-only library", "index.html", [
-      [ "Author", "index.html#autotoc_md1", null ],
-      [ "License", "index.html#autotoc_md2", null ],
-      [ "Description", "index.html#autotoc_md3", null ],
-      [ "Installation with CMake", "index.html#autotoc_md4", [
-        [ "FetchContent", "index.html#autotoc_md5", null ],
-        [ "CPM", "index.html#autotoc_md6", null ]
+      [ "Author", "index.html#autotoc_md4", null ],
+      [ "License", "index.html#autotoc_md5", null ],
+      [ "Description", "index.html#autotoc_md6", [
+        [ "nullables & unique_handle", "index.html#autotoc_md7", null ]
+      ] ],
+      [ "Installation with CMake", "index.html#autotoc_md8", [
+        [ "FetchContent", "index.html#autotoc_md9", null ],
+        [ "CPM", "index.html#autotoc_md10", null ]
       ] ]
     ] ],
     [ "Modules", "modules.html", "modules" ],
@@ -51,7 +53,8 @@ var NAVTREE =
         [ "All", "functions.html", null ],
         [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", null ],
-        [ "Typedefs", "functions_type.html", null ]
+        [ "Typedefs", "functions_type.html", null ],
+        [ "Related Functions", "functions_rela.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
@@ -67,7 +70,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"de/d27/group___g_r_o_u_p___s_h_i_f_t___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga64da27d2d3686d17b6c27447f2f54b93"
+"dd/dcd/operators_8hpp.html#ga753752652ab2ae5cd588daf1eff97397"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
