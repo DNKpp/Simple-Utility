@@ -626,7 +626,7 @@ TEST_CASE("chain usage example with movable type", "[nullables][algorithm][examp
 											}
 										}
 										| sn::or_else([&] { logger << "Unspecified database error occurred.\n"; })
-										// pay attention for the nullable type in the next line
+										// pay attention for the nullable type on the next line
 										| sn::and_then([](int id) { return std::optional{ std::to_string(id) }; })
 										| sn::value_or("invalid transaction id");
 		//! [nullables algorithm chain movable]
