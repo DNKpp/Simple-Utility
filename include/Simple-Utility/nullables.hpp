@@ -476,6 +476,11 @@ namespace sl::nullables
 		}
 
 		/**
+		 * \brief Default destructor
+		 */
+		constexpr ~value_or() noexcept = default;
+
+		/**
 		 * \brief Deleted copy-constructor
 		 */
 		value_or(const value_or&) = delete;
@@ -483,6 +488,15 @@ namespace sl::nullables
 		 * \brief Deleted copy-assign
 		 */
 		value_or& operator =(const value_or&) = delete;
+
+		/**
+		 * \brief Deleted move-constructor
+		 */
+		value_or(value_or&&) = delete;
+		/**
+		 * \brief Deleted move-assign
+		 */
+		value_or& operator =(value_or&&) = delete;
 
 		/**
 		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::input_nullable "input_nullable" on the left side.
@@ -551,6 +565,11 @@ namespace sl::nullables
 		}
 
 		/**
+		 * \brief Default destructor
+		 */
+		constexpr ~or_else() noexcept = default;
+
+		/**
 		 * \brief Deleted copy-constructor
 		 */
 		or_else(const or_else&) = delete;
@@ -558,6 +577,15 @@ namespace sl::nullables
 		 * \brief Deleted copy-assign
 		 */
 		or_else& operator =(const or_else&) = delete;
+
+		/**
+		 * \brief Deleted move-constructor
+		 */
+		or_else(or_else&&) = delete;
+		/**
+		 * \brief Deleted move-assign
+		 */
+		or_else& operator =(or_else&&) = delete;
 
 		/**
 		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::nullable "nullable" on the left side.
@@ -617,6 +645,11 @@ namespace sl::nullables
 		}
 
 		/**
+		 * \brief Default destructor
+		 */
+		constexpr ~and_then() noexcept = default;
+
+		/**
 		 * \brief Deleted copy-constructor
 		 */
 		and_then(const and_then&) = delete;
@@ -624,6 +657,15 @@ namespace sl::nullables
 		 * \brief Deleted copy-assign
 		 */
 		and_then& operator =(const and_then&) = delete;
+
+		/**
+		 * \brief Deleted move-constructor
+		 */
+		and_then(and_then&&) = delete;
+		/**
+		 * \brief Deleted move-assign
+		 */
+		and_then& operator =(and_then&&) = delete;
 
 		/**
 		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::input_nullable "input_nullable" on the left side.
