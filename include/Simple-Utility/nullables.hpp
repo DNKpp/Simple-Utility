@@ -216,6 +216,13 @@ namespace sl::nullables
 	{
 		template <input_nullable TNullable>
 		using dereference_type_t = decltype(value_unchecked(std::declval<TNullable>()));
+
+		template <class TNullable, class TAlt>
+		concept has_value_or_member = input_nullable<TNullable>
+									&& requires(TNullable n, TAlt a)
+									{
+										{ n.value_or(a) } -> std::convertible_to<nullable_value_t<TNullable>>;
+									};
 	}
 
 	/**
@@ -248,10 +255,7 @@ namespace sl::nullables
 	 * \tparam T Type of the alternative.
 	 */
 	template <input_nullable TNullable, class T>
-		requires requires(TNullable n, T a)
-		{
-			{ n.value_or(a) } -> std::convertible_to<nullable_value_t<TNullable>>;
-		}
+		requires detail::has_value_or_member<TNullable, T>
 	struct value_or_func_t<TNullable, T>
 	{
 		[[nodiscard]]
@@ -267,10 +271,7 @@ namespace sl::nullables
 	 * \tparam T Type of the alternative. Must initialize ``nullable_value_t<TNullable>``
 	 */
 	template <input_nullable TNullable, class T>
-		requires (!requires(TNullable n, T a)
-		{
-			{ n.value_or(a) } -> std::convertible_to<nullable_value_t<TNullable>>;
-		})
+		requires (!detail::has_value_or_member<TNullable, T>)
 	struct value_or_func_t<TNullable, T>
 	{
 		static_assert
