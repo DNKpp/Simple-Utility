@@ -46,6 +46,8 @@ var operators_8hpp =
     [ "fully_shiftable_r", "dd/dcd/operators_8hpp.html#gaeebb91970313ab0f633ec6e86fee6b03", null ],
     [ "fully_shiftable_with", "dd/dcd/operators_8hpp.html#gad265c44014bc4078aaeadecf6c06f1d4", null ],
     [ "fully_shiftable_with_r", "dd/dcd/operators_8hpp.html#gace8737f7bf9d777a6c588878901a311b", null ],
+    [ "index_dereferencable", "dd/dcd/operators_8hpp.html#gaa9cd33b3b1874ee873432a60074254b7", null ],
+    [ "index_dereferencable_r", "dd/dcd/operators_8hpp.html#gae7f5286aa0d0ee307f2bc16dbbc9f393", null ],
     [ "invertible", "dd/dcd/operators_8hpp.html#ae4f1cb8de3516ce5113afb40652dc897", null ],
     [ "invertible_r", "dd/dcd/operators_8hpp.html#aecea0bf0a70bfef7c7717966051ad630", null ],
     [ "left_shift_assignable", "dd/dcd/operators_8hpp.html#ga0844ed945b4ecadf05b466fd98e6b055", null ],

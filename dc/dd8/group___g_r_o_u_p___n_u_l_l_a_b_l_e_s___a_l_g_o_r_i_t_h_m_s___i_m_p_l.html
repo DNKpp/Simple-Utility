@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Simple-Utility
-   &#160;<span id="projectnumber">v1.1.0</span>
+   &#160;<span id="projectnumber">v1.1.2</span>
    </div>
   </td>
  </tr>
@@ -96,10 +96,11 @@ $(document).ready(function(){initNavTree('dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d1e/structsl_1_1nullables_1_1value__or__func__t.html">sl::nullables::value_or_func_t&lt; TNullable, T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d1e/structsl_1_1nullables_1_1value__or__func__t.html">sl::nullables::value_or_func_t&lt; TNullable, TAlt &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base type for the <code><a class="el" href="../../d6/d6c/classsl_1_1nullables_1_1value__or.html" title="Retrieves the value of a input_nullable if it&#39;s not equal to its &#39;&#39;null&#39;&#39;-object. Returns the alterna...">value_or</a></code> algorithms. May be specialized.  <a href="../../dc/d1e/structsl_1_1nullables_1_1value__or__func__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d20/structsl_1_1nullables_1_1value__or__func__t_3_01_t_nullable_00_01_t_01_4.html">sl::nullables::value_or_func_t&lt; TNullable, T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dc5/structsl_1_1nullables_1_1value__or__func__t_3_01_t_nullable_00_01_t_alt_01_4.html">sl::nullables::value_or_func_t&lt; TNullable, TAlt &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization which will be used instead if the <code><a class="el" href="../../d6/d6c/classsl_1_1nullables_1_1value__or.html" title="Retrieves the value of a input_nullable if it&#39;s not equal to its &#39;&#39;null&#39;&#39;-object. Returns the alterna...">value_or</a></code> functions is present as a member of <code>TNullable</code> type.  <a href="../../df/dc5/structsl_1_1nullables_1_1value__or__func__t_3_01_t_nullable_00_01_t_alt_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dfa/structsl_1_1nullables_1_1or__else__func__t.html">sl::nullables::or_else_func_t&lt; TNullable, TFunc &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base type for the <code><a class="el" href="../../d6/deb/classsl_1_1nullables_1_1or__else.html" title="Returns the nullable if it&#39;s not equal to its &#39;&#39;null&#39;&#39;-object. Executes the passed function otherwise...">or_else</a></code> algorithms. May be specialized.  <a href="../../d2/dfa/structsl_1_1nullables_1_1or__else__func__t.html#details">More...</a><br /></td></tr>
@@ -113,33 +114,39 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/de9/structsl_1_1nullables_1_1and__then__func__t_3_01_t_nullable_00_01_t_func_01_4.html">sl::nullables::and_then_func_t&lt; TNullable, TFunc &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">General algorithm implementation. May be specialized by users if necessary.  <a href="../../d5/de9/structsl_1_1nullables_1_1and__then__func__t_3_01_t_nullable_00_01_t_func_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/db2/structsl_1_1nullables_1_1fwd__value__func__t.html">sl::nullables::fwd_value_func_t&lt; TNullable, TFunc &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base type for the <code><a class="el" href="../../da/d9b/classsl_1_1nullables_1_1fwd__value.html" title="Passes the value of the input_nullable to the function if it&#39;s not equal to its null-object.">fwd_value</a></code> algorithms. May be specialized.  <a href="../../d3/db2/structsl_1_1nullables_1_1fwd__value__func__t.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d0c/structsl_1_1nullables_1_1fwd__value__func__t_3_01_t_nullable_00_01_t_func_01_4.html">sl::nullables::fwd_value_func_t&lt; TNullable, TFunc &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">General algorithm implementation. May be specialized by users if necessary.  <a href="../../d3/d0c/structsl_1_1nullables_1_1fwd__value__func__t_3_01_t_nullable_00_01_t_func_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gaef12e15ea458b62e7fe84929f927093e"><td class="memTemplParams" colspan="2">template&lt;input_nullable TNullable, class T &gt; </td></tr>
-<tr class="memitem:gaef12e15ea458b62e7fe84929f927093e"><td class="memTemplItemLeft" align="right" valign="top">requires&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gaef12e15ea458b62e7fe84929f927093e">sl::nullables::requires</a> (TNullable n, <a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gab488fd28d33addf33460ff3d6b9363e5">T</a> a)</td></tr>
-<tr class="memdesc:gaef12e15ea458b62e7fe84929f927093e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization which will be used instead if the <code><a class="el" href="../../d6/d6c/classsl_1_1nullables_1_1value__or.html" title="Retrieves the value of a input_nullable if it&#39;s not equal to its &#39;&#39;null&#39;&#39;-object. Returns the alterna...">value_or</a></code> functions is present as a member of <code>TNullable</code> type.  <a href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gaef12e15ea458b62e7fe84929f927093e">More...</a><br /></td></tr>
-<tr class="separator:gaef12e15ea458b62e7fe84929f927093e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga669fdec4e96311119f52333db2de03d4"><td class="memTemplParams" colspan="2">template&lt;input_nullable TNullable, class T &gt; </td></tr>
-<tr class="memitem:ga669fdec4e96311119f52333db2de03d4"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#ga669fdec4e96311119f52333db2de03d4">sl::nullables::requires</a> (!requires(TNullable n, <a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gab488fd28d33addf33460ff3d6b9363e5">T</a> a) { { n.value_or(a) } -&gt; std::convertible_to&lt; <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga30b2386500938406f95e13450ffa7c7f">nullable_value_t</a>&lt; TNullable &gt;&gt;;}) struct <a class="el" href="../../dc/d1e/structsl_1_1nullables_1_1value__or__func__t.html">value_or_func_t</a>&lt; TNullable</td></tr>
-<tr class="memdesc:ga669fdec4e96311119f52333db2de03d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">General algorithm implementation. May be specialized by users if necessary.  <a href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#ga669fdec4e96311119f52333db2de03d4">More...</a><br /></td></tr>
-<tr class="separator:ga669fdec4e96311119f52333db2de03d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga00ed2bec51706202555492ab81f5ed3d"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga30b2386500938406f95e13450ffa7c7f">nullable_value_t</a>&lt; TNullable &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#ga00ed2bec51706202555492ab81f5ed3d">sl::nullables::operator()</a> (TNullable &amp;&amp;closure, <a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gab488fd28d33addf33460ff3d6b9363e5">T</a> &amp;&amp;alternative)</td></tr>
-<tr class="separator:ga00ed2bec51706202555492ab81f5ed3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0a1dc94618f94cdf926e226ddf139d8a"><td class="memTemplParams" colspan="2">template&lt;input_nullable TNullable, class TAlt &gt; </td></tr>
+<tr class="memitem:ga0a1dc94618f94cdf926e226ddf139d8a"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#ga0a1dc94618f94cdf926e226ddf139d8a">sl::nullables::requires</a> (!detail::has_value_or_member&lt; TNullable, <a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#ga9bc6e5db2809d095b12513c68d224d8e">TAlt</a> &gt;) struct <a class="el" href="../../dc/d1e/structsl_1_1nullables_1_1value__or__func__t.html">value_or_func_t</a>&lt; TNullable</td></tr>
+<tr class="memdesc:ga0a1dc94618f94cdf926e226ddf139d8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">General algorithm implementation. May be specialized by users if necessary.  <a href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#ga0a1dc94618f94cdf926e226ddf139d8a">More...</a><br /></td></tr>
+<tr class="separator:ga0a1dc94618f94cdf926e226ddf139d8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadaab0f77cc245e47e54f70490995d0b0"><td class="memTemplParams" colspan="2">template&lt;input_nullable UNullable, class UAlt &gt; </td></tr>
+<tr class="memitem:gadaab0f77cc245e47e54f70490995d0b0"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga30b2386500938406f95e13450ffa7c7f">nullable_value_t</a>&lt; TNullable &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gadaab0f77cc245e47e54f70490995d0b0">sl::nullables::operator()</a> (UNullable &amp;&amp;closure, UAlt &amp;&amp;alternative)</td></tr>
+<tr class="memdesc:gadaab0f77cc245e47e54f70490995d0b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke operator.  <a href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gadaab0f77cc245e47e54f70490995d0b0">More...</a><br /></td></tr>
+<tr class="separator:gadaab0f77cc245e47e54f70490995d0b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:gab488fd28d33addf33460ff3d6b9363e5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gab488fd28d33addf33460ff3d6b9363e5">sl::nullables::T</a></td></tr>
-<tr class="separator:gab488fd28d33addf33460ff3d6b9363e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9bc6e5db2809d095b12513c68d224d8e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#ga9bc6e5db2809d095b12513c68d224d8e">sl::nullables::TAlt</a></td></tr>
+<tr class="separator:ga9bc6e5db2809d095b12513c68d224d8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>These are the implementations of the <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html">nullable algorithms</a>. Users may specialize them for custom types, but should not explicitly used in code. </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga00ed2bec51706202555492ab81f5ed3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga00ed2bec51706202555492ab81f5ed3d">&#9670;&nbsp;</a></span>operator()()</h2>
+<a id="gadaab0f77cc245e47e54f70490995d0b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadaab0f77cc245e47e54f70490995d0b0">&#9670;&nbsp;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;input_nullable UNullable, class UAlt &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -147,13 +154,13 @@ Variables</h2></td></tr>
         <tr>
           <td class="memname">constexpr <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga30b2386500938406f95e13450ffa7c7f">nullable_value_t</a>&lt;TNullable&gt; sl::nullables::operator() </td>
           <td>(</td>
-          <td class="paramtype">TNullable &amp;&amp;&#160;</td>
+          <td class="paramtype">UNullable &amp;&amp;&#160;</td>
           <td class="paramname"><em>closure</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gab488fd28d33addf33460ff3d6b9363e5">T</a> &amp;&amp;&#160;</td>
+          <td class="paramtype">UAlt &amp;&amp;&#160;</td>
           <td class="paramname"><em>alternative</em>&#160;</td>
         </tr>
         <tr>
@@ -169,20 +176,37 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Invoke operator. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">UNullable</td><td>The actual <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b">input_nullable</a> type </td></tr>
+    <tr><td class="paramname">UAlt</td><td>The actual alternative type </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">closure</td><td>The nullable object </td></tr>
+    <tr><td class="paramname">alternative</td><td>The alternative object </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returns the either the <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b">input_nullable</a> value or the forwarded alternative. </dd></dl>
+
 </div>
 </div>
-<a id="ga669fdec4e96311119f52333db2de03d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga669fdec4e96311119f52333db2de03d4">&#9670;&nbsp;</a></span>requires() <span class="overload">[1/2]</span></h2>
+<a id="ga0a1dc94618f94cdf926e226ddf139d8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0a1dc94618f94cdf926e226ddf139d8a">&#9670;&nbsp;</a></span>requires()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;input_nullable TNullable, class T &gt; </div>
+template&lt;input_nullable TNullable, class TAlt &gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">sl::nullables::requires </td>
           <td>(</td>
-          <td class="paramtype">!requires(TNullable n, <a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gab488fd28d33addf33460ff3d6b9363e5">T</a> a) { { n.value_or(a) } -&gt; std::convertible_to&lt; <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga30b2386500938406f95e13450ffa7c7f">nullable_value_t</a>&lt; TNullable &gt;&gt;;}&#160;</td>
+          <td class="paramtype">!detail::has_value_or_member&lt; TNullable, <a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#ga9bc6e5db2809d095b12513c68d224d8e">TAlt</a> &gt;&#160;</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
@@ -192,47 +216,8 @@ template&lt;input_nullable TNullable, class T &gt; </div>
 <p>General algorithm implementation. May be specialized by users if necessary. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">TNullable</td><td>Type of the <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b">input_nullable</a> </td></tr>
-    <tr><td class="paramname">T</td><td>Type of the alternative. Must initialize <code>nullable_value_t&lt;TNullable&gt;</code> </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="gaef12e15ea458b62e7fe84929f927093e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gaef12e15ea458b62e7fe84929f927093e">&#9670;&nbsp;</a></span>requires() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;input_nullable TNullable, class T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">requires sl::nullables::requires </td>
-          <td>(</td>
-          <td class="paramtype">TNullable&#160;</td>
-          <td class="paramname"><em>n</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gab488fd28d33addf33460ff3d6b9363e5">T</a>&#160;</td>
-          <td class="paramname"><em>a</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Specialization which will be used instead if the <code><a class="el" href="../../d6/d6c/classsl_1_1nullables_1_1value__or.html" title="Retrieves the value of a input_nullable if it&#39;s not equal to its &#39;&#39;null&#39;&#39;-object. Returns the alterna...">value_or</a></code> functions is present as a member of <code>TNullable</code> type. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">TNullable</td><td>Type of the <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b">input_nullable</a> </td></tr>
-    <tr><td class="paramname">T</td><td>Type of the alternative. </td></tr>
+    <tr><td class="paramname">TNullable</td><td>The decayed type of the <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b">input_nullable</a> </td></tr>
+    <tr><td class="paramname">TAlt</td><td>The decayed type of the alternative. Must initialize <code>nullable_value_t&lt;TNullable&gt;</code> </td></tr>
   </table>
   </dd>
 </dl>
@@ -240,25 +225,25 @@ template&lt;input_nullable TNullable, class T &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="gab488fd28d33addf33460ff3d6b9363e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab488fd28d33addf33460ff3d6b9363e5">&#9670;&nbsp;</a></span>T</h2>
+<a id="ga9bc6e5db2809d095b12513c68d224d8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9bc6e5db2809d095b12513c68d224d8e">&#9670;&nbsp;</a></span>TAlt</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">sl::nullables::T</td>
+          <td class="memname">sl::nullables::TAlt</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">        static_assert</div>
 <div class="line">        (</div>
-<div class="line">            <a class="code" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga6d88f2f46efbfef9ebca08d17acce7b0">concepts::initializes</a>&lt;<a class="code" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gab488fd28d33addf33460ff3d6b9363e5">T</a>, nullable_value_t&lt;TNullable&gt;&gt;,</div>
+<div class="line">            <a class="code" href="../../dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#ga6d88f2f46efbfef9ebca08d17acce7b0">concepts::initializes</a>&lt;<a class="code" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#ga9bc6e5db2809d095b12513c68d224d8e">TAlt</a>, nullable_value_t&lt;TNullable&gt;&gt;,</div>
 <div class="line">            <span class="stringliteral">&quot;The alternative must be usable to initialize a nullable_value_t&lt;TNullable&gt; value.&quot;</span></div>
 <div class="line">        )</div>
-<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l_html_gab488fd28d33addf33460ff3d6b9363e5"><div class="ttname"><a href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gab488fd28d33addf33460ff3d6b9363e5">sl::nullables::T</a></div><div class="ttdeci">T</div><div class="ttdef"><b>Definition:</b> nullables.hpp:277</div></div>
-<div class="ttc" id="agroup___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s_html_ga6d88f2f46efbfef9ebca08d17acce7b0"><div class="ttname"><a href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga6d88f2f46efbfef9ebca08d17acce7b0">sl::concepts::initializes</a></div><div class="ttdeci">concept initializes</div><div class="ttdoc">Checks whether the target type is constructible from the source type.</div><div class="ttdef"><b>Definition:</b> stl_counterparts.hpp:41</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l_html_ga9bc6e5db2809d095b12513c68d224d8e"><div class="ttname"><a href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#ga9bc6e5db2809d095b12513c68d224d8e">sl::nullables::TAlt</a></div><div class="ttdeci">TAlt</div><div class="ttdef"><b>Definition:</b> nullables.hpp:287</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s_html_ga6d88f2f46efbfef9ebca08d17acce7b0"><div class="ttname"><a href="../../dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#ga6d88f2f46efbfef9ebca08d17acce7b0">sl::concepts::initializes</a></div><div class="ttdeci">concept initializes</div><div class="ttdoc">Checks whether the target type is constructible from the source type.</div><div class="ttdef"><b>Definition:</b> stl_extensions.hpp:41</div></div>
 </div><!-- fragment -->
 </div>
 </div>

@@ -1,9 +1,9 @@
 var namespacesl =
 [
     [ "concepts", "dd/d06/namespacesl_1_1concepts.html", [
-      [ "arrow_dereferencable", "de/dbe/group__access-operators.html#ga3f28c5bc64126919be41fa8f83dcd878", null ],
-      [ "arrow_dereferencable_r", "de/dbe/group__access-operators.html#gaffa70e4c7405be026b8481c75bfd3728", null ],
-      [ "assignable_to", "d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga06839fb251d8ad4b3f390d9d39e03ca0", null ],
+      [ "arrow_dereferencable", "d8/d43/group___g_r_o_u_p___a_c_c_e_s_s___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga3f28c5bc64126919be41fa8f83dcd878", null ],
+      [ "arrow_dereferencable_r", "d8/d43/group___g_r_o_u_p___a_c_c_e_s_s___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gaffa70e4c7405be026b8481c75bfd3728", null ],
+      [ "assignable_to", "dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#ga06839fb251d8ad4b3f390d9d39e03ca0", null ],
       [ "bidirectional_shift_assignable", "de/d27/group___g_r_o_u_p___s_h_i_f_t___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga09d8c00769e83a4627b7a00342ab7f3b", null ],
       [ "bidirectional_shift_assignable_r", "de/d27/group___g_r_o_u_p___s_h_i_f_t___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gab82cc2ace97b530ae87e32b7c50f57a4", null ],
       [ "bidirectional_shift_assignable_with", "de/d27/group___g_r_o_u_p___s_h_i_f_t___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga3175df5c2c5a811a740b0ff9437d6350", null ],
@@ -22,8 +22,8 @@ var namespacesl =
       [ "conjunctive_r", "d7/d37/group___g_r_o_u_p___l_o_g_i_c_a_l___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gaaf05bcfd5a2ea02588de4525dbfae51b", null ],
       [ "conjunctive_with", "d7/d37/group___g_r_o_u_p___l_o_g_i_c_a_l___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga20f4aee21ca9a971f326bf349a53fc05", null ],
       [ "conjunctive_with_r", "d7/d37/group___g_r_o_u_p___l_o_g_i_c_a_l___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga841e99dd11b179e20964a07b26642f1b", null ],
-      [ "dereferencable", "de/dbe/group__access-operators.html#gac0a21e5845639b36b09a09318cc53233", null ],
-      [ "dereferencable_r", "de/dbe/group__access-operators.html#gaa3b13483aacff822cf6c8ba59a425bde", null ],
+      [ "dereferencable", "d8/d43/group___g_r_o_u_p___a_c_c_e_s_s___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gac0a21e5845639b36b09a09318cc53233", null ],
+      [ "dereferencable_r", "d8/d43/group___g_r_o_u_p___a_c_c_e_s_s___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gaa3b13483aacff822cf6c8ba59a425bde", null ],
       [ "disjunctive", "d7/d37/group___g_r_o_u_p___l_o_g_i_c_a_l___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gad4c0b07b7aef000206766abb988bf8c6", null ],
       [ "disjunctive_assign", "d7/d37/group___g_r_o_u_p___l_o_g_i_c_a_l___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga84e51f32fa9aa5a41b653e255bd17534", null ],
       [ "disjunctive_assign_r", "d7/d37/group___g_r_o_u_p___l_o_g_i_c_a_l___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga0472aac355b57e700ad639ab21a39f38", null ],
@@ -48,7 +48,9 @@ var namespacesl =
       [ "fully_shiftable_r", "de/d27/group___g_r_o_u_p___s_h_i_f_t___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gaeebb91970313ab0f633ec6e86fee6b03", null ],
       [ "fully_shiftable_with", "de/d27/group___g_r_o_u_p___s_h_i_f_t___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gad265c44014bc4078aaeadecf6c06f1d4", null ],
       [ "fully_shiftable_with_r", "de/d27/group___g_r_o_u_p___s_h_i_f_t___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gace8737f7bf9d777a6c588878901a311b", null ],
-      [ "initializes", "d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga6d88f2f46efbfef9ebca08d17acce7b0", null ],
+      [ "index_dereferencable", "d8/d43/group___g_r_o_u_p___a_c_c_e_s_s___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gaa9cd33b3b1874ee873432a60074254b7", null ],
+      [ "index_dereferencable_r", "d8/d43/group___g_r_o_u_p___a_c_c_e_s_s___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gae7f5286aa0d0ee307f2bc16dbbc9f393", null ],
+      [ "initializes", "dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#ga6d88f2f46efbfef9ebca08d17acce7b0", null ],
       [ "invertible", "dd/d06/namespacesl_1_1concepts.html#ae4f1cb8de3516ce5113afb40652dc897", null ],
       [ "invertible_r", "dd/d06/namespacesl_1_1concepts.html#aecea0bf0a70bfef7c7717966051ad630", null ],
       [ "left_shift_assignable", "de/d27/group___g_r_o_u_p___s_h_i_f_t___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga0844ed945b4ecadf05b466fd98e6b055", null ],
@@ -67,7 +69,7 @@ var namespacesl =
       [ "logically_combinable_r", "d7/d37/group___g_r_o_u_p___l_o_g_i_c_a_l___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gaa54e1b7b4517b78ec8a8df32ec501708", null ],
       [ "logically_combinable_with", "d7/d37/group___g_r_o_u_p___l_o_g_i_c_a_l___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gaebcb92033ac39792270f5d34b7bcbd80", null ],
       [ "logically_combinable_with_r", "d7/d37/group___g_r_o_u_p___l_o_g_i_c_a_l___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga842ed63a2882193b04c7c295603b9a97", null ],
-      [ "not_same_as", "d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889", null ],
+      [ "not_same_as", "dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889", null ],
       [ "right_shift_assignable", "de/d27/group___g_r_o_u_p___s_h_i_f_t___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga591273d4ffd70244313a371edad35a63", null ],
       [ "right_shift_assignable_r", "de/d27/group___g_r_o_u_p___s_h_i_f_t___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga5a7aa6114ac985907cda9c4bb7f9884b", null ],
       [ "right_shift_assignable_with", "de/d27/group___g_r_o_u_p___s_h_i_f_t___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gabcdfc707c5d4aaea32e1323385d919a6", null ],
@@ -76,7 +78,7 @@ var namespacesl =
       [ "right_shiftable_r", "de/d27/group___g_r_o_u_p___s_h_i_f_t___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga64da27d2d3686d17b6c27447f2f54b93", null ],
       [ "right_shiftable_with", "de/d27/group___g_r_o_u_p___s_h_i_f_t___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gab1daf0fc8d908756f57b5b2d5b2d31a6", null ],
       [ "right_shiftable_with_r", "de/d27/group___g_r_o_u_p___s_h_i_f_t___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga472f80e26a5131dece242fc9758c5b9f", null ],
-      [ "weakly_equality_comparable_with", "d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga439237452668f6de8c858f2581a698c5", null ]
+      [ "weakly_equality_comparable_with", "dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#ga439237452668f6de8c858f2581a698c5", null ]
     ] ],
     [ "nullables", "d0/de0/namespacesl_1_1nullables.html", "d0/de0/namespacesl_1_1nullables" ],
     [ "nullhandle_t", "d9/db6/structsl_1_1nullhandle__t.html", null ],

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Simple-Utility: sl::nullables::value_or_func_t&lt; TNullable, T &gt; Struct Reference</title>
+<title>Simple-Utility: sl::nullables::fwd_value_func_t&lt; TNullable, TFunc &gt; Struct Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Simple-Utility
-   &#160;<span id="projectnumber">v1.1.0</span>
+   &#160;<span id="projectnumber">v1.1.2</span>
    </div>
   </td>
  </tr>
@@ -63,7 +63,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('db/d20/structsl_1_1nullables_1_1value__or__func__t_3_01_t_nullable_00_01_t_01_4.html','../../'); initResizable(); });
+$(document).ready(function(){initNavTree('d3/d0c/structsl_1_1nullables_1_1fwd__value__func__t_3_01_t_nullable_00_01_t_func_01_4.html','../../'); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -84,40 +84,61 @@ $(document).ready(function(){initNavTree('db/d20/structsl_1_1nullables_1_1value_
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="../../d4/d19/structsl_1_1nullables_1_1value__or__func__t_3_01_t_nullable_00_01_t_01_4-members.html">List of all members</a>  </div>
+<a href="../../dc/dd2/structsl_1_1nullables_1_1fwd__value__func__t_3_01_t_nullable_00_01_t_func_01_4-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">sl::nullables::value_or_func_t&lt; TNullable, T &gt; Struct Reference<div class="ingroups"><a class="el" href="../../d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html">nullables</a> &raquo; <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html">algorithms</a> &raquo; <a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html">implementation</a></div></div>  </div>
+<div class="title">sl::nullables::fwd_value_func_t&lt; TNullable, TFunc &gt; Struct Template Reference<div class="ingroups"><a class="el" href="../../d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html">nullables</a> &raquo; <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html">algorithms</a> &raquo; <a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html">implementation</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>General algorithm implementation. May be specialized by users if necessary.  
+ <a href="../../d3/d0c/structsl_1_1nullables_1_1fwd__value__func__t_3_01_t_nullable_00_01_t_func_01_4.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../d3/ddc/nullables_8hpp_source.html">nullables.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0d3d19b04d0cc5f8043a2b7dd040219d"><td class="memItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d20/structsl_1_1nullables_1_1value__or__func__t_3_01_t_nullable_00_01_t_01_4.html#a0d3d19b04d0cc5f8043a2b7dd040219d">operator()</a> (TNullable &amp;&amp;closure, <a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gab488fd28d33addf33460ff3d6b9363e5">T</a> &amp;&amp;alternative)</td></tr>
-<tr class="separator:a0d3d19b04d0cc5f8043a2b7dd040219d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04e27c3e40d1e369d766e8512aadab95"><td class="memTemplParams" colspan="2">template&lt;input_nullable UNullable, class UFunc &gt; </td></tr>
+<tr class="memitem:a04e27c3e40d1e369d766e8512aadab95"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d3/d0c/structsl_1_1nullables_1_1fwd__value__func__t_3_01_t_nullable_00_01_t_func_01_4.html#a04e27c3e40d1e369d766e8512aadab95">operator()</a> (UNullable &amp;&amp;closure, UFunc &amp;&amp;func)</td></tr>
+<tr class="memdesc:a04e27c3e40d1e369d766e8512aadab95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke operator.  <a href="../../d3/d0c/structsl_1_1nullables_1_1fwd__value__func__t_3_01_t_nullable_00_01_t_func_01_4.html#a04e27c3e40d1e369d766e8512aadab95">More...</a><br /></td></tr>
+<tr class="separator:a04e27c3e40d1e369d766e8512aadab95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a0d3d19b04d0cc5f8043a2b7dd040219d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d3d19b04d0cc5f8043a2b7dd040219d">&#9670;&nbsp;</a></span>operator()()</h2>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><h3>template&lt;input_nullable TNullable, class TFunc&gt;<br />
+struct sl::nullables::fwd_value_func_t&lt; TNullable, TFunc &gt;</h3>
+
+<p>General algorithm implementation. May be specialized by users if necessary. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">TNullable</td><td>The decayed type of the <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b">input_nullable</a> </td></tr>
+    <tr><td class="paramname">TFunc</td><td>The decayed type of the passed function. </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a04e27c3e40d1e369d766e8512aadab95"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04e27c3e40d1e369d766e8512aadab95">&#9670;&nbsp;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<div class="memtemplate">
+template&lt;input_nullable TNullable, class TFunc &gt; </div>
+<div class="memtemplate">
+template&lt;input_nullable UNullable, class UFunc &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr decltype(auto) <a class="el" href="../../dc/d1e/structsl_1_1nullables_1_1value__or__func__t.html">sl::nullables::value_or_func_t</a>&lt; TNullable, <a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gab488fd28d33addf33460ff3d6b9363e5">T</a> &gt;::operator() </td>
+          <td class="memname">constexpr void <a class="el" href="../../d3/db2/structsl_1_1nullables_1_1fwd__value__func__t.html">sl::nullables::fwd_value_func_t</a>&lt; TNullable, TFunc &gt;::operator() </td>
           <td>(</td>
-          <td class="paramtype">TNullable &amp;&amp;&#160;</td>
+          <td class="paramtype">UNullable &amp;&amp;&#160;</td>
           <td class="paramname"><em>closure</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gab488fd28d33addf33460ff3d6b9363e5">T</a> &amp;&amp;&#160;</td>
-          <td class="paramname"><em>alternative</em>&#160;</td>
+          <td class="paramtype">UFunc &amp;&amp;&#160;</td>
+          <td class="paramname"><em>func</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -132,6 +153,22 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Invoke operator. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">UNullable</td><td>The actual <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b">input_nullable</a> type </td></tr>
+    <tr><td class="paramname">UFunc</td><td>The actual function type </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">closure</td><td>The nullable object </td></tr>
+    <tr><td class="paramname">func</td><td>The functional object </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
@@ -142,7 +179,7 @@ Public Member Functions</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dd/d2c/namespacesl.html">sl</a></li><li class="navelem"><a class="el" href="../../d0/de0/namespacesl_1_1nullables.html">nullables</a></li><li class="navelem"><a class="el" href="../../db/d20/structsl_1_1nullables_1_1value__or__func__t_3_01_t_nullable_00_01_t_01_4.html">value_or_func_t&lt; TNullable, T &gt;</a></li>
+    <li class="navelem"><a class="el" href="../../dd/d2c/namespacesl.html">sl</a></li><li class="navelem"><a class="el" href="../../d0/de0/namespacesl_1_1nullables.html">nullables</a></li><li class="navelem"><a class="el" href="../../d3/d0c/structsl_1_1nullables_1_1fwd__value__func__t_3_01_t_nullable_00_01_t_func_01_4.html">fwd_value_func_t&lt; TNullable, TFunc &gt;</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

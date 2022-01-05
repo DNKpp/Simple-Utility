@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Simple-Utility
-   &#160;<span id="projectnumber">v1.1.0</span>
+   &#160;<span id="projectnumber">v1.1.2</span>
    </div>
   </td>
  </tr>
@@ -97,8 +97,10 @@ $(document).ready(function(){initNavTree('de/d98/structsl_1_1nullables_1_1or__el
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a03fdb4a6c37932692fe44197d2f9fdc5"><td class="memItemLeft" align="right" valign="top">constexpr std::remove_cvref_t&lt; TNullable &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d98/structsl_1_1nullables_1_1or__else__func__t_3_01_t_nullable_00_01_t_func_01_4.html#a03fdb4a6c37932692fe44197d2f9fdc5">operator()</a> (TNullable &amp;&amp;closure, TFunc func)</td></tr>
-<tr class="separator:a03fdb4a6c37932692fe44197d2f9fdc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4ed8d210a3206672ad60d821a512b24"><td class="memTemplParams" colspan="2">template&lt;input_nullable UNullable, class UFunc &gt; </td></tr>
+<tr class="memitem:af4ed8d210a3206672ad60d821a512b24"><td class="memTemplItemLeft" align="right" valign="top">constexpr TNullable&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/d98/structsl_1_1nullables_1_1or__else__func__t_3_01_t_nullable_00_01_t_func_01_4.html#af4ed8d210a3206672ad60d821a512b24">operator()</a> (UNullable &amp;&amp;closure, UFunc &amp;&amp;func)</td></tr>
+<tr class="memdesc:af4ed8d210a3206672ad60d821a512b24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke operator.  <a href="../../de/d98/structsl_1_1nullables_1_1or__else__func__t_3_01_t_nullable_00_01_t_func_01_4.html#af4ed8d210a3206672ad60d821a512b24">More...</a><br /></td></tr>
+<tr class="separator:af4ed8d210a3206672ad60d821a512b24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;nullable TNullable, std::invocable TFunc&gt;<br />
@@ -107,33 +109,35 @@ struct sl::nullables::or_else_func_t&lt; TNullable, TFunc &gt;</h3>
 <p>General algorithm implementation. May be specialized by users if necessary. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">TNullable</td><td>Type of the <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga38933bec8744d0cf232c2e77da5be331">nullable</a> </td></tr>
-    <tr><td class="paramname">TFunc</td><td>Type of the passed function. </td></tr>
+    <tr><td class="paramname">TNullable</td><td>The decayed type of the <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga38933bec8744d0cf232c2e77da5be331">nullable</a> </td></tr>
+    <tr><td class="paramname">TFunc</td><td>The decayed type of the passed function </td></tr>
   </table>
   </dd>
 </dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a03fdb4a6c37932692fe44197d2f9fdc5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a03fdb4a6c37932692fe44197d2f9fdc5">&#9670;&nbsp;</a></span>operator()()</h2>
+<a id="af4ed8d210a3206672ad60d821a512b24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4ed8d210a3206672ad60d821a512b24">&#9670;&nbsp;</a></span>operator()()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;nullable TNullable, std::invocable TFunc&gt; </div>
+<div class="memtemplate">
+template&lt;input_nullable UNullable, class UFunc &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr std::remove_cvref_t&lt;TNullable&gt; <a class="el" href="../../d2/dfa/structsl_1_1nullables_1_1or__else__func__t.html">sl::nullables::or_else_func_t</a>&lt; TNullable, TFunc &gt;::operator() </td>
+          <td class="memname">constexpr TNullable <a class="el" href="../../d2/dfa/structsl_1_1nullables_1_1or__else__func__t.html">sl::nullables::or_else_func_t</a>&lt; TNullable, TFunc &gt;::operator() </td>
           <td>(</td>
-          <td class="paramtype">TNullable &amp;&amp;&#160;</td>
+          <td class="paramtype">UNullable &amp;&amp;&#160;</td>
           <td class="paramname"><em>closure</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">TFunc&#160;</td>
+          <td class="paramtype">UFunc &amp;&amp;&#160;</td>
           <td class="paramname"><em>func</em>&#160;</td>
         </tr>
         <tr>
@@ -148,6 +152,22 @@ template&lt;nullable TNullable, std::invocable TFunc&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>Invoke operator. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">UNullable</td><td>The actual <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga48418c075c74cd0c14f1981691ceab6b">input_nullable</a> type </td></tr>
+    <tr><td class="paramname">UFunc</td><td>The actual function type </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">closure</td><td>The nullable object </td></tr>
+    <tr><td class="paramname">func</td><td>The functional object </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

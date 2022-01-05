@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['simple_2dutility_20c_2b_2b20_20header_2donly_20library_290',['Simple-Utility C++20 header-only library',['../index.html',1,'']]]
+  ['simple_2dutility_20c_2b_2b20_20header_2donly_20library_307',['Simple-Utility C++20 header-only library',['../index.html',1,'']]]
 ];

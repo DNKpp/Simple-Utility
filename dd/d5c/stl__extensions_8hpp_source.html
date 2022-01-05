@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Simple-Utility: /github/workspace/include/Simple-Utility/concepts/stl_counterparts.hpp Source File</title>
+<title>Simple-Utility: /github/workspace/include/Simple-Utility/concepts/stl_extensions.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tr style="height: 56px;">
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">Simple-Utility
-   &#160;<span id="projectnumber">v1.1.0</span>
+   &#160;<span id="projectnumber">v1.1.2</span>
    </div>
   </td>
  </tr>
@@ -63,7 +63,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
-$(document).ready(function(){initNavTree('d8/dc5/stl__counterparts_8hpp_source.html','../../'); initResizable(); });
+$(document).ready(function(){initNavTree('dd/d5c/stl__extensions_8hpp_source.html','../../'); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -83,16 +83,16 @@ $(document).ready(function(){initNavTree('d8/dc5/stl__counterparts_8hpp_source.h
 
 <div class="header">
   <div class="headertitle">
-<div class="title">stl_counterparts.hpp</div>  </div>
+<div class="title">stl_extensions.hpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<a href="../../d8/dc5/stl__counterparts_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//          Copyright Dominic Koepke 2019 - 2022.</span></div>
+<a href="../../dd/d5c/stl__extensions_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="comment">//          Copyright Dominic Koepke 2019 - 2022.</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="comment">// Distributed under the Boost Software License, Version 1.0.</span></div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="comment">//    (See accompanying file LICENSE_1_0.txt or copy at</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="comment">//          https://www.boost.org/LICENSE_1_0.txt)</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#ifndef SL_STL_SYMMETRICAL_HPP</span></div>
-<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#define SL_STL_SYMMETRICAL_HPP</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#ifndef SL_UTILITY_CONCEPTS_STL_EXTENSIONSL_HPP</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#define SL_UTILITY_CONCEPTS_STL_EXTENSIONSL_HPP</span></div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160; </div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160; </div>
@@ -103,16 +103,16 @@ $(document).ready(function(){initNavTree('d8/dc5/stl__counterparts_8hpp_source.h
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">namespace </span><a class="code" href="../../dd/d06/namespacesl_1_1concepts.html">sl::concepts</a></div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> TLhs, <span class="keyword">class</span> TRhs&gt;</div>
-<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889">   32</a></span>&#160;    concept <a class="code" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889">not_same_as</a> = !std::same_as&lt;TLhs, TRhs&gt;;</div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="../../dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889">   32</a></span>&#160;    concept <a class="code" href="../../dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889">not_same_as</a> = !std::same_as&lt;TLhs, TRhs&gt;;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> TSource, <span class="keyword">class</span> TTarget&gt;</div>
-<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga6d88f2f46efbfef9ebca08d17acce7b0">   41</a></span>&#160;    concept <a class="code" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga6d88f2f46efbfef9ebca08d17acce7b0">initializes</a> = std::constructible_from&lt;TTarget, TSource&gt;;</div>
+<div class="line"><a name="l00041"></a><span class="lineno"><a class="line" href="../../dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#ga6d88f2f46efbfef9ebca08d17acce7b0">   41</a></span>&#160;    concept <a class="code" href="../../dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#ga6d88f2f46efbfef9ebca08d17acce7b0">initializes</a> = std::constructible_from&lt;TTarget, TSource&gt;;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> TSource, <span class="keyword">class</span> TTarget&gt;</div>
-<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga06839fb251d8ad4b3f390d9d39e03ca0">   50</a></span>&#160;    concept <a class="code" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga06839fb251d8ad4b3f390d9d39e03ca0">assignable_to</a> = std::assignable_from&lt;TTarget, TSource&gt;;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="../../dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#ga06839fb251d8ad4b3f390d9d39e03ca0">   50</a></span>&#160;    concept <a class="code" href="../../dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#ga06839fb251d8ad4b3f390d9d39e03ca0">assignable_to</a> = std::assignable_from&lt;TTarget, TSource&gt;;</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span> T1, <span class="keyword">class</span> T2&gt;</div>
-<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga439237452668f6de8c858f2581a698c5">   60</a></span>&#160;    concept <a class="code" href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga439237452668f6de8c858f2581a698c5">weakly_equality_comparable_with</a> = <a class="code" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gaef12e15ea458b62e7fe84929f927093e">requires</a>(<span class="keyword">const</span> std::remove_cvref_t&lt;T1&gt;&amp; t1, <span class="keyword">const</span> std::remove_cvref_t&lt;T2&gt;&amp; t2)</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="../../dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#ga439237452668f6de8c858f2581a698c5">   60</a></span>&#160;    concept <a class="code" href="../../dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#ga439237452668f6de8c858f2581a698c5">weakly_equality_comparable_with</a> = <a class="code" href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#ga0a1dc94618f94cdf926e226ddf139d8a">requires</a>(<span class="keyword">const</span> std::remove_cvref_t&lt;T1&gt;&amp; t1, <span class="keyword">const</span> std::remove_cvref_t&lt;T2&gt;&amp; t2)</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    {</div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;        { t1 == t2 } -&gt; std::convertible_to&lt;bool&gt;;</div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;        { t1 != t2 } -&gt; std::convertible_to&lt;bool&gt;;</div>
@@ -123,18 +123,18 @@ $(document).ready(function(){initNavTree('d8/dc5/stl__counterparts_8hpp_source.h
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;}</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l_html_gaef12e15ea458b62e7fe84929f927093e"><div class="ttname"><a href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#gaef12e15ea458b62e7fe84929f927093e">sl::nullables::requires</a></div><div class="ttdeci">requires requires(TNullable n, T a)</div><div class="ttdoc">Specialization which will be used instead if the value_or functions is present as a member of TNullab...</div><div class="ttdef"><b>Definition:</b> nullables.hpp:253</div></div>
-<div class="ttc" id="agroup___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s_html_ga06839fb251d8ad4b3f390d9d39e03ca0"><div class="ttname"><a href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga06839fb251d8ad4b3f390d9d39e03ca0">sl::concepts::assignable_to</a></div><div class="ttdeci">concept assignable_to</div><div class="ttdoc">Checks whether the target type is assignable from the source type.</div><div class="ttdef"><b>Definition:</b> stl_counterparts.hpp:50</div></div>
-<div class="ttc" id="agroup___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s_html_ga439237452668f6de8c858f2581a698c5"><div class="ttname"><a href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga439237452668f6de8c858f2581a698c5">sl::concepts::weakly_equality_comparable_with</a></div><div class="ttdeci">concept weakly_equality_comparable_with</div><div class="ttdoc">Checks whether a symmetrical set of operators == and != to compare both types with each other exists.</div><div class="ttdef"><b>Definition:</b> stl_counterparts.hpp:60</div></div>
-<div class="ttc" id="agroup___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s_html_ga6d88f2f46efbfef9ebca08d17acce7b0"><div class="ttname"><a href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#ga6d88f2f46efbfef9ebca08d17acce7b0">sl::concepts::initializes</a></div><div class="ttdeci">concept initializes</div><div class="ttdoc">Checks whether the target type is constructible from the source type.</div><div class="ttdef"><b>Definition:</b> stl_counterparts.hpp:41</div></div>
-<div class="ttc" id="agroup___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s_html_gaf618472341462fbaef7c51648221d889"><div class="ttname"><a href="../../d5/d1c/group___g_r_o_u_p___s_t_l___c_o_u_n_t_e_r_p_a_r_t___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889">sl::concepts::not_same_as</a></div><div class="ttdeci">concept not_same_as</div><div class="ttdoc">Checks whether the left-hand-side type is unequal to the right-hand-side type.</div><div class="ttdef"><b>Definition:</b> stl_counterparts.hpp:32</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l_html_ga0a1dc94618f94cdf926e226ddf139d8a"><div class="ttname"><a href="../../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html#ga0a1dc94618f94cdf926e226ddf139d8a">sl::nullables::requires</a></div><div class="ttdeci">requires(!detail::has_value_or_member&lt; TNullable, TAlt &gt;) struct value_or_func_t&lt; TNullable</div><div class="ttdoc">General algorithm implementation. May be specialized by users if necessary.</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s_html_ga06839fb251d8ad4b3f390d9d39e03ca0"><div class="ttname"><a href="../../dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#ga06839fb251d8ad4b3f390d9d39e03ca0">sl::concepts::assignable_to</a></div><div class="ttdeci">concept assignable_to</div><div class="ttdoc">Checks whether the target type is assignable from the source type.</div><div class="ttdef"><b>Definition:</b> stl_extensions.hpp:50</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s_html_ga439237452668f6de8c858f2581a698c5"><div class="ttname"><a href="../../dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#ga439237452668f6de8c858f2581a698c5">sl::concepts::weakly_equality_comparable_with</a></div><div class="ttdeci">concept weakly_equality_comparable_with</div><div class="ttdoc">Checks whether a symmetrical set of operators == and != to compare both types with each other exists.</div><div class="ttdef"><b>Definition:</b> stl_extensions.hpp:60</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s_html_ga6d88f2f46efbfef9ebca08d17acce7b0"><div class="ttname"><a href="../../dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#ga6d88f2f46efbfef9ebca08d17acce7b0">sl::concepts::initializes</a></div><div class="ttdeci">concept initializes</div><div class="ttdoc">Checks whether the target type is constructible from the source type.</div><div class="ttdef"><b>Definition:</b> stl_extensions.hpp:41</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s_html_gaf618472341462fbaef7c51648221d889"><div class="ttname"><a href="../../dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889">sl::concepts::not_same_as</a></div><div class="ttdeci">concept not_same_as</div><div class="ttdoc">Checks whether the left-hand-side type is unequal to the right-hand-side type.</div><div class="ttdef"><b>Definition:</b> stl_extensions.hpp:32</div></div>
 <div class="ttc" id="anamespacesl_1_1concepts_html"><div class="ttname"><a href="../../dd/d06/namespacesl_1_1concepts.html">sl::concepts</a></div><div class="ttdef"><b>Definition:</b> operators.hpp:15</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="../../dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="../../dir_6e0f4ef8b06c98cc225efcfd4d37205c.html">Simple-Utility</a></li><li class="navelem"><a class="el" href="../../dir_73c0ad15f2cd42ced3ce1dfbad7651e9.html">concepts</a></li><li class="navelem"><a class="el" href="../../d8/dc5/stl__counterparts_8hpp.html">stl_counterparts.hpp</a></li>
+    <li class="navelem"><a class="el" href="../../dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="../../dir_6e0f4ef8b06c98cc225efcfd4d37205c.html">Simple-Utility</a></li><li class="navelem"><a class="el" href="../../dir_73c0ad15f2cd42ced3ce1dfbad7651e9.html">concepts</a></li><li class="navelem"><a class="el" href="../../dd/d5c/stl__extensions_8hpp.html">stl_extensions.hpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1 </li>
   </ul>
 </div>

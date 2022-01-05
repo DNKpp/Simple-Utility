@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['is_5fvalid_173',['is_valid',['../da/da9/classsl_1_1unique__handle.html#a8f2246509b25463c6d0f23202858aa7d',1,'sl::unique_handle']]]
+  ['fwd_5fvalue_184',['fwd_value',['../da/d9b/classsl_1_1nullables_1_1fwd__value.html#a66eced7fad175869c523528fb4b1149b',1,'sl::nullables::fwd_value::fwd_value(TFunc func) noexcept'],['../da/d9b/classsl_1_1nullables_1_1fwd__value.html#adae84ef1890420b51d2887c521cb4951',1,'sl::nullables::fwd_value::fwd_value(const fwd_value &amp;)=delete'],['../da/d9b/classsl_1_1nullables_1_1fwd__value.html#a2b81e7891f19110c590d6d32fa4affc0',1,'sl::nullables::fwd_value::fwd_value(fwd_value &amp;&amp;)=delete']]]
 ];
