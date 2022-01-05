@@ -711,7 +711,9 @@ namespace sl::concepts
 	};
 
 	/**
-	* \defgroup access-operators access operators
+	* \defgroup GROUP_ACCESS_OPERATOR_CONCEPTS access operators
+	*
+	* \ingroup GROUP_CONCEPTS
 	* @{
 	*/
 
@@ -742,7 +744,7 @@ namespace sl::concepts
 	concept arrow_dereferencable = requires(T t) { t.operator ->(); };
 
 	/**
-	 * \brief Determines whether a type can be used in unary operator -> expressions and if the return type is convertible
+	 * \brief Determines whether a type can be used in operator -> expressions and if the return type is convertible
 	 * to the expected one.
 	 * \tparam T The type to check
 	 * \tparam TReturn The expected return type
@@ -751,6 +753,27 @@ namespace sl::concepts
 	concept arrow_dereferencable_r = requires(T t)
 	{
 		{ t.operator ->() } -> std::convertible_to<TReturn>;
+	};
+
+	/**
+	 * \brief Determines whether a type can be used in operator [] expressions.
+	 * \tparam T The type to check
+	 * \tparam TIndex The index type
+	 */
+	template <class T, class TIndex>
+	concept index_dereferencable = requires(T t, TIndex i) { t[i]; };
+
+	/**
+	 * \brief Determines whether a type can be used in operator -> expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TIndex The index type
+	 * \tparam TReturn The expected return type
+	 */
+	template <class T, class TIndex, class TReturn>
+	concept index_dereferencable_r = requires(T t, TIndex i)
+	{
+		{ t[i] } -> std::convertible_to<TReturn>;
 	};
 
 	/** @} */

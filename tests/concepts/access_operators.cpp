@@ -25,6 +25,11 @@ namespace
 		{
 			return {};
 		}
+
+		constexpr T operator [](int index)
+		{
+			return {};
+		}
 	};
 }
 
@@ -62,7 +67,7 @@ TEMPLATE_TEST_CASE_SIG
 #pragma warning(disable: 26444)
 TEMPLATE_TEST_CASE_SIG
 (
-	"arrow_dereferencable should determine if a type can be used in unary operator -> expressions.",
+	"arrow_dereferencable should determine if a type can be used in operator -> expressions.",
 	"[concepts][operators][access]",
 	((class T, bool VExpected), T, VExpected),
 	(int, false),
@@ -77,7 +82,7 @@ TEMPLATE_TEST_CASE_SIG
 #pragma warning(disable: 26444)
 TEMPLATE_TEST_CASE_SIG
 (
-	"arrow_dereferencable_r should determine if a type can be used in unary operator -> expressions and the return type is convertible to the expected type.",
+	"arrow_dereferencable_r should determine if a type can be used in operator -> expressions and the return type is convertible to the expected type.",
 	"[concepts][operators][access]",
 	((class T, class TReturn, bool VExpected), T, TReturn, VExpected),
 	(int, int, false),
@@ -88,4 +93,34 @@ TEMPLATE_TEST_CASE_SIG
 #pragma warning(default: 26444)
 {
 	STATIC_REQUIRE(arrow_dereferencable_r<T, TReturn> == VExpected);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_TEST_CASE_SIG
+(
+	"index_dereferencable should determine if a type can be used in operator [] expressions.",
+	"[concepts][operators][access]",
+	((class T, class TIndex, bool VExpected), T, TIndex, VExpected),
+	(int, int, false),
+	(target_t<int>, int, true),
+	(const target_t<int>, int, false)
+)
+#pragma warning(default: 26444)
+{
+	STATIC_REQUIRE(index_dereferencable<T, TIndex> == VExpected);
+}
+
+#pragma warning(disable: 26444)
+TEMPLATE_TEST_CASE_SIG
+(
+	"index_dereferencable should determine if a type can be used in operator [] expressions and the return type is convertible to the expected type.",
+	"[concepts][operators][access]",
+	((class T, class TIndex, class TReturn, bool VExpected), T, TIndex, TReturn, VExpected),
+	(int, int, int, false),
+	(target_t<int>, int, int, true),
+	(const target_t<int>, int, int, false)
+)
+#pragma warning(default: 26444)
+{
+	STATIC_REQUIRE(index_dereferencable_r<T, TIndex, TReturn> == VExpected);
 }
