@@ -363,37 +363,45 @@ namespace sl::nullables
 
 	/**
 	 * \brief Base type for the ``and_then`` algorithms. May be specialized.
-	 * \tparam TNullable  Type of the \ref sl::nullables::input_nullable "input_nullable"
-	 * \tparam TFunc Type of the passed function
+	 * \tparam TNullable  The decayed type of the \ref sl::nullables::input_nullable "input_nullable"
+	 * \tparam TFunc The decayed type of the passed function
 	 */
 	template <class TNullable, class TFunc>
 	struct and_then_func_t;
 
 	/**
 	 * \brief General algorithm implementation. May be specialized by users if necessary.
-	 * \tparam TNullable Type of the \ref sl::nullables::input_nullable "input_nullable"
-	 * \tparam TFunc Type of the passed function.
+	 * \tparam TNullable The decayed type of the \ref sl::nullables::input_nullable "input_nullable"
+	 * \tparam TFunc The decayed type of the passed function.
 	 */
 	template <input_nullable TNullable, class TFunc>
 	struct and_then_func_t<TNullable, TFunc>
 	{
-		static_assert
-		(
-			std::invocable<TFunc, detail::dereference_type_t<TNullable>>,
-			"TFunc must accept the value returned by TNullables as parameter."
-		);
-
-		using return_t = std::invoke_result_t<TFunc, detail::dereference_type_t<TNullable>>;
-		static_assert(nullable<return_t>, "TFunc must return a nullable type.");
-
+		/**
+		 * \brief Invoke operator
+		 * \tparam UNullable The actual \ref sl::nullables::input_nullable "input_nullable" type
+		 * \tparam UFunc The actual function type
+		 * \param closure The nullable object
+		 * \param func The functional object
+		 */
+		template <input_nullable UNullable, class UFunc>
 		[[nodiscard]]
-		constexpr return_t operator()(TNullable&& closure, TFunc func)
+		constexpr auto operator()(UNullable&& closure, UFunc&& func)
 		{
-			if (closure != nullable_null_v<TNullable>)
+			static_assert
+			(
+				std::invocable<UFunc, detail::dereference_type_t<UNullable>>,
+				"TFunc must accept the value returned by TNullables as parameter."
+			);
+
+			using return_t = std::invoke_result_t<UFunc, detail::dereference_type_t<UNullable>>;
+			static_assert(nullable<return_t>, "TFunc must return a nullable type.");
+
+			if (closure != nullable_null_v<UNullable>)
 			{
-				return std::invoke(func, value_unchecked(std::forward<TNullable>(closure)));
+				return std::invoke(std::forward<UFunc>(func), value_unchecked(std::forward<UNullable>(closure)));
 			}
-			return nullable_null_v<return_t>;
+			return return_t{ nullable_null_v<return_t> };
 		}
 	};
 
@@ -570,6 +578,15 @@ namespace sl::nullables
 		}
 
 		/**
+		 * \brief Deleted copy-constructor
+		 */
+		and_then(const and_then&) = delete;
+		/**
+		 * \brief Deleted copy-assign
+		 */
+		and_then& operator =(const and_then&) = delete;
+
+		/**
 		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::input_nullable "input_nullable" on the left side.
 		 * \tparam TNullable The \ref sl::nullables::input_nullable "input_nullable" type
 		 * \param closure The \ref sl::nullables::input_nullable "input_nullable" object
@@ -586,10 +603,10 @@ namespace sl::nullables
 			and_then&& andThen
 		)
 		{
-			return and_then_func_t<TNullable, std::reference_wrapper<TFunc>>{}
+			return and_then_func_t<std::remove_cvref_t<TNullable>, TFunc>{}
 			(
 				std::forward<TNullable>(closure),
-				std::ref(andThen.m_Func)
+				andThen.m_Func
 			);
 		}
 

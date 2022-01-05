@@ -490,6 +490,39 @@ TEST_CASE("and_then should be usable in chains", "[nullables][algorithm]")
 	}
 }
 
+TEST_CASE("and_then should forward value", "[nullables][algorithm]")
+{
+	using namespace sl::nullables;
+
+	int copy_counter{};
+	int move_counter{};
+	std::optional<value_mock_t> opt{ std::in_place, copy_counter, move_counter };
+
+	SECTION("when nullable is passed as lvalue ref")
+	{
+		const auto result = opt | and_then{[](value_mock_t& val){ return std::optional{ val }; } };
+
+		REQUIRE(copy_counter == 1);
+		REQUIRE(move_counter == 0);
+	}
+
+	SECTION("when nullable is passed as const lvalue ref")
+	{
+		const auto result = std::as_const(opt) | and_then{ [](const value_mock_t& val){ return std::optional{ val }; } };
+
+		REQUIRE(copy_counter == 1);
+		REQUIRE(move_counter == 0);
+	}
+
+	SECTION("when nullable is passed as rvalue ref")
+	{
+		const auto result = std::move(opt) | and_then{ [](value_mock_t&& val){ return std::optional{ std::move(val) }; } };
+
+		REQUIRE(copy_counter == 0);
+		REQUIRE(move_counter == 1);
+	}
+}
+
 TEST_CASE("value_or minimal requirements should be satisfied by input_nullable", "[nullables][algorithm]")
 {
 	using sl::nullables::value_or;
