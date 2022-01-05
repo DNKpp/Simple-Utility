@@ -28,11 +28,12 @@ namespace sl::nullables
 	 * - and ``raw pointers``
 	 *
 	 * The general idea is making the handling with types e.g. ``std::optional`` less verbose and more enjoyable. The syntax is inspired by
-	 * the ``std::ranges`` library.
+	 * the ``std::ranges`` library and [this proposal](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2021/p0798r8.html).
 	 * If you would like to learn more about an algorithm, just visit the specific sub-page:
 	 *	- \ref sl::nullables::or_else "or_else"
 	 *	- \ref sl::nullables::and_then "and_then"
 	 *	- \ref sl::nullables::value_or "value_or"
+	 *	- \ref sl::nullables::fwd_value "fwd_value"
 	 *
 	 * ## Working with movable types
 	 * If you have an object which you would like to move into the algorithm chain, either because its non-copyable or its simply more performant,
@@ -58,6 +59,7 @@ namespace sl::nullables
 	 *	- \ref sl::nullables::value_or_func_t "value_or_func_t"
 	 *	- \ref sl::nullables::value_or_func_t "and_then_func_t"
 	 *	- \ref sl::nullables::value_or_func_t "or_else_func_t"
+	 *	- \ref sl::nullables::fwd_value_func_t "fwd_value_func_t"
 	 *
 	 *	#### Example: How to make a type ready as nullable
 	 *	Given a type which you can not adjust (here ``your_type``, which is quite similar to ``std::optional``), which you would like to use with
@@ -701,6 +703,7 @@ namespace sl::nullables
 	 * "value_unchecked".
 	 *
 	 * \details This algorithm uses the actual value of a \ref sl::nullables::input_nullable "input_nullable" and passes it to the given functional.
+	 * If the \ref sl::nullables::input_nullable "input_nullable" compares equal to its ``null``-object, nothing happens.
 	 *
 	 * \note In the following examples the outcome is always presented within the ``REQUIRE()`` statement.
 	 *
