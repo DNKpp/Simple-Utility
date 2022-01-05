@@ -379,6 +379,39 @@ TEST_CASE("or_else may also return void", "[nullables][algorithm]")
 	}
 }
 
+TEST_CASE("or_else should forward value", "[nullables][algorithm]")
+{
+	using namespace sl::nullables;
+
+	int copy_counter{};
+	int move_counter{};
+	std::optional<value_mock_t> opt{ std::in_place, copy_counter, move_counter };
+
+	SECTION("when nullable is passed as lvalue ref")
+	{
+		const auto result = opt | or_else{ []{} };
+
+		REQUIRE(copy_counter == 1);
+		REQUIRE(move_counter == 0);
+	}
+
+	SECTION("when nullable is passed as const lvalue ref")
+	{
+		const auto result = std::as_const(opt) | or_else{ []{} };
+
+		REQUIRE(copy_counter == 1);
+		REQUIRE(move_counter == 0);
+	}
+
+	SECTION("when nullable is passed as rvalue ref")
+	{
+		const auto result = std::move(opt) | or_else{ []{} };
+
+		REQUIRE(copy_counter == 0);
+		REQUIRE(move_counter == 1);
+	}
+}
+
 TEST_CASE("and_then minimal requirements should be satisfied by input_nullable", "[nullables][algorithm]")
 {
 	using sl::nullables::and_then;

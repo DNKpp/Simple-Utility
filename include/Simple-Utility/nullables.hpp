@@ -312,44 +312,51 @@ namespace sl::nullables
 
 	/**
 	 * \brief Base type for the ``or_else`` algorithms. May be specialized.
-	 * \tparam TNullable  Type of the \ref sl::nullables::nullable "nullable"
-	 * \tparam TFunc Type of the passed function
+	 * \tparam TNullable The decayed type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam TFunc The decayed type of the passed function
 	 */
 	template <class TNullable, class TFunc>
 	struct or_else_func_t;
 
 	/**
 	 * \brief General algorithm implementation. May be specialized by users if necessary.
-	 * \tparam TNullable Type of the \ref sl::nullables::nullable "nullable"
-	 * \tparam TFunc Type of the passed function.
+	 * \tparam TNullable The decayed type of the \ref sl::nullables::nullable "nullable"
+	 * \tparam TFunc The decayed type of the passed function
 	 */
 	template <nullable TNullable, std::invocable TFunc>
-		requires std::constructible_from<std::remove_cvref_t<TNullable>, TNullable>
 	struct or_else_func_t<TNullable, TFunc>
 	{
-		[[nodiscard]]
-		constexpr std::remove_cvref_t<TNullable> operator()(TNullable&& closure, TFunc func)
-		{
-			static_assert
-			(
-				std::constructible_from<std::remove_cvref_t<TNullable>, std::invoke_result_t<TFunc>>
-				|| std::same_as<void, std::invoke_result_t<TFunc>>,
-				"Func return type must be either void or initialize the std::remove_cvref_t<TNullable> type."
-			);
+		static_assert
+		(
+			std::constructible_from<TNullable, std::invoke_result_t<TFunc>>
+			|| std::same_as<void, std::invoke_result_t<TFunc>>,
+			"TFunc return type must be either void or initialize the TNullable type."
+		);
 
-			if (closure != nullable_null_v<TNullable>)
+		/**
+		 * \brief Invoke operator
+		 * \tparam UNullable The actual \ref sl::nullables::input_nullable "input_nullable" type
+		 * \tparam UFunc The actual function type
+		 * \param closure The nullable object
+		 * \param func The functional object
+		 */
+		template <input_nullable UNullable, class UFunc>
+		[[nodiscard]]
+		constexpr TNullable operator()(UNullable&& closure, UFunc&& func)
+		{
+			if (closure != nullable_null_v<UNullable>)
 			{
-				return std::forward<TNullable>(closure);
+				return std::forward<UNullable>(closure);
 			}
 
-			if constexpr (std::same_as<void, std::invoke_result_t<TFunc>>)
+			if constexpr (std::same_as<void, std::invoke_result_t<UFunc>>)
 			{
-				std::invoke(func);
-				return nullable_null_v<TNullable>;
+				std::invoke(std::forward<UFunc>(func));
+				return nullable_null_v<UNullable>;
 			}
 			else
 			{
-				return std::invoke(func);
+				return std::invoke(std::forward<UFunc>(func));
 			}
 		}
 	};
@@ -460,6 +467,75 @@ namespace sl::nullables
 	value_or(T&&) -> value_or<T>;
 
 	/**
+	 * \brief Returns the \ref sl::nullables::nullable "nullable" if it's not equal to its ''null''-object. Executes the passed function otherwise.
+	 * \tparam TFunc The type of the passed function. The return type must be either ```void`` or such that it can be
+	 * used to initialize a new object of type ``std::remove_cvref_t<TNullable>``.
+	 *
+	 * \details This algorithm simply forwards the \ref sl::nullables::nullable "nullable" if it compares unequal to its ``null``-object.
+	 * Otherwise the passed function will be called and the returned value initializes a new \ref sl::nullables::nullable "nullable"-object of the same type.
+	 * If the functions return type is ``void``, the ``null``-object of that \ref sl::nullables::nullable "nullable"-type will be returned instead.
+	 *
+	 * \note In the following examples the outcome is always presented within the ``REQUIRE()`` statement.
+	 * 
+	 * This example shows what happens when a valid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression.
+	 * \snippet nullables.cpp or_else valid copyable
+	 * \---
+	 * 
+	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression and the functional has a
+	 * return type other than ``void``.
+	 * \snippet nullables.cpp or_else invalid value non-void return copyable
+	 * \---
+	 * 
+	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression and the functional does not
+	 * return anything.
+	 * \snippet nullables.cpp or_else invalid value void return copyable
+	 */
+	template <std::invocable TFunc>
+	class or_else
+	{
+	public:
+		/**
+		 * \brief Constructor awaiting a function object
+		 * \param func The function object
+		 */
+		explicit constexpr or_else(TFunc func) noexcept
+			: m_Func{ std::move(func) }
+		{
+		}
+
+		/**
+		 * \brief Deleted copy-constructor
+		 */
+		or_else(const or_else&) = delete;
+		/**
+		 * \brief Deleted copy-assign
+		 */
+		or_else& operator =(const or_else&) = delete;
+
+		/**
+		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::nullable "nullable" on the left side.
+		 * \tparam TNullable The \ref sl::nullables::nullable "nullable" type
+		 * \param closure The \ref sl::nullables::nullable "nullable" object
+		 * \param orElse The algorithm object
+		 * \return Returns either the \ref sl::nullables::nullable "nullable" or the invocation result of the function. If the function has
+		 * a ``void`` return type then a the ``null``-object of the given \ref sl::nullables::nullable "nullable" will be returned.
+		 */
+		template <nullable TNullable>
+		[[nodiscard]]
+		friend constexpr std::remove_cvref_t<TNullable> operator |(TNullable&& closure, or_else&& orElse)
+		{
+			return or_else_func_t<std::remove_cvref_t<TNullable>, TFunc>{}
+			(
+				std::forward<TNullable>(closure),
+				std::ref(orElse.m_Func)
+			);
+		}
+
+	private:
+		TFunc m_Func;
+	};
+
+	/**
 	 * \brief Passes the value of the \ref sl::nullables::input_nullable "input_nullable" to the function if it's not equal to its ``null``-object.
 	 * Returns the ``null``-object otherwise.
 	 * \tparam TFunc The type of the passed function. The function should be invokable with types returned by \ref sl::nullables::value_unchecked
@@ -514,66 +590,6 @@ namespace sl::nullables
 			(
 				std::forward<TNullable>(closure),
 				std::ref(andThen.m_Func)
-			);
-		}
-
-	private:
-		TFunc m_Func;
-	};
-
-	/**
-	 * \brief Returns the \ref sl::nullables::nullable "nullable" if it's not equal to its ''null''-object. Executes the passed function otherwise.
-	 * \tparam TFunc The type of the passed function. The return type must be either ```void`` or such that it can be
-	 * used to initialize a new object of type ``std::remove_cvref_t<TNullable>``.
-	 *
-	 * \details This algorithm simply forwards the \ref sl::nullables::nullable "nullable" if it compares unequal to its ``null``-object.
-	 * Otherwise the passed function will be called and the returned value initializes a new \ref sl::nullables::nullable "nullable"-object of the same type.
-	 * If the functions return type is ``void``, the ``null``-object of that \ref sl::nullables::nullable "nullable"-type will be returned instead.
-	 *
-	 * \note In the following examples the outcome is always presented within the ``REQUIRE()`` statement.
-	 * 
-	 * This example shows what happens when a valid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression.
-	 * \snippet nullables.cpp or_else valid copyable
-	 * \---
-	 * 
-	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression and the functional has a
-	 * return type other than ``void``.
-	 * \snippet nullables.cpp or_else invalid value non-void return copyable
-	 * \---
-	 * 
-	 * This example shows what happens when an invalid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression and the functional does not
-	 * return anything.
-	 * \snippet nullables.cpp or_else invalid value void return copyable
-	 */
-	template <std::invocable TFunc>
-	class or_else
-	{
-	public:
-		/**
-		 * \brief Constructor awaiting a function object
-		 * \param func The function object
-		 */
-		explicit constexpr or_else(TFunc func) noexcept
-			: m_Func{ std::move(func) }
-		{
-		}
-
-		/**
-		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::nullable "nullable" on the left side.
-		 * \tparam TNullable The \ref sl::nullables::nullable "nullable" type
-		 * \param closure The \ref sl::nullables::nullable "nullable" object
-		 * \param orElse The algorithm object
-		 * \return Returns either the \ref sl::nullables::nullable "nullable" or the invocation result of the function. If the function has
-		 * a ``void`` return type then a the ``null``-object of the given \ref sl::nullables::nullable "nullable" will be returned.
-		 */
-		template <nullable TNullable>
-		[[nodiscard]]
-		friend constexpr std::remove_cvref_t<TNullable> operator |(TNullable&& closure, or_else&& orElse)
-		{
-			return or_else_func_t<TNullable, std::reference_wrapper<TFunc>>{}
-			(
-				std::forward<TNullable>(closure),
-				std::ref(orElse.m_Func)
 			);
 		}
 
