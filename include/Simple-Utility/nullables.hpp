@@ -405,6 +405,45 @@ namespace sl::nullables
 		}
 	};
 
+	/**
+	 * \brief Base type for the ``fwd_value`` algorithms. May be specialized.
+	 * \tparam TNullable  The decayed type of the \ref sl::nullables::input_nullable "input_nullable"
+	 * \tparam TFunc The decayed type of the passed function
+	 */
+	template <class TNullable, class TFunc>
+	struct fwd_value_func_t;
+
+	/**
+	 * \brief General algorithm implementation. May be specialized by users if necessary.
+	 * \tparam TNullable The decayed type of the \ref sl::nullables::input_nullable "input_nullable"
+	 * \tparam TFunc The decayed type of the passed function.
+	 */
+	template <input_nullable TNullable, class TFunc>
+	struct fwd_value_func_t<TNullable, TFunc>
+	{
+		/**
+		 * \brief Invoke operator
+		 * \tparam UNullable The actual \ref sl::nullables::input_nullable "input_nullable" type
+		 * \tparam UFunc The actual function type
+		 * \param closure The nullable object
+		 * \param func The functional object
+		 */
+		template <input_nullable UNullable, class UFunc>
+		constexpr void operator()(UNullable&& closure, UFunc&& func)
+		{
+			static_assert
+			(
+				std::invocable<UFunc, detail::dereference_type_t<UNullable>>,
+				"TFunc must accept the value returned by TNullables as parameter."
+			);
+
+			if (closure != nullable_null_v<UNullable>)
+			{
+				return std::invoke(std::forward<UFunc>(func), value_unchecked(std::forward<UNullable>(closure)));
+			}
+		}
+	};
+
 	/** @} */
 
 	/**
@@ -607,6 +646,78 @@ namespace sl::nullables
 			(
 				std::forward<TNullable>(closure),
 				andThen.m_Func
+			);
+		}
+
+	private:
+		TFunc m_Func;
+	};
+
+	/**
+	 * \brief Passes the value of the \ref sl::nullables::input_nullable "input_nullable" to the function if it's not equal to its ``null``-object.
+	 * \tparam TFunc The type of the passed function. The function should be invokable with types returned by \ref sl::nullables::value_unchecked
+	 * "value_unchecked".
+	 *
+	 * \details This algorithm uses the actual value of a \ref sl::nullables::input_nullable "input_nullable" and passes it to the given functional.
+	 *
+	 * \note In the following examples the outcome is always presented within the ``REQUIRE()`` statement.
+	 *
+	 * This example shows what happens when a valid \ref sl::nullables::input_nullable "input_nullable" is used in a ``fwd_value`` expression.
+	 * \snippet nullables.cpp fwd_value valid copyable
+	 *
+	 *
+	 * This example shows what happens when an invalid \ref sl::nullables::input_nullable "input_nullable" is used in a ``fwd_value`` expression.
+	 * \snippet nullables.cpp fwd_value invalid copyable
+	 */
+	template <class TFunc>
+	class fwd_value
+	{
+	public:
+		/**
+		 * \brief Constructor awaiting an functional object
+		 * \param func The passed functional object
+		 */
+		explicit constexpr fwd_value(TFunc func) noexcept
+			: m_Func{ std::move(func) }
+		{
+		}
+
+		/**
+		 * \brief Default destructor
+		 */
+		constexpr ~fwd_value() noexcept = default;
+
+		/**
+		 * \brief Deleted copy-constructor
+		 */
+		fwd_value(const fwd_value&) = delete;
+		/**
+		 * \brief Deleted copy-assign
+		 */
+		fwd_value& operator =(const fwd_value&) = delete;
+
+		/**
+		 * \brief Deleted move-constructor
+		 */
+		fwd_value(fwd_value&&) = delete;
+		/**
+		 * \brief Deleted move-assign
+		 */
+		fwd_value& operator =(fwd_value&&) = delete;
+
+		/**
+		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::input_nullable "input_nullable" on the left side.
+		 * \tparam TNullable The \ref sl::nullables::input_nullable "input_nullable" type
+		 * \param closure The \ref sl::nullables::input_nullable "input_nullable" object
+		 * \param fwdValue The algorithm object
+		 */
+		template <input_nullable TNullable>
+		friend constexpr void operator |(TNullable&& closure, fwd_value&& fwdValue)
+		{
+			return fwd_value_func_t<std::remove_cvref_t<TNullable>, TFunc>{}
+			(
+				std::forward<TNullable>(closure),
+				fwdValue.m_Func
 			);
 		}
 

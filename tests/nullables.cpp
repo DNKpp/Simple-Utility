@@ -863,6 +863,35 @@ TEST_CASE("value_or usage example with copyable types", "[nullables][algorithm][
 	}
 }
 
+TEST_CASE("fwd_value usage example with copyable types", "[nullables][algorithm][example]")
+{
+	SECTION("fwd_value does nothing if the nullable is invalid.")
+	{
+		//! [fwd_value invalid copyable]
+		namespace sn = sl::nullables;
+
+		int result{ 42 };
+		std::optional<int> opt{ std::nullopt };
+		opt | sn::fwd_value{ [&result](int value){ result = value; } };
+
+		REQUIRE(result == 42);
+		//! [fwd_value invalid copyable]
+	}
+
+	SECTION("value_or returns the value if the nullable is invalid.")
+	{
+		//! [fwd_value valid copyable]
+		namespace sn = sl::nullables;
+
+		int result{ 42 };
+		std::optional<int> opt{ 1337 };
+		opt | sn::fwd_value{ [&result](int value){ result = value; } };
+
+		REQUIRE(result == 1337);
+		//! [fwd_value valid copyable]
+	}
+}
+
 namespace
 {
 	sl::unique_handle<int> exec_transaction(std::string key)
