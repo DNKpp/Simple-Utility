@@ -18,6 +18,57 @@
 
 namespace
 {
+	class value_mock_t
+	{
+	public:
+		constexpr value_mock_t() noexcept = default;
+		constexpr ~value_mock_t() noexcept = default;
+
+		constexpr value_mock_t(int& copy_counter, int& move_counter) noexcept
+			: copy_counter{ &copy_counter },
+			move_counter{ &move_counter }
+		{
+		}
+
+		constexpr value_mock_t(const value_mock_t& other) noexcept
+			: copy_counter{ other.copy_counter },
+			move_counter{ other.move_counter }
+		{
+			if (copy_counter)
+				++*copy_counter;
+		}
+
+		constexpr value_mock_t& operator =(const value_mock_t& other) noexcept
+		{
+			move_counter = other.move_counter;
+			copy_counter = other.copy_counter;
+			if (copy_counter)
+				++*copy_counter;
+			return *this;
+		}
+
+		constexpr value_mock_t(value_mock_t&& other) noexcept
+			: copy_counter{ other.copy_counter },
+			move_counter{ other.move_counter }
+		{
+			if (move_counter)
+				++*move_counter;
+		}
+
+		constexpr value_mock_t& operator =(value_mock_t&& other) noexcept
+		{
+			move_counter = other.move_counter;
+			copy_counter = other.copy_counter;
+			if (move_counter)
+				++*move_counter;
+			return *this;
+		}
+
+	private:
+		int* copy_counter{};
+		int* move_counter{};
+	};
+
 	struct input_nullable_target_t
 	{
 		int x{};
@@ -456,6 +507,39 @@ TEST_CASE("value_or should favor member function of std::optional", "[nullables]
 	std::string result = std::move(opt) | value_or{ "empty" };
 
 	// Don't know how to actually test if overload has been taken, thus it's simply a compile check for now
+}
+
+TEST_CASE("value_or should forward value", "[nullables][algorithm]")
+{
+	using namespace sl::nullables;
+
+	int copy_counter{};
+	int move_counter{};
+	std::optional<value_mock_t> opt{ std::in_place, copy_counter, move_counter };
+
+	SECTION("when nullable is passed as lvalue ref")
+	{
+		const auto result = opt | value_or{ value_mock_t{} };
+
+		REQUIRE(copy_counter == 1);
+		REQUIRE(move_counter == 0);
+	}
+
+	SECTION("when nullable is passed as const lvalue ref")
+	{
+		const auto result = std::as_const(opt) | value_or{ value_mock_t{} };
+
+		REQUIRE(copy_counter == 1);
+		REQUIRE(move_counter == 0);
+	}
+
+	SECTION("when nullable is passed as rvalue ref")
+	{
+		const auto result = std::move(opt) | value_or{ value_mock_t{} };
+
+		REQUIRE(copy_counter == 0);
+		REQUIRE(move_counter == 1);
+	}
 }
 
 TEST_CASE("nullable algorithms should be usable in chains", "[nullables][algorithm]")

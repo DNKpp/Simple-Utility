@@ -243,51 +243,70 @@ namespace sl::nullables
 
 	/**
 	 * \brief Base type for the ``value_or`` algorithms. May be specialized.
-	 * \tparam TNullable Type of the \ref sl::nullables::input_nullable "input_nullable"
-	 * \tparam T Type of the alternative.
+	 * \tparam TNullable The decayed type of the \ref sl::nullables::input_nullable "input_nullable"
+	 * \tparam TAlt The decayed type of the alternative. 
 	 */
-	template <class TNullable, class T>
+	template <class TNullable, class TAlt>
 	struct value_or_func_t;
 
 	/**
 	 * \brief Specialization which will be used instead if the ``value_or`` functions is present as a member of ``TNullable`` type.
-	 * \tparam TNullable Type of the \ref sl::nullables::input_nullable "input_nullable"
-	 * \tparam T Type of the alternative.
+	 * \tparam TNullable The decayed type of the \ref sl::nullables::input_nullable "input_nullable"
+	 * \tparam TAlt The decayed type of the alternative. 
 	 */
-	template <input_nullable TNullable, class T>
-		requires detail::has_value_or_member<TNullable, T>
-	struct value_or_func_t<TNullable, T>
+	template <input_nullable TNullable, class TAlt>
+		requires detail::has_value_or_member<TNullable, TAlt>
+	struct value_or_func_t<TNullable, TAlt>
 	{
+		/**
+		 * \brief Invoke operator
+		 * \tparam UNullable The actual \ref sl::nullables::input_nullable "input_nullable" type
+		 * \tparam UAlt The actual alternative type
+		 * \param closure The nullable object
+		 * \param alternative The alternative object
+		 * \return Returns the invocation result of the ``value_or`` member function.
+		 */
+		template <input_nullable UNullable, class UAlt>
 		[[nodiscard]]
-		constexpr decltype(auto) operator()(TNullable&& closure, T&& alternative)
+		constexpr decltype(auto) operator()(UNullable&& closure, UAlt&& alternative)
 		{
-			return std::forward<TNullable>(closure).value_or(std::forward<T>(alternative));
+			return std::forward<UNullable>(closure).value_or(std::forward<UAlt>(alternative));
 		}
 	};
 
 	/**
 	 * \brief General algorithm implementation. May be specialized by users if necessary.
-	 * \tparam TNullable Type of the \ref sl::nullables::input_nullable "input_nullable"
-	 * \tparam T Type of the alternative. Must initialize ``nullable_value_t<TNullable>``
+	 * \tparam TNullable The decayed type of the \ref sl::nullables::input_nullable "input_nullable"
+	 * \tparam TAlt The decayed type of the alternative. Must initialize ``nullable_value_t<TNullable>``
 	 */
-	template <input_nullable TNullable, class T>
-		requires (!detail::has_value_or_member<TNullable, T>)
-	struct value_or_func_t<TNullable, T>
+	template <input_nullable TNullable, class TAlt>
+		requires (!detail::has_value_or_member<TNullable, TAlt>)
+	struct value_or_func_t<TNullable, TAlt>
 	{
 		static_assert
 		(
-			concepts::initializes<T, nullable_value_t<TNullable>>,
+			concepts::initializes<TAlt, nullable_value_t<TNullable>>,
 			"The alternative must be usable to initialize a nullable_value_t<TNullable> value."
 		);
 
+		/**
+		 * \brief Invoke operator
+		 * \tparam UNullable The actual \ref sl::nullables::input_nullable "input_nullable" type
+		 * \tparam UAlt The actual alternative type
+		 * \param closure The nullable object
+		 * \param alternative The alternative object
+		 * \return Returns the either the \ref sl::nullables::input_nullable "input_nullable" value
+		 * or the forwarded alternative.
+		 */
+		template <input_nullable UNullable, class UAlt>
 		[[nodiscard]]
-		constexpr nullable_value_t<TNullable> operator()(TNullable&& closure, T&& alternative)
+		constexpr nullable_value_t<TNullable> operator()(UNullable&& closure, UAlt&& alternative)
 		{
-			if (closure != nullable_null_v<TNullable>)
+			if (closure != nullable_null_v<UNullable>)
 			{
-				return value_unchecked(std::forward<TNullable>(closure));
+				return value_unchecked(std::forward<UNullable>(closure));
 			}
-			return std::forward<T>(alternative);
+			return std::forward<UAlt>(alternative);
 		}
 	};
 
@@ -397,7 +416,7 @@ namespace sl::nullables
 		 * \brief Constructor awaiting an alternative value
 		 * \param alternative The passed alternative value
 		 */
-		explicit constexpr value_or(T&& alternative) noexcept
+		explicit constexpr value_or(T alternative) noexcept
 			: m_Alternative{ std::forward<T>(alternative) }
 		{
 		}
@@ -413,7 +432,7 @@ namespace sl::nullables
 		[[nodiscard]]
 		friend constexpr nullable_value_t<TNullable> operator |(TNullable&& closure, value_or&& valueOr)
 		{
-			return value_or_func_t<TNullable, T>{}
+			return value_or_func_t<std::remove_cvref_t<TNullable>, std::remove_cvref_t<T>>{}
 			(
 				std::forward<TNullable>(closure),
 				std::forward<T>(valueOr.m_Alternative)
@@ -429,7 +448,7 @@ namespace sl::nullables
 	 * \tparam T The type of the alternative
 	 */
 	template <class T>
-	value_or(T&&) -> value_or<T&&>;
+	value_or(T&&) -> value_or<T>;
 
 	/**
 	 * \brief Passes the value of the \ref sl::nullables::input_nullable "input_nullable" to the function if it's not equal to its ``null``-object.
