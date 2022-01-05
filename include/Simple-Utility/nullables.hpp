@@ -422,6 +422,15 @@ namespace sl::nullables
 		}
 
 		/**
+		 * \brief Deleted copy-constructor
+		 */
+		value_or(const value_or&) = delete;
+		/**
+		 * \brief Deleted copy-assign
+		 */
+		value_or& operator =(const value_or&) = delete;
+
+		/**
 		 * \brief Operator which let the algorithm operate on the \ref sl::nullables::input_nullable "input_nullable" on the left side.
 		 * \tparam TNullable The \ref sl::nullables::input_nullable "input_nullable" type
 		 * \param closure The \ref sl::nullables::input_nullable "input_nullable" object
