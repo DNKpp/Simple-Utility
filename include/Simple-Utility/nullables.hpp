@@ -240,9 +240,7 @@ namespace sl::nullables
 	 * \tparam T Type of the alternative.
 	 */
 	template <class TNullable, class T>
-	struct value_or_func_t
-	{
-	};
+	struct value_or_func_t;
 
 	/**
 	 * \brief Specialization which will be used instead if the ``value_or`` functions is present as a member of ``TNullable`` type.
@@ -298,9 +296,7 @@ namespace sl::nullables
 	 * \tparam TFunc Type of the passed function
 	 */
 	template <class TNullable, class TFunc>
-	struct or_else_func_t
-	{
-	};
+	struct or_else_func_t;
 
 	/**
 	 * \brief General algorithm implementation. May be specialized by users if necessary.
@@ -344,9 +340,7 @@ namespace sl::nullables
 	 * \tparam TFunc Type of the passed function
 	 */
 	template <class TNullable, class TFunc>
-	struct and_then_func_t
-	{
-	};
+	struct and_then_func_t;
 
 	/**
 	 * \brief General algorithm implementation. May be specialized by users if necessary.
