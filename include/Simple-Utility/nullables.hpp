@@ -599,10 +599,10 @@ namespace sl::nullables
 		[[nodiscard]]
 		friend constexpr std::remove_cvref_t<TNullable> operator |(TNullable&& closure, or_else&& orElse)
 		{
-			return or_else_func_t<std::remove_cvref_t<TNullable>, TFunc>{}
+			return or_else_func_t<std::remove_cvref_t<TNullable>, std::remove_cvref_t<TFunc>>{}
 			(
 				std::forward<TNullable>(closure),
-				std::ref(orElse.m_Func)
+				orElse.m_Func
 			);
 		}
 
@@ -684,7 +684,7 @@ namespace sl::nullables
 			and_then&& andThen
 		)
 		{
-			return and_then_func_t<std::remove_cvref_t<TNullable>, TFunc>{}
+			return and_then_func_t<std::remove_cvref_t<TNullable>, std::remove_cvref_t<TFunc>>{}
 			(
 				std::forward<TNullable>(closure),
 				andThen.m_Func
@@ -756,7 +756,7 @@ namespace sl::nullables
 		template <input_nullable TNullable>
 		friend constexpr void operator |(TNullable&& closure, fwd_value&& fwdValue)
 		{
-			return fwd_value_func_t<std::remove_cvref_t<TNullable>, TFunc>{}
+			return fwd_value_func_t<std::remove_cvref_t<TNullable>, std::remove_cvref_t<TFunc>>{}
 			(
 				std::forward<TNullable>(closure),
 				fwdValue.m_Func
