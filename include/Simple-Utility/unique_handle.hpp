@@ -1,8 +1,3 @@
-//          Copyright Dominic Koepke 2019 - 2022.
-// Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          https://www.boost.org/LICENSE_1_0.txt)
-
 #ifndef SL_UNIQUE_HANDLE_HPP
 #define SL_UNIQUE_HANDLE_HPP
 
@@ -101,8 +96,7 @@ namespace sl
 	 */
 	// ReSharper disable once IdentifierTypo
 	struct nullhandle_t
-	{
-	};
+	{ };
 
 	/**
 	 * \brief an object of type nullhandle_t
@@ -124,8 +118,7 @@ namespace sl
 		 * \brief Empty invoke operator
 		 */
 		constexpr void operator ()(auto&) const noexcept
-		{
-		}
+		{ }
 	};
 
 	namespace detail
@@ -193,12 +186,11 @@ namespace sl
 		SL_UNIQUE_HANDLE_FULL_CONSTEXPR unique_handle
 		(
 			unique_handle&& other
-		) noexcept(noexcept(std::is_nothrow_move_constructible_v<T>
-							&& std::is_nothrow_copy_constructible_v<TDeleteAction>))
+		) noexcept(std::is_nothrow_move_constructible_v<T>
+					&& std::is_nothrow_copy_constructible_v<TDeleteAction>)
 			: m_Value{ std::exchange(other.m_Value, std::nullopt) },
 			m_DeleteAction{ other.m_DeleteAction }
-		{
-		}
+		{ }
 
 		/**
 		 * \brief Move assignment, which relocates the ownership of the value to the target and resets the source. Delete actions will be copied.
@@ -208,10 +200,10 @@ namespace sl
 		SL_UNIQUE_HANDLE_FULL_CONSTEXPR unique_handle& operator =
 		(
 			unique_handle&& other
-		) noexcept(noexcept(std::is_nothrow_move_constructible_v<T>
-							&& std::is_nothrow_move_assignable_v<T>
-							&& std::is_nothrow_copy_constructible_v<TDeleteAction>
-							&& std::is_nothrow_copy_assignable_v<TDeleteAction>))
+		) noexcept(std::is_nothrow_move_constructible_v<T>
+					&& std::is_nothrow_move_assignable_v<T>
+					&& std::is_nothrow_copy_constructible_v<TDeleteAction>
+					&& std::is_nothrow_copy_assignable_v<TDeleteAction>)
 		{
 			if (this != &other)
 			{
@@ -230,10 +222,10 @@ namespace sl
 		constexpr void swap
 		(
 			unique_handle& other
-		) noexcept(noexcept(std::is_nothrow_move_constructible_v<T>
-							&& std::is_nothrow_swappable_v<T>
-							&& std::is_nothrow_move_constructible_v<TDeleteAction>
-							&& std::is_nothrow_swappable_v<TDeleteAction>))
+		) noexcept(std::is_nothrow_move_constructible_v<T>
+					&& std::is_nothrow_swappable_v<T>
+					&& std::is_nothrow_move_constructible_v<TDeleteAction>
+					&& std::is_nothrow_swappable_v<TDeleteAction>)
 		{
 			using std::swap;
 
@@ -259,8 +251,7 @@ namespace sl
 		constexpr unique_handle(nullhandle_t, const delete_action_type& deleteAction = delete_action_type()) noexcept
 			: m_Value{ std::nullopt },
 			m_DeleteAction{ deleteAction }
-		{
-		}
+		{ }
 
 		/**
 		 * \brief Explicitly resets the value and invokes the delete action if value was initialized.
@@ -280,8 +271,7 @@ namespace sl
 		constexpr unique_handle(const delete_action_type& deleteAction) noexcept
 			: m_Value{ std::nullopt },
 			m_DeleteAction{ deleteAction }
-		{
-		}
+		{ }
 
 		/**
 		 * \brief Constructor overload for initializing the value.
@@ -296,8 +286,7 @@ namespace sl
 		constexpr unique_handle(T2&& value, const delete_action_type& deleteAction = delete_action_type{})
 			: m_Value{ std::forward<T2>(value) },
 			m_DeleteAction{ deleteAction }
-		{
-		}
+		{ }
 
 		/**
 		 * \brief Assignment operator overload for assigning the value.
@@ -326,8 +315,7 @@ namespace sl
 			requires std::constructible_from<T, TArgs...>
 		constexpr explicit unique_handle(std::in_place_t, TArgs&&... args)
 			: m_Value{ std::in_place, std::forward<TArgs>(args)... }
-		{
-		}
+		{ }
 
 		/**
 		 * \brief Constructor overload for directly initializing the value with a set of arguments and also initializing
@@ -341,8 +329,7 @@ namespace sl
 		constexpr explicit unique_handle(std::in_place_t, const delete_action_type& deleteAction, TArgs&&... args)
 			: m_Value{ std::in_place, std::forward<TArgs>(args)... },
 			m_DeleteAction{ deleteAction }
-		{
-		}
+		{ }
 
 		/**
 		 * \brief Constructor overload for directly initializing the value with a set of arguments.
