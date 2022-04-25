@@ -5,6 +5,7 @@
 
 #include <compare>
 #include <concepts>
+#include <functional>
 #include <optional>
 
 #include "Simple-Utility/concepts/stl_extensions.hpp"
