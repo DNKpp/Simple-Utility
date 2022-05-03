@@ -82,3 +82,19 @@ TEST_CASE("more complex composition_fn is evaluated in deterministic manner.", "
 
 	REQUIRE(std::invoke(comp, 3) == 390);
 }
+
+#pragma warning(disable: 26444)
+TEMPLATE_TEST_CASE_SIG(
+	"as casts the given parameter when invoked.",
+	"[functional]",
+	((class TTarget, auto VSource, auto VExpected), TTarget, VSource, VExpected),
+	(int, 42ul, 42),
+	(float, 42, 42.f),
+	(int, 3.1415f, 3),
+	(std::optional<int>, 3, 3)
+)
+#pragma warning(default: 26444)
+{
+	STATIC_REQUIRE(std::same_as<TTarget, decltype(functional::as<TTarget>(VSource))>);
+	REQUIRE(functional::as<TTarget>(VSource) == VExpected);
+}
