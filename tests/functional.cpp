@@ -7,6 +7,8 @@
 
 #include "Simple-Utility/functional.hpp"
 
+#include <optional>
+
 using namespace sl;
 
 namespace
