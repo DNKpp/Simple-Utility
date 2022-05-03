@@ -13,6 +13,7 @@ add_executable(
 	"unique_handle.cpp"
 	"concepts/stl_extensions.cpp"
 	"nullables.cpp"
+	"functional.cpp"
 )
 
 target_link_libraries(
