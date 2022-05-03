@@ -39,7 +39,14 @@ namespace sl::functional::detail
 		{}
 
 		template <class... TArgs>
-		constexpr decltype(auto) operator ()(TArgs&&... v) const
+		constexpr decltype(auto) operator ()
+		(
+			TArgs&&... v
+		) const
+		noexcept(noexcept(std::invoke(
+			std::declval<const TFunc2&>(),
+			std::invoke(std::declval<const TFunc1&>(), std::forward<TArgs>(v)...)
+		)))
 		{
 			return std::invoke(
 				m_Func2,
@@ -48,7 +55,14 @@ namespace sl::functional::detail
 		}
 
 		template <class... TArgs>
-		constexpr decltype(auto) operator ()(TArgs&&... v)
+		constexpr decltype(auto) operator ()
+		(
+			TArgs&&... v
+		)
+		noexcept(noexcept(std::invoke(
+			std::declval<TFunc2&>(),
+			std::invoke(std::declval<TFunc1&>(), std::forward<TArgs>(v)...)
+		)))
 		{
 			return std::invoke(
 				m_Func2,
@@ -70,7 +84,10 @@ namespace sl::functional::detail
 	struct pipe
 	{
 		template <class TOther>
-		constexpr auto operator |(TOther&& other) &&
+		constexpr auto operator |
+		(
+			TOther&& other
+		) && noexcept(noexcept(composition_fn{ static_cast<TDerived&&>(*this), std::forward<TOther>(other) }))
 		{
 			return composition_fn{
 				static_cast<TDerived&&>(*this),
@@ -79,7 +96,10 @@ namespace sl::functional::detail
 		}
 
 		template <class TOther>
-		constexpr auto operator |(TOther&& other) const &
+		constexpr auto operator |
+		(
+			TOther&& other
+		) const & noexcept(noexcept(composition_fn{ static_cast<const TDerived&>(*this), std::forward<TOther>(other) }))
 		{
 			return composition_fn{
 				static_cast<const TDerived&>(*this),
@@ -88,8 +108,14 @@ namespace sl::functional::detail
 		}
 
 		template <class TLhs>
-		friend constexpr auto operator |(TLhs&& lhs, pipe&& rhs)
+		friend constexpr auto operator |
+		(
+			TLhs&& lhs,
+			pipe&& rhs
+		)
+		noexcept(noexcept(composition_fn{ std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs) }))
 			requires (!requires { lhs.operator|(std::move(rhs)); })
+
 		{
 			return composition_fn{
 				std::forward<TLhs>(lhs),
@@ -98,7 +124,12 @@ namespace sl::functional::detail
 		}
 
 		template <class TLhs>
-		friend constexpr auto operator |(TLhs&& lhs, const pipe& rhs)
+		friend constexpr auto operator |
+		(
+			TLhs&& lhs,
+			const pipe& rhs
+		)
+		noexcept(noexcept(composition_fn{ std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs) }))
 			requires (!requires { lhs.operator|(rhs); })
 		{
 			return composition_fn{
@@ -129,7 +160,8 @@ namespace sl::functional
 		{}
 
 		template <class... TArgs>
-		constexpr decltype(auto) operator ()(TArgs&&... args) const noexcept(noexcept(std::invoke(std::declval<TFunc&>(), args...)))
+		constexpr decltype(auto) operator ()
+		(TArgs&&... args) const noexcept(noexcept(std::invoke(std::declval<const TFunc&>(), args...)))
 		{
 			return std::invoke(m_Func, std::forward<TArgs>(args)...);
 		}
