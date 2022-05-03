@@ -142,6 +142,10 @@ namespace sl::functional::detail
 
 namespace sl::functional
 {
+	/**
+	 * \brief Helper type which accepts a functional type and enables pipe chaining.
+	 * \tparam TFunc The functional type.
+	 */
 	template <class TFunc>
 	class transform_fn
 		: public detail::pipe<transform_fn<TFunc>>
@@ -149,6 +153,11 @@ namespace sl::functional
 	public:
 		using function_type = TFunc;
 
+		/**
+		 * \brief Forwards the constructor arguments to the internal functional object.
+		 * \tparam TArgs The constructor argument types.
+		 * \param args The constructor arguments.
+		 */
 		template <class... TArgs>
 			requires std::constructible_from<TFunc, TArgs...>
 		explicit constexpr transform_fn
@@ -159,15 +168,29 @@ namespace sl::functional
 			: m_Func{ std::forward<TArgs>(args)... }
 		{}
 
+		/**
+		 * \brief Invokes the internal functional with the given arguments.
+		 * \tparam TArgs The argument types.
+		 * \param args The arguments.
+		 * \return Returns as received by invocation.
+		 */
 		template <class... TArgs>
 		constexpr decltype(auto) operator ()
-		(TArgs&&... args) const noexcept(noexcept(std::invoke(std::declval<const TFunc&>(), args...)))
+		(
+			TArgs&&... args
+		) const noexcept(noexcept(std::invoke(std::declval<const TFunc&>(), args...)))
 		{
 			return std::invoke(m_Func, std::forward<TArgs>(args)...);
 		}
 
+		/**
+		 * \copydoc operator()()
+		 */
 		template <class... TArgs>
-		constexpr decltype(auto) operator ()(TArgs&&... args) noexcept(noexcept(std::invoke(std::declval<TFunc&>(), args...)))
+		constexpr decltype(auto) operator ()
+		(
+			TArgs&&... args
+		) noexcept(noexcept(std::invoke(std::declval<TFunc&>(), args...)))
 		{
 			return std::invoke(m_Func, std::forward<TArgs>(args)...);
 		}
@@ -177,14 +200,26 @@ namespace sl::functional
 		TFunc m_Func{};
 	};
 
+	/**
+	 * \brief Deduction guide.
+	 * \tparam TFunc Type of the given functional.
+	 */
 	template <class TFunc>
 	transform_fn(TFunc) -> transform_fn<std::remove_cvref_t<TFunc>>;
 
+	/**
+	 * \brief Functional object which static_cast the given argument to the target type on invocation.
+	 * \tparam TTarget The target type.
+	 */
 	template <class TTarget>
 	inline constexpr transform_fn as{
 		[]<class T>(T&& v) -> TTarget { return static_cast<TTarget>(std::forward<T>(v)); }
 	};
 
+	/**
+	 * \brief Functional object which retrieves an object of a specific type from a tuple-like argument.
+	 * \tparam T The type to be retrieved.
+	 */
 	template <class T>
 	inline constexpr transform_fn get{
 		[]<class TTuple>(TTuple&& v) -> decltype(auto)
@@ -194,6 +229,10 @@ namespace sl::functional
 		}
 	};
 
+	/**
+	 * \brief Functional object which retrieves an object at a specific index from a tuple-like argument.
+	 * \tparam VIndex The index of type to be retrieved.
+	 */
 	template <std::size_t VIndex>
 	inline constexpr transform_fn get_at{
 		[]<class TTuple>(TTuple&& v) -> decltype(auto)
