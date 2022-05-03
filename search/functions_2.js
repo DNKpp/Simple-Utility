@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['delete_5faction_182',['delete_action',['../da/da9/classsl_1_1unique__handle.html#a862bda113ce7af53421f304bdcbd56a1',1,'sl::unique_handle']]]
+  ['emplace_0',['emplace',['../da/da9/classsl_1_1unique__handle.html#af3fda8877830e2cab390b95deae49612',1,'sl::unique_handle']]]
 ];

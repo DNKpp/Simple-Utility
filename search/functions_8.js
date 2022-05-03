@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['swap_197',['swap',['../da/da9/classsl_1_1unique__handle.html#a49ab98bf77405e88c2353e7d8e3404b7',1,'sl::unique_handle']]]
+  ['transform_5ffn_0',['transform_fn',['../da/dbe/classsl_1_1functional_1_1transform__fn.html#a6c7c25cae991c238d2a47a79a40133c5',1,'sl::functional::transform_fn::transform_fn()'],['../d9/da2/namespacesl_1_1functional.html#afec5c38b9845d0717b3edb72f9497913',1,'sl::functional::transform_fn()']]]
 ];

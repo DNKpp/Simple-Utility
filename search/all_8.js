@@ -1,18 +1,4 @@
 var searchData=
 [
-  ['not_5fsame_5fas_88',['not_same_as',['../dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html#gaf618472341462fbaef7c51648221d889',1,'sl::concepts']]],
-  ['null_89',['null',['../de/dc1/structsl_1_1nullables_1_1nullable__traits_3_01_t_01_4.html#a4d5ade3e02a59c0fc1eb869404283509',1,'sl::nullables::nullable_traits&lt; T &gt;::null()'],['../da/d78/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html#af34b52c6537e05045437cdb901b45497',1,'sl::nullables::nullable_traits&lt; std::shared_ptr&lt; TArgs... &gt; &gt;::null()'],['../da/d35/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html#a00bcc5511b929914bfcaf2664df1bde9',1,'sl::nullables::nullable_traits&lt; std::unique_ptr&lt; TArgs... &gt; &gt;::null()'],['../d9/d48/structsl_1_1nullables_1_1nullable__traits_3_01unique__handle_3_01_t_args_8_8_8_01_4_01_4.html#a8efce6168d723a156a02a52e4c87c72f',1,'sl::nullables::nullable_traits&lt; unique_handle&lt; TArgs... &gt; &gt;::null()'],['../db/dcf/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html#a9ff873e23995ba44f253b058dea238c4',1,'sl::nullables::nullable_traits&lt; std::optional&lt; TArgs... &gt; &gt;::null()']]],
-  ['nullable_90',['nullable',['../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga38933bec8744d0cf232c2e77da5be331',1,'sl::nullables']]],
-  ['nullable_5fnull_5fv_91',['nullable_null_v',['../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#gae6e1b97fc8c68cfd3435025dd14e76c3',1,'sl::nullables']]],
-  ['nullable_5ftraits_92',['nullable_traits',['../db/dfb/structsl_1_1nullables_1_1nullable__traits.html',1,'sl::nullables']]],
-  ['nullable_5ftraits_3c_20std_3a_3aoptional_3c_20targs_2e_2e_2e_20_3e_20_3e_93',['nullable_traits&lt; std::optional&lt; TArgs... &gt; &gt;',['../db/dcf/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html',1,'sl::nullables']]],
-  ['nullable_5ftraits_3c_20std_3a_3ashared_5fptr_3c_20targs_2e_2e_2e_20_3e_20_3e_94',['nullable_traits&lt; std::shared_ptr&lt; TArgs... &gt; &gt;',['../da/d78/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html',1,'sl::nullables']]],
-  ['nullable_5ftraits_3c_20std_3a_3aunique_5fptr_3c_20targs_2e_2e_2e_20_3e_20_3e_95',['nullable_traits&lt; std::unique_ptr&lt; TArgs... &gt; &gt;',['../da/d35/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html',1,'sl::nullables']]],
-  ['nullable_5ftraits_3c_20t_20_3e_96',['nullable_traits&lt; T &gt;',['../de/dc1/structsl_1_1nullables_1_1nullable__traits_3_01_t_01_4.html',1,'sl::nullables']]],
-  ['nullable_5ftraits_3c_20unique_5fhandle_3c_20targs_2e_2e_2e_20_3e_20_3e_97',['nullable_traits&lt; unique_handle&lt; TArgs... &gt; &gt;',['../d9/d48/structsl_1_1nullables_1_1nullable__traits_3_01unique__handle_3_01_t_args_8_8_8_01_4_01_4.html',1,'sl::nullables']]],
-  ['nullable_5fvalue_5ft_98',['nullable_value_t',['../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga30b2386500938406f95e13450ffa7c7f',1,'sl::nullables']]],
-  ['nullables_99',['nullables',['../d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html',1,'']]],
-  ['nullables_2ehpp_100',['nullables.hpp',['../d3/ddc/nullables_8hpp.html',1,'']]],
-  ['nullhandle_101',['nullhandle',['../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga3351a5e5ccde1cbc9cfd3d4a819e5995',1,'sl']]],
-  ['nullhandle_5ft_102',['nullhandle_t',['../d9/db6/structsl_1_1nullhandle__t.html',1,'sl']]]
+  ['logical_20arithmetic_20operators_0',['logical arithmetic operators',['../d7/d37/group___g_r_o_u_p___l_o_g_i_c_a_l___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html',1,'']]]
 ];

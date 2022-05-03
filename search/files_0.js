@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['nullables_2ehpp_175',['nullables.hpp',['../d3/ddc/nullables_8hpp.html',1,'']]]
+  ['functional_2ehpp_0',['functional.hpp',['../d2/db4/functional_8hpp.html',1,'']]]
 ];
