@@ -502,21 +502,6 @@ namespace sl
 	template <class T>
 	unique_handle(T) -> unique_handle<T>;
 
-	///**
-	// * \brief Equality operator overload for comparison of \ref unique_handle and \ref nullhandle_t. operator != is implicitly defined.
-	// * \relatesalso unique_handle
-	// * \tparam T Value type of the handles
-	// * \tparam TDeleteAction Delete action type of the handles
-	// * \param lhs left-hand-side of the operation
-	// * \return Returns ``true`` if handle is invalid.
-	// */
-	//template <class T, class TDeleteAction>
-	//[[nodiscard]]
-	//constexpr std::strong_ordering operator ==(const unique_handle<T, TDeleteAction>& lhs, nullhandle_t) noexcept
-	//{
-	//	return !lhs.is_valid();
-	//}
-
 	/** @} */
 }
 
