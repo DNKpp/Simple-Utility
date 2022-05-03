@@ -184,6 +184,24 @@ namespace sl::functional
 	inline constexpr transform_fn as{
 		[]<class T>(T&& v) -> TTarget { return static_cast<TTarget>(std::forward<T>(v)); }
 	};
+
+	template <class T>
+	inline constexpr transform_fn get{
+		[]<class TTuple>(TTuple&& v) -> decltype(auto)
+		{
+			using std::get;
+			return get<T>(std::forward<TTuple>(v));
+		}
+	};
+
+	template <std::size_t VIndex>
+	inline constexpr transform_fn get_at{
+		[]<class TTuple>(TTuple&& v) -> decltype(auto)
+		{
+			using std::get;
+			return get<VIndex>(std::forward<TTuple>(v));
+		}
+	};
 }
 
 #endif
