@@ -179,6 +179,11 @@ namespace sl::functional
 
 	template <class TFunc>
 	transform_fn(TFunc) -> transform_fn<std::remove_cvref_t<TFunc>>;
+
+	template <class TTarget>
+	inline constexpr transform_fn as{
+		[]<class T>(T&& v) -> TTarget { return static_cast<TTarget>(std::forward<T>(v)); }
+	};
 }
 
 #endif
