@@ -6,10 +6,12 @@
 #ifndef SL_UTILITY_NULLABLES_HPP
 #define SL_UTILITY_NULLABLES_HPP
 
-#include <concepts>
-
 #include "Simple-Utility/unique_handle.hpp"
 #include "Simple-Utility/concepts/operators.hpp"
+
+#include <concepts>
+#include <memory>
+#include <optional>
 
 namespace sl::nullables
 {

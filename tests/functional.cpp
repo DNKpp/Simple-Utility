@@ -3,7 +3,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_template_test_macros.hpp>
 
 #include "Simple-Utility/functional.hpp"
 
@@ -91,8 +91,7 @@ TEMPLATE_TEST_CASE_SIG(
 	"[functional]",
 	((class TTarget, auto VSource, auto VExpected), TTarget, VSource, VExpected),
 	(int, 42ul, 42),
-	(float, 42, 42.f),
-	(int, 3.1415f, 3),
+	(char, 42, '*'),
 	(std::optional<int>, 3, 3)
 )
 #pragma warning(default: 26444)
