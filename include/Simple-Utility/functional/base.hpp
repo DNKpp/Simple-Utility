@@ -88,9 +88,12 @@ namespace sl::functional::detail
 		[[no_unique_address]]
 		TBinaryOp m_BinaryOperation{};
 	};
+}
 
+namespace sl::functional
+{
 	template <class TFunc>
-	class closure_fn
+	class closure
 	{
 	public:
 		using function_type = TFunc;
@@ -103,7 +106,7 @@ namespace sl::functional::detail
 		template <class... TArgs>
 			requires std::constructible_from<function_type, TArgs...>
 		[[nodiscard]]
-		explicit (sizeof...(TArgs) == 1) constexpr closure_fn
+		explicit (sizeof...(TArgs) == 1) constexpr closure
 		(
 			TArgs&&... args
 		)
@@ -144,7 +147,10 @@ namespace sl::functional::detail
 		[[no_unique_address]]
 		function_type m_Func{};
 	};
+}
 
+namespace sl::functional::detail
+{
 	template <template <class> class TClosureBase, class TBinaryOp>
 	struct composer
 	{

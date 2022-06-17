@@ -119,11 +119,11 @@ TEMPLATE_TEST_CASE_SIG(
 
 //template <class TFunc>
 //struct piping
-//	: functional::detail::closure_fn<std::remove_cvref_t<TFunc>>,
-//	functional::detail::pipe_op<piping<TFunc>, piping>,
+//	: functional::detail::closure<std::remove_cvref_t<TFunc>>,
+//	functional::detail::pipe_operator<piping<TFunc>, piping>,
 //	functional::detail::conjunction_op<piping<TFunc>, piping>
 //{
-//	using closure_t = functional::detail::closure_fn<std::remove_cvref_t<TFunc>>;
+//	using closure_t = functional::detail::closure<std::remove_cvref_t<TFunc>>;
 //	using closure_t::closure_t;
 //};
 

@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "Simple-Utility/functional/detail.hpp"
+#include "Simple-Utility/functional/base.hpp"
 
-namespace sl::functional::detail
+namespace sl::functional
 {
 	struct binary_nesting_fn
 	{
@@ -26,6 +26,8 @@ namespace sl::functional::detail
 			std::forward<TFunc2>(func2),
 			std::invoke(std::forward<TFunc1>(func1), std::forward<TArgs>(v)...)
 		)))
+			requires std::invocable<TFunc1, TArgs...>
+					&& std::invocable<TFunc2, std::invoke_result_t<TFunc1, TArgs...>>
 		{
 			return std::invoke(
 				std::forward<TFunc2>(func2),
@@ -35,10 +37,11 @@ namespace sl::functional::detail
 	};
 
 	template <class TDerived, template <class> class TClosureBase>
-	struct pipe_op
+		requires std::is_class_v<TDerived>
+	struct pipe_operator
 	{
 	private:
-		using composer_t = composer<TClosureBase, binary_nesting_fn>;
+		using composer_t = detail::composer<TClosureBase, binary_nesting_fn>;
 
 	public:
 		template <class TOther>
@@ -66,7 +69,7 @@ namespace sl::functional::detail
 		friend constexpr auto operator |
 		(
 			TLhs&& lhs,
-			pipe_op&& rhs
+			pipe_operator&& rhs
 		)
 		noexcept(noexcept(composer_t::compose(std::declval<TLhs>(), std::declval<TDerived&&>())))
 			requires (!requires { lhs.operator|(std::move(rhs)); })
@@ -80,7 +83,7 @@ namespace sl::functional::detail
 		friend constexpr auto operator |
 		(
 			TLhs&& lhs,
-			const pipe_op& rhs
+			const pipe_operator& rhs
 		)
 		noexcept(noexcept(composer_t::compose(std::declval<TLhs>(), std::declval<const TDerived&>())))
 			requires (!requires { lhs.operator|(rhs); })
@@ -88,22 +91,19 @@ namespace sl::functional::detail
 			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
 		}
 	};
-}
 
-namespace sl::functional
-{
 	/**
 	 * \brief Helper type which accepts a functional type and enables pipe chaining.
 	 * \tparam TFunc The functional type.
 	 */
 	template <class TFunc>
 	class transform_fn
-		: public detail::closure_fn<std::remove_cvref_t<TFunc>>,
-		public detail::pipe_op<transform_fn<TFunc>, transform_fn>
+		: public closure<std::remove_cvref_t<TFunc>>,
+		public pipe_operator<transform_fn<TFunc>, transform_fn>
 	{
-		using closure_fn = detail::closure_fn<std::remove_cvref_t<TFunc>>;
+		using closure_t = closure<std::remove_cvref_t<TFunc>>;
 	public:
-		using closure_fn::closure_fn;
+		using closure_t::closure;
 	};
 
 	/**
