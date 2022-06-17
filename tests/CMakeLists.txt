@@ -14,6 +14,7 @@ add_executable(
 	"concepts/stl_extensions.cpp"
 	"nullables.cpp"
 	"functional.cpp"
+	"predicate.cpp"
 )
 
 target_link_libraries(
