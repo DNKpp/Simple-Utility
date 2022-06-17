@@ -14,29 +14,28 @@
 
 namespace sl::functional::detail
 {
-	template <class TDerived>
-	struct pipe;
-
-	template <class TFunc1, class TFunc2>
-	class composition_fn
-		: public pipe<composition_fn<TFunc1, TFunc2>>
+	template <class TFunc1, class TFunc2, class TBinaryOp>
+	class binary_composition_fn
 	{
 	public:
-		using function_type1 = TFunc1;
-		using function_type2 = TFunc2;
+		using binary_operation_type = TBinaryOp;
+		using function1_type = TFunc1;
+		using function2_type = TFunc2;
 
-		template <class TArg1, class TArg2>
+		template <class TFunc1Arg, class TFunc2Arg, class TBinaryOpArg = TBinaryOp>
 		[[nodiscard]]
-		constexpr composition_fn
+		constexpr binary_composition_fn
 		(
-			TArg1&& arg1,
-			TArg2&& arg2
+			TFunc1Arg&& func1Arg,
+			TFunc2Arg&& func2Arg,
+			TBinaryOpArg&& binaryOpArg = {}
 		)
-		noexcept(std::is_nothrow_constructible_v<TFunc1, TArg1>
-				&& std::is_nothrow_constructible_v<TFunc2, TArg2>)
-			: m_Func1{ std::forward<TArg1>(arg1) },
-			m_Func2{ std::forward<TArg2>(arg2) }
-
+		noexcept(std::is_nothrow_constructible_v<TFunc1, TFunc1Arg>
+				&& std::is_nothrow_constructible_v<TFunc2, TFunc2Arg>
+				&& std::is_nothrow_constructible_v<TBinaryOp, TBinaryOpArg>)
+			: m_Func1{ std::forward<TFunc1Arg>(func1Arg) },
+			m_Func2{ std::forward<TFunc2Arg>(func2Arg) },
+			m_BinaryOperation{ std::forward<TBinaryOpArg>(binaryOpArg) }
 		{}
 
 		template <class... TArgs>
@@ -46,13 +45,17 @@ namespace sl::functional::detail
 			TArgs&&... v
 		) const
 		noexcept(noexcept(std::invoke(
+			std::declval<const TBinaryOp&>(),
+			std::declval<const TFunc1&>(),
 			std::declval<const TFunc2&>(),
-			std::invoke(std::declval<const TFunc1&>(), std::forward<TArgs>(v)...)
+			std::forward<TArgs>(v)...
 		)))
 		{
 			return std::invoke(
+				m_BinaryOperation,
+				m_Func1,
 				m_Func2,
-				std::invoke(m_Func1, std::forward<TArgs>(v)...)
+				std::forward<TArgs>(v)...
 			);
 		}
 
@@ -63,13 +66,17 @@ namespace sl::functional::detail
 			TArgs&&... v
 		)
 		noexcept(noexcept(std::invoke(
+			std::declval<TBinaryOp&>(),
+			std::declval<TFunc1&>(),
 			std::declval<TFunc2&>(),
-			std::invoke(std::declval<TFunc1&>(), std::forward<TArgs>(v)...)
+			std::forward<TArgs>(v)...
 		)))
 		{
 			return std::invoke(
+				m_BinaryOperation,
+				m_Func1,
 				m_Func2,
-				std::invoke(m_Func1, std::forward<TArgs>(v)...)
+				std::forward<TArgs>(v)...
 			);
 		}
 
@@ -78,84 +85,63 @@ namespace sl::functional::detail
 		TFunc1 m_Func1{};
 		[[no_unique_address]]
 		TFunc2 m_Func2{};
+		[[no_unique_address]]
+		TBinaryOp m_BinaryOperation{};
 	};
 
-	template <class TFunc1, class TFunc2>
-	composition_fn(TFunc1, TFunc2) -> composition_fn<std::remove_cvref_t<TFunc1>, std::remove_cvref_t<TFunc2>>;
+	template <class TFunc1, class TFunc2, class TBinaryOp>
+	binary_composition_fn
+	(
+		TFunc1,
+		TFunc2,
+		TBinaryOp
+	) -> binary_composition_fn<std::remove_cvref_t<TFunc1>, std::remove_cvref_t<TFunc2>, std::remove_cvref_t<TBinaryOp>>;
 
-	template <class TDerived>
-	struct pipe
+	struct binary_nesting_fn
 	{
-		template <class TOther>
+		template <class TFunc1, class TFunc2, class... TArgs>
 		[[nodiscard]]
-		constexpr auto operator |
+		constexpr decltype(auto) operator ()
 		(
-			TOther&& other
-		) && noexcept(noexcept(composition_fn{ static_cast<TDerived&&>(*this), std::forward<TOther>(other) }))
+			TFunc1&& func1,
+			TFunc2&& func2,
+			TArgs&&... v
+		) const
+		noexcept(noexcept(std::invoke(
+			std::forward<TFunc2>(func2),
+			std::invoke(std::forward<TFunc1>(func1), std::forward<TArgs>(v)...)
+		)))
 		{
-			return composition_fn{
-				static_cast<TDerived&&>(*this),
-				std::forward<TOther>(other)
-			};
-		}
-
-		template <class TOther>
-		[[nodiscard]]
-		constexpr auto operator |
-		(
-			TOther&& other
-		) const & noexcept(noexcept(composition_fn{ static_cast<const TDerived&>(*this), std::forward<TOther>(other) }))
-		{
-			return composition_fn{
-				static_cast<const TDerived&>(*this),
-				std::forward<TOther>(other)
-			};
-		}
-
-		template <class TLhs>
-		[[nodiscard]]
-		friend constexpr auto operator |
-		(
-			TLhs&& lhs,
-			pipe&& rhs
-		)
-		noexcept(noexcept(composition_fn{ std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs) }))
-			requires (!requires { lhs.operator|(std::move(rhs)); })
-
-		{
-			return composition_fn{
-				std::forward<TLhs>(lhs),
-				static_cast<TDerived&&>(rhs)
-			};
-		}
-
-		template <class TLhs>
-		[[nodiscard]]
-		friend constexpr auto operator |
-		(
-			TLhs&& lhs,
-			const pipe& rhs
-		)
-		noexcept(noexcept(composition_fn{ std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs) }))
-			requires (!requires { lhs.operator|(rhs); })
-		{
-			return composition_fn{
-				std::forward<TLhs>(lhs),
-				static_cast<const TDerived&>(rhs)
-			};
+			return std::invoke(
+				std::forward<TFunc2>(func2),
+				std::invoke(std::forward<TFunc1>(func1), std::forward<TArgs>(v)...)
+			);
 		}
 	};
-}
 
-namespace sl::functional
-{
-	/**
-	 * \brief Helper type which accepts a functional type and enables pipe chaining.
-	 * \tparam TFunc The functional type.
-	 */
+	struct binary_conjunction_fn
+	{
+		template <class TFunc1, class TFunc2, class... TArgs>
+		[[nodiscard]]
+		constexpr decltype(auto) operator ()
+		(
+			TFunc1&& func1,
+			TFunc2&& func2,
+			const TArgs&... v
+		) const
+		noexcept(noexcept(std::invoke(std::forward<TFunc1>(func1), v...))
+				&& noexcept(std::invoke(std::forward<TFunc2>(func2), v...))
+		)
+			requires std::predicate<TFunc1, TArgs...>
+					&& std::predicate<TFunc2, TArgs...>
+		{
+			return std::invoke(std::forward<TFunc1>(func1), v...)
+					&& std::invoke(std::forward<TFunc2>(func2), v...);
+		}
+	};
+
 	template <class TFunc>
-	class transform_fn
-		: public detail::pipe<transform_fn<TFunc>>
+	class closure_fn
 	{
 	public:
 		using function_type = TFunc;
@@ -166,13 +152,13 @@ namespace sl::functional
 		 * \param args The constructor arguments.
 		 */
 		template <class... TArgs>
-			requires std::constructible_from<TFunc, TArgs...>
+			requires std::constructible_from<function_type, TArgs...>
 		[[nodiscard]]
-		explicit constexpr transform_fn
+		explicit (sizeof...(TArgs) == 1) constexpr closure_fn
 		(
 			TArgs&&... args
 		)
-		noexcept(std::is_nothrow_constructible_v<TFunc, TArgs...>)
+		noexcept(std::is_nothrow_constructible_v<function_type, TArgs...>)
 			: m_Func{ std::forward<TArgs>(args)... }
 		{}
 
@@ -187,7 +173,7 @@ namespace sl::functional
 		constexpr decltype(auto) operator ()
 		(
 			TArgs&&... args
-		) const noexcept(noexcept(std::invoke(std::declval<const TFunc&>(), args...)))
+		) const noexcept(noexcept(std::invoke(std::declval<const function_type&>(), args...)))
 		{
 			return std::invoke(m_Func, std::forward<TArgs>(args)...);
 		}
@@ -200,14 +186,126 @@ namespace sl::functional
 		constexpr decltype(auto) operator ()
 		(
 			TArgs&&... args
-		) noexcept(noexcept(std::invoke(std::declval<TFunc&>(), args...)))
+		) noexcept(noexcept(std::invoke(std::declval<function_type&>(), args...)))
 		{
 			return std::invoke(m_Func, std::forward<TArgs>(args)...);
 		}
 
 	private:
 		[[no_unique_address]]
-		TFunc m_Func{};
+		function_type m_Func{};
+	};
+
+	template <template <class> class TClosureBase, class TBinaryOp>
+	struct composer
+	{
+		template <class TFunc1, class TFunc2>
+		using closure_base_fn = TClosureBase<binary_composition_fn<
+				std::remove_cvref_t<TFunc1>, std::remove_cvref_t<TFunc2>, TBinaryOp>
+		>;
+
+		template <class TFunc1, class TFunc2>
+		[[nodiscard]]
+		static constexpr closure_base_fn<TFunc1, TFunc2> compose
+		(
+			TFunc1 func1,
+			TFunc2 func2
+		)
+		noexcept(std::is_nothrow_constructible_v<closure_base_fn<TFunc1, TFunc2>, TFunc1, TFunc2>)
+		{
+			return { std::forward<TFunc1>(func1), std::forward<TFunc2>(func2) };
+		}
+	};
+
+	template <class TDerived, template <class> class TClosureBase>
+	struct pipe_op
+	{
+	private:
+		using composer_t = composer<TClosureBase, binary_nesting_fn>;
+
+	public:
+		template <class TOther>
+		[[nodiscard]]
+		constexpr auto operator |
+		(
+			TOther&& other
+		) && noexcept(noexcept(composer_t::compose(std::declval<TDerived&&>(), std::declval<TOther>())))
+		{
+			return composer_t::compose(static_cast<TDerived&&>(*this), std::forward<TOther>(other));
+		}
+
+		template <class TOther>
+		[[nodiscard]]
+		constexpr auto operator |
+		(
+			TOther&& other
+		) const & noexcept(noexcept(composer_t::compose(std::declval<const TDerived&>(), std::declval<TOther>())))
+		{
+			return composer_t::compose(static_cast<const TDerived&>(*this), std::forward<TOther>(other));
+		}
+
+		template <class TLhs>
+		[[nodiscard]]
+		friend constexpr auto operator |
+		(
+			TLhs&& lhs,
+			pipe_op&& rhs
+		)
+		noexcept(noexcept(composer_t::compose(std::declval<TLhs>(), std::declval<TDerived&&>())))
+			requires (!requires { lhs.operator|(std::move(rhs)); })
+
+		{
+			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
+		}
+
+		template <class TLhs>
+		[[nodiscard]]
+		friend constexpr auto operator |
+		(
+			TLhs&& lhs,
+			const pipe_op& rhs
+		)
+		noexcept(noexcept(composer_t::compose(std::declval<TLhs>(), std::declval<const TDerived&>())))
+			requires (!requires { lhs.operator|(rhs); })
+		{
+			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
+		}
+	};
+
+	template <class TDerived, template <class> class TClosureBase>
+	struct conjunction_op
+	{
+		template <class TFunc1, class TFunc2>
+		using closure_base_fn = TClosureBase<binary_composition_fn<
+				std::remove_cvref_t<TFunc1>, std::remove_cvref_t<TFunc2>, binary_conjunction_fn>
+		>;
+
+		template <class TOther>
+		[[nodiscard]]
+		constexpr closure_base_fn<TDerived, TOther> operator &&
+		(
+			TOther&& other
+		) && noexcept(std::is_nothrow_constructible_v<closure_base_fn<TDerived, TOther>, TDerived&&, TOther>)
+		{
+			return { static_cast<TDerived&&>(*this), std::forward<TOther>(other) };
+		}
+	};
+}
+
+namespace sl::functional
+{
+	/**
+	 * \brief Helper type which accepts a functional type and enables pipe chaining.
+	 * \tparam TFunc The functional type.
+	 */
+	template <class TFunc>
+	class transform_fn
+		: public detail::closure_fn<std::remove_cvref_t<TFunc>>,
+		public detail::pipe_op<transform_fn<TFunc>, transform_fn>
+	{
+		using closure_fn = detail::closure_fn<std::remove_cvref_t<TFunc>>;
+	public:
+		using closure_fn::closure_fn;
 	};
 
 	/**
