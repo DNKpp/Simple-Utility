@@ -9,7 +9,7 @@ project(
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 include("get_cpm")
 
-OPTION(SIMPLE_UTILITY_BUILD_TESTS "Determines wether tests will be build or not." OFF)
+OPTION(${PROJECT_NAME}_BUILD_TESTS "Determines wether tests will be build or not." OFF)
 
 add_library(${PROJECT_NAME} INTERFACE)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
@@ -25,7 +25,7 @@ target_compile_features(
 	cxx_std_20
 )
 
-if (SIMPLE_UTILITY_BUILD_TESTS)
+if (${PROJECT_NAME}_BUILD_TESTS)
 	
 	add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tests")
 
