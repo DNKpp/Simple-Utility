@@ -5,7 +5,7 @@
 
 #include <catch2/catch_template_test_macros.hpp>
 
-#include "Simple-Utility/functional.hpp"
+#include "Simple-Utility/functional/transform.hpp"
 
 #include <optional>
 
