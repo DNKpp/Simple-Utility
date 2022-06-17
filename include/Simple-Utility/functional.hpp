@@ -26,6 +26,7 @@ namespace sl::functional::detail
 		using function_type2 = TFunc2;
 
 		template <class TArg1, class TArg2>
+		[[nodiscard]]
 		constexpr composition_fn
 		(
 			TArg1&& arg1,
@@ -39,6 +40,7 @@ namespace sl::functional::detail
 		{}
 
 		template <class... TArgs>
+		[[nodiscard]]
 		constexpr decltype(auto) operator ()
 		(
 			TArgs&&... v
@@ -55,6 +57,7 @@ namespace sl::functional::detail
 		}
 
 		template <class... TArgs>
+		[[nodiscard]]
 		constexpr decltype(auto) operator ()
 		(
 			TArgs&&... v
@@ -84,6 +87,7 @@ namespace sl::functional::detail
 	struct pipe
 	{
 		template <class TOther>
+		[[nodiscard]]
 		constexpr auto operator |
 		(
 			TOther&& other
@@ -96,6 +100,7 @@ namespace sl::functional::detail
 		}
 
 		template <class TOther>
+		[[nodiscard]]
 		constexpr auto operator |
 		(
 			TOther&& other
@@ -108,6 +113,7 @@ namespace sl::functional::detail
 		}
 
 		template <class TLhs>
+		[[nodiscard]]
 		friend constexpr auto operator |
 		(
 			TLhs&& lhs,
@@ -124,6 +130,7 @@ namespace sl::functional::detail
 		}
 
 		template <class TLhs>
+		[[nodiscard]]
 		friend constexpr auto operator |
 		(
 			TLhs&& lhs,
@@ -160,6 +167,7 @@ namespace sl::functional
 		 */
 		template <class... TArgs>
 			requires std::constructible_from<TFunc, TArgs...>
+		[[nodiscard]]
 		explicit constexpr transform_fn
 		(
 			TArgs&&... args
@@ -175,6 +183,7 @@ namespace sl::functional
 		 * \return Returns as received by invocation.
 		 */
 		template <class... TArgs>
+		[[nodiscard]]
 		constexpr decltype(auto) operator ()
 		(
 			TArgs&&... args
@@ -187,6 +196,7 @@ namespace sl::functional
 		 * \copydoc operator()()
 		 */
 		template <class... TArgs>
+		[[nodiscard]]
 		constexpr decltype(auto) operator ()
 		(
 			TArgs&&... args
