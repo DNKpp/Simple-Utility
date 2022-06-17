@@ -91,8 +91,7 @@ TEMPLATE_TEST_CASE_SIG(
 	"[functional]",
 	((class TTarget, auto VSource, auto VExpected), TTarget, VSource, VExpected),
 	(int, 42ul, 42),
-	(float, 42, 42.f),
-	(int, 3.1415f, 3),
+	(char, 42, '*'),
 	(std::optional<int>, 3, 3)
 )
 #pragma warning(default: 26444)
