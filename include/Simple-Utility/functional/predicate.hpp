@@ -58,7 +58,7 @@ namespace sl::functional::detail
 namespace sl::functional
 {
 	template <class TDerived, template <class> class TClosureBase>
-		requires std::is_class_v<TDerived>
+		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
 	struct conjunction_operator
 	{
 	private:
@@ -114,7 +114,7 @@ namespace sl::functional
 	};
 
 	template <class TDerived, template <class> class TClosureBase>
-		requires std::is_class_v<TDerived>
+		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
 	struct disjunction_operator
 	{
 	private:
@@ -170,7 +170,7 @@ namespace sl::functional
 	};
 
 	template <class TDerived, template <class> class TClosureBase>
-		requires std::is_class_v<TDerived>
+		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
 	struct negation_operator
 	{
 	private:
