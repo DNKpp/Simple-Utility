@@ -116,24 +116,3 @@ TEMPLATE_TEST_CASE_SIG(
 
 	REQUIRE(std::get<VIndex>(tuple) == e);
 }
-
-//template <class TFunc>
-//struct piping
-//	: functional::detail::closure<std::remove_cvref_t<TFunc>>,
-//	functional::detail::pipe_operator<piping<TFunc>, piping>,
-//	functional::detail::conjunction_op<piping<TFunc>, piping>
-//{
-//	using closure_t = functional::detail::closure<std::remove_cvref_t<TFunc>>;
-//	using closure_t::closure_t;
-//};
-
-//constexpr auto trueFunc = [](auto&&...) { return true; };
-//constexpr auto falseFunc = [](auto&&...) { return false; };
-//
-//TEST_CASE("alt_pipe can be used on the right side of operator | expressions.", "[functional][transform]")
-//{
-//	auto comp = piping<decltype(add42)>{ add42 } | times3 && times3;
-//	//functional::detail::binary_composition_fn comp = piping<decltype(add42)>{ add42 } | times3;
-//
-//	REQUIRE(std::invoke(comp, 1) == 45);
-//}

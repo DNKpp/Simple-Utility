@@ -98,12 +98,12 @@ namespace sl::functional
 	 */
 	template <class TFunc>
 	class transform_fn
-		: public closure<std::remove_cvref_t<TFunc>>,
+		: public closure_base_fn<std::remove_cvref_t<TFunc>>,
 		public pipe_operator<transform_fn<TFunc>, transform_fn>
 	{
-		using closure_t = closure<std::remove_cvref_t<TFunc>>;
+		using closure_t = closure_base_fn<std::remove_cvref_t<TFunc>>;
 	public:
-		using closure_t::closure;
+		using closure_t::closure_base_fn;
 	};
 
 	/**

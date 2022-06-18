@@ -93,7 +93,7 @@ namespace sl::functional::detail
 namespace sl::functional
 {
 	template <class TFunc>
-	class closure
+	class closure_base_fn
 	{
 	public:
 		using function_type = TFunc;
@@ -106,7 +106,7 @@ namespace sl::functional
 		template <class... TArgs>
 			requires std::constructible_from<function_type, TArgs...>
 		[[nodiscard]]
-		explicit (sizeof...(TArgs) == 1) constexpr closure
+		explicit (sizeof...(TArgs) == 1) constexpr closure_base_fn
 		(
 			TArgs&&... args
 		)
@@ -169,46 +169,6 @@ namespace sl::functional::detail
 		noexcept(std::is_nothrow_constructible_v<closure_base_fn<TFunc1, TFunc2>, TFunc1, TFunc2>)
 		{
 			return { std::forward<TFunc1>(func1), std::forward<TFunc2>(func2) };
-		}
-	};
-
-	struct binary_conjunction_fn
-	{
-		template <class TFunc1, class TFunc2, class... TArgs>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()
-		(
-			TFunc1&& func1,
-			TFunc2&& func2,
-			const TArgs&... v
-		) const
-		noexcept(noexcept(std::invoke(std::forward<TFunc1>(func1), v...))
-				&& noexcept(std::invoke(std::forward<TFunc2>(func2), v...))
-		)
-			requires std::predicate<TFunc1, TArgs...>
-					&& std::predicate<TFunc2, TArgs...>
-		{
-			return std::invoke(std::forward<TFunc1>(func1), v...)
-					&& std::invoke(std::forward<TFunc2>(func2), v...);
-		}
-	};
-
-	template <class TDerived, template <class> class TClosureBase>
-	struct conjunction_op
-	{
-		template <class TFunc1, class TFunc2>
-		using closure_base_fn = TClosureBase<binary_composition_fn<
-				std::remove_cvref_t<TFunc1>, std::remove_cvref_t<TFunc2>, binary_conjunction_fn>
-		>;
-
-		template <class TOther>
-		[[nodiscard]]
-		constexpr closure_base_fn<TDerived, TOther> operator &&
-		(
-			TOther&& other
-		) && noexcept(std::is_nothrow_constructible_v<closure_base_fn<TDerived, TOther>, TDerived&&, TOther>)
-		{
-			return { static_cast<TDerived&&>(*this), std::forward<TOther>(other) };
 		}
 	};
 }
