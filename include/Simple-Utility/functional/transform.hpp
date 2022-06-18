@@ -103,7 +103,7 @@ namespace sl::functional
 	{
 		using closure_t = closure_base_fn<std::remove_cvref_t<TFunc>>;
 	public:
-		using closure_t::closure_base_fn;
+		using closure_t::closure_t;
 	};
 
 	/**
