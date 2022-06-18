@@ -169,6 +169,32 @@ namespace sl::functional
 		}
 	};
 
+	template <class TDerived, template <class> class TClosureBase>
+		requires std::is_class_v<TDerived>
+	struct negation_operator
+	{
+	private:
+		template <class TFunc>
+		using negated_fn = std::remove_cvref_t<decltype(std::not_fn(std::declval<TFunc>()))>;
+
+	public:
+		[[nodiscard]]
+		constexpr auto operator !() && noexcept(
+			std::is_nothrow_constructible_v<TClosureBase<negated_fn<TDerived&&>>, negated_fn<TDerived&&>>
+		)
+		{
+			return TClosureBase<negated_fn<TDerived&&>>{ std::not_fn(static_cast<TDerived&&>(*this)) };
+		}
+
+		[[nodiscard]]
+		constexpr auto operator !() const & noexcept(
+			std::is_nothrow_constructible_v<TClosureBase<negated_fn<const TDerived&>>, negated_fn<const TDerived&>>
+		)
+		{
+			return TClosureBase<negated_fn<const TDerived&>>{ std::not_fn(static_cast<const TDerived&>(*this)) };
+		}
+	};
+
 	/**
 	 * \brief Helper type which accepts a functional type and enables pipe, conjunctive and disjunctive chaining.
 	 * \tparam TFunc The functional type.
@@ -178,7 +204,8 @@ namespace sl::functional
 		: public closure_base_fn<std::remove_cvref_t<TFunc>>,
 		public pipe_operator<predicate_fn<TFunc>, predicate_fn>,
 		public conjunction_operator<predicate_fn<TFunc>, predicate_fn>,
-		public disjunction_operator<predicate_fn<TFunc>, predicate_fn>
+		public disjunction_operator<predicate_fn<TFunc>, predicate_fn>,
+		public negation_operator<predicate_fn<TFunc>, predicate_fn>
 	{
 		using closure_t = closure_base_fn<std::remove_cvref_t<TFunc>>;
 	public:
@@ -191,7 +218,6 @@ namespace sl::functional
 	 */
 	template <class TFunc>
 	predicate_fn(TFunc) -> predicate_fn<std::remove_cvref_t<TFunc>>;
-
 }
 
 #endif

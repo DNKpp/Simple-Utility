@@ -84,3 +84,22 @@ TEST_CASE("predicate_fn common operator hierarchy can be adjusted with ().", "[f
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
+
+TEST_CASE("prvalue predicate_fn can be negated via operator !", "[functional][predicate]")
+{
+	const auto& [basePredicate, expectedResult] = GENERATE(table<bool(*)(), bool>({ { trueFunc, false }, { falseFunc, true } }));
+
+	const functional::predicate_fn negatedPredicate = !functional::predicate_fn{ basePredicate };
+
+	REQUIRE(negatedPredicate() == expectedResult);
+}
+
+TEST_CASE("predicate_fn can be negated via operator !", "[functional][predicate]")
+{
+	const auto& [basePredicate, expectedResult] = GENERATE(table<bool(*)(), bool>({ { trueFunc, false }, { falseFunc, true } }));
+
+	const functional::predicate_fn predicate{ basePredicate };
+	const functional::predicate_fn negatedPredicate = !predicate;
+
+	REQUIRE(negatedPredicate() == expectedResult);
+}
