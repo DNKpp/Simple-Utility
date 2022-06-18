@@ -80,7 +80,8 @@ TEST_CASE("predicate_fn common operator hierarchy can be adjusted with ().", "[f
 		})
 	);
 
-	const functional::predicate_fn composedPredicate = (functional::predicate_fn{ falseFunc } || orFunc) && andFunc;
+	// gcc needs that additional pair of parenthesis. Don't ask me why...
+	const functional::predicate_fn composedPredicate = ((functional::predicate_fn{ falseFunc }) || orFunc) && andFunc;
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
