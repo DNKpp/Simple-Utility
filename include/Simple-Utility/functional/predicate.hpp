@@ -57,6 +57,17 @@ namespace sl::functional::detail
 
 namespace sl::functional
 {
+	/**
+	 * \addtogroup GROUP_FUNCTIONAL
+	 *
+	 * @{
+	 */
+
+	/**
+	 * \brief Helper type which enables conjunctive composing of two functional objects via operator &&.
+	 * \tparam TDerived The most derived class type.
+	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
+	 */
 	template <class TDerived, template <class> class TClosureBase>
 		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
 	struct conjunction_operator
@@ -65,6 +76,12 @@ namespace sl::functional
 		using composer_t = detail::composer<TClosureBase, detail::binary_conjunction_fn>;
 
 	public:
+		/**
+		 * \brief Composes this and the other functional object as conjunction.
+		 * \tparam TOther The type of the other functional object.
+		 * \param other The right-hand-side functional object.
+		 * \return The conjunctive composition of this and other as new functional object.
+		 */
 		template <class TOther>
 		[[nodiscard]]
 		constexpr auto operator &&
@@ -75,6 +92,9 @@ namespace sl::functional
 			return composer_t::compose(static_cast<TDerived&&>(*this), std::forward<TOther>(other));
 		}
 
+		/**
+		 * \copydoc operator||()
+		 */
 		template <class TOther>
 		[[nodiscard]]
 		constexpr auto operator &&
@@ -85,6 +105,13 @@ namespace sl::functional
 			return composer_t::compose(static_cast<const TDerived&>(*this), std::forward<TOther>(other));
 		}
 
+		/**
+		 * \brief Composes both functional objects as conjunction.
+		 * \tparam TLhs The left-hand-side functional type.
+		 * \param lhs The left-hand-side functional object.
+		 * \param rhs The right-hand-side functional object.
+		 * \return The conjunctive composition of both functional objects as new functional object.
+		 */
 		template <class TLhs>
 		[[nodiscard]]
 		friend constexpr auto operator &&
@@ -99,6 +126,9 @@ namespace sl::functional
 			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
 		}
 
+		/**
+		 * \copydoc operator||(TLhs&&, conjunction_operator&&)
+		 */
 		template <class TLhs>
 		[[nodiscard]]
 		friend constexpr auto operator &&
@@ -113,6 +143,11 @@ namespace sl::functional
 		}
 	};
 
+	/**
+	 * \brief Helper type which enables disjunctive composing of two functional objects via operator ||.
+	 * \tparam TDerived The most derived class type.
+	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
+	 */
 	template <class TDerived, template <class> class TClosureBase>
 		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
 	struct disjunction_operator
@@ -121,6 +156,12 @@ namespace sl::functional
 		using composer_t = detail::composer<TClosureBase, detail::binary_disjunction_fn>;
 
 	public:
+		/**
+		 * \brief Composes this and the other functional object as disjunction.
+		 * \tparam TOther The type of the other functional object.
+		 * \param other The right-hand-side functional object.
+		 * \return The disjunctive composition of this and other as new functional object.
+		 */
 		template <class TOther>
 		[[nodiscard]]
 		constexpr auto operator ||
@@ -131,6 +172,9 @@ namespace sl::functional
 			return composer_t::compose(static_cast<TDerived&&>(*this), std::forward<TOther>(other));
 		}
 
+		/**
+		 * \copydoc operator||()
+		 */
 		template <class TOther>
 		[[nodiscard]]
 		constexpr auto operator ||
@@ -141,6 +185,13 @@ namespace sl::functional
 			return composer_t::compose(static_cast<const TDerived&>(*this), std::forward<TOther>(other));
 		}
 
+		/**
+		 * \brief Composes both functional objects as disjunction.
+		 * \tparam TLhs The left-hand-side functional type.
+		 * \param lhs The left-hand-side functional object.
+		 * \param rhs The right-hand-side functional object.
+		 * \return The disjunctive composition of both functional objects as new functional object.
+		 */
 		template <class TLhs>
 		[[nodiscard]]
 		friend constexpr auto operator ||
@@ -154,6 +205,9 @@ namespace sl::functional
 			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
 		}
 
+		/**
+		 * \copydoc operator||(TLhs&&, disjunction_operator&&)
+		 */
 		template <class TLhs>
 		[[nodiscard]]
 		friend constexpr auto operator ||
@@ -168,6 +222,11 @@ namespace sl::functional
 		}
 	};
 
+	/**
+	 * \brief Helper type which enables negation on functionals via operator !.
+	 * \tparam TDerived The most derived class type.
+	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
+	 */
 	template <class TDerived, template <class> class TClosureBase>
 		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
 	struct negation_operator
@@ -177,6 +236,10 @@ namespace sl::functional
 		using negated_fn = std::remove_cvref_t<decltype(std::not_fn(std::declval<TFunc>()))>;
 
 	public:
+		/**
+		 * \brief Negates this functional object.
+		 * \return The negation of this functional, as a new functional object.
+		 */
 		[[nodiscard]]
 		constexpr auto operator !() && noexcept(
 			std::is_nothrow_constructible_v<TClosureBase<negated_fn<TDerived&&>>, negated_fn<TDerived&&>>
@@ -185,6 +248,9 @@ namespace sl::functional
 			return TClosureBase<negated_fn<TDerived&&>>{ std::not_fn(static_cast<TDerived&&>(*this)) };
 		}
 
+		/**
+		 * \copydoc operator!()
+		 */
 		[[nodiscard]]
 		constexpr auto operator !() const & noexcept(
 			std::is_nothrow_constructible_v<TClosureBase<negated_fn<const TDerived&>>, negated_fn<const TDerived&>>
@@ -218,6 +284,8 @@ namespace sl::functional
 	 */
 	template <class TFunc>
 	predicate_fn(TFunc) -> predicate_fn<std::remove_cvref_t<TFunc>>;
+
+	/** @} */
 }
 
 #endif

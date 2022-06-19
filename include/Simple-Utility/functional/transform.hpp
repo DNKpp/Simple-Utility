@@ -10,7 +10,7 @@
 
 #include "Simple-Utility/functional/base.hpp"
 
-namespace sl::functional
+namespace sl::functional::detail
 {
 	struct binary_nesting_fn
 	{
@@ -33,15 +33,36 @@ namespace sl::functional
 			);
 		}
 	};
+}
 
+namespace sl::functional
+{
+	/**
+	 * \addtogroup GROUP_FUNCTIONAL
+	 *
+	 * @{
+	 */
+
+	/**
+	 * \brief Helper type which enables pipe composing of two functional objects via operator |.
+	 * \tparam TDerived The most derived class type.
+	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
+	 */
 	template <class TDerived, template <class> class TClosureBase>
 		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
 	struct pipe_operator
 	{
 	private:
-		using composer_t = detail::composer<TClosureBase, binary_nesting_fn>;
+		using composer_t = detail::composer<TClosureBase, detail::binary_nesting_fn>;
 
 	public:
+		/**
+		 * \brief Composes this and the other functional object as nested function
+		 * (result of left-hand-side as argument for right-hand-side).
+		 * \tparam TOther The type of the other functional object.
+		 * \param other The right-hand-side functional object.
+		 * \return The nested composition of this and other as new functional object.
+		 */
 		template <class TOther>
 		[[nodiscard]]
 		constexpr auto operator |
@@ -52,6 +73,9 @@ namespace sl::functional
 			return composer_t::compose(static_cast<TDerived&&>(*this), std::forward<TOther>(other));
 		}
 
+		/**
+		 * \copydoc operator||()
+		 */
 		template <class TOther>
 		[[nodiscard]]
 		constexpr auto operator |
@@ -62,6 +86,13 @@ namespace sl::functional
 			return composer_t::compose(static_cast<const TDerived&>(*this), std::forward<TOther>(other));
 		}
 
+		/**
+		 * \brief Composes both functional objects as nested function (result of left-hand-side as argument for right-hand-side).
+		 * \tparam TLhs The left-hand-side functional type.
+		 * \param lhs The left-hand-side functional object.
+		 * \param rhs The right-hand-side functional object.
+		 * \return The nested composition of both functional objects as new functional object.
+		 */
 		template <class TLhs>
 		[[nodiscard]]
 		friend constexpr auto operator |
@@ -76,6 +107,9 @@ namespace sl::functional
 			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
 		}
 
+		/**
+		 * \copydoc operator||(TLhs&&, pipe_operator&&)
+		 */
 		template <class TLhs>
 		[[nodiscard]]
 		friend constexpr auto operator |
@@ -146,6 +180,8 @@ namespace sl::functional
 			return get<VIndex>(std::forward<TTuple>(v));
 		}
 	};
+
+	/** @} */
 }
 
 #endif

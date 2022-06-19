@@ -15,6 +15,9 @@
 namespace sl::functional::detail
 {
 	template <class TFunc1, class TFunc2, class TBinaryOp>
+		requires std::same_as<TFunc1, std::remove_cvref_t<TFunc1>>
+				&& std::same_as<TFunc2, std::remove_cvref_t<TFunc2>>
+				&& std::same_as<TBinaryOp, std::remove_cvref_t<TBinaryOp>>
 	class binary_composition_fn
 	{
 	public:
@@ -95,6 +98,16 @@ namespace sl::functional::detail
 
 namespace sl::functional
 {
+	/**
+	 * \defgroup GROUP_FUNCTIONAL functional
+	 *
+	 * @{
+	 */
+
+	/**
+	 * \brief Helper type which simply stores functional objects or function pointers.
+	 * \tparam TFunc The functional type.
+	 */
 	template <class TFunc>
 		requires std::same_as<TFunc, std::remove_cvref_t<TFunc>>
 	class closure_base_fn
@@ -110,7 +123,8 @@ namespace sl::functional
 		template <class... TArgs>
 			requires std::constructible_from<function_type, TArgs...>
 		[[nodiscard]]
-		explicit (sizeof...(TArgs) == 1) constexpr closure_base_fn
+		explicit (sizeof...(TArgs) == 1)
+		constexpr closure_base_fn
 		(
 			TArgs&&... args
 		)
@@ -129,8 +143,7 @@ namespace sl::functional
 		constexpr decltype(auto) operator ()
 		(
 			TArgs&&... args
-		) const &
-		noexcept(std::is_nothrow_invocable_v<const function_type&, TArgs...>)
+		) const & noexcept(std::is_nothrow_invocable_v<const function_type&, TArgs...>)
 		{
 			return std::invoke(m_Func, std::forward<TArgs>(args)...);
 		}
@@ -143,8 +156,7 @@ namespace sl::functional
 		constexpr decltype(auto) operator ()
 		(
 			TArgs&&... args
-		) &
-		noexcept(std::is_nothrow_invocable_v<function_type&, TArgs...>)
+		) & noexcept(std::is_nothrow_invocable_v<function_type&, TArgs...>)
 		{
 			return std::invoke(m_Func, std::forward<TArgs>(args)...);
 		}
@@ -157,8 +169,7 @@ namespace sl::functional
 		constexpr decltype(auto) operator ()
 		(
 			TArgs&&... args
-		) &&
-		noexcept(std::is_nothrow_invocable_v<function_type&&, TArgs...>)
+		) && noexcept(std::is_nothrow_invocable_v<function_type&&, TArgs...>)
 		{
 			return std::invoke(std::move(m_Func), std::forward<TArgs>(args)...);
 		}
@@ -167,6 +178,8 @@ namespace sl::functional
 		[[no_unique_address]]
 		function_type m_Func{};
 	};
+
+	/** @} */
 }
 
 namespace sl::functional::detail
