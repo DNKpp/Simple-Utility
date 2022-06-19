@@ -10,41 +10,186 @@
 
 using namespace sl;
 
-constexpr auto trueFunc = [](auto&&...) { return true; };
-constexpr auto falseFunc = [](auto&&...) { return false; };
+inline constexpr auto trueFunc = [](auto&&...) { return true; };
+inline constexpr auto falseFunc = [](auto&&...) { return false; };
 
-TEST_CASE("predicate_fn is composable with operator && as left-hand-side", "[functional][predicate]")
+using empty_predicate_t = bool(*)();
+
+inline constexpr functional::predicate_fn<empty_predicate_t> truePredicate{ trueFunc };
+inline constexpr functional::predicate_fn<empty_predicate_t> falsePredicate{ falseFunc };
+
+using predicate_reference_list_t = std::tuple<functional::predicate_fn<empty_predicate_t>&,
+											const functional::predicate_fn<empty_predicate_t>&,
+											functional::predicate_fn<empty_predicate_t>&&>;
+
+TEST_CASE("predicate_fn is constructed from predicate.", "[functional][predicate]")
 {
-	const auto& [chainedFunction, expectedResult] = GENERATE(table<bool(*)(), bool>({ { trueFunc, true }, { falseFunc, false } }));
+	functional::predicate_fn<empty_predicate_t> predicate{ trueFunc };
 
-	const functional::predicate_fn composedPredicate = functional::predicate_fn{ trueFunc } && chainedFunction;
+	REQUIRE(predicate());
+}
+
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is evaluated via operator ()",
+	"[functional][predicate]",
+	predicate_reference_list_t
+)
+{
+	auto [sourcePredicate, expectedResult] = GENERATE(
+		table<empty_predicate_t,
+		bool>({
+			{ trueFunc, true },
+			{ falseFunc, false }
+			})
+	);
+
+	functional::predicate_fn predicate{ sourcePredicate };
+
+	REQUIRE(static_cast<TestType>(predicate)() == expectedResult);
+}
+
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is composable with operator && as left-hand-side",
+	"[functional][predicate]",
+	predicate_reference_list_t
+)
+{
+	const auto& [chainedFunction, expectedResult] = GENERATE(
+		table<empty_predicate_t,
+		bool>({
+			{ trueFunc, true },
+			{ falseFunc, false }
+			})
+	);
+
+	functional::predicate_fn predicate{ truePredicate };
+	const functional::predicate_fn composedPredicate = static_cast<TestType>(predicate) && chainedFunction;
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEST_CASE("predicate_fn is composable with operator && as right-hand-side", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is composable with operator && as right-hand-side",
+	"[functional][predicate]",
+	predicate_reference_list_t
+)
 {
-	const auto& [chainedFunction, expectedResult] = GENERATE(table<bool(*)(), bool>({ { trueFunc, true }, { falseFunc, false } }));
+	const auto& [chainedFunction, expectedResult] = GENERATE(
+		table<empty_predicate_t,
+		bool>({
+			{ trueFunc, true },
+			{ falseFunc, false }
+			})
+	);
 
-	const functional::predicate_fn composedPredicate = chainedFunction && functional::predicate_fn{ trueFunc };
+	functional::predicate_fn predicate{ truePredicate };
+	const functional::predicate_fn composedPredicate = chainedFunction && static_cast<TestType>(predicate);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEST_CASE("predicate_fn is composable with operator || as left-hand-side", "[functional][predicate]")
+TEMPLATE_TEST_CASE_SIG(
+	"predicate_fn is composable as param on both sides of operator &&.",
+	"[functional][predicate]",
+	((bool VDummy, class TLhs, class TRhs), VDummy, TLhs, TRhs),
+	(true, functional::predicate_fn<empty_predicate_t>&, functional::predicate_fn<empty_predicate_t>&),
+	(true, functional::predicate_fn<empty_predicate_t>&, const functional::predicate_fn<empty_predicate_t>&),
+	(true, functional::predicate_fn<empty_predicate_t>&, functional::predicate_fn<empty_predicate_t>&&),
+	(true, const functional::predicate_fn<empty_predicate_t>&, functional::predicate_fn<empty_predicate_t>&),
+	(true, const functional::predicate_fn<empty_predicate_t>&, const functional::predicate_fn<empty_predicate_t>&),
+	(true, const functional::predicate_fn<empty_predicate_t>&, functional::predicate_fn<empty_predicate_t>&&),
+	(true, functional::predicate_fn<empty_predicate_t>&&, functional::predicate_fn<empty_predicate_t>&),
+	(true, functional::predicate_fn<empty_predicate_t>&&, const functional::predicate_fn<empty_predicate_t>&),
+	(true, functional::predicate_fn<empty_predicate_t>&&, functional::predicate_fn<empty_predicate_t>&&)
+)
 {
-	const auto& [chainedFunction, expectedResult] = GENERATE(table<bool(*)(), bool>({ { trueFunc, true }, { falseFunc, false } }));
+	const auto& [lhsPredicate, rhsPredicate, expectedResult] = GENERATE(
+		table<empty_predicate_t,
+		empty_predicate_t,
+		bool>({
+			{ falseFunc, falseFunc, false },
+			{ trueFunc, falseFunc, false },
+			{ falseFunc, trueFunc, false },
+			{ trueFunc, trueFunc, true }
+			})
+	);
+	functional::predicate_fn lhs{ lhsPredicate };
+	functional::predicate_fn rhs{ rhsPredicate };
 
-	const functional::predicate_fn composedPredicate = functional::predicate_fn{ falseFunc } || chainedFunction;
+	const functional::predicate_fn composedPredicate = static_cast<TLhs>(lhs) && static_cast<TRhs>(rhs);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEST_CASE("predicate_fn is composable with operator || as right-hand-side", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is composable with operator || as left-hand-side",
+	"[functional][predicate]",
+	predicate_reference_list_t
+)
 {
-	const auto& [chainedFunction, expectedResult] = GENERATE(table<bool(*)(), bool>({ { trueFunc, true }, { falseFunc, false } }));
+	const auto& [chainedFunction, expectedResult] = GENERATE(
+		table<empty_predicate_t,
+		bool>({
+			{ trueFunc, true },
+			{ falseFunc, false }
+			})
+	);
 
-	const functional::predicate_fn composedPredicate = chainedFunction || functional::predicate_fn{ falseFunc };
+	functional::predicate_fn predicate{ falsePredicate };
+	const functional::predicate_fn composedPredicate = static_cast<TestType>(predicate) || chainedFunction;
+
+	REQUIRE(composedPredicate() == expectedResult);
+}
+
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is composable with operator || as right-hand-side",
+	"[functional][predicate]",
+	predicate_reference_list_t
+)
+{
+	const auto& [chainedFunction, expectedResult] = GENERATE(
+		table<empty_predicate_t,
+		bool>({
+			{ trueFunc, true },
+			{ falseFunc, false }
+			})
+	);
+
+	functional::predicate_fn predicate{ falsePredicate };
+	const functional::predicate_fn composedPredicate = chainedFunction || static_cast<TestType>(predicate);
+
+	REQUIRE(composedPredicate() == expectedResult);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"predicate_fn is composable as param on both sides of operator ||.",
+	"[functional][predicate]",
+	((bool VDummy, class TLhs, class TRhs), VDummy, TLhs, TRhs),
+	(true, functional::predicate_fn<empty_predicate_t>&, functional::predicate_fn<empty_predicate_t>&),
+	(true, functional::predicate_fn<empty_predicate_t>&, const functional::predicate_fn<empty_predicate_t>&),
+	(true, functional::predicate_fn<empty_predicate_t>&, functional::predicate_fn<empty_predicate_t>&&),
+	(true, const functional::predicate_fn<empty_predicate_t>&, functional::predicate_fn<empty_predicate_t>&),
+	(true, const functional::predicate_fn<empty_predicate_t>&, const functional::predicate_fn<empty_predicate_t>&),
+	(true, const functional::predicate_fn<empty_predicate_t>&, functional::predicate_fn<empty_predicate_t>&&),
+	(true, functional::predicate_fn<empty_predicate_t>&&, functional::predicate_fn<empty_predicate_t>&),
+	(true, functional::predicate_fn<empty_predicate_t>&&, const functional::predicate_fn<empty_predicate_t>&),
+	(true, functional::predicate_fn<empty_predicate_t>&&, functional::predicate_fn<empty_predicate_t>&&)
+)
+{
+	const auto& [lhsPredicate, rhsPredicate, expectedResult] = GENERATE(
+		table<empty_predicate_t,
+		empty_predicate_t,
+		bool>({
+			{ falseFunc, falseFunc, false },
+			{ trueFunc, falseFunc, true },
+			{ falseFunc, trueFunc, true },
+			{ trueFunc, trueFunc, true }
+			})
+	);
+	functional::predicate_fn lhs{ lhsPredicate };
+	functional::predicate_fn rhs{ rhsPredicate };
+
+	const functional::predicate_fn composedPredicate = static_cast<TLhs>(lhs) || static_cast<TRhs>(rhs);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
@@ -52,8 +197,8 @@ TEST_CASE("predicate_fn is composable with operator || as right-hand-side", "[fu
 TEST_CASE("predicate_fn follows the common operator hierarchy.", "[functional][predicate]")
 {
 	const auto& [andFunc, orFunc, expectedResult] = GENERATE(
-		table<bool(*)(),
-		bool(*)(),
+		table<empty_predicate_t,
+		empty_predicate_t,
 		bool>({
 			{ falseFunc, falseFunc, false },
 			{ falseFunc, trueFunc, true },
@@ -62,7 +207,7 @@ TEST_CASE("predicate_fn follows the common operator hierarchy.", "[functional][p
 			})
 	);
 
-	const functional::predicate_fn composedPredicate = functional::predicate_fn{ trueFunc } && andFunc || orFunc;
+	const functional::predicate_fn composedPredicate = truePredicate && andFunc || orFunc;
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
@@ -70,8 +215,8 @@ TEST_CASE("predicate_fn follows the common operator hierarchy.", "[functional][p
 TEST_CASE("predicate_fn common operator hierarchy can be adjusted with ().", "[functional][predicate]")
 {
 	const auto& [andFunc, orFunc, expectedResult] = GENERATE(
-		table<bool(*)(),
-		bool(*)(),
+		table<empty_predicate_t,
+		empty_predicate_t,
 		bool>({
 			{ falseFunc, falseFunc, false },
 			{ falseFunc, trueFunc, false },
@@ -80,27 +225,27 @@ TEST_CASE("predicate_fn common operator hierarchy can be adjusted with ().", "[f
 			})
 	);
 
-	// gcc needs that additional pair of parenthesis. Don't ask me why...
-	const functional::predicate_fn composedPredicate = ((functional::predicate_fn{ falseFunc }) || orFunc) && andFunc;
+	const functional::predicate_fn composedPredicate = (falsePredicate || orFunc) && andFunc;
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEST_CASE("prvalue predicate_fn can be negated via operator !", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn can be negated via operator !",
+	"[functional][predicate]",
+	predicate_reference_list_t
+)
 {
-	const auto& [basePredicate, expectedResult] = GENERATE(table<bool(*)(), bool>({ { trueFunc, false }, { falseFunc, true } }));
+	const auto& [basePredicate, expectedResult] = GENERATE(
+		table<empty_predicate_t,
+		bool>({
+			{ trueFunc, false },
+			{ falseFunc, true }
+			})
+	);
 
-	const functional::predicate_fn negatedPredicate = !functional::predicate_fn{ basePredicate };
-
-	REQUIRE(negatedPredicate() == expectedResult);
-}
-
-TEST_CASE("predicate_fn can be negated via operator !", "[functional][predicate]")
-{
-	const auto& [basePredicate, expectedResult] = GENERATE(table<bool(*)(), bool>({ { trueFunc, false }, { falseFunc, true } }));
-
-	const functional::predicate_fn predicate{ basePredicate };
-	const functional::predicate_fn negatedPredicate = !predicate;
+	functional::predicate_fn predicate{ basePredicate };
+	const functional::predicate_fn negatedPredicate = !static_cast<TestType>(predicate);
 
 	REQUIRE(negatedPredicate() == expectedResult);
 }
