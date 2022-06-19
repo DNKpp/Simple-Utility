@@ -74,7 +74,7 @@ namespace sl::functional
 		}
 
 		/**
-		 * \copydoc operator||()
+		 * \copydoc operator|()
 		 */
 		template <class TOther>
 		[[nodiscard]]
@@ -108,7 +108,7 @@ namespace sl::functional
 		}
 
 		/**
-		 * \copydoc operator||(TLhs&&, pipe_operator&&)
+		 * \copydoc operator|(TLhs&&, pipe_operator&&)
 		 */
 		template <class TLhs>
 		[[nodiscard]]

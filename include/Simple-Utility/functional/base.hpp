@@ -100,7 +100,36 @@ namespace sl::functional
 {
 	/**
 	 * \defgroup GROUP_FUNCTIONAL functional
+	 * \brief This namespace contains helper types for complex functional chaining and concrete functional objects.
+	 * \details As working more and more with ``ranges`` and functional style approach, this library is designed to fully
+	 * support the programmers in such cases.
 	 *
+	 * There are mainly two parts:
+	 * - transform
+	 * - predicate
+	 *
+	 * # transform
+	 * The transform part of this library is designed to help the programmer when working with ``ranges`` or any other algorithm,
+	 * which accepts a functional as part of its interface. There is often the need to do multiple steps, before the work is actually done.
+	 * Because of this many existing functional objects are not usable by their own, thus they must be wrapped into a lambda, which
+	 * results in quite a bit of noise. With objects of type ``transform_fn`` programmers have the option to pipe function results into
+	 * other functions, and thus nest multiple functions into each other.
+	 * \snippet functional/transform.cpp functional piped
+	 * ``comp`` is equivalent to
+	 * \code{.cpp}
+	 * [](const int i) { return std::to_string(i + 42); };
+	 * \endcode
+	 *
+	 * # predicates
+	 * ``predicate_fn`` objects are fully compatible with ``transform_fn`` objects, thus they may be mixed as desired. Additionally they
+	 * offer composing via operator && and ||. Other than piping, all such composed predicates will receive the identically input and
+	 * are required to return boolean convertible results. Finally ``predicate_fn`` are easily invertible via operator !.
+	 *
+	 * \note The library classes are designed to only accept functional objects or pointers as value.
+	 * This usually works fine but may lead to surprisingly effects when working with mutable lambdas or other functional types.
+	 * In those cases the functional object itself may be wrapped into a ``std::reference_wrapper`` before putting into the
+	 * closure object.
+	 * \snippet functional/predicate.cpp predicate wrapped
 	 * @{
 	 */
 

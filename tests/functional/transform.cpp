@@ -51,10 +51,12 @@ TEST_CASE("transform_fn can be chained in arbitrary length.", "[functional][tran
 
 TEST_CASE("transform_fn can be used to project to different types.", "[functional][transform]")
 {
+	//! [functional piped]
 	functional::transform_fn comp = functional::transform_fn{ add42 }
 									| [](const int x) { return std::to_string(x); };
 
-	REQUIRE(std::invoke(comp, 1) == "43");
+	REQUIRE(comp(1) == "43");
+	//! [functional piped]
 }
 
 TEST_CASE("more complex composition_fn is evaluated in deterministic manner.", "[functional][transform]")

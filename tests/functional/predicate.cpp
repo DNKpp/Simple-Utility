@@ -268,3 +268,18 @@ TEST_CASE("predicate_fn is composable via operator |", "[functional][predicate]"
 
 	REQUIRE(finalPredicate(input) == expectedResult);
 }
+
+TEST_CASE("predicate_fn accepts functional objects wrapped into a std::reference_wrapper", "[functional][predicate]")
+{
+	//! [predicate wrapped]
+	const std::vector sourceInts{ 0, 1, 2, 3 };
+	auto skipFirst = [i{ 0 }](auto&&...) mutable { return static_cast<bool>(i++); };
+
+	const auto result = std::ranges::count_if(
+		sourceInts,
+		functional::predicate_fn{ std::ref(skipFirst) }
+	);
+
+	REQUIRE(result == 3);
+	//! [predicate wrapped]
+}

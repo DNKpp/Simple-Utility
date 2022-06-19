@@ -93,7 +93,7 @@ namespace sl::functional
 		}
 
 		/**
-		 * \copydoc operator||()
+		 * \copydoc operator&&()
 		 */
 		template <class TOther>
 		[[nodiscard]]
@@ -127,7 +127,7 @@ namespace sl::functional
 		}
 
 		/**
-		 * \copydoc operator||(TLhs&&, conjunction_operator&&)
+		 * \copydoc operator&&(TLhs&&, conjunction_operator&&)
 		 */
 		template <class TLhs>
 		[[nodiscard]]
