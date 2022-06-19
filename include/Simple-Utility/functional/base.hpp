@@ -43,8 +43,7 @@ namespace sl::functional::detail
 		constexpr decltype(auto) operator ()
 		(
 			TArgs&&... v
-		) const
-		noexcept(std::is_nothrow_invocable_v<const TBinaryOp&, const TFunc1&, const TFunc2&, TArgs...>)
+		) const & noexcept(std::is_nothrow_invocable_v<const TBinaryOp&, const TFunc1&, const TFunc2&, TArgs...>)
 		{
 			return std::invoke(
 				m_BinaryOperation,
@@ -59,13 +58,27 @@ namespace sl::functional::detail
 		constexpr decltype(auto) operator ()
 		(
 			TArgs&&... v
-		)
-		noexcept(std::is_nothrow_invocable_v<TBinaryOp&, TFunc1&, TFunc2&, TArgs...>)
+		) & noexcept(std::is_nothrow_invocable_v<TBinaryOp&, TFunc1&, TFunc2&, TArgs...>)
 		{
 			return std::invoke(
 				m_BinaryOperation,
 				m_Func1,
 				m_Func2,
+				std::forward<TArgs>(v)...
+			);
+		}
+
+		template <class... TArgs>
+		[[nodiscard]]
+		constexpr decltype(auto) operator ()
+		(
+			TArgs&&... v
+		) && noexcept(std::is_nothrow_invocable_v<TBinaryOp&&, TFunc1&&, TFunc2&&, TArgs...>)
+		{
+			return std::invoke(
+				std::move(m_BinaryOperation),
+				std::move(m_Func1),
+				std::move(m_Func2),
 				std::forward<TArgs>(v)...
 			);
 		}
@@ -115,7 +128,7 @@ namespace sl::functional
 		constexpr decltype(auto) operator ()
 		(
 			TArgs&&... args
-		) const
+		) const &
 		noexcept(std::is_nothrow_invocable_v<const function_type&, TArgs...>)
 		{
 			return std::invoke(m_Func, std::forward<TArgs>(args)...);
@@ -129,10 +142,24 @@ namespace sl::functional
 		constexpr decltype(auto) operator ()
 		(
 			TArgs&&... args
-		)
+		) &
 		noexcept(std::is_nothrow_invocable_v<function_type&, TArgs...>)
 		{
 			return std::invoke(m_Func, std::forward<TArgs>(args)...);
+		}
+
+		/**
+		 * \copydoc operator()()
+		 */
+		template <class... TArgs>
+		[[nodiscard]]
+		constexpr decltype(auto) operator ()
+		(
+			TArgs&&... args
+		) &&
+		noexcept(std::is_nothrow_invocable_v<function_type&&, TArgs...>)
+		{
+			return std::invoke(std::move(m_Func), std::forward<TArgs>(args)...);
 		}
 
 	private:
