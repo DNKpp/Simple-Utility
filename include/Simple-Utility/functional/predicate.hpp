@@ -285,6 +285,200 @@ namespace sl::functional
 	template <class TFunc>
 	predicate_fn(TFunc) -> predicate_fn<std::remove_cvref_t<TFunc>>;
 
+	/**
+	 * \brief Helper type which accepts a binary predicate type and enables pipe, conjunctive and disjunctive chaining.
+	 * \tparam TFunc The binary predicate type.
+	 */
+	template <class TFunc>
+	class binary_predicate_fn
+		: public closure_base_fn<TFunc>,
+		public pipe_operator<predicate_fn<TFunc>, predicate_fn>,
+		public conjunction_operator<predicate_fn<TFunc>, predicate_fn>,
+		public disjunction_operator<predicate_fn<TFunc>, predicate_fn>,
+		public negation_operator<predicate_fn<TFunc>, predicate_fn>
+	{
+		using closure_t = closure_base_fn<TFunc>;
+
+	public:
+		using closure_t::closure_t;
+
+		/**
+		 * \brief Curries the first parameter of this predicate object.
+		 * \tparam TValue The type of the bound value.
+		 * \param value The value to be bound.
+		 * \return The curried predicate as new functional object.
+		 */
+		template <class TValue>
+		[[nodiscard]]
+		constexpr auto bind_first(TValue&& value) const &
+		{
+			return predicate_fn{
+				[predicate{ *this }, v{ std::forward<TValue>(value) }]<class T>(T&& lhs)
+				{
+					return std::invoke(predicate, v, std::forward<T>(lhs));
+				}
+			};
+		}
+
+		/**
+		 * \copydoc bind_first()
+		 */
+		template <class TValue>
+		[[nodiscard]]
+		constexpr auto bind_first(TValue&& value) &&
+		{
+			return predicate_fn{
+				[predicate{ std::move(*this) }, v{ std::forward<TValue>(value) }]<class T>(T&& lhs)
+				{
+					return std::invoke(predicate, v, std::forward<T>(lhs));
+				}
+			};
+		}
+
+		/**
+		 * \brief Curries the second parameter of this predicate object.
+		 * \tparam TValue The type of the bound value.
+		 * \param value The value to be bound.
+		 * \return The curried predicate as new functional object.
+		 */
+		template <class TValue>
+		[[nodiscard]]
+		constexpr auto bind_second(TValue&& value) const &
+		{
+			return predicate_fn{
+				[predicate{ *this }, v{ std::forward<TValue>(value) }]<class T>(T&& lhs)
+				{
+					return std::invoke(predicate, std::forward<T>(lhs), v);
+				}
+			};
+		}
+
+		/**
+		 * \copydoc bind_second()
+		 */
+		template <class TValue>
+		[[nodiscard]]
+		constexpr auto bind_second(TValue&& value) &&
+		{
+			return predicate_fn{
+				[predicate{ std::move(*this) }, v{ std::forward<TValue>(value) }]<class T>(T&& lhs)
+				{
+					return std::invoke(predicate, std::forward<T>(lhs), v);
+				}
+			};
+		}
+	};
+
+	/**
+	 * \brief Deduction guide.
+	 * \tparam TFunc Type of the given functional.
+	 */
+	template <class TFunc>
+	binary_predicate_fn(TFunc) -> binary_predicate_fn<std::remove_cvref_t<TFunc>>;
+
+	/**
+	 * \defgroup GROUP_FUNCTIONAL_PREDICATE predicate
+	 * @{
+	 */
+
+	/**
+	 * \brief Functional object, which compares its two operands less.
+	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_less`` is used instead.
+	 */
+	inline constexpr binary_predicate_fn less{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
+		{
+			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
+			{
+				return std::cmp_less(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
+			}
+			else
+				return std::forward<TLhs>(lhs) < std::forward<TRhs>(rhs);
+		}
+	};
+
+	/**
+	 * \brief Functional object, which compares its two operands less-equal.
+	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_less_equal`` is used instead.
+	 */
+	inline constexpr binary_predicate_fn less_equal{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
+		{
+			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
+			{
+				return std::cmp_less_equal(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
+			}
+			else
+				return std::forward<TLhs>(lhs) <= std::forward<TRhs>(rhs);
+		}
+	};
+
+	/**
+	 * \brief Functional object, which compares its two operands greater.
+	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_greater`` is used instead.
+	 */
+	inline constexpr binary_predicate_fn greater{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
+		{
+			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
+			{
+				return std::cmp_greater(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
+			}
+			else
+				return std::forward<TLhs>(lhs) > std::forward<TRhs>(rhs);
+		}
+	};
+
+	/**
+	 * \brief Functional object, which compares its two operands greater-equal.
+	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_greater_equal`` is used instead.
+	 */
+	inline constexpr binary_predicate_fn greater_equal{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
+		{
+			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
+			{
+				return std::cmp_greater_equal(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
+			}
+			else
+				return std::forward<TLhs>(lhs) >= std::forward<TRhs>(rhs);
+		}
+	};
+
+	/**
+	 * \brief Functional object, which compares its two operands equal.
+	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_equal`` is used instead.
+	 */
+	inline constexpr binary_predicate_fn equal{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
+		{
+			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
+			{
+				return std::cmp_equal(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
+			}
+			else
+				return std::forward<TLhs>(lhs) == std::forward<TRhs>(rhs);
+		}
+	};
+
+	/**
+	 * \brief Functional object, which compares its two operands not-equal.
+	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_not_equal`` is used instead.
+	 */
+	inline constexpr binary_predicate_fn not_equal{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
+		{
+			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
+			{
+				return std::cmp_not_equal(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
+			}
+			else
+				return std::forward<TLhs>(lhs) != std::forward<TRhs>(rhs);
+		}
+	};
+
+	/** @} */
+
 	/** @} */
 }
 
