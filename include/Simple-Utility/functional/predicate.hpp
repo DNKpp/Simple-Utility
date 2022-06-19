@@ -22,8 +22,8 @@ namespace sl::functional::detail
 			TFunc2&& func2,
 			const TArgs&... v
 		) const
-		noexcept(noexcept(std::invoke(std::forward<TFunc1>(func1), v...))
-				&& noexcept(std::invoke(std::forward<TFunc2>(func2), v...))
+		noexcept(std::is_nothrow_invocable_v<TFunc1, std::add_lvalue_reference_t<std::add_const_t<TArgs>>...>
+				&& std::is_nothrow_invocable_v<TFunc2, std::add_lvalue_reference_t<std::add_const_t<TArgs>>...>
 		)
 			requires std::predicate<TFunc1, TArgs...>
 					&& std::predicate<TFunc2, TArgs...>
@@ -43,8 +43,8 @@ namespace sl::functional::detail
 			TFunc2&& func2,
 			const TArgs&... v
 		) const
-		noexcept(noexcept(std::invoke(std::forward<TFunc1>(func1), v...))
-				&& noexcept(std::invoke(std::forward<TFunc2>(func2), v...))
+		noexcept(std::is_nothrow_invocable_v<TFunc1, std::add_lvalue_reference_t<std::add_const_t<TArgs>>...>
+				&& std::is_nothrow_invocable_v<TFunc2, std::add_lvalue_reference_t<std::add_const_t<TArgs>>...>
 		)
 			requires std::predicate<TFunc1, TArgs...>
 					&& std::predicate<TFunc2, TArgs...>
@@ -70,7 +70,7 @@ namespace sl::functional
 		constexpr auto operator &&
 		(
 			TOther&& other
-		) && noexcept(noexcept(composer_t::compose(std::declval<TDerived&&>(), std::declval<TOther>())))
+		) && noexcept(detail::is_nothrow_composable_v<composer_t, TDerived&&, TOther>)
 		{
 			return composer_t::compose(static_cast<TDerived&&>(*this), std::forward<TOther>(other));
 		}
@@ -80,7 +80,7 @@ namespace sl::functional
 		constexpr auto operator &&
 		(
 			TOther&& other
-		) const & noexcept(noexcept(composer_t::compose(std::declval<const TDerived&>(), std::declval<TOther>())))
+		) const & noexcept(detail::is_nothrow_composable_v<composer_t, const TDerived&, TOther>)
 		{
 			return composer_t::compose(static_cast<const TDerived&>(*this), std::forward<TOther>(other));
 		}
@@ -92,7 +92,7 @@ namespace sl::functional
 			TLhs&& lhs,
 			conjunction_operator&& rhs
 		)
-		noexcept(noexcept(composer_t::compose(std::declval<TLhs>(), std::declval<TDerived&&>())))
+		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, TDerived&&>)
 			requires (!requires { lhs.operator|(std::move(rhs)); })
 
 		{
@@ -106,7 +106,7 @@ namespace sl::functional
 			TLhs&& lhs,
 			const conjunction_operator& rhs
 		)
-		noexcept(noexcept(composer_t::compose(std::declval<TLhs>(), std::declval<const TDerived&>())))
+		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, const TDerived&>)
 			requires (!requires { lhs.operator|(rhs); })
 		{
 			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
@@ -126,7 +126,7 @@ namespace sl::functional
 		constexpr auto operator ||
 		(
 			TOther&& other
-		) && noexcept(noexcept(composer_t::compose(std::declval<TDerived&&>(), std::declval<TOther>())))
+		) && noexcept(detail::is_nothrow_composable_v<composer_t, TDerived&&, TOther>)
 		{
 			return composer_t::compose(static_cast<TDerived&&>(*this), std::forward<TOther>(other));
 		}
@@ -136,7 +136,7 @@ namespace sl::functional
 		constexpr auto operator ||
 		(
 			TOther&& other
-		) const & noexcept(noexcept(composer_t::compose(std::declval<const TDerived&>(), std::declval<TOther>())))
+		) const & noexcept(detail::is_nothrow_composable_v<composer_t, const TDerived&, TOther>)
 		{
 			return composer_t::compose(static_cast<const TDerived&>(*this), std::forward<TOther>(other));
 		}
@@ -148,7 +148,7 @@ namespace sl::functional
 			TLhs&& lhs,
 			disjunction_operator&& rhs
 		)
-		noexcept(noexcept(composer_t::compose(std::declval<TLhs>(), std::declval<TDerived&&>())))
+		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, TDerived&&>)
 			requires (!requires { lhs.operator|(std::move(rhs)); })
 
 		{
@@ -162,7 +162,7 @@ namespace sl::functional
 			TLhs&& lhs,
 			const disjunction_operator& rhs
 		)
-		noexcept(noexcept(composer_t::compose(std::declval<TLhs>(), std::declval<const TDerived&>())))
+		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, const TDerived&>)
 			requires (!requires { lhs.operator|(rhs); })
 		{
 			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));

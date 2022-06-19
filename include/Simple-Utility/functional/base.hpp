@@ -44,12 +44,7 @@ namespace sl::functional::detail
 		(
 			TArgs&&... v
 		) const
-		noexcept(noexcept(std::invoke(
-			std::declval<const TBinaryOp&>(),
-			std::declval<const TFunc1&>(),
-			std::declval<const TFunc2&>(),
-			std::forward<TArgs>(v)...
-		)))
+		noexcept(std::is_nothrow_invocable_v<const TBinaryOp&, const TFunc1&, const TFunc2&, TArgs...>)
 		{
 			return std::invoke(
 				m_BinaryOperation,
@@ -65,12 +60,7 @@ namespace sl::functional::detail
 		(
 			TArgs&&... v
 		)
-		noexcept(noexcept(std::invoke(
-			std::declval<TBinaryOp&>(),
-			std::declval<TFunc1&>(),
-			std::declval<TFunc2&>(),
-			std::forward<TArgs>(v)...
-		)))
+		noexcept(std::is_nothrow_invocable_v<TBinaryOp&, TFunc1&, TFunc2&, TArgs...>)
 		{
 			return std::invoke(
 				m_BinaryOperation,
@@ -125,7 +115,8 @@ namespace sl::functional
 		constexpr decltype(auto) operator ()
 		(
 			TArgs&&... args
-		) const noexcept(noexcept(std::invoke(std::declval<const function_type&>(), args...)))
+		) const
+		noexcept(std::is_nothrow_invocable_v<const function_type&, TArgs...>)
 		{
 			return std::invoke(m_Func, std::forward<TArgs>(args)...);
 		}
@@ -138,7 +129,8 @@ namespace sl::functional
 		constexpr decltype(auto) operator ()
 		(
 			TArgs&&... args
-		) noexcept(noexcept(std::invoke(std::declval<function_type&>(), args...)))
+		)
+		noexcept(std::is_nothrow_invocable_v<function_type&, TArgs...>)
 		{
 			return std::invoke(m_Func, std::forward<TArgs>(args)...);
 		}
@@ -171,6 +163,9 @@ namespace sl::functional::detail
 			return { std::forward<TFunc1>(func1), std::forward<TFunc2>(func2) };
 		}
 	};
+
+	template <class TComposer, class TFunc1, class TFunc2>
+	inline constexpr bool is_nothrow_composable_v{ noexcept(TComposer::compose(std::declval<TFunc1>(), std::declval<TFunc2>())) };
 }
 
 #endif
