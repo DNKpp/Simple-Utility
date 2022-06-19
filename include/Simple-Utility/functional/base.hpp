@@ -96,6 +96,7 @@ namespace sl::functional::detail
 namespace sl::functional
 {
 	template <class TFunc>
+		requires std::same_as<TFunc, std::remove_cvref_t<TFunc>>
 	class closure_base_fn
 	{
 	public:

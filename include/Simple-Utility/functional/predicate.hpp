@@ -199,14 +199,15 @@ namespace sl::functional
 	 * \tparam TFunc The functional type.
 	 */
 	template <class TFunc>
+		requires std::same_as<TFunc, std::remove_cvref_t<TFunc>>
 	class predicate_fn
-		: public closure_base_fn<std::remove_cvref_t<TFunc>>,
+		: public closure_base_fn<TFunc>,
 		public pipe_operator<predicate_fn<TFunc>, predicate_fn>,
 		public conjunction_operator<predicate_fn<TFunc>, predicate_fn>,
 		public disjunction_operator<predicate_fn<TFunc>, predicate_fn>,
 		public negation_operator<predicate_fn<TFunc>, predicate_fn>
 	{
-		using closure_t = closure_base_fn<std::remove_cvref_t<TFunc>>;
+		using closure_t = closure_base_fn<TFunc>;
 	public:
 		using closure_t::closure_t;
 	};
