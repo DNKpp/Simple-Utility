@@ -8,6 +8,9 @@
 
 #include "Simple-Utility/functional/predicate.hpp"
 
+#include <ranges>
+#include <vector>
+
 using namespace sl;
 
 inline constexpr auto trueFunc = [](auto&&...) { return true; };
