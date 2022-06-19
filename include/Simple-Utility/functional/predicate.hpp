@@ -93,7 +93,7 @@ namespace sl::functional
 			conjunction_operator&& rhs
 		)
 		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, TDerived&&>)
-			requires (!requires { lhs.operator|(std::move(rhs)); })
+			requires (!requires { lhs.operator&&(std::move(rhs)); })
 
 		{
 			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
@@ -107,7 +107,7 @@ namespace sl::functional
 			const conjunction_operator& rhs
 		)
 		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, const TDerived&>)
-			requires (!requires { lhs.operator|(rhs); })
+			requires (!requires { lhs.operator&&(rhs); })
 		{
 			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
 		}
@@ -149,8 +149,7 @@ namespace sl::functional
 			disjunction_operator&& rhs
 		)
 		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, TDerived&&>)
-			requires (!requires { lhs.operator|(std::move(rhs)); })
-
+			requires (!requires { lhs.operator||(std::move(rhs)); })
 		{
 			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
 		}
@@ -163,7 +162,7 @@ namespace sl::functional
 			const disjunction_operator& rhs
 		)
 		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, const TDerived&>)
-			requires (!requires { lhs.operator|(rhs); })
+			requires (!requires { lhs.operator||(rhs); })
 		{
 			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
 		}
