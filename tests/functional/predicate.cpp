@@ -59,7 +59,7 @@ TEST_CASE("predicate_fn follows the common operator hierarchy.", "[functional][p
 			{ falseFunc, trueFunc, true },
 			{ trueFunc, falseFunc, true },
 			{ trueFunc, trueFunc, true },
-		})
+			})
 	);
 
 	const functional::predicate_fn composedPredicate = functional::predicate_fn{ trueFunc } && andFunc || orFunc;
@@ -77,7 +77,7 @@ TEST_CASE("predicate_fn common operator hierarchy can be adjusted with ().", "[f
 			{ falseFunc, trueFunc, false },
 			{ trueFunc, falseFunc, false },
 			{ trueFunc, trueFunc, true },
-		})
+			})
 	);
 
 	// gcc needs that additional pair of parenthesis. Don't ask me why...
@@ -103,4 +103,23 @@ TEST_CASE("predicate_fn can be negated via operator !", "[functional][predicate]
 	const functional::predicate_fn negatedPredicate = !predicate;
 
 	REQUIRE(negatedPredicate() == expectedResult);
+}
+
+TEST_CASE("predicate_fn is composable via operator |", "[functional][predicate]")
+{
+	const auto& [input, expectedResult] = GENERATE(
+		table<std::string,
+		bool>({
+			{ "9", true },
+			{ "0", false },
+			{ "10", false }
+			})
+	);
+
+	const functional::predicate_fn composedPredicate = functional::predicate_fn{ [](const int v) { return std::cmp_less(v, 10); } }
+														&& [](const int v) { return std::cmp_less(0, v); };
+	const functional::predicate_fn finalPredicate = [](const std::string& str) { return std::stoi(str); }
+													| composedPredicate;
+
+	REQUIRE(finalPredicate(input) == expectedResult);
 }
