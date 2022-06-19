@@ -228,8 +228,8 @@ namespace sl::functional::detail
 		[[nodiscard]]
 		static constexpr closure_base_fn<TFunc1, TFunc2> compose
 		(
-			TFunc1 func1,
-			TFunc2 func2
+			TFunc1&& func1,
+			TFunc2&& func2
 		)
 		noexcept(std::is_nothrow_constructible_v<closure_base_fn<TFunc1, TFunc2>, TFunc1, TFunc2>)
 		{
