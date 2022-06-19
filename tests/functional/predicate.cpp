@@ -8,7 +8,7 @@
 
 #include "Simple-Utility/functional/predicate.hpp"
 
-#include <ranges>
+#include <algorithm>
 #include <vector>
 
 using namespace sl;
