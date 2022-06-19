@@ -152,8 +152,11 @@ namespace sl::functional
 		template <class... TArgs>
 			requires std::constructible_from<function_type, TArgs...>
 		[[nodiscard]]
-		explicit (sizeof...(TArgs) == 1)
-		constexpr closure_base_fn
+		constexpr
+		/**\cond conditional-explicit*/
+		explicit(sizeof...(TArgs) == 1)
+		/**\endcond*/
+		closure_base_fn
 		(
 			TArgs&&... args
 		)
