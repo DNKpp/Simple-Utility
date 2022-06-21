@@ -287,7 +287,7 @@ TEST_CASE("predicate_fn accepts functional objects wrapped into a std::reference
 	//! [predicate wrapped]
 }
 
-TEMPLATE_TEST_CASE("less compares its two parameters","[functional][predicate]", int, float)
+TEMPLATE_TEST_CASE("less compares its two parameters", "[functional][predicate]", int, float)
 {
 	const auto& [value1, value2, expectedResult] = GENERATE(
 		table<int,
@@ -303,7 +303,7 @@ TEMPLATE_TEST_CASE("less compares its two parameters","[functional][predicate]",
 	REQUIRE(result == expectedResult);
 }
 
-TEMPLATE_TEST_CASE("greater compares its two parameters","[functional][predicate]", int, float)
+TEMPLATE_TEST_CASE("greater compares its two parameters", "[functional][predicate]", int, float)
 {
 	const auto& [value1, value2, expectedResult] = GENERATE(
 		table<int,
@@ -319,7 +319,7 @@ TEMPLATE_TEST_CASE("greater compares its two parameters","[functional][predicate
 	REQUIRE(result == expectedResult);
 }
 
-TEMPLATE_TEST_CASE("less_equal compares its two parameters","[functional][predicate]", int, float)
+TEMPLATE_TEST_CASE("less_equal compares its two parameters", "[functional][predicate]", int, float)
 {
 	const auto& [value1, value2, expectedResult] = GENERATE(
 		table<int,
@@ -336,7 +336,7 @@ TEMPLATE_TEST_CASE("less_equal compares its two parameters","[functional][predic
 	REQUIRE(result == expectedResult);
 }
 
-TEMPLATE_TEST_CASE("greater_equal compares its two parameters","[functional][predicate]", int, float)
+TEMPLATE_TEST_CASE("greater_equal compares its two parameters", "[functional][predicate]", int, float)
 {
 	const auto& [value1, value2, expectedResult] = GENERATE(
 		table<int,
@@ -353,7 +353,7 @@ TEMPLATE_TEST_CASE("greater_equal compares its two parameters","[functional][pre
 	REQUIRE(result == expectedResult);
 }
 
-TEMPLATE_TEST_CASE("equal compares its two parameters","[functional][predicate]", int, float)
+TEMPLATE_TEST_CASE("equal compares its two parameters", "[functional][predicate]", int, float)
 {
 	const auto& [value1, value2, expectedResult] = GENERATE(
 		table<int,
@@ -369,7 +369,7 @@ TEMPLATE_TEST_CASE("equal compares its two parameters","[functional][predicate]"
 	REQUIRE(result == expectedResult);
 }
 
-TEMPLATE_TEST_CASE("not_equal compares its two parameters","[functional][predicate]", int, float)
+TEMPLATE_TEST_CASE("not_equal compares its two parameters", "[functional][predicate]", int, float)
 {
 	const auto& [value1, value2, expectedResult] = GENERATE(
 		table<int,
