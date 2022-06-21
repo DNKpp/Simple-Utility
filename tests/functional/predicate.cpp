@@ -287,53 +287,6 @@ TEST_CASE("predicate_fn accepts functional objects wrapped into a std::reference
 	//! [predicate wrapped]
 }
 
-using binary_int_predicate = bool(*)(int, int);
-using binary_int_predicate_reference_list_t = std::tuple<functional::binary_predicate_fn<binary_int_predicate>&,
-														const functional::binary_predicate_fn<binary_int_predicate>&,
-														functional::binary_predicate_fn<binary_int_predicate>&&>;
-
-TEMPLATE_LIST_TEST_CASE(
-	"binary_predicate_fn accepts currying of the first parameter.",
-	"[functional][predicate]",
-	binary_int_predicate_reference_list_t
-)
-{
-	functional::binary_predicate_fn<bool(*)(int, int)> compare{
-		[](const int lhs, const int rhs) { return lhs < rhs; }
-	};
-	const functional::predicate_fn curried{ static_cast<TestType>(compare).bind_first(42) };
-
-	REQUIRE(curried(43));
-	REQUIRE(!curried(42));
-}
-
-TEMPLATE_LIST_TEST_CASE(
-	"binary_predicate_fn accepts currying of the second parameter.",
-	"[functional][predicate]",
-	binary_int_predicate_reference_list_t
-)
-{
-	functional::binary_predicate_fn<bool(*)(int, int)> compare{
-		[](const int lhs, const int rhs) { return lhs < rhs; }
-	};
-	const functional::predicate_fn curried{ static_cast<TestType>(compare).bind_second(42) };
-
-	REQUIRE(curried(41));
-	REQUIRE(!curried(42));
-}
-
-TEST_CASE("binary_predicate_fn can be used with stl algorithms.", "[functional][predicate]")
-{
-	const std::vector sourceInts{ 0, 1, 2, 3 };
-
-	const auto result = std::ranges::count_if(
-		sourceInts,
-		functional::greater.bind_second(1)
-	);
-
-	REQUIRE(result == 2);
-}
-
 TEMPLATE_TEST_CASE("less compares its two parameters","[functional][predicate]", int, float)
 {
 	const auto& [value1, value2, expectedResult] = GENERATE(
