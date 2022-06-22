@@ -16,6 +16,7 @@ add_executable(
 	"concepts/stl_extensions.cpp"
 	"functional/transform.cpp"
 	"functional/predicate.cpp"
+	"functional/tuple.cpp"
 )
 
 target_link_libraries(
