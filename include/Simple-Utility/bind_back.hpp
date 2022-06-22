@@ -8,13 +8,19 @@
 
 #pragma once
 
+#include <concepts>
+#include <functional>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+
 namespace sl::detail
 {
 	template <class TFunc, class TBoundArgsTuple, class... TCallArgs>
 	decltype(auto) bind_back_caller(TFunc&& func, TBoundArgsTuple&& boundArgsTuple, TCallArgs&&... callArgs)
 	{
 		return std::apply(
-			[&func, &callArgs...]<typename... TArgs>(TArgs&&... boundArgs) -> decltype(auto)
+			[&func, &callArgs...]<class... TArgs>(TArgs&&... boundArgs) -> decltype(auto)
 			{
 				return std::invoke(
 					std::forward<TFunc>(func),
