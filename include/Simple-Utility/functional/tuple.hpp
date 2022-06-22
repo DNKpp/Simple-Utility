@@ -87,6 +87,13 @@ namespace sl::functional::tuple
 		[]<class... TTuples>(TTuples&&... tuples) { return detail::concat(std::forward<TTuples>(tuples)...); }
 	};
 
+	/**
+	 * \brief Combines all given lvalue references into one tuple
+	 */
+	inline constexpr transform_fn tie{
+		[]<class... TTypes>(TTypes&... args) { return std::tie(args...); }
+	};
+
 	/** @} */
 }
 

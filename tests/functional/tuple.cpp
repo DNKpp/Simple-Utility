@@ -66,3 +66,15 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(std::same_as<TExpected, decltype(tuple::concat(std::declval<TTuples>()...))>);
 }
 
+TEMPLATE_TEST_CASE_SIG(
+	"tie creates tuple from lvalue references.",
+	"[functional][tuple]",
+	((bool VDummy, class TExpected, class... TArgs), VDummy, TExpected, TArgs...),
+	(true, std::tuple<int&>, int&),
+	(true, std::tuple<int&, float&, int&>, int&, float&, int&),
+	(true, std::tuple<const int&>, const int&),
+	(true, std::tuple<>)
+)
+{
+	STATIC_REQUIRE(std::same_as<TExpected, decltype(tuple::tie(std::declval<TArgs>()...))>);
+}
