@@ -76,6 +76,10 @@ namespace sl::detail
 
 namespace sl
 {
+	/**
+	 * \brief Helper function, which generates a forwarding call wrapper for the given function and curries
+	 * the params beginning at the back.
+	 */
 	inline constexpr auto bind_back = []<class TFunc, class... TBoundArgs>(TFunc&& func, TBoundArgs&&... boundArgs)
 	{
 		return detail::bind_back_fn{ std::forward<TFunc>(func), std::forward<TBoundArgs>(boundArgs)... };
