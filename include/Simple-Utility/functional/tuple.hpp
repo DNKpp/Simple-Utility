@@ -80,6 +80,9 @@ namespace sl::functional::tuple
 		[]<class T>(T&& t) { return detail::reduce<TArgs...>(std::forward<T>(t)); }
 	};
 
+	/**
+	 * \brief Combines all elements from each given tuple into one tuple.
+	 */
 	inline constexpr transform_fn concat{
 		[]<class... TTuples>(TTuples&&... tuples) { return detail::concat(std::forward<TTuples>(tuples)...); }
 	};
