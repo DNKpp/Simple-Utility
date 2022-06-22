@@ -94,6 +94,56 @@ namespace sl::functional::tuple
 		[](auto&... args) { return std::tie(args...); }
 	};
 
+	/**
+	 * \brief Utility class to forward-and-apply tuple objects.
+	 * \tparam TFunc Type of underlying invocable object.
+	 */
+	template <class TFunc>
+		requires std::same_as<TFunc, std::remove_cvref_t<TFunc>>
+	class apply_fn
+		: closure_base_fn<TFunc>,
+		public pipe_operator<apply_fn<TFunc>, apply_fn>,
+		public bind_front_operator<apply_fn<TFunc>, apply_fn>,
+		public bind_back_operator<apply_fn<TFunc>, apply_fn>
+	{
+		using closure_t = closure_base_fn<TFunc>;
+	public:
+		using closure_t::closure_t;
+
+		/**
+		* \brief Forwards and applies the arguments with the underlying function.
+		* \tparam TType Tuple-like type to forward to the underlying function.
+		* \param args Parameters to forward to the underlying function.
+		* \return Return value of the underlying function, if any.
+		*/
+		template <class TType>
+		constexpr decltype(auto) operator()(TType&& args) const & noexcept(noexcept(std::apply(std::declval<const TFunc&>(), args)))
+		{
+			return std::apply(static_cast<const closure_t&>(*this), std::forward<TType>(args));
+		}
+
+		/*! \copydoc operator()() */
+		template <class TType>
+		constexpr decltype(auto) operator()(TType&& args) & noexcept(noexcept(std::apply(std::declval<TFunc&>(), args)))
+		{
+			return std::apply(static_cast<closure_t&>(*this), std::forward<TType>(args));
+		}
+
+		/*! \copydoc operator()() */
+		template <class TType>
+		constexpr decltype(auto) operator()(TType&& args) && noexcept(noexcept(std::apply(std::declval<TFunc&&>(), args)))
+		{
+			return std::apply(static_cast<closure_t&&>(*this), std::forward<TType>(args));
+		}
+	};
+
+	/**
+	 * \brief Deduction guide.
+	 * \tparam TFunc Type of the given functional.
+	 */
+	template <class TFunc>
+	apply_fn(TFunc) -> apply_fn<std::remove_cvref_t<TFunc>>;
+
 	/** @} */
 }
 

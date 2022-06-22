@@ -6,6 +6,7 @@
 #include <catch2/catch_template_test_macros.hpp>
 
 #include "Simple-Utility/functional/tuple.hpp"
+#include "Simple-Utility/functional/predicate.hpp"
 
 using namespace sl::functional;
 
@@ -77,4 +78,21 @@ TEMPLATE_TEST_CASE_SIG(
 )
 {
 	STATIC_REQUIRE(std::same_as<TExpected, decltype(tuple::tie(std::declval<TArgs>()...))>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"apply_fn forwards tuple elements as given to std::apply.",
+	"[functional][tuple]",
+	((auto... VValue), VValue...),
+	('c'),
+	(42, 'c')
+)
+{
+	const std::tuple tuple{ VValue... };
+
+	tuple::apply_fn func{ tuple::tie | equal << tuple };
+
+	REQUIRE(func(tuple));
+	REQUIRE(std::as_const(func)(tuple));
+	REQUIRE(std::move(func)(tuple));
 }
