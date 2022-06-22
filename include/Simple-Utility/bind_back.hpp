@@ -20,7 +20,7 @@ namespace sl::detail
 	decltype(auto) bind_back_caller(TFunc&& func, TBoundArgsTuple&& boundArgsTuple, TCallArgs&&... callArgs)
 	{
 		return std::apply(
-			[&func, &callArgs...]<class... TArgs>(TArgs&&... boundArgs) -> decltype(auto)
+			[&]<class... TArgs>(TArgs&&... boundArgs) -> decltype(auto)
 			{
 				return std::invoke(
 					std::forward<TFunc>(func),
