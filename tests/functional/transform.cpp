@@ -118,3 +118,22 @@ TEMPLATE_TEST_CASE_SIG(
 
 	REQUIRE(std::get<VIndex>(tuple) == e);
 }
+
+TEST_CASE("transform_fn front params can be curried", "[functional][transform]")
+{
+	const functional::transform_fn transform{ [](const int x, const std::string& str) { return x + std::stoi(str); } };
+
+	const int result = (transform << 42)("1337");
+
+	REQUIRE(result == 1379);
+}
+
+TEST_CASE("transform_fn front params can be curried multiple times", "[functional][transform]")
+{
+	const functional::transform_fn transform{ [](const int x, const std::string& str) { return x + std::stoi(str); } };
+	const functional::transform_fn curriedTransform = transform << 42 << "1337";
+
+	const int result = curriedTransform();
+
+	REQUIRE(result == 1379);
+}
