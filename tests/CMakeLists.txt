@@ -13,9 +13,11 @@ add_executable(
 	"concepts/access_operators.cpp"
 	"concepts/shift_operators.cpp"
 	"concepts/logical_arithmetic_operators.cpp"
+	"concepts/utility.cpp"
 	"concepts/stl_extensions.cpp"
 	"functional/transform.cpp"
 	"functional/predicate.cpp"
+	"functional/tuple.cpp"
 )
 
 target_link_libraries(
