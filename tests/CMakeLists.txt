@@ -7,12 +7,13 @@ include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
 
 add_executable(
 	${PROJECT_NAME}-Tests
+	"bind_back.cpp"
+	"nullables.cpp"
+	"unique_handle.cpp"
 	"concepts/access_operators.cpp"
 	"concepts/shift_operators.cpp"
 	"concepts/logical_arithmetic_operators.cpp"
-	"unique_handle.cpp"
 	"concepts/stl_extensions.cpp"
-	"nullables.cpp"
 	"functional/transform.cpp"
 	"functional/predicate.cpp"
 )
