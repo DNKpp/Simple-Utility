@@ -271,7 +271,9 @@ namespace sl::functional
 		public pipe_operator<predicate_fn<TFunc>, predicate_fn>,
 		public conjunction_operator<predicate_fn<TFunc>, predicate_fn>,
 		public disjunction_operator<predicate_fn<TFunc>, predicate_fn>,
-		public negation_operator<predicate_fn<TFunc>, predicate_fn>
+		public negation_operator<predicate_fn<TFunc>, predicate_fn>,
+		public bind_front_operator<predicate_fn<TFunc>, predicate_fn>,
+		public bind_back_operator<predicate_fn<TFunc>, predicate_fn>
 	{
 		using closure_t = closure_base_fn<TFunc>;
 	public:
