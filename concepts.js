@@ -79,7 +79,8 @@ var concepts =
         [ "not_same_as", "d4/d40/conceptsl_1_1concepts_1_1not__same__as.html", null ],
         [ "initializes", "d1/ded/conceptsl_1_1concepts_1_1initializes.html", null ],
         [ "assignable_to", "dd/d00/conceptsl_1_1concepts_1_1assignable__to.html", null ],
-        [ "weakly_equality_comparable_with", "d3/da6/conceptsl_1_1concepts_1_1weakly__equality__comparable__with.html", null ]
+        [ "weakly_equality_comparable_with", "d3/da6/conceptsl_1_1concepts_1_1weakly__equality__comparable__with.html", null ],
+        [ "unique_types", "d8/d76/conceptsl_1_1concepts_1_1unique__types.html", null ]
       ] ],
       [ "nullables", "d0/de0/namespacesl_1_1nullables.html", [
         [ "input_nullable", "d1/d54/conceptsl_1_1nullables_1_1input__nullable.html", null ],

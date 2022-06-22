@@ -2,6 +2,17 @@ var annotated_dup =
 [
     [ "sl", "dd/d2c/namespacesl.html", [
       [ "functional", "d9/da2/namespacesl_1_1functional.html", [
+        [ "tuple", "d7/dce/namespacesl_1_1functional_1_1tuple.html", [
+          [ "apply_fn", "d0/d97/classsl_1_1functional_1_1tuple_1_1apply__fn.html", "d0/d97/classsl_1_1functional_1_1tuple_1_1apply__fn" ]
+        ] ],
+        [ "bind_back_operator", "d8/dff/structsl_1_1functional_1_1bind__back__operator.html", "d8/dff/structsl_1_1functional_1_1bind__back__operator" ],
+        [ "bind_front_operator", "de/dc6/structsl_1_1functional_1_1bind__front__operator.html", "de/dc6/structsl_1_1functional_1_1bind__front__operator" ],
+        [ "closure_base_fn", "d9/de4/classsl_1_1functional_1_1closure__base__fn.html", "d9/de4/classsl_1_1functional_1_1closure__base__fn" ],
+        [ "conjunction_operator", "db/d42/structsl_1_1functional_1_1conjunction__operator.html", "db/d42/structsl_1_1functional_1_1conjunction__operator" ],
+        [ "disjunction_operator", "d5/db7/structsl_1_1functional_1_1disjunction__operator.html", "d5/db7/structsl_1_1functional_1_1disjunction__operator" ],
+        [ "negation_operator", "dc/da5/structsl_1_1functional_1_1negation__operator.html", "dc/da5/structsl_1_1functional_1_1negation__operator" ],
+        [ "pipe_operator", "df/d1b/structsl_1_1functional_1_1pipe__operator.html", "df/d1b/structsl_1_1functional_1_1pipe__operator" ],
+        [ "predicate_fn", "df/d86/classsl_1_1functional_1_1predicate__fn.html", "df/d86/classsl_1_1functional_1_1predicate__fn" ],
         [ "transform_fn", "da/dbe/classsl_1_1functional_1_1transform__fn.html", "da/dbe/classsl_1_1functional_1_1transform__fn" ]
       ] ],
       [ "nullables", "d0/de0/namespacesl_1_1nullables.html", [

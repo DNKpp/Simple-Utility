@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['value_5for_0',['value_or',['../d6/d6c/classsl_1_1nullables_1_1value__or.html',1,'sl::nullables']]],
-  ['value_5for_5ffunc_5ft_1',['value_or_func_t',['../dc/d1e/structsl_1_1nullables_1_1value__or__func__t.html',1,'sl::nullables']]],
-  ['value_5for_5ffunc_5ft_3c_20tnullable_2c_20talt_20_3e_2',['value_or_func_t&lt; TNullable, TAlt &gt;',['../df/dc5/structsl_1_1nullables_1_1value__or__func__t_3_01_t_nullable_00_01_t_alt_01_4.html',1,'sl::nullables']]]
+  ['pipe_5foperator_0',['pipe_operator',['../df/d1b/structsl_1_1functional_1_1pipe__operator.html',1,'sl::functional']]],
+  ['pipe_5foperator_3c_20apply_5ffn_3c_20tfunc_20_3e_2c_20apply_5ffn_20_3e_1',['pipe_operator&lt; apply_fn&lt; TFunc &gt;, apply_fn &gt;',['../df/d1b/structsl_1_1functional_1_1pipe__operator.html',1,'sl::functional']]],
+  ['pipe_5foperator_3c_20predicate_5ffn_3c_20tfunc_20_3e_2c_20predicate_5ffn_20_3e_2',['pipe_operator&lt; predicate_fn&lt; TFunc &gt;, predicate_fn &gt;',['../df/d1b/structsl_1_1functional_1_1pipe__operator.html',1,'sl::functional']]],
+  ['pipe_5foperator_3c_20transform_5ffn_3c_20tfunc_20_3e_2c_20transform_5ffn_20_3e_3',['pipe_operator&lt; transform_fn&lt; TFunc &gt;, transform_fn &gt;',['../df/d1b/structsl_1_1functional_1_1pipe__operator.html',1,'sl::functional']]],
+  ['predicate_5ffn_4',['predicate_fn',['../df/d86/classsl_1_1functional_1_1predicate__fn.html',1,'sl::functional']]]
 ];

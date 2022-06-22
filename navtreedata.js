@@ -26,14 +26,14 @@ var NAVTREE =
 [
   [ "Simple-Utility", "index.html", [
     [ "Simple-Utility C++20 header-only library", "index.html", [
-      [ "Author", "index.html#autotoc_md5", null ],
-      [ "License", "index.html#autotoc_md6", null ],
-      [ "Description", "index.html#autotoc_md7", [
-        [ "nullables & unique_handle", "index.html#autotoc_md8", null ]
+      [ "Author", "index.html#autotoc_md7", null ],
+      [ "License", "index.html#autotoc_md8", null ],
+      [ "Description", "index.html#autotoc_md9", [
+        [ "nullables & unique_handle", "index.html#autotoc_md10", null ]
       ] ],
-      [ "Installation with CMake", "index.html#autotoc_md9", [
-        [ "FetchContent", "index.html#autotoc_md10", null ],
-        [ "CPM", "index.html#autotoc_md11", null ]
+      [ "Installation with CMake", "index.html#autotoc_md11", [
+        [ "FetchContent", "index.html#autotoc_md12", null ],
+        [ "CPM", "index.html#autotoc_md13", null ]
       ] ]
     ] ],
     [ "Modules", "modules.html", "modules" ],
@@ -72,7 +72,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"index.html#autotoc_md7"
+"dd/d2b/namespacesl_1_1functional_1_1tuple_1_1detail.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

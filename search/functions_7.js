@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['swap_0',['swap',['../da/da9/classsl_1_1unique__handle.html#a9175ff5bbccc6298811a5d06b936c3bb',1,'sl::unique_handle']]]
+  ['predicate_5ffn_0',['predicate_fn',['../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#gad80174982ec9de5b965f774c44b4113f',1,'sl::functional']]]
 ];

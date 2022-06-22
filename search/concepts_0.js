@@ -79,5 +79,6 @@ var searchData=
   ['right_5fshiftable_5fr_76',['right_shiftable_r',['../df/de6/conceptsl_1_1concepts_1_1right__shiftable__r.html',1,'sl::concepts']]],
   ['right_5fshiftable_5fwith_77',['right_shiftable_with',['../d1/d5a/conceptsl_1_1concepts_1_1right__shiftable__with.html',1,'sl::concepts']]],
   ['right_5fshiftable_5fwith_5fr_78',['right_shiftable_with_r',['../d1/df2/conceptsl_1_1concepts_1_1right__shiftable__with__r.html',1,'sl::concepts']]],
-  ['weakly_5fequality_5fcomparable_5fwith_79',['weakly_equality_comparable_with',['../d3/da6/conceptsl_1_1concepts_1_1weakly__equality__comparable__with.html',1,'sl::concepts']]]
+  ['unique_5ftypes_79',['unique_types',['../d8/d76/conceptsl_1_1concepts_1_1unique__types.html',1,'sl::concepts']]],
+  ['weakly_5fequality_5fcomparable_5fwith_80',['weakly_equality_comparable_with',['../d3/da6/conceptsl_1_1concepts_1_1weakly__equality__comparable__with.html',1,'sl::concepts']]]
 ];

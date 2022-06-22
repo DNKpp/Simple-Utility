@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['implementation_0',['implementation',['../dc/dd8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s___i_m_p_l.html',1,'']]]
+  ['functional_0',['functional',['../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html',1,'']]]
 ];

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['fwd_5fvalue_0',['fwd_value',['../da/d9b/classsl_1_1nullables_1_1fwd__value.html',1,'sl::nullables']]],
-  ['fwd_5fvalue_5ffunc_5ft_1',['fwd_value_func_t',['../d3/db2/structsl_1_1nullables_1_1fwd__value__func__t.html',1,'sl::nullables']]],
-  ['fwd_5fvalue_5ffunc_5ft_3c_20tnullable_2c_20tfunc_20_3e_2',['fwd_value_func_t&lt; TNullable, TFunc &gt;',['../d3/d0c/structsl_1_1nullables_1_1fwd__value__func__t_3_01_t_nullable_00_01_t_func_01_4.html',1,'sl::nullables']]]
+  ['closure_5fbase_5ffn_0',['closure_base_fn',['../d9/de4/classsl_1_1functional_1_1closure__base__fn.html',1,'sl::functional']]],
+  ['conjunction_5foperator_1',['conjunction_operator',['../db/d42/structsl_1_1functional_1_1conjunction__operator.html',1,'sl::functional']]],
+  ['conjunction_5foperator_3c_20predicate_5ffn_3c_20tfunc_20_3e_2c_20predicate_5ffn_20_3e_2',['conjunction_operator&lt; predicate_fn&lt; TFunc &gt;, predicate_fn &gt;',['../db/d42/structsl_1_1functional_1_1conjunction__operator.html',1,'sl::functional']]]
 ];
