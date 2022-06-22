@@ -12,7 +12,7 @@ using namespace sl::functional;
 #pragma warning(disable: 26444)
 TEMPLATE_TEST_CASE_SIG(
 	"get forwards tuple to the specific get implementation and returns as received.",
-	"[functional]",
+	"[functional][tuple]",
 	((class TQuery, class TExpected, auto... VValue), TQuery, TExpected, VValue...),
 	(char, char&, 'c'),
 	( int, int&, 'c', 42),
@@ -29,7 +29,7 @@ TEMPLATE_TEST_CASE_SIG(
 
 TEMPLATE_TEST_CASE_SIG(
 	"get_at forwards tuple to the specific get implementation and returns as received.",
-	"[functional]",
+	"[functional][tuple]",
 	((std::size_t VIndex, class TExpected, auto... VValue), VIndex, TExpected, VValue...),
 	(0, char&, 'c'),
 	(1, int&, 'c', 42),
@@ -41,5 +41,16 @@ TEMPLATE_TEST_CASE_SIG(
 	TExpected e = tuple::get_at<VIndex>(tuple);
 
 	REQUIRE(std::get<VIndex>(tuple) == e);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"reduce extracts elements from tuple",
+	"[functional][tuple]",
+	((bool VDummy, class TSource, class TTarget, class... TArgs), VDummy, TSource, TTarget, TArgs...),
+	(true, std::tuple<int, float, int&>, std::tuple<int&, float, int>, int&, float, int),
+	(true, std::tuple<int, float, int&>, std::tuple<int&, float>, int&, float)
+)
+{
+	STATIC_REQUIRE(std::same_as<TTarget, decltype(tuple::reduce<TArgs...>(std::declval<TSource>()))>);
 }
 

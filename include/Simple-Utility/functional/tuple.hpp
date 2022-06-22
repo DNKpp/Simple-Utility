@@ -3,16 +3,12 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-//          Copyright Dominic Koepke 2019 - 2022.
-// Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          https://www.boost.org/LICENSE_1_0.txt)
-
 #ifndef SL_UTILITY_FUNCTIONAL_TUPLE_HPP
 #define SL_UTILITY_FUNCTIONAL_TUPLE_HPP
 
 #pragma once
 
+#include "Simple-Utility/concepts/utility.hpp"
 #include "Simple-Utility/functional/transform.hpp"
 
 #include <utility>
@@ -49,6 +45,31 @@ namespace sl::functional::tuple
 			using std::get;
 			return get<VIndex>(std::forward<TTuple>(v));
 		}
+	};
+}
+
+namespace sl::functional::tuple::detail
+{
+	// workaround
+	// as of MSVC version 19.32.31328.0 the following workaround became necessary.
+	template <class... TArgs, class TTuple>
+	constexpr std::tuple<TArgs...> reduce(TTuple&& tuple)
+	{
+		return { tuple::get<TArgs>(std::forward<TTuple>(tuple))... };
+	}
+}
+
+namespace sl::functional::tuple
+{
+	/**
+	 * \brief Reduces (or permutes) the components of a tuple and returns a them as new tuple.
+	 * \tparam TArgs The component types of the returned tuple.
+	 * \remark The source and target tuple must consist of unique types.
+	 */
+	template <class... TArgs>
+		requires concepts::unique_types<TArgs...>
+	inline constexpr transform_fn reduce{
+		[]<class T>(T&& t) { return detail::reduce<TArgs...>(std::forward<T>(t)); }
 	};
 
 	/** @} */
