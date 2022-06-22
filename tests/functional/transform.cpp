@@ -5,7 +5,7 @@
 
 #include <catch2/catch_template_test_macros.hpp>
 
-#include "Simple-Utility/functional.hpp"
+#include "Simple-Utility/functional/transform.hpp"
 
 #include <optional>
 
@@ -24,63 +24,48 @@ TEST_CASE("transform_fn invokes internal function on invocation.", "[functional]
 	REQUIRE(std::invoke(proj, 1) == 43);
 }
 
-TEST_CASE("composition_fn invokes internal func1 and supplies func2 with the result.", "[functional][transform]")
-{
-	functional::detail::composition_fn comp{ add42, times3 };
-
-	REQUIRE(std::invoke(comp, 1) == 129);
-}
-
-TEST_CASE("composition_fn can be nested.", "[functional][transform]")
-{
-	functional::detail::composition_fn comp{
-		functional::detail::composition_fn{ add42, times3 },
-		[](int x) { return x - 5; }
-	};
-
-	REQUIRE(std::invoke(comp, 1) == 124);
-}
-
 TEST_CASE("transform_fn can be used on the right side of operator | expressions.", "[functional][transform]")
 {
-	functional::detail::composition_fn comp = times3
-											| functional::transform_fn{ add42 };
+	functional::transform_fn comp = times3
+									| functional::transform_fn{ add42 };
 
 	REQUIRE(std::invoke(comp, 1) == 45);
 }
 
 TEST_CASE("transform_fn can be used on the left side of operator | expressions.", "[functional][transform]")
 {
-	functional::detail::composition_fn comp = functional::transform_fn{ add42 }
-											| times3;
+	functional::transform_fn comp = functional::transform_fn{ add42 }
+									| times3;
 
 	REQUIRE(std::invoke(comp, 1) == 129);
 }
 
 TEST_CASE("transform_fn can be chained in arbitrary length.", "[functional][transform]")
 {
-	functional::detail::composition_fn comp = functional::transform_fn{ add42 }
-											| functional::transform_fn{ add42 }
-											| functional::transform_fn{ add42 };
+	functional::transform_fn comp = functional::transform_fn{ add42 }
+									| functional::transform_fn{ add42 }
+									| functional::transform_fn{ add42 };
 
 	REQUIRE(std::invoke(comp, 1) == 127);
 }
 
 TEST_CASE("transform_fn can be used to project to different types.", "[functional][transform]")
 {
-	functional::detail::composition_fn comp = functional::transform_fn{ add42 }
-											| [](int x) { return std::to_string(x); };
+	//! [functional piped]
+	functional::transform_fn comp = functional::transform_fn{ add42 }
+									| [](const int x) { return std::to_string(x); };
 
-	REQUIRE(std::invoke(comp, 1) == "43");
+	REQUIRE(comp(1) == "43");
+	//! [functional piped]
 }
 
 TEST_CASE("more complex composition_fn is evaluated in deterministic manner.", "[functional][transform]")
 {
-	auto comp = (functional::transform_fn{ add42 }
-				| times3)
-				|
-				(functional::transform_fn{ [](int x) { return x - 5; } }
-				| times3);
+	functional::transform_fn comp = (functional::transform_fn{ add42 }
+									| times3)
+									|
+									(functional::transform_fn{ [](int x) { return x - 5; } }
+									| times3);
 
 	REQUIRE(std::invoke(comp, 3) == 390);
 }
