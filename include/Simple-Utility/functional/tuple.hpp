@@ -57,6 +57,14 @@ namespace sl::functional::tuple::detail
 	{
 		return { tuple::get<TArgs>(std::forward<TTuple>(tuple))... };
 	}
+
+	// workaround
+	// as of MSVC version 19.32.31328.0 the following workaround became necessary.
+	template <class... TTuples>
+	constexpr auto concat(TTuples&&... tuples)
+	{
+		return std::tuple_cat(std::forward<TTuples>(tuples)...);
+	}
 }
 
 namespace sl::functional::tuple
@@ -70,6 +78,10 @@ namespace sl::functional::tuple
 		requires concepts::unique_types<TArgs...>
 	inline constexpr transform_fn reduce{
 		[]<class T>(T&& t) { return detail::reduce<TArgs...>(std::forward<T>(t)); }
+	};
+
+	inline constexpr transform_fn concat{
+		[]<class... TTuples>(TTuples&&... tuples) { return detail::concat(std::forward<TTuples>(tuples)...); }
 	};
 
 	/** @} */

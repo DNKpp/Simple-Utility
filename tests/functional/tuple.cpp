@@ -54,3 +54,15 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(std::same_as<TTarget, decltype(tuple::reduce<TArgs...>(std::declval<TSource>()))>);
 }
 
+TEMPLATE_TEST_CASE_SIG(
+	"concat combines elements from multiple tuples.",
+	"[functional][tuple]",
+	((bool VDummy, class TExpected, class... TTuples), VDummy, TExpected, TTuples...),
+	(true, std::tuple<int, float, int&>, const std::tuple<int, float, int&>&, std::tuple<>&),
+	(true, std::tuple<int, float, int&>, std::tuple<>&&, const std::tuple<int, float, int&>&),
+	(true, std::tuple<int, float>, const std::tuple<int, float>&)
+)
+{
+	STATIC_REQUIRE(std::same_as<TExpected, decltype(tuple::concat(std::declval<TTuples>()...))>);
+}
+
