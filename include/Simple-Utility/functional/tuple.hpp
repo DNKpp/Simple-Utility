@@ -91,7 +91,7 @@ namespace sl::functional::tuple
 	 * \brief Combines all given lvalue references into one tuple
 	 */
 	inline constexpr transform_fn tie{
-		[]<class... TTypes>(TTypes&... args) { return std::tie(args...); }
+		[](auto&... args) { return std::tie(args...); }
 	};
 
 	/** @} */
