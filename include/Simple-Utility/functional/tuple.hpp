@@ -117,21 +117,21 @@ namespace sl::functional::tuple
 		* \return Return value of the underlying function, if any.
 		*/
 		template <class TType>
-		constexpr decltype(auto) operator()(TType&& args) const & noexcept(noexcept(std::apply(std::declval<const TFunc&>(), args)))
+		constexpr decltype(auto) operator()(TType&& args) const & noexcept(noexcept(std::apply(std::declval<const closure_t&>(), args)))
 		{
 			return std::apply(static_cast<const closure_t&>(*this), std::forward<TType>(args));
 		}
 
 		/*! \copydoc operator()() */
 		template <class TType>
-		constexpr decltype(auto) operator()(TType&& args) & noexcept(noexcept(std::apply(std::declval<TFunc&>(), args)))
+		constexpr decltype(auto) operator()(TType&& args) & noexcept(noexcept(std::apply(std::declval<closure_t&>(), args)))
 		{
 			return std::apply(static_cast<closure_t&>(*this), std::forward<TType>(args));
 		}
 
 		/*! \copydoc operator()() */
 		template <class TType>
-		constexpr decltype(auto) operator()(TType&& args) && noexcept(noexcept(std::apply(std::declval<TFunc&&>(), args)))
+		constexpr decltype(auto) operator()(TType&& args) && noexcept(noexcept(std::apply(std::declval<closure_t&&>(), args)))
 		{
 			return std::apply(static_cast<closure_t&&>(*this), std::forward<TType>(args));
 		}
