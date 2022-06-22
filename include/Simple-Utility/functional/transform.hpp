@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "Simple-Utility/bind_back.hpp"
 #include "Simple-Utility/functional/base.hpp"
 
 namespace sl::functional::detail
@@ -179,6 +180,60 @@ namespace sl::functional
 	};
 
 	/**
+	 * \brief Helper type which enables unary back currying on functionals via operator >>.
+	 * \tparam TDerived The most derived class type.
+	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
+	 */
+	template <class TDerived, template <class> class TClosureBase>
+		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
+	struct bind_back_operator
+	{
+	private:
+		template <class TFunc, class TValue>
+		using bind_back_fn = std::remove_cvref_t<decltype(bind_back(std::declval<TFunc>(), std::declval<TValue>()))>;
+
+	public:
+		/**
+		 * \brief Curries the back parameter of this functional object.
+		 * \tparam TValue The type of the curried value.
+		 * \param value The value to be curried.
+		 * \return The curried functional, as a new functional object.
+		 */
+		template <class TValue>
+		[[nodiscard]]
+		constexpr auto operator >>
+		(
+			TValue&& value
+		) && noexcept(
+			std::is_nothrow_constructible_v<TClosureBase<bind_back_fn<TDerived&&, TValue>>, bind_back_fn<TDerived&&, TValue>>
+		)
+		{
+			return TClosureBase<bind_back_fn<TDerived&&, TValue>>{
+				bind_back(static_cast<TDerived&&>(*this), std::forward<TValue>(value))
+			};
+		}
+
+		/**
+		 * \copydoc operator!()
+		 */
+		template <class TValue>
+		[[nodiscard]]
+		constexpr auto operator >>
+		(
+			TValue&& value
+		) const & noexcept(
+			std::is_nothrow_constructible_v<TClosureBase<bind_back_fn<const TDerived&, TValue>>,
+											bind_back_fn<const TDerived&, TValue>
+			>
+		)
+		{
+			return TClosureBase<bind_back_fn<const TDerived&, TValue>>{
+				bind_back(static_cast<const TDerived&>(*this), std::forward<TValue>(value))
+			};
+		}
+	};
+
+	/**
 	 * \brief Helper type which accepts a functional type and enables pipe chaining.
 	 * \tparam TFunc The functional type.
 	 */
@@ -187,7 +242,8 @@ namespace sl::functional
 	class transform_fn
 		: public closure_base_fn<TFunc>,
 		public pipe_operator<transform_fn<TFunc>, transform_fn>,
-		public bind_front_operator<transform_fn<TFunc>, transform_fn>
+		public bind_front_operator<transform_fn<TFunc>, transform_fn>,
+		public bind_back_operator<transform_fn<TFunc>, transform_fn>
 	{
 		using closure_t = closure_base_fn<TFunc>;
 	public:
