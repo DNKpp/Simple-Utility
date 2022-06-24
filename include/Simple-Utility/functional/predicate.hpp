@@ -53,6 +53,12 @@ namespace sl::functional::detail
 					|| std::invoke(std::forward<TFunc2>(func2), v...);
 		}
 	};
+	
+	struct conjunction_base_tag
+	{};
+	
+	struct disjunction_base_tag
+	{};
 }
 
 namespace sl::functional
@@ -71,6 +77,7 @@ namespace sl::functional
 	template <class TDerived, template <class> class TClosureBase>
 		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
 	struct conjunction_operator
+		: private unified_base<detail::conjunction_base_tag>
 	{
 	private:
 		using composer_t = detail::composer<TClosureBase, detail::binary_conjunction_fn>;
@@ -113,6 +120,7 @@ namespace sl::functional
 		 * \return The conjunctive composition of both functional objects as new functional object.
 		 */
 		template <class TLhs>
+			requires (!derived_from_unified_base<TLhs, detail::conjunction_base_tag>)
 		[[nodiscard]]
 		friend constexpr auto operator &&
 		(
@@ -120,8 +128,6 @@ namespace sl::functional
 			conjunction_operator&& rhs
 		)
 		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, TDerived&&>)
-			requires (!requires { lhs.operator&&(std::move(rhs)); })
-
 		{
 			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
 		}
@@ -130,6 +136,7 @@ namespace sl::functional
 		 * \copydoc operator&&(TLhs&&, conjunction_operator&&)
 		 */
 		template <class TLhs>
+			requires (!derived_from_unified_base<TLhs, detail::conjunction_base_tag>)
 		[[nodiscard]]
 		friend constexpr auto operator &&
 		(
@@ -137,7 +144,6 @@ namespace sl::functional
 			const conjunction_operator& rhs
 		)
 		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, const TDerived&>)
-			requires (!requires { lhs.operator&&(rhs); })
 		{
 			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
 		}
@@ -151,6 +157,7 @@ namespace sl::functional
 	template <class TDerived, template <class> class TClosureBase>
 		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
 	struct disjunction_operator
+		: private unified_base<detail::disjunction_base_tag>
 	{
 	private:
 		using composer_t = detail::composer<TClosureBase, detail::binary_disjunction_fn>;
@@ -193,6 +200,7 @@ namespace sl::functional
 		 * \return The disjunctive composition of both functional objects as new functional object.
 		 */
 		template <class TLhs>
+			requires (!derived_from_unified_base<TLhs, detail::disjunction_base_tag>)
 		[[nodiscard]]
 		friend constexpr auto operator ||
 		(
@@ -200,7 +208,6 @@ namespace sl::functional
 			disjunction_operator&& rhs
 		)
 		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, TDerived&&>)
-			requires (!requires { lhs.operator||(std::move(rhs)); })
 		{
 			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
 		}
@@ -209,6 +216,7 @@ namespace sl::functional
 		 * \copydoc operator||(TLhs&&, disjunction_operator&&)
 		 */
 		template <class TLhs>
+			requires (!derived_from_unified_base<TLhs, detail::disjunction_base_tag>)
 		[[nodiscard]]
 		friend constexpr auto operator ||
 		(
@@ -216,7 +224,6 @@ namespace sl::functional
 			const disjunction_operator& rhs
 		)
 		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, const TDerived&>)
-			requires (!requires { lhs.operator||(rhs); })
 		{
 			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
 		}
