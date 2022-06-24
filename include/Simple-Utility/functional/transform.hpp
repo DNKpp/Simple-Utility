@@ -9,6 +9,7 @@
 #pragma once
 
 #include "Simple-Utility/bind_back.hpp"
+#include "Simple-Utility/unified_base.hpp"
 #include "Simple-Utility/functional/base.hpp"
 
 namespace sl::functional::detail
@@ -34,6 +35,9 @@ namespace sl::functional::detail
 			);
 		}
 	};
+
+	struct pipe_base_tag
+	{};
 }
 
 namespace sl::functional
@@ -52,6 +56,7 @@ namespace sl::functional
 	template <class TDerived, template <class> class TClosureBase>
 		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
 	struct pipe_operator
+		: private unified_base<detail::pipe_base_tag>
 	{
 	private:
 		using composer_t = detail::composer<TClosureBase, detail::binary_nesting_fn>;
@@ -95,6 +100,7 @@ namespace sl::functional
 		 * \return The nested composition of both functional objects as new functional object.
 		 */
 		template <class TLhs>
+			requires (!derived_from_unified_base<TLhs, detail::pipe_base_tag>)
 		[[nodiscard]]
 		friend constexpr auto operator |
 		(
@@ -102,8 +108,6 @@ namespace sl::functional
 			pipe_operator&& rhs
 		)
 		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, TDerived&&>)
-			requires (!requires { lhs.operator|(std::move(rhs)); })
-
 		{
 			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
 		}
@@ -112,6 +116,7 @@ namespace sl::functional
 		 * \copydoc operator|(TLhs&&, pipe_operator&&)
 		 */
 		template <class TLhs>
+			requires (!derived_from_unified_base<TLhs, detail::pipe_base_tag>)
 		[[nodiscard]]
 		friend constexpr auto operator |
 		(
@@ -119,7 +124,6 @@ namespace sl::functional
 			const pipe_operator& rhs
 		)
 		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, const TDerived&>)
-			requires (!requires { lhs.operator|(rhs); })
 		{
 			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
 		}
