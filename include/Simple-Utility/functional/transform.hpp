@@ -36,6 +36,43 @@ namespace sl::functional::detail
 		}
 	};
 
+	struct binary_nesting_caller_fn
+	{
+		static constexpr bool is_associative_operation{ false };
+
+		template <class TFunctionsTuple, class... TCallArgs>
+			requires (2 == std::tuple_size_v<std::remove_cvref_t<TFunctionsTuple>>)
+		[[nodiscard]]
+		constexpr decltype(auto) operator ()
+		(
+			TFunctionsTuple&& functionsTuple,
+			TCallArgs&&... callArgs
+		) const
+		noexcept(std::is_nothrow_invocable_v<std::tuple_element_t<0, std::remove_cvref_t<TFunctionsTuple>>, TCallArgs...>
+				&& std::is_nothrow_invocable_v<
+					std::tuple_element_t<1, std::remove_cvref_t<TFunctionsTuple>>,
+					std::invoke_result_t<std::tuple_element_t<0, std::remove_cvref_t<TFunctionsTuple>>, TCallArgs...
+					>
+				>)
+			requires std::invocable<std::tuple_element_t<0, std::remove_cvref_t<TFunctionsTuple>>, TCallArgs...>
+					&& std::invocable<
+						std::tuple_element_t<1, std::remove_cvref_t<TFunctionsTuple>>,
+						std::invoke_result_t<std::tuple_element_t<0, std::remove_cvref_t<TFunctionsTuple>>, TCallArgs...>
+					>
+		{
+			return std::apply(
+				[&]<class TFunc1, class TFunc2>(TFunc1&& func1, TFunc2&& func2) -> decltype(auto)
+				{
+					return std::invoke(
+						std::forward<TFunc2>(func2),
+						std::invoke(std::forward<TFunc1>(func1), std::forward<TCallArgs>(callArgs)...)
+					);
+				},
+				std::forward<TFunctionsTuple>(functionsTuple)
+			);
+		}
+	};
+
 	struct pipe_base_tag
 	{};
 }
@@ -59,7 +96,7 @@ namespace sl::functional
 		: private unified_base<detail::pipe_base_tag>
 	{
 	private:
-		using composer_t = detail::composer<TClosureBase, detail::binary_nesting_fn>;
+		using composer_t = detail::binary_composer_t<TClosureBase, detail::binary_nesting_caller_fn>;
 
 	public:
 		/**
@@ -74,9 +111,9 @@ namespace sl::functional
 		constexpr auto operator |
 		(
 			TOther&& other
-		) && noexcept(detail::is_nothrow_composable_v<composer_t, TDerived&&, TOther>)
+		) const & noexcept(detail::is_nothrow_composable_v<composer_t, const TDerived&, TOther>)
 		{
-			return composer_t::compose(static_cast<TDerived&&>(*this), std::forward<TOther>(other));
+			return composer_t::compose(static_cast<const TDerived&>(*this), std::forward<TOther>(other));
 		}
 
 		/**
@@ -87,9 +124,9 @@ namespace sl::functional
 		constexpr auto operator |
 		(
 			TOther&& other
-		) const & noexcept(detail::is_nothrow_composable_v<composer_t, const TDerived&, TOther>)
+		) && noexcept(detail::is_nothrow_composable_v<composer_t, TDerived&&, TOther>)
 		{
-			return composer_t::compose(static_cast<const TDerived&>(*this), std::forward<TOther>(other));
+			return composer_t::compose(static_cast<TDerived&&>(*this), std::forward<TOther>(other));
 		}
 
 		/**

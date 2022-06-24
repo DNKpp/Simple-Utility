@@ -53,10 +53,10 @@ namespace sl::functional::detail
 					|| std::invoke(std::forward<TFunc2>(func2), v...);
 		}
 	};
-	
+
 	struct conjunction_base_tag
 	{};
-	
+
 	struct disjunction_base_tag
 	{};
 }

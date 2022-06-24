@@ -15,6 +15,7 @@ add_executable(
 	"concepts/logical_arithmetic_operators.cpp"
 	"concepts/utility.cpp"
 	"concepts/stl_extensions.cpp"
+	"functional/base.cpp"
 	"functional/transform.cpp"
 	"functional/predicate.cpp"
 	"functional/tuple.cpp"
