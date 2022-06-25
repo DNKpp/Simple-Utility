@@ -32,13 +32,12 @@ namespace sl::functional
 	 * \details As working more and more with ``ranges`` and functional style approach, this library is designed to fully
 	 * support the programmers in such cases.
 	 *
-	 * There are mainly two parts:
-	 * - transform
-	 * - predicate
+	 * This namespaces aims to simplify caller code, when supplying algorithm with user provided function objects. Therefore several
+	 * types are offered, which enable different composition modes.
 	 *
 	 * # transform
 	 * The transform part of this library is designed to help the programmer when working with ``ranges`` or any other algorithm,
-	 * which accepts a functional as part of its interface. There is often the need to do multiple steps, before the work is actually done.
+	 * which accepts a functional as part of its interface. There is often the need to do multiple steps before the work is actually done.
 	 * Because of this many existing functional objects are not usable by their own, thus they must be wrapped into a lambda, which
 	 * results in quite a bit of noise. With objects of type ``transform_fn`` programmers have the option to pipe function results into
 	 * other functions, and thus nest multiple functions into each other.
@@ -50,14 +49,37 @@ namespace sl::functional
 	 *
 	 * # predicates
 	 * ``predicate_fn`` objects are fully compatible with ``transform_fn`` objects, thus they may be mixed as desired. Additionally they
-	 * offer composing via operator && and ||. Other than piping, all such composed predicates will receive the identically input and
-	 * are required to return boolean convertible results. Finally ``predicate_fn`` are easily invertible via operator !.
+	 * offer composing via operator &&, || and other common operations. Other than piping, all such composed predicates will receive the
+	 * identically input and are required to return boolean convertible results. Finally ``predicate_fn`` are easily invertible via operator !.
 	 *
 	 * \note The library classes are designed to only accept functional objects or pointers as value.
 	 * This usually works fine but may lead to surprisingly effects when working with mutable lambdas or other functional types.
 	 * In those cases the functional object itself may be wrapped into a ``std::reference_wrapper`` before putting into the
 	 * closure object.
 	 * \snippet functional/predicate.cpp predicate wrapped
+	 *
+	 * # currying
+	 * When working in functional style, there also often exists the desire to curry existing function objects, before giving them out of hands.
+	 * This library supports this currently in two styles:
+	 * - front currying via operator << (points to the front)
+	 * - back currying via operator << (points to the back)
+	 *
+	 * Users are free to use them both on the same functional, but this will soon lead to non-obvious behaviour when mixing too arbitrarily. The
+	 * library tries to keep the call stack as flat as possible and therefore combines multiple binds with equally directions into one final
+	 * composition. When mixing them up like
+	 * \code{.cpp}
+	 * myTransform << 42 >> 1337 << "Hello, World!" >> 3.1415;
+	 * \endcode
+	 * the result will be not as good as it could. The code will still work; a semantically equal but a better optimized (and readable) solution
+	 * would be something like this:
+	 * \code{.cpp}
+	 * myTransform << 42 << "Hello, World!" >> 3.1415 >> 1337;
+	 * \endcode
+	 * Note how the ordering of the two back-bound-values changed (which is the ordering readers understand probably best).
+	 *
+	 * Values will usually be bound by value, but users may wrap their values into ``std::reference_wrapper``, which will then be unwrapped during
+	 * invocation and thus provided as (const) lvalue-reference to the invoked function(s).
+	 * \snippet functional/base.cpp value_fn wrapped
 	 * @{
 	 */
 
@@ -192,6 +214,16 @@ namespace sl::functional::detail
 
 namespace sl::functional
 {
+	/**
+	 * \addtogroup GROUP_FUNCTIONAL
+	 * @{
+	 */
+
+	/**
+	 * \brief Functional type, which composes multiple functional objects via the given operation.
+	 * \tparam TOperator The composing operation type.
+	 * \tparam TFunctions The composed function types.
+	 */
 	template <class TOperator, class... TFunctions>
 		requires std::same_as<TOperator, std::remove_cvref_t<TOperator>>
 				&& (1 < sizeof...(TFunctions))
@@ -335,6 +367,8 @@ namespace sl::functional
 	 */
 	template <class TValue>
 	value_fn(TValue) -> value_fn<TValue>;
+
+	/** @} */
 }
 
 namespace sl::functional::detail

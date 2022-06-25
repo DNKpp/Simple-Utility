@@ -173,6 +173,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, as_rvalue_ref_t)
 )
 {
+	//! [value_fn wrapped]
 	int x{ 42 };
 	value_fn value{ std::ref(x) };
 
@@ -180,4 +181,5 @@ TEMPLATE_TEST_CASE_SIG(
 	x_ref = 1337;
 
 	REQUIRE(x == 1337);
+	//! [value_fn wrapped]
 }
