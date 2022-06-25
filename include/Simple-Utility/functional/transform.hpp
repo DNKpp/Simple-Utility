@@ -27,7 +27,7 @@ namespace sl::functional::detail
 		) const
 		{
 			return std::apply(
-				[&]<class TFunc, class... TOthers>(TFunc&& func, TOthers&&... otherFuncs) -> decltype(auto)
+				[&]<std::invocable<TCallArgs...> TFunc, class... TOthers>(TFunc&& func, TOthers&&... otherFuncs) -> decltype(auto)
 				{
 					return recursive_invoke(
 						std::invoke(std::forward<TFunc>(func), std::forward<TCallArgs>(callArgs)...),
@@ -39,7 +39,7 @@ namespace sl::functional::detail
 		}
 
 	private:
-		template <class TInput, class TFunc, class... TOthers>
+		template <class TInput, std::invocable<TInput> TFunc, class... TOthers>
 		[[nodiscard]]
 		static constexpr decltype(auto) recursive_invoke
 		(
