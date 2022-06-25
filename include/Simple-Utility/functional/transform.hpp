@@ -16,7 +16,7 @@ namespace sl::functional::detail
 {
 	struct nested_invoke_caller_fn
 	{
-		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::nested_only };
+		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::prefer_join };
 
 		template <class TFunctionsTuple, class... TCallArgs>
 		[[nodiscard]]
