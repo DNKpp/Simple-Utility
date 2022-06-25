@@ -276,6 +276,15 @@ namespace sl::functional
 	template <class TOperator, class... TFunctions>
 	composition_fn(TOperator, TFunctions ...) -> composition_fn<TOperator, detail::unwrap_functional_r_t<TFunctions>...>;
 
+	/**
+	 * \brief Functional helper type, which takes a value and returns them on invocation.
+	 * \details This type has special treatment for ``std::reference_wrapper`` types. Instead of returning those at invocation,
+	 * they will be unwrapped and the containing reference will be returned instead.
+	 * \note In general the ``value_type`` will be equally to ``T``, but if ``T`` is an array type, it will become ``T*``.
+	 * ``reference_type`` will be usually equally to ``const value_type&``, but if ``value_type`` is a ``std::reference_wrapper<U>``, then
+	 * it will be ``U&``.
+	 * \tparam T The value type. 
+	 */
 	template <class T>
 		requires std::same_as<T, std::remove_cvref_t<T>>
 	class value_fn
@@ -284,6 +293,11 @@ namespace sl::functional
 		using value_type = std::conditional_t<std::is_array_v<T>, T*, T>;
 		using reference_type = const std::unwrap_reference_t<value_type>&;
 
+		/**
+		 * \brief Constructor, which forwards all of its args to the internal value.
+		 * \tparam TArgs The constructor argument type.
+		 * \param args The constructor arguments, which will be forwarded to the constructor of ``value_type``.
+		 */
 		template <class... TArgs>
 		[[nodiscard]]
 		explicit (1 == sizeof...(TArgs))
@@ -291,12 +305,20 @@ namespace sl::functional
 			: m_Value{ std::forward<TArgs>(args)... }
 		{}
 
+		/**
+		 * \brief The invocation operator.
+		 * \return Returns value as ``reference_type``.
+		 */
 		[[nodiscard]]
 		constexpr reference_type operator ()() const & noexcept(std::is_nothrow_convertible_v<reference_type, value_type>)
 		{
 			return m_Value;
 		}
 
+		/**
+		 * \brief The invocation operator.
+		 * \return Returns a move constructed ``value_type``.
+		 */
 		[[nodiscard]]
 		constexpr value_type operator ()() && noexcept(std::is_nothrow_move_constructible_v<value_type>)
 		{
