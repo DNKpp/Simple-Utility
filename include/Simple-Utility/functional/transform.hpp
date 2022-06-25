@@ -62,6 +62,38 @@ namespace sl::functional::detail
 		}
 	};
 
+	struct bind_front_caller_fn
+	{
+		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::prefer_join };
+
+		template <class TFunctionsTuple, class... TCallArgs>
+		[[nodiscard]]
+		constexpr decltype(auto) operator ()
+		(
+			TFunctionsTuple&& functionsTuple,
+			TCallArgs&&... callArgs
+		) const
+		{
+			static_assert(1 < std::tuple_size_v<std::remove_cvref_t<TFunctionsTuple>>, "Tuple must at least contain two functions.");
+
+			const auto caller = [&]<class TFunction, std::invocable... TBoundArgs>
+					requires std::invocable<TFunction, std::invoke_result_t<TBoundArgs>..., TCallArgs...>
+			(
+				TFunction&& func,
+				TBoundArgs&&... boundArgs
+			) -> decltype(auto)
+			{
+				return std::invoke(
+					std::forward<TFunction>(func),
+					std::invoke(std::forward<TBoundArgs>(boundArgs))...,
+					std::forward<TCallArgs>(callArgs)...
+				);
+			};
+
+			return std::apply(caller, std::forward<TFunctionsTuple>(functionsTuple));
+		}
+	};
+
 	struct pipe_base_tag
 	{};
 }
@@ -165,8 +197,7 @@ namespace sl::functional
 	struct bind_front_operator
 	{
 	private:
-		template <class TFunc, class TValue>
-		using bind_front_fn = std::remove_cvref_t<decltype(std::bind_front(std::declval<TFunc>(), std::declval<TValue>()))>;
+		using composer_t = detail::compose_helper_t<TClosureBase, detail::bind_front_caller_fn>;
 
 	public:
 		/**
@@ -180,13 +211,9 @@ namespace sl::functional
 		constexpr auto operator <<
 		(
 			TValue&& value
-		) && noexcept(
-			std::is_nothrow_constructible_v<TClosureBase<bind_front_fn<TDerived&&, TValue>>, bind_front_fn<TDerived&&, TValue>>
-		)
+		) const & noexcept(std::is_nothrow_invocable_v<composer_t, const TDerived&, value_fn<std::remove_cvref_t<TValue>>&&>)
 		{
-			return TClosureBase<bind_front_fn<TDerived&&, TValue>>{
-				std::bind_front(static_cast<TDerived&&>(*this), std::forward<TValue>(value))
-			};
+			return composer_t{}(static_cast<const TDerived&>(*this), value_fn{ std::forward<TValue>(value) });
 		}
 
 		/**
@@ -197,15 +224,9 @@ namespace sl::functional
 		constexpr auto operator <<
 		(
 			TValue&& value
-		) const & noexcept(
-			std::is_nothrow_constructible_v<TClosureBase<bind_front_fn<const TDerived&, TValue>>,
-											bind_front_fn<const TDerived&, TValue>
-			>
-		)
+		) && noexcept(std::is_nothrow_invocable_v<composer_t, TDerived&&, value_fn<std::remove_cvref_t<TValue>>&&>)
 		{
-			return TClosureBase<bind_front_fn<const TDerived&, TValue>>{
-				std::bind_front(static_cast<const TDerived&>(*this), std::forward<TValue>(value))
-			};
+			return composer_t{}(static_cast<TDerived&&>(*this), value_fn{ std::forward<TValue>(value) });
 		}
 	};
 
