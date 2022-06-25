@@ -52,12 +52,6 @@ namespace sl::functional
 	 * offer composing via operator &&, || and other common operations. Other than piping, all such composed predicates will receive the
 	 * identically input and are required to return boolean convertible results. Finally ``predicate_fn`` are easily invertible via operator !.
 	 *
-	 * \note The library classes are designed to only accept functional objects or pointers as value.
-	 * This usually works fine but may lead to surprisingly effects when working with mutable lambdas or other functional types.
-	 * In those cases the functional object itself may be wrapped into a ``std::reference_wrapper`` before putting into the
-	 * closure object.
-	 * \snippet functional/predicate.cpp predicate wrapped
-	 *
 	 * # currying
 	 * When working in functional style, there also often exists the desire to curry existing function objects, before giving them out of hands.
 	 * This library supports this currently in two styles:
@@ -80,6 +74,13 @@ namespace sl::functional
 	 * Values will usually be bound by value, but users may wrap their values into ``std::reference_wrapper``, which will then be unwrapped during
 	 * invocation and thus provided as (const) lvalue-reference to the invoked function(s).
 	 * \snippet functional/base.cpp value_fn wrapped
+	 *
+	 *
+	 * \note The library classes are designed to only accept functional objects or pointers as value.
+	 * This usually works fine but may lead to surprisingly effects when working with mutable lambdas or other functional types.
+	 * In those cases the functional object itself may be wrapped into a ``std::reference_wrapper`` before putting into the
+	 * closure object.
+	 * \snippet functional/predicate.cpp predicate wrapped
 	 * @{
 	 */
 
