@@ -77,16 +77,52 @@ namespace sl::functional::detail
 			static_assert(1 < std::tuple_size_v<std::remove_cvref_t<TFunctionsTuple>>, "Tuple must at least contain two functions.");
 
 			const auto caller = [&]<class TFunction, std::invocable... TBoundArgs>
-					requires std::invocable<TFunction, std::invoke_result_t<TBoundArgs>..., TCallArgs...>
 			(
 				TFunction&& func,
 				TBoundArgs&&... boundArgs
 			) -> decltype(auto)
 			{
+				static_assert(std::invocable<TFunction, std::invoke_result_t<TBoundArgs>..., TCallArgs...>,
+					"Functional is not invokable with bound and call arguments.");
+
 				return std::invoke(
 					std::forward<TFunction>(func),
 					std::invoke(std::forward<TBoundArgs>(boundArgs))...,
 					std::forward<TCallArgs>(callArgs)...
+				);
+			};
+
+			return std::apply(caller, std::forward<TFunctionsTuple>(functionsTuple));
+		}
+	};
+
+	struct bind_back_caller_fn
+	{
+		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::prefer_join };
+
+		template <class TFunctionsTuple, class... TCallArgs>
+		[[nodiscard]]
+		constexpr decltype(auto) operator ()
+		(
+			TFunctionsTuple&& functionsTuple,
+			TCallArgs&&... callArgs
+		) const
+		{
+			static_assert(1 < std::tuple_size_v<std::remove_cvref_t<TFunctionsTuple>>, "Tuple must at least contain two functions.");
+
+			const auto caller = [&]<class TFunction, std::invocable... TBoundArgs>
+			(
+				TFunction&& func,
+				TBoundArgs&&... boundArgs
+			) -> decltype(auto)
+			{
+				static_assert(std::invocable<TFunction, TCallArgs..., std::invoke_result_t<TBoundArgs>...>,
+					"Functional is not invokable with bound and call arguments.");
+
+				return std::invoke(
+					std::forward<TFunction>(func),
+					std::forward<TCallArgs>(callArgs)...,
+					std::invoke(std::forward<TBoundArgs>(boundArgs))...
 				);
 			};
 
@@ -217,7 +253,7 @@ namespace sl::functional
 		}
 
 		/**
-		 * \copydoc operator!()
+		 * \copydoc operator<<
 		 */
 		template <class TValue>
 		[[nodiscard]]
@@ -240,8 +276,7 @@ namespace sl::functional
 	struct bind_back_operator
 	{
 	private:
-		template <class TFunc, class TValue>
-		using bind_back_fn = std::remove_cvref_t<decltype(bind_back(std::declval<TFunc>(), std::declval<TValue>()))>;
+		using composer_t = detail::compose_helper_t<TClosureBase, detail::bind_back_caller_fn>;
 
 	public:
 		/**
@@ -255,32 +290,22 @@ namespace sl::functional
 		constexpr auto operator >>
 		(
 			TValue&& value
-		) && noexcept(
-			std::is_nothrow_constructible_v<TClosureBase<bind_back_fn<TDerived&&, TValue>>, bind_back_fn<TDerived&&, TValue>>
-		)
+		) const & noexcept(std::is_nothrow_invocable_v<composer_t, const TDerived&, value_fn<std::remove_cvref_t<TValue>>&&>)
 		{
-			return TClosureBase<bind_back_fn<TDerived&&, TValue>>{
-				bind_back(static_cast<TDerived&&>(*this), std::forward<TValue>(value))
-			};
+			return composer_t{}(static_cast<const TDerived&>(*this), value_fn{ std::forward<TValue>(value) });
 		}
 
 		/**
-		 * \copydoc operator!()
+		 * \copydoc operator>>
 		 */
 		template <class TValue>
 		[[nodiscard]]
 		constexpr auto operator >>
 		(
 			TValue&& value
-		) const & noexcept(
-			std::is_nothrow_constructible_v<TClosureBase<bind_back_fn<const TDerived&, TValue>>,
-											bind_back_fn<const TDerived&, TValue>
-			>
-		)
+		) && noexcept(std::is_nothrow_invocable_v<composer_t, TDerived&&, value_fn<std::remove_cvref_t<TValue>>&&>)
 		{
-			return TClosureBase<bind_back_fn<const TDerived&, TValue>>{
-				bind_back(static_cast<const TDerived&>(*this), std::forward<TValue>(value))
-			};
+			return composer_t{}(static_cast<TDerived&&>(*this), value_fn{ std::forward<TValue>(value) });
 		}
 	};
 

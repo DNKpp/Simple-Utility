@@ -306,8 +306,20 @@ TEST_CASE("predicate_fn is composable via operator |", "[functional][predicate]"
 	REQUIRE(finalPredicate(input) == expectedResult);
 }
 
+TEST_CASE("front curried arguments to predicate_fn will be applied in correct order.", "[functional][predicate]")
+{
+	const predicate_fn predicate = predicate_fn{
+										[](const int i, const std::string& str, const std::optional<int>& opt)
+										{
+											return i == std::stoi(str) && i != opt;
+										}
+									} << 42 << "42";
+
+	REQUIRE(predicate(std::nullopt));
+}
+
 TEMPLATE_TEST_CASE_SIG(
-	"predicate_fn can be front curried with operator << from the right-hand-side in arbitrary length",
+	"predicate_fn can be front curried with operator < in arbitrary length",
 	"[functional][predicate]",
 	((template <class> class TMod, bool VExpected, int... VValues), TMod, VExpected, VValues...),
 	(as_lvalue_ref_t, true, 42),
@@ -327,9 +339,50 @@ TEMPLATE_TEST_CASE_SIG(
 	REQUIRE(curriedPredicate() == VExpected);
 }
 
-TEST_CASE("curried predicate_fn can be piped", "[functional][transform]")
+TEST_CASE("front curried predicate_fn can be piped", "[functional][predicate]")
 {
 	predicate_fn predicate = predicate_fn{ variadicAllEqual } << 42 << -2
+							| predicate_fn{ std::equal_to{} } << false;
+
+	REQUIRE(predicate());
+}
+
+TEST_CASE("back curried arguments to predicate_fn will be applied in correct order.", "[functional][predicate]")
+{
+	const predicate_fn predicate = predicate_fn{
+										[](const int i, const std::string& str, const std::optional<int>& opt)
+										{
+											return i == std::stoi(str) && i != opt;
+										}
+									} >> "42" >> std::nullopt;
+
+	REQUIRE(predicate(42));
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"predicate_fn can be back curried with operator >> from the right-hand-side in arbitrary length",
+	"[functional][predicate]",
+	((template <class> class TMod, bool VExpected, int... VValues), TMod, VExpected, VValues...),
+	(as_lvalue_ref_t, true, 42),
+	(as_lvalue_ref_t, false, 42, 1337),
+	(as_lvalue_ref_t, true, 42, 42, 42),
+	(as_const_lvalue_ref_t, true, 42),
+	(as_const_lvalue_ref_t, false, 42, 1337),
+	(as_const_lvalue_ref_t, true, 42, 42, 42),
+	(as_rvalue_ref_t, true, 42),
+	(as_rvalue_ref_t, false, 42, 1337),
+	(as_rvalue_ref_t, true, 42, 42, 42)
+)
+{
+	predicate_fn predicate{ variadicAllEqual };
+	const predicate_fn curriedPredicate = (apply_mod<TMod>(predicate) >> ... >> VValues);
+
+	REQUIRE(curriedPredicate() == VExpected);
+}
+
+TEST_CASE("back curried predicate_fn can be piped", "[functional][predicate]")
+{
+	predicate_fn predicate = predicate_fn{ variadicAllEqual } >> 42 >> -2
 							| predicate_fn{ std::equal_to{} } << false;
 
 	REQUIRE(predicate());
