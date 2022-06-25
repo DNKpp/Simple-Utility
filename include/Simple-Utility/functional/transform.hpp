@@ -14,40 +14,51 @@
 
 namespace sl::functional::detail
 {
-	struct binary_nesting_caller_fn
+	struct nested_invoke_caller_fn
 	{
 		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::nested_only };
 
 		template <class TFunctionsTuple, class... TCallArgs>
-			requires (2 == std::tuple_size_v<std::remove_cvref_t<TFunctionsTuple>>)
 		[[nodiscard]]
 		constexpr decltype(auto) operator ()
 		(
 			TFunctionsTuple&& functionsTuple,
 			TCallArgs&&... callArgs
 		) const
-		noexcept(std::is_nothrow_invocable_v<std::tuple_element_t<0, std::remove_cvref_t<TFunctionsTuple>>, TCallArgs...>
-				&& std::is_nothrow_invocable_v<
-					std::tuple_element_t<1, std::remove_cvref_t<TFunctionsTuple>>,
-					std::invoke_result_t<std::tuple_element_t<0, std::remove_cvref_t<TFunctionsTuple>>, TCallArgs...
-					>
-				>)
-			requires std::invocable<std::tuple_element_t<0, std::remove_cvref_t<TFunctionsTuple>>, TCallArgs...>
-					&& std::invocable<
-						std::tuple_element_t<1, std::remove_cvref_t<TFunctionsTuple>>,
-						std::invoke_result_t<std::tuple_element_t<0, std::remove_cvref_t<TFunctionsTuple>>, TCallArgs...>
-					>
 		{
 			return std::apply(
-				[&]<class TFunc1, class TFunc2>(TFunc1&& func1, TFunc2&& func2) -> decltype(auto)
+				[&]<class TFunc, class... TOthers>(TFunc&& func, TOthers&&... otherFuncs) -> decltype(auto)
 				{
-					return std::invoke(
-						std::forward<TFunc2>(func2),
-						std::invoke(std::forward<TFunc1>(func1), std::forward<TCallArgs>(callArgs)...)
+					return recursive_invoke(
+						std::invoke(std::forward<TFunc>(func), std::forward<TCallArgs>(callArgs)...),
+						std::forward<TOthers>(otherFuncs)...
 					);
 				},
 				std::forward<TFunctionsTuple>(functionsTuple)
 			);
+		}
+
+	private:
+		template <class TInput, class TFunc, class... TOthers>
+		[[nodiscard]]
+		static constexpr decltype(auto) recursive_invoke
+		(
+			TInput&& input,
+			TFunc&& func,
+			TOthers&&... otherFunctions
+		)
+		{
+			if constexpr (0 == sizeof...(TOthers))
+			{
+				return std::invoke(std::forward<TFunc>(func), std::forward<TInput>(input));
+			}
+			else
+			{
+				return recursive_invoke(
+					std::invoke(std::forward<TFunc>(func), std::forward<TInput>(input)),
+					std::forward<TOthers>(otherFunctions)...
+				);
+			}
 		}
 	};
 
@@ -74,7 +85,7 @@ namespace sl::functional
 		: private unified_base<detail::pipe_base_tag>
 	{
 	private:
-		using composer_t = detail::compose_helper_t<TClosureBase, detail::binary_nesting_caller_fn>;
+		using composer_t = detail::compose_helper_t<TClosureBase, detail::nested_invoke_caller_fn>;
 
 	public:
 		/**
