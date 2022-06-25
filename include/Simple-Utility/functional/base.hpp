@@ -17,87 +17,6 @@
 
 namespace sl::functional::detail
 {
-	template <class TFunc1, class TFunc2, class TBinaryOp>
-		requires std::same_as<TFunc1, std::remove_cvref_t<TFunc1>>
-				&& std::same_as<TFunc2, std::remove_cvref_t<TFunc2>>
-				&& std::same_as<TBinaryOp, std::remove_cvref_t<TBinaryOp>>
-	class binary_composition_fn
-	{
-	public:
-		using binary_operation_type = TBinaryOp;
-		using function1_type = TFunc1;
-		using function2_type = TFunc2;
-
-		template <class TFunc1Arg, class TFunc2Arg, class TBinaryOpArg = TBinaryOp>
-		[[nodiscard]]
-		constexpr binary_composition_fn
-		(
-			TFunc1Arg&& func1Arg,
-			TFunc2Arg&& func2Arg,
-			TBinaryOpArg&& binaryOpArg = {}
-		)
-		noexcept(std::is_nothrow_constructible_v<TFunc1, TFunc1Arg>
-				&& std::is_nothrow_constructible_v<TFunc2, TFunc2Arg>
-				&& std::is_nothrow_constructible_v<TBinaryOp, TBinaryOpArg>)
-			: m_Func1{ std::forward<TFunc1Arg>(func1Arg) },
-			m_Func2{ std::forward<TFunc2Arg>(func2Arg) },
-			m_BinaryOperation{ std::forward<TBinaryOpArg>(binaryOpArg) }
-		{}
-
-		template <class... TArgs>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()
-		(
-			TArgs&&... v
-		) const & noexcept(std::is_nothrow_invocable_v<const TBinaryOp&, const TFunc1&, const TFunc2&, TArgs...>)
-		{
-			return std::invoke(
-				m_BinaryOperation,
-				m_Func1,
-				m_Func2,
-				std::forward<TArgs>(v)...
-			);
-		}
-
-		template <class... TArgs>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()
-		(
-			TArgs&&... v
-		) & noexcept(std::is_nothrow_invocable_v<TBinaryOp&, TFunc1&, TFunc2&, TArgs...>)
-		{
-			return std::invoke(
-				m_BinaryOperation,
-				m_Func1,
-				m_Func2,
-				std::forward<TArgs>(v)...
-			);
-		}
-
-		template <class... TArgs>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()
-		(
-			TArgs&&... v
-		) && noexcept(std::is_nothrow_invocable_v<TBinaryOp&&, TFunc1&&, TFunc2&&, TArgs...>)
-		{
-			return std::invoke(
-				std::move(m_BinaryOperation),
-				std::move(m_Func1),
-				std::move(m_Func2),
-				std::forward<TArgs>(v)...
-			);
-		}
-
-	private:
-		[[no_unique_address]]
-		TFunc1 m_Func1{};
-		[[no_unique_address]]
-		TFunc2 m_Func2{};
-		[[no_unique_address]]
-		TBinaryOp m_BinaryOperation{};
-	};
-
 	struct composition_base_tag
 	{};
 
@@ -141,90 +60,6 @@ namespace sl::functional
 	 * \snippet functional/predicate.cpp predicate wrapped
 	 * @{
 	 */
-
-	template <class TOperator, class... TFunctions>
-		requires std::same_as<TOperator, std::remove_cvref_t<TOperator>>
-				&& (1 < sizeof...(TFunctions))
-				&& (std::same_as<TFunctions, std::remove_cvref_t<TFunctions>> && ...)
-	class composition_fn
-		: private unified_base<detail::composition_base_tag>
-	{
-	public:
-		using function_storage_t = std::tuple<TFunctions...>;
-		using operation_t = TOperator;
-
-		template <concepts::initializes<operation_t> TOperationArg, class... TFunctionArgs>
-			requires std::constructible_from<function_storage_t, TFunctionArgs...>
-		[[nodiscard]]
-		constexpr composition_fn
-		(
-			TOperationArg&& operationArg,
-			TFunctionArgs&&... functionArgs
-		)
-		noexcept(std::is_nothrow_constructible_v<operation_t, TOperationArg>
-				&& std::is_nothrow_constructible_v<function_storage_t, TFunctionArgs...>
-		)
-			: m_Operation{ std::forward<TOperationArg>(operationArg) },
-			m_Functions{ std::forward<TFunctionArgs>(functionArgs)... }
-
-		{}
-
-		template <class... TCallArgs>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()
-		(
-			TCallArgs&&... callArgs
-		) const & noexcept(
-			std::is_nothrow_invocable_v<const operation_t&, const function_storage_t&, TCallArgs...>
-		)
-		{
-			return std::invoke(m_Operation, m_Functions, std::forward<TCallArgs>(callArgs)...);
-		}
-
-		template <class... TCallArgs>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()
-		(
-			TCallArgs&&... callArgs
-		) & noexcept(
-			std::is_nothrow_invocable_v<operation_t&, function_storage_t&, TCallArgs...>
-		)
-		{
-			return std::invoke(m_Operation, m_Functions, std::forward<TCallArgs>(callArgs)...);
-		}
-
-		template <class... TCallArgs>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()
-		(
-			TCallArgs&&... callArgs
-		) && noexcept(
-			std::is_nothrow_invocable_v<operation_t&&, function_storage_t&&, TCallArgs...>
-		)
-		{
-			return std::invoke(std::move(m_Operation), std::move(m_Functions), std::forward<TCallArgs>(callArgs)...);
-		}
-
-		[[nodiscard]]
-		constexpr function_storage_t operator *() const & noexcept(std::is_nothrow_copy_constructible_v<function_storage_t>)
-		{
-			return m_Functions;
-		}
-
-		[[nodiscard]]
-		constexpr function_storage_t operator *() && noexcept(std::is_nothrow_move_constructible_v<function_storage_t>)
-		{
-			return std::move(m_Functions);
-		}
-
-	private:
-		[[no_unique_address]]
-		operation_t m_Operation{};
-		function_storage_t m_Functions{};
-	};
-
-	template <class TOperator, class... TFunctions>
-	composition_fn(TOperator, TFunctions ...) -> composition_fn<std::remove_cvref_t<TOperator>, std::remove_cvref_t<TFunctions>...>;
 
 	/**
 	 * \brief Helper type which simply stores functional objects or function pointers.
@@ -326,134 +161,261 @@ namespace sl::functional
 namespace sl::functional::detail
 {
 	template <class T>
-	struct unwrap_functional_result
+	struct unwrap_functional_r
 	{
 		using type = T;
 	};
 
 	template <derived_from_unified_base<closure_base_tag> T>
-	struct unwrap_functional_result<T>
+	struct unwrap_functional_r<T>
 	{
-		using type = typename unwrap_functional_result<closure_function_t<T>>::type;
+		using type = typename unwrap_functional_r<closure_function_t<T>>::type;
 	};
 
 	template <class T>
-	using unwrap_functional_result_t = typename unwrap_functional_result<T>::type;
+	using unwrap_functional_r_t = typename unwrap_functional_r<T>::type;
 
 	template <class TFunc>
 	[[nodiscard]]
-	constexpr unwrap_functional_result_t<TFunc> unwrap_functional(TFunc&& func) noexcept
+	constexpr unwrap_functional_r_t<TFunc> unwrap_functional(TFunc&& func) noexcept
 	{
 		return std::forward<TFunc>(func);
 	}
 
 	template <derived_from_unified_base<closure_base_tag> TClosure>
 	[[nodiscard]]
-	constexpr unwrap_functional_result_t<TClosure> unwrap_functional(TClosure&& closure) noexcept(noexcept(*std::declval<TClosure>()))
+	constexpr unwrap_functional_r_t<TClosure> unwrap_functional(TClosure&& closure) noexcept(noexcept(*std::declval<TClosure>()))
 	{
 		return unwrap_functional(*std::forward<TClosure>(closure));
 	}
+}
 
-	template <template <class> class TClosureBase, class TOperation>
-	struct composer
+namespace sl::functional
+{
+	template <class TOperator, class... TFunctions>
+		requires std::same_as<TOperator, std::remove_cvref_t<TOperator>>
+				&& (1 < sizeof...(TFunctions))
+				&& (std::same_as<TFunctions, std::remove_cvref_t<TFunctions>> && ...)
+				&& (!derived_from_unified_base<TFunctions, detail::closure_base_tag> && ...)
+	class composition_fn
+		: private unified_base<detail::composition_base_tag>
 	{
-		template <class TFunc1, class TFunc2>
-		using closure_t = TClosureBase<
-			composition_fn<
-				TOperation,
-				std::remove_cvref_t<unwrap_functional_result_t<TFunc1>>,
-				std::remove_cvref_t<unwrap_functional_result_t<TFunc2>>
-			>
-		>;
+	public:
+		using function_storage_t = std::tuple<TFunctions...>;
+		using operation_t = TOperator;
 
-		template <class TFunc1, class TFunc2>
+		template <concepts::initializes<operation_t> TOperationArg, class... TFunctionArgs>
+			requires std::constructible_from<function_storage_t, detail::unwrap_functional_r_t<TFunctionArgs>...>
 		[[nodiscard]]
-		static constexpr closure_t<TFunc1, TFunc2> compose
+		constexpr composition_fn
 		(
-			TFunc1&& func1,
-			TFunc2&& func2
+			TOperationArg&& operationArg,
+			TFunctionArgs&&... functionArgs
 		)
-		noexcept(
-			std::is_nothrow_constructible_v<
-				closure_t<TFunc1, TFunc2>,
-				TOperation,
-				unwrap_functional_result_t<TFunc1>,
-				unwrap_functional_result_t<TFunc2>
-			>)
+		noexcept(std::is_nothrow_constructible_v<operation_t, TOperationArg>
+				&& (std::is_nothrow_constructible_v<TFunctions, detail::unwrap_functional_r_t<TFunctionArgs>> && ...)
+		)
+			: m_Operation{ std::forward<TOperationArg>(operationArg) },
+			m_Functions{ detail::unwrap_functional(std::forward<TFunctionArgs>(functionArgs))... }
+
+		{}
+
+		template <class... TCallArgs>
+		[[nodiscard]]
+		constexpr decltype(auto) operator ()
+		(
+			TCallArgs&&... callArgs
+		) const & noexcept(
+			std::is_nothrow_invocable_v<const operation_t&, const function_storage_t&, TCallArgs...>
+		)
 		{
-			return { TOperation{}, unwrap_functional(std::forward<TFunc1>(func1)), unwrap_functional(std::forward<TFunc2>(func2)) };
+			return std::invoke(m_Operation, m_Functions, std::forward<TCallArgs>(callArgs)...);
 		}
+
+		template <class... TCallArgs>
+		[[nodiscard]]
+		constexpr decltype(auto) operator ()
+		(
+			TCallArgs&&... callArgs
+		) & noexcept(
+			std::is_nothrow_invocable_v<operation_t&, function_storage_t&, TCallArgs...>
+		)
+		{
+			return std::invoke(m_Operation, m_Functions, std::forward<TCallArgs>(callArgs)...);
+		}
+
+		template <class... TCallArgs>
+		[[nodiscard]]
+		constexpr decltype(auto) operator ()
+		(
+			TCallArgs&&... callArgs
+		) && noexcept(
+			std::is_nothrow_invocable_v<operation_t&&, function_storage_t&&, TCallArgs...>
+		)
+		{
+			return std::invoke(std::move(m_Operation), std::move(m_Functions), std::forward<TCallArgs>(callArgs)...);
+		}
+
+		[[nodiscard]]
+		constexpr function_storage_t operator *() const & noexcept(std::is_nothrow_copy_constructible_v<function_storage_t>)
+		{
+			return m_Functions;
+		}
+
+		[[nodiscard]]
+		constexpr function_storage_t operator *() && noexcept(std::is_nothrow_move_constructible_v<function_storage_t>)
+		{
+			return std::move(m_Functions);
+		}
+
+	private:
+		[[no_unique_address]]
+		operation_t m_Operation{};
+		function_storage_t m_Functions{};
 	};
 
-	template <class T>
-	using composition_operation_t = typename std::remove_cvref_t<T>::operation_t;
+	template <class TOperator, class... TFunctions>
+	composition_fn
+	(
+		TOperator,
+		TFunctions ...
 
-	template <class T>
-	concept associative_operation = std::remove_cvref_t<T>::is_associative_operation;;
-
-	template <template <class> class TClosureBase, class TOperation, class TFunc1, class TFunc2>
-	using composition_closure_t = TClosureBase<
-		composition_fn<
-			TOperation,
-			std::remove_cvref_t<unwrap_functional_result_t<TFunc1>>,
-			std::remove_cvref_t<unwrap_functional_result_t<TFunc2>>
-		>
+	
+	) -> composition_fn<
+		std::remove_cvref_t<TOperator>,
+		std::remove_cvref_t<detail::unwrap_functional_r_t<TFunctions>>...
 	>;
+}
+
+namespace sl::functional::detail
+{
+	template <class TFunction>
+	struct is_nothrow_constructible_helper
+		: std::bool_constant<
+			std::is_nothrow_copy_constructible_v<unwrap_functional_r_t<TFunction>>
+			&& std::is_nothrow_move_constructible_v<unwrap_functional_r_t<TFunction>>
+		>
+	{};
+
+	template <class TOperation, class... TFunctions>
+	struct is_nothrow_constructible_helper<composition_fn<TOperation, TFunctions...>>
+		: std::bool_constant<std::conjunction_v<is_nothrow_constructible_helper<TFunctions>...>>
+	{};
+
+	template <class TOperation, class... TFunctions>
+	inline constexpr bool is_nothrow_composable_v{
+		std::is_nothrow_constructible_v<TOperation>
+		&& (is_nothrow_constructible_helper<std::remove_cvref_t<TFunctions>>::value && ...)
+	};
+
+	template <class T, class... TCallArgs>
+	struct is_type_list_nothrow_invokable;
+
+	template <class... TFunctions, class... TCallArgs>
+	struct is_type_list_nothrow_invokable<std::tuple<TFunctions...>, TCallArgs...>
+		: std::bool_constant<std::conjunction_v<std::is_nothrow_invocable<TFunctions>...>>
+	{};
+
+	template <class T, class... TCallArgs>
+	inline constexpr bool is_type_list_nothrow_invokable_v{
+		is_type_list_nothrow_invokable<std::remove_cvref_t<T>, TCallArgs...>::value
+	};
+
+	enum class composition_strategy_t
+	{
+		nested_only,
+		prefer_join
+	};
+
+	template <class T>
+	concept joinable_operation = std::remove_cvref_t<T>::composition_strategy == composition_strategy_t::prefer_join;
+
+	template <class T, class TJoinableOperation>
+	concept joinable_with = joinable_operation<TJoinableOperation>
+							&& derived_from_unified_base<T, composition_base_tag>
+							&& std::same_as<typename std::remove_cvref_t<T>::operation_t, TJoinableOperation>;
+
+	template <class TOperation, class... TTupleElements>
+	[[nodiscard]]
+	constexpr auto make_composition_from_tuple
+	(
+		std::tuple<TTupleElements...>&& functionsTuple
+	) noexcept(is_nothrow_composable_v<TOperation, TTupleElements...> )
+	{
+		return std::apply(
+			[]<class... TFunctions>(TFunctions&&... functions)
+			{
+				return composition_fn{ TOperation{}, std::forward<TFunctions>(functions)... };
+			},
+			std::move(functionsTuple)
+		);
+	}
+
+	template <class TOperation, class TFunc1, class TFunc2>
+		requires (!joinable_with<TFunc1, TOperation>
+				&& !joinable_with<TFunc2, TOperation>)
+	[[nodiscard]]
+	constexpr auto make_composition(TFunc1&& func1, TFunc2&& func2)
+	{
+		return composition_fn{ TOperation{}, std::forward<TFunc1>(func1), std::forward<TFunc2>(func2) };
+	}
+
+	template <class TOperation, joinable_with<TOperation> TFunc1, joinable_with<TOperation> TFunc2>
+	[[nodiscard]]
+	constexpr auto make_composition(TFunc1&& func1, TFunc2&& func2)
+	{
+		return make_composition_from_tuple<TOperation>(
+			std::tuple_cat(
+				*std::forward<TFunc1>(func1),
+				*std::forward<TFunc2>(func2)
+			)
+		);
+	}
+
+	template <class TOperation, joinable_with<TOperation> TFunc1, class TFunc2>
+		requires (!joinable_with<TFunc2, TOperation>)
+	[[nodiscard]]
+	constexpr auto make_composition(TFunc1&& func1, TFunc2&& func2)
+	{
+		return make_composition_from_tuple<TOperation>(
+			std::tuple_cat(
+				*std::forward<TFunc1>(func1),
+				std::tuple<TFunc2>(std::forward<TFunc2>(func2))
+			)
+		);
+	}
+
+	template <class TOperation, class TFunc1, joinable_with<TOperation> TFunc2>
+		requires (!joinable_with<TFunc1, TOperation>)
+	[[nodiscard]]
+	constexpr auto make_composition(TFunc1&& func1, TFunc2&& func2)
+	{
+		return make_composition_from_tuple<TOperation>(
+			std::tuple_cat(
+				std::tuple<TFunc1>(std::forward<TFunc1>(func1)),
+				*std::forward<TFunc2>(func2)
+			)
+		);
+	}
 
 	template <template <class> class TClosureBase, class TOperation>
-	struct binary_composer_t
+	struct compose_helper_t
 	{
 		template <class TFunc1, class TFunc2>
-		using closure_t = composition_closure_t<TClosureBase, TOperation, TFunc1, TFunc2>;
-
-		template <class TFunc1, class TFunc2>
 		[[nodiscard]]
-		static constexpr closure_t<TFunc1, TFunc2> compose
-		(
-			TFunc1&& func1,
-			TFunc2&& func2
-		) noexcept(
-			std::is_nothrow_constructible_v<
-				closure_t<TFunc1, TFunc2>,
-				TOperation,
-				unwrap_functional_result_t<TFunc1>,
-				unwrap_functional_result_t<TFunc2>
-			>)
+		constexpr auto operator ()(TFunc1&& func1, TFunc2&& func2) const noexcept(is_nothrow_composable_v<TOperation, TFunc1, TFunc2>)
 		{
-			return { TOperation{}, unwrap_functional(std::forward<TFunc1>(func1)), unwrap_functional(std::forward<TFunc2>(func2)) };
+			using composition_t = decltype(make_composition<TOperation>(
+				unwrap_functional(std::forward<TFunc1>(func1)),
+				unwrap_functional(std::forward<TFunc2>(func2))
+			));
+			return TClosureBase<composition_t>{
+				make_composition<TOperation>(
+					unwrap_functional(std::forward<TFunc1>(func1)),
+					unwrap_functional(std::forward<TFunc2>(func2))
+				)
+			};
 		}
-	};
-
-	template <template <class> class TClosureBase, associative_operation TOperation>
-	struct binary_composer_t<TClosureBase, TOperation>
-	{
-		template <class TFunc1, class TFunc2>
-		using closure_t = composition_closure_t<TClosureBase, TOperation, TFunc1, TFunc2>;
-
-		template <class TFunc1, class TFunc2>
-		//requires is_associative_operation_v<TOperation>
-		//		&& derived_from_unified_base<TFunc1>
-		//		&& std::same_as<composition_operation_t<TFunc1>, TOperation>
-		//		&& (!derived_from_unified_base<TFunc2> || !std::same_as<composition_operation_t<TFunc1>, TOperation>)
-		[[nodiscard]]
-		static constexpr auto compose
-		(
-			TFunc1&& func1,
-			TFunc2&& func2
-		)
-		{
-			if constexpr (derived_from_unified_base<TFunc1, composition_base_tag> && std::same_as<composition_operation_t<TFunc1>, TOperation>)
-
-			return { std::forward<TFunc1>(func1), std::forward<TFunc2>(func2) };
-		}
-	};
-
-	template <class TComposer, class TFunc1, class TFunc2>
-	inline constexpr bool is_nothrow_composable_v{
-		noexcept(TComposer::compose(
-			std::declval<unwrap_functional_result_t<TFunc1>>(),
-			std::declval<unwrap_functional_result_t<TFunc2>>()
-		))
 	};
 }
 

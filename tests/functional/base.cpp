@@ -29,15 +29,21 @@ namespace
 
 	inline constexpr auto trueFunc = [](auto&&...) { return true; };
 	inline constexpr auto falseFunc = [](auto&&...) { return false; };
+
+	inline constexpr closure_base_fn<std::remove_cvref_t<decltype(trueFunc)>> envelopedTrueFunc{ trueFunc };
+	inline constexpr closure_base_fn<std::remove_cvref_t<decltype(falseFunc)>> envelopedFalseFunc{ falseFunc };
 }
 
-TEST_CASE("composition_fn is constructible with functionals", "[functional][base]")
+template <template <class> class TMod, class T>
+constexpr decltype(auto) apply_mod(T&& v)
 {
-	composition_fn composition{ operation_mock_fn{}, trueFunc, trueFunc, trueFunc };
-	composition_fn falseComposition{ operation_mock_fn{}, falseFunc, trueFunc, trueFunc };
+	return static_cast<TMod<std::remove_cvref_t<T>>>(v);
+}
 
-	REQUIRE(composition(42));
-	REQUIRE(!falseComposition(42, "test"));
+TEST_CASE("closure_base_fn satisfies derived_from_unified_base concept with closure_base_tag>.", "[functional][base]")
+{
+	using result_t = decltype(envelopedTrueFunc);
+	STATIC_REQUIRE(sl::derived_from_unified_base<result_t, detail::closure_base_tag>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -55,5 +61,44 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, closure_base_fn<closure_base_fn<std::remove_cvref_t<decltype(trueFunc)>>>, std::remove_cvref_t<decltype(trueFunc)>)
 )
 {
-	STATIC_REQUIRE(std::same_as<detail::unwrap_functional_result_t<T>, TExpected>);
+	STATIC_REQUIRE(std::same_as<detail::unwrap_functional_r_t<T>, TExpected>);
+}
+
+TEST_CASE("composition_fn satisfies derived_from_unified_base concept with composition_base_tag>.", "[functional][base]")
+{
+	using result_t = decltype(composition_fn{ operation_mock_fn{}, envelopedTrueFunc, trueFunc });
+	STATIC_REQUIRE(sl::derived_from_unified_base<result_t, detail::composition_base_tag>);
+}
+
+TEST_CASE("composition_fn is constructible with functionals", "[functional][base]")
+{
+	using expected_t = composition_fn<
+		operation_mock_fn,
+		std::remove_cvref_t<decltype(falseFunc)>,
+		std::remove_cvref_t<decltype(trueFunc)>
+	>;
+	STATIC_REQUIRE(std::same_as<decltype(composition_fn{ operation_mock_fn{}, falseFunc, trueFunc }), expected_t>);
+}
+
+TEST_CASE("composition_fn unwraps functionals on construction.", "[functional][base]")
+{
+	STATIC_REQUIRE(
+		std::same_as<decltype(composition_fn{ operation_mock_fn{}, envelopedTrueFunc, trueFunc }),
+		decltype(composition_fn{ operation_mock_fn{}, trueFunc, trueFunc })>
+	);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"composition_fn is invocable in arbitrary state.",
+	"[functional][base]",
+	((template <class> class TTypeMod, auto... VArgs), TTypeMod, VArgs...),
+	(std::add_lvalue_reference_t, 0),
+	(std::add_lvalue_reference_t, 1, nullptr)
+)
+{
+	composition_fn trueComposition{ operation_mock_fn{}, falseFunc, envelopedFalseFunc };
+	composition_fn falseComposition{ operation_mock_fn{}, envelopedFalseFunc, trueFunc };
+
+	REQUIRE(apply_mod<TTypeMod>(trueComposition)(VArgs...));
+	REQUIRE(!apply_mod<TTypeMod>(falseComposition)(VArgs...));
 }
