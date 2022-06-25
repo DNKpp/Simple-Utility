@@ -18,13 +18,26 @@
 namespace sl::functional
 {
 	/**
-	 * \addtogroup GROUP_FUNCTIONAL
-	 *
+	 * \defgroup GROUP_FUNCTIONAL_PREDICATE predicate
+	 * \ingroup GROUP_FUNCTIONAL
+	 * \brief Contains the base ``predicate_fn`` and several pre-defined predicate objects.
+	 * \details Predicate types aim to simplify the composition of multiple conditions and are even fully compatible with the transformer
+	 * functions. Predicates are therefore pipe-able with any other functional type (the params and return types still have to match, which can't
+	 * be checked before the actual invocation) and offer many more composing operators.
+	 * Predicates also aim to be flat as possible, which means, if users chain multiple predicates via supported operators, instead of simply
+	 * building a tree like structure, the functional objects will be combined into one ``composition_fn``. This keeps the calling-hierarchy as
+	 * flat as possible and also supports easier debugging. Operations following this strategy are:
+	 * - pipe
+	 * - conjunction
+	 * - disjunction
+	 * - bind_front
+	 * - bind_back
 	 * @{
 	 */
 
 	/**
-	 * \brief Helper type which accepts a functional type and enables pipe, conjunctive and disjunctive chaining.
+	 * \brief Base type for predicate functionals, which accepts a functional type and enables pipe, conjunctive and disjunctive chaining,
+	 * and front and back binding.
 	 * \tparam TFunc The functional type.
 	 */
 	template <class TFunc>
@@ -49,11 +62,6 @@ namespace sl::functional
 	 */
 	template <class TFunc>
 	predicate_fn(TFunc) -> predicate_fn<TFunc>;
-
-	/**
-	 * \defgroup GROUP_FUNCTIONAL_PREDICATE predicate
-	 * @{
-	 */
 
 	/**
 	 * \brief Functional object, which compares its two operands less.
@@ -150,8 +158,6 @@ namespace sl::functional
 				return std::forward<TLhs>(lhs) != std::forward<TRhs>(rhs);
 		}
 	};
-
-	/** @} */
 
 	/** @} */
 }
