@@ -6,36 +6,47 @@
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
 
+#include "../helper.hpp"
+
 #include "Simple-Utility/functional/predicate.hpp"
 
 #include <algorithm>
 #include <vector>
+#include <optional>
 
-using namespace sl;
+using namespace sl::functional;
 
 inline constexpr auto trueFunc = [](auto&&...) { return true; };
 inline constexpr auto falseFunc = [](auto&&...) { return false; };
 
+inline constexpr auto variadicAllEqual = [](auto&& v, auto&&... vs)
+{
+	return ((vs == v) && ... && true);
+};
+
 using empty_predicate_t = bool(*)();
 
-inline constexpr functional::predicate_fn<empty_predicate_t> truePredicate{ trueFunc };
-inline constexpr functional::predicate_fn<empty_predicate_t> falsePredicate{ falseFunc };
+inline constexpr predicate_fn<empty_predicate_t> truePredicate{ trueFunc };
+inline constexpr predicate_fn<empty_predicate_t> falsePredicate{ falseFunc };
 
-using predicate_reference_list_t = std::tuple<functional::predicate_fn<empty_predicate_t>&,
-											const functional::predicate_fn<empty_predicate_t>&,
-											functional::predicate_fn<empty_predicate_t>&&>;
+using predicate_reference_list_t = std::tuple<predicate_fn<empty_predicate_t>&,
+											const predicate_fn<empty_predicate_t>&,
+											predicate_fn<empty_predicate_t>&&>;
 
 TEST_CASE("predicate_fn is constructed from predicate.", "[functional][predicate]")
 {
-	functional::predicate_fn<empty_predicate_t> predicate{ trueFunc };
+	predicate_fn<empty_predicate_t> predicate{ trueFunc };
 
 	REQUIRE(predicate());
 }
 
-TEMPLATE_LIST_TEST_CASE(
+TEMPLATE_TEST_CASE_SIG(
 	"predicate_fn is evaluated via operator ()",
 	"[functional][predicate]",
-	predicate_reference_list_t
+	((bool VDummy, template <class> class TMod), VDummy, TMod),
+	(true, as_lvalue_ref_t),
+	(true, as_const_lvalue_ref_t),
+	(true, as_rvalue_ref_t)
 )
 {
 	auto [sourcePredicate, expectedResult] = GENERATE(
@@ -46,15 +57,18 @@ TEMPLATE_LIST_TEST_CASE(
 			})
 	);
 
-	functional::predicate_fn predicate{ sourcePredicate };
+	predicate_fn predicate{ sourcePredicate };
 
-	REQUIRE(static_cast<TestType>(predicate)() == expectedResult);
+	REQUIRE(apply_mod<TMod>(predicate)() == expectedResult);
 }
 
-TEMPLATE_LIST_TEST_CASE(
+TEMPLATE_TEST_CASE_SIG(
 	"predicate_fn is composable with operator && as left-hand-side",
 	"[functional][predicate]",
-	predicate_reference_list_t
+	((bool VDummy, template <class> class TMod), VDummy, TMod),
+	(true, as_lvalue_ref_t),
+	(true, as_const_lvalue_ref_t),
+	(true, as_rvalue_ref_t)
 )
 {
 	const auto& [chainedFunction, expectedResult] = GENERATE(
@@ -65,16 +79,19 @@ TEMPLATE_LIST_TEST_CASE(
 			})
 	);
 
-	functional::predicate_fn predicate{ truePredicate };
-	const functional::predicate_fn composedPredicate = static_cast<TestType>(predicate) && chainedFunction;
+	predicate_fn predicate{ truePredicate };
+	const predicate_fn composedPredicate = apply_mod<TMod>(predicate) && chainedFunction;
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEMPLATE_LIST_TEST_CASE(
+TEMPLATE_TEST_CASE_SIG(
 	"predicate_fn is composable with operator && as right-hand-side",
 	"[functional][predicate]",
-	predicate_reference_list_t
+	((bool VDummy, template <class> class TMod), VDummy, TMod),
+	(true, as_lvalue_ref_t),
+	(true, as_const_lvalue_ref_t),
+	(true, as_rvalue_ref_t)
 )
 {
 	const auto& [chainedFunction, expectedResult] = GENERATE(
@@ -85,8 +102,8 @@ TEMPLATE_LIST_TEST_CASE(
 			})
 	);
 
-	functional::predicate_fn predicate{ truePredicate };
-	const functional::predicate_fn composedPredicate = chainedFunction && static_cast<TestType>(predicate);
+	predicate_fn predicate{ truePredicate };
+	const predicate_fn composedPredicate = chainedFunction && apply_mod<TMod>(predicate);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
@@ -94,16 +111,16 @@ TEMPLATE_LIST_TEST_CASE(
 TEMPLATE_TEST_CASE_SIG(
 	"predicate_fn is composable as param on both sides of operator &&.",
 	"[functional][predicate]",
-	((bool VDummy, class TLhs, class TRhs), VDummy, TLhs, TRhs),
-	(true, functional::predicate_fn<empty_predicate_t>&, functional::predicate_fn<empty_predicate_t>&),
-	(true, functional::predicate_fn<empty_predicate_t>&, const functional::predicate_fn<empty_predicate_t>&),
-	(true, functional::predicate_fn<empty_predicate_t>&, functional::predicate_fn<empty_predicate_t>&&),
-	(true, const functional::predicate_fn<empty_predicate_t>&, functional::predicate_fn<empty_predicate_t>&),
-	(true, const functional::predicate_fn<empty_predicate_t>&, const functional::predicate_fn<empty_predicate_t>&),
-	(true, const functional::predicate_fn<empty_predicate_t>&, functional::predicate_fn<empty_predicate_t>&&),
-	(true, functional::predicate_fn<empty_predicate_t>&&, functional::predicate_fn<empty_predicate_t>&),
-	(true, functional::predicate_fn<empty_predicate_t>&&, const functional::predicate_fn<empty_predicate_t>&),
-	(true, functional::predicate_fn<empty_predicate_t>&&, functional::predicate_fn<empty_predicate_t>&&)
+	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
+	(true, as_lvalue_ref_t, as_lvalue_ref_t),
+	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
+	(true, as_lvalue_ref_t, as_rvalue_ref_t),
+	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
+	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
+	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
+	(true, as_rvalue_ref_t, as_lvalue_ref_t),
+	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
+	(true, as_rvalue_ref_t, as_rvalue_ref_t)
 )
 {
 	const auto& [lhsPredicate, rhsPredicate, expectedResult] = GENERATE(
@@ -116,12 +133,22 @@ TEMPLATE_TEST_CASE_SIG(
 			{ trueFunc, trueFunc, true }
 			})
 	);
-	functional::predicate_fn lhs{ lhsPredicate };
-	functional::predicate_fn rhs{ rhsPredicate };
+	predicate_fn lhs{ lhsPredicate };
+	predicate_fn rhs{ rhsPredicate };
 
-	const functional::predicate_fn composedPredicate = static_cast<TLhs>(lhs) && static_cast<TRhs>(rhs);
+	const predicate_fn composedPredicate = apply_mod<TLhsMod>(lhs) && apply_mod<TRhsMod>(rhs);
 
 	REQUIRE(composedPredicate() == expectedResult);
+}
+
+TEST_CASE("operator && composed predicates get flattened", "[functional][predicate]")
+{
+	using result_t = std::remove_cvref_t<decltype(truePredicate && truePredicate && truePredicate)>;
+	using expected_t = predicate_fn<composition_fn<
+			operators::detail::conjunction_caller_fn, empty_predicate_t, empty_predicate_t, empty_predicate_t>
+	>;
+
+	STATIC_REQUIRE(std::same_as<result_t, expected_t>);
 }
 
 TEMPLATE_LIST_TEST_CASE(
@@ -138,8 +165,8 @@ TEMPLATE_LIST_TEST_CASE(
 			})
 	);
 
-	functional::predicate_fn predicate{ falsePredicate };
-	const functional::predicate_fn composedPredicate = static_cast<TestType>(predicate) || chainedFunction;
+	predicate_fn predicate{ falsePredicate };
+	const predicate_fn composedPredicate = static_cast<TestType>(predicate) || chainedFunction;
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
@@ -158,8 +185,8 @@ TEMPLATE_LIST_TEST_CASE(
 			})
 	);
 
-	functional::predicate_fn predicate{ falsePredicate };
-	const functional::predicate_fn composedPredicate = chainedFunction || static_cast<TestType>(predicate);
+	predicate_fn predicate{ falsePredicate };
+	const predicate_fn composedPredicate = chainedFunction || static_cast<TestType>(predicate);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
@@ -167,16 +194,16 @@ TEMPLATE_LIST_TEST_CASE(
 TEMPLATE_TEST_CASE_SIG(
 	"predicate_fn is composable as param on both sides of operator ||.",
 	"[functional][predicate]",
-	((bool VDummy, class TLhs, class TRhs), VDummy, TLhs, TRhs),
-	(true, functional::predicate_fn<empty_predicate_t>&, functional::predicate_fn<empty_predicate_t>&),
-	(true, functional::predicate_fn<empty_predicate_t>&, const functional::predicate_fn<empty_predicate_t>&),
-	(true, functional::predicate_fn<empty_predicate_t>&, functional::predicate_fn<empty_predicate_t>&&),
-	(true, const functional::predicate_fn<empty_predicate_t>&, functional::predicate_fn<empty_predicate_t>&),
-	(true, const functional::predicate_fn<empty_predicate_t>&, const functional::predicate_fn<empty_predicate_t>&),
-	(true, const functional::predicate_fn<empty_predicate_t>&, functional::predicate_fn<empty_predicate_t>&&),
-	(true, functional::predicate_fn<empty_predicate_t>&&, functional::predicate_fn<empty_predicate_t>&),
-	(true, functional::predicate_fn<empty_predicate_t>&&, const functional::predicate_fn<empty_predicate_t>&),
-	(true, functional::predicate_fn<empty_predicate_t>&&, functional::predicate_fn<empty_predicate_t>&&)
+	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
+	(true, as_lvalue_ref_t, as_lvalue_ref_t),
+	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
+	(true, as_lvalue_ref_t, as_rvalue_ref_t),
+	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
+	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
+	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
+	(true, as_rvalue_ref_t, as_lvalue_ref_t),
+	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
+	(true, as_rvalue_ref_t, as_rvalue_ref_t)
 )
 {
 	const auto& [lhsPredicate, rhsPredicate, expectedResult] = GENERATE(
@@ -189,12 +216,22 @@ TEMPLATE_TEST_CASE_SIG(
 			{ trueFunc, trueFunc, true }
 			})
 	);
-	functional::predicate_fn lhs{ lhsPredicate };
-	functional::predicate_fn rhs{ rhsPredicate };
+	predicate_fn lhs{ lhsPredicate };
+	predicate_fn rhs{ rhsPredicate };
 
-	const functional::predicate_fn composedPredicate = static_cast<TLhs>(lhs) || static_cast<TRhs>(rhs);
+	const predicate_fn composedPredicate = apply_mod<TLhsMod>(lhs) || apply_mod<TRhsMod>(rhs);
 
 	REQUIRE(composedPredicate() == expectedResult);
+}
+
+TEST_CASE("operator || composed predicates get flattened", "[functional][predicate]")
+{
+	using result_t = std::remove_cvref_t<decltype(truePredicate || truePredicate || truePredicate)>;
+	using expected_t = predicate_fn<composition_fn<
+			operators::detail::disjunction_caller_fn, empty_predicate_t, empty_predicate_t, empty_predicate_t>
+	>;
+
+	STATIC_REQUIRE(std::same_as<result_t, expected_t>);
 }
 
 TEST_CASE("predicate_fn follows the common operator hierarchy.", "[functional][predicate]")
@@ -210,7 +247,7 @@ TEST_CASE("predicate_fn follows the common operator hierarchy.", "[functional][p
 			})
 	);
 
-	const functional::predicate_fn composedPredicate = truePredicate && andFunc || orFunc;
+	const predicate_fn composedPredicate = truePredicate && andFunc || orFunc;
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
@@ -228,7 +265,7 @@ TEST_CASE("predicate_fn common operator hierarchy can be adjusted with ().", "[f
 			})
 	);
 
-	const functional::predicate_fn composedPredicate = (falsePredicate || orFunc) && andFunc;
+	const predicate_fn composedPredicate = (falsePredicate || orFunc) && andFunc;
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
@@ -247,8 +284,8 @@ TEMPLATE_LIST_TEST_CASE(
 			})
 	);
 
-	functional::predicate_fn predicate{ basePredicate };
-	const functional::predicate_fn negatedPredicate = !static_cast<TestType>(predicate);
+	predicate_fn predicate{ basePredicate };
+	const predicate_fn negatedPredicate = !static_cast<TestType>(predicate);
 
 	REQUIRE(negatedPredicate() == expectedResult);
 }
@@ -264,12 +301,94 @@ TEST_CASE("predicate_fn is composable via operator |", "[functional][predicate]"
 			})
 	);
 
-	const functional::predicate_fn composedPredicate = functional::predicate_fn{ [](const int v) { return std::cmp_less(v, 10); } }
-														&& [](const int v) { return std::cmp_less(0, v); };
-	const functional::predicate_fn finalPredicate = [](const std::string& str) { return std::stoi(str); }
-													| composedPredicate;
+	const predicate_fn composedPredicate = predicate_fn{ [](const int v) { return std::cmp_less(v, 10); } }
+											&& [](const int v) { return std::cmp_less(0, v); };
+	const predicate_fn finalPredicate = [](const std::string& str) { return std::stoi(str); }
+										| composedPredicate;
 
 	REQUIRE(finalPredicate(input) == expectedResult);
+}
+
+TEST_CASE("front curried arguments to predicate_fn will be applied in correct order.", "[functional][predicate]")
+{
+	const predicate_fn predicate = predicate_fn{
+										[](const int i, const std::string& str, const std::optional<int>& opt)
+										{
+											return i == std::stoi(str) && i != opt;
+										}
+									} << 42 << "42";
+
+	REQUIRE(predicate(std::nullopt));
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"predicate_fn can be front curried with operator < in arbitrary length",
+	"[functional][predicate]",
+	((template <class> class TMod, bool VExpected, int... VValues), TMod, VExpected, VValues...),
+	(as_lvalue_ref_t, true, 42),
+	(as_lvalue_ref_t, false, 42, 1337),
+	(as_lvalue_ref_t, true, 42, 42, 42),
+	(as_const_lvalue_ref_t, true, 42),
+	(as_const_lvalue_ref_t, false, 42, 1337),
+	(as_const_lvalue_ref_t, true, 42, 42, 42),
+	(as_rvalue_ref_t, true, 42),
+	(as_rvalue_ref_t, false, 42, 1337),
+	(as_rvalue_ref_t, true, 42, 42, 42)
+)
+{
+	predicate_fn predicate{ variadicAllEqual };
+	const predicate_fn curriedPredicate = (apply_mod<TMod>(predicate) << ... << VValues);
+
+	REQUIRE(curriedPredicate() == VExpected);
+}
+
+TEST_CASE("front curried predicate_fn can be piped", "[functional][predicate]")
+{
+	predicate_fn predicate = predicate_fn{ variadicAllEqual } << 42 << -2
+							| predicate_fn{ std::equal_to{} } << false;
+
+	REQUIRE(predicate());
+}
+
+TEST_CASE("back curried arguments to predicate_fn will be applied in correct order.", "[functional][predicate]")
+{
+	const predicate_fn predicate = predicate_fn{
+										[](const int i, const std::string& str, const std::optional<int>& opt)
+										{
+											return i == std::stoi(str) && i != opt;
+										}
+									} >> "42" >> std::nullopt;
+
+	REQUIRE(predicate(42));
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"predicate_fn can be back curried with operator >> from the right-hand-side in arbitrary length",
+	"[functional][predicate]",
+	((template <class> class TMod, bool VExpected, int... VValues), TMod, VExpected, VValues...),
+	(as_lvalue_ref_t, true, 42),
+	(as_lvalue_ref_t, false, 42, 1337),
+	(as_lvalue_ref_t, true, 42, 42, 42),
+	(as_const_lvalue_ref_t, true, 42),
+	(as_const_lvalue_ref_t, false, 42, 1337),
+	(as_const_lvalue_ref_t, true, 42, 42, 42),
+	(as_rvalue_ref_t, true, 42),
+	(as_rvalue_ref_t, false, 42, 1337),
+	(as_rvalue_ref_t, true, 42, 42, 42)
+)
+{
+	predicate_fn predicate{ variadicAllEqual };
+	const predicate_fn curriedPredicate = (apply_mod<TMod>(predicate) >> ... >> VValues);
+
+	REQUIRE(curriedPredicate() == VExpected);
+}
+
+TEST_CASE("back curried predicate_fn can be piped", "[functional][predicate]")
+{
+	predicate_fn predicate = predicate_fn{ variadicAllEqual } >> 42 >> -2
+							| predicate_fn{ std::equal_to{} } << false;
+
+	REQUIRE(predicate());
 }
 
 TEST_CASE("predicate_fn accepts functional objects wrapped into a std::reference_wrapper", "[functional][predicate]")
@@ -280,7 +399,7 @@ TEST_CASE("predicate_fn accepts functional objects wrapped into a std::reference
 
 	const auto result = std::ranges::count_if(
 		sourceInts,
-		functional::predicate_fn{ std::ref(skipFirst) }
+		predicate_fn{ std::ref(skipFirst) }
 	);
 
 	REQUIRE(result == 3);
@@ -298,7 +417,7 @@ TEMPLATE_TEST_CASE("less compares its two parameters", "[functional][predicate]"
 			})
 	);
 
-	const bool result = functional::less(static_cast<TestType>(value1), static_cast<TestType>(value2));
+	const bool result = less(static_cast<TestType>(value1), static_cast<TestType>(value2));
 
 	REQUIRE(result == expectedResult);
 }
@@ -314,7 +433,7 @@ TEMPLATE_TEST_CASE("greater compares its two parameters", "[functional][predicat
 			})
 	);
 
-	const bool result = functional::greater(static_cast<TestType>(value1), static_cast<TestType>(value2));
+	const bool result = greater(static_cast<TestType>(value1), static_cast<TestType>(value2));
 
 	REQUIRE(result == expectedResult);
 }
@@ -331,7 +450,7 @@ TEMPLATE_TEST_CASE("less_equal compares its two parameters", "[functional][predi
 			})
 	);
 
-	const bool result = functional::less_equal(static_cast<TestType>(value1), static_cast<TestType>(value2));
+	const bool result = less_equal(static_cast<TestType>(value1), static_cast<TestType>(value2));
 
 	REQUIRE(result == expectedResult);
 }
@@ -348,7 +467,7 @@ TEMPLATE_TEST_CASE("greater_equal compares its two parameters", "[functional][pr
 			})
 	);
 
-	const bool result = functional::greater_equal(static_cast<TestType>(value1), static_cast<TestType>(value2));
+	const bool result = greater_equal(static_cast<TestType>(value1), static_cast<TestType>(value2));
 
 	REQUIRE(result == expectedResult);
 }
@@ -364,7 +483,7 @@ TEMPLATE_TEST_CASE("equal compares its two parameters", "[functional][predicate]
 			})
 	);
 
-	const bool result = functional::equal(static_cast<TestType>(value1), static_cast<TestType>(value2));
+	const bool result = equal(static_cast<TestType>(value1), static_cast<TestType>(value2));
 
 	REQUIRE(result == expectedResult);
 }
@@ -380,7 +499,7 @@ TEMPLATE_TEST_CASE("not_equal compares its two parameters", "[functional][predic
 			})
 	);
 
-	const bool result = functional::not_equal(static_cast<TestType>(value1), static_cast<TestType>(value2));
+	const bool result = not_equal(static_cast<TestType>(value1), static_cast<TestType>(value2));
 
 	REQUIRE(result == expectedResult);
 }

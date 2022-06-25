@@ -18,6 +18,7 @@ namespace sl::functional::tuple
 {
 	/**
 	 * \defgroup GROUP_FUNCTIONAL_TUPLE tuple
+	 * \ingroup GROUP_FUNCTIONAL
 	 * @{
 	 */
 
@@ -102,9 +103,9 @@ namespace sl::functional::tuple
 		requires std::same_as<TFunc, std::remove_cvref_t<TFunc>>
 	class apply_fn
 		: closure_base_fn<TFunc>,
-		public pipe_operator<apply_fn<TFunc>, apply_fn>,
-		public bind_front_operator<apply_fn<TFunc>, apply_fn>,
-		public bind_back_operator<apply_fn<TFunc>, apply_fn>
+		public operators::pipe<apply_fn<TFunc>, apply_fn>,
+		public operators::bind_front<apply_fn<TFunc>, apply_fn>,
+		public operators::bind_back<apply_fn<TFunc>, apply_fn>
 	{
 		using closure_t = closure_base_fn<TFunc>;
 	public:
@@ -142,7 +143,7 @@ namespace sl::functional::tuple
 	 * \tparam TFunc Type of the given functional.
 	 */
 	template <class TFunc>
-	apply_fn(TFunc) -> apply_fn<std::remove_cvref_t<TFunc>>;
+	apply_fn(TFunc) -> apply_fn<TFunc>;
 
 	/** @} */
 }
