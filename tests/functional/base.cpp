@@ -104,12 +104,16 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"value_fn holds decayed value.",
+	"value_fn::value_type holds decayed value.",
 	"[functional][base]",
 	((bool VDummy, class TSource, class TExpected), VDummy, TSource, TExpected),
 	(true, int, int),
 	(true, int&, int),
-	(true, int*, int*)
+	(true, int*, int*),
+	(true, char[5], char*),
+	(true, const char[5], const char*),
+	(true, const char*, const char*),
+	(true, std::reference_wrapper<int>&, std::reference_wrapper<int>)
 )
 {
 	using result_t = typename decltype(value_fn{ std::declval<TSource>() })::value_type;
@@ -118,17 +122,62 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"value_fn's value is retrievable via operator ().",
+	"value_fn::reference_type holds reference type.",
 	"[functional][base]",
-	((bool VDummy, template <class> class TTypeMod, class TValue, class TExpected), VDummy, TTypeMod, TValue, TExpected),
-	(true, as_lvalue_ref_t, int, const int&),
-	(true, as_const_lvalue_ref_t, int, const int&),
-	(true, as_rvalue_ref_t, int, int)
+	((bool VDummy, class TSource, class TExpected), VDummy, TSource, TExpected),
+	(true, int, const int&),
+	(true, int&, const int&),
+	(true, int*, int* const&),
+	(true, int* const, int* const&),
+	(true, const int* const, const int* const&),
+	(true, char[5], char* const&),
+	(true, const char[5], const char* const&),
+	(true, std::reference_wrapper<int>&, int&),
+	(true, std::reference_wrapper<const int>&, const int&)
 )
 {
-	value_fn value{ TValue{} };
+	using result_t = typename decltype(value_fn{ std::declval<TSource>() })::reference_type;
 
-	using result_t = decltype(apply_mod<TTypeMod>(value)());
+	STATIC_REQUIRE(std::same_as<result_t, TExpected>);
+}
 
-	REQUIRE(std::same_as<result_t, TExpected>);
+TEMPLATE_TEST_CASE_SIG(
+	"value_fn supports arbitrary types.",
+	"[functional][base]",
+	((bool VDummy, template <class> class TMod, class TValue, class TExpected), VDummy, TMod, TValue, TExpected),
+	(true, as_lvalue_ref_t, int, const int&),
+	(true, as_const_lvalue_ref_t, int, const int&),
+	(true, as_rvalue_ref_t, int, int),
+	(true, as_lvalue_ref_t, int*, int* const&),
+	(true, as_const_lvalue_ref_t, int*, int* const&),
+	(true, as_rvalue_ref_t, int*, int*),
+	(true, as_lvalue_ref_t, char[5], char* const&),
+	(true, as_const_lvalue_ref_t, char[5], char* const&),
+	(true, as_rvalue_ref_t, char[5], char*)
+)
+{
+	TValue v{};
+	value_fn value{ v };
+
+	TExpected retrieved = apply_mod<TMod>(value)();
+
+	REQUIRE(retrieved == v);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"value_fn treats std::reference_wrapper types special.",
+	"[functional][base]",
+	((bool VDummy, template <class> class TMod), VDummy, TMod),
+	(true, as_lvalue_ref_t),
+	(true, as_const_lvalue_ref_t),
+	(true, as_rvalue_ref_t)
+)
+{
+	int x{ 42 };
+	value_fn value{ std::ref(x) };
+
+	int& x_ref = apply_mod<TMod>(value)();
+	x_ref = 1337;
+
+	REQUIRE(x == 1337);
 }

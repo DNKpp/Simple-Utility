@@ -281,7 +281,8 @@ namespace sl::functional
 	class value_fn
 	{
 	public:
-		using value_type = T;
+		using value_type = std::conditional_t<std::is_array_v<T>, T*, T>;
+		using reference_type = const std::unwrap_reference_t<value_type>&;
 
 		template <class... TArgs>
 		[[nodiscard]]
@@ -291,7 +292,7 @@ namespace sl::functional
 		{}
 
 		[[nodiscard]]
-		constexpr const value_type& operator ()() const & noexcept
+		constexpr reference_type operator ()() const & noexcept
 		{
 			return m_Value;
 		}
