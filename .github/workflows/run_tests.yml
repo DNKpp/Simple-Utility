@@ -107,7 +107,7 @@ jobs:
     - name: Compile tests
       run: |
         cmake -DCMAKE_CONFIGURATION_TYPES="${{ matrix.build_mode }}" ${{ matrix.toolset_option }} -B ${{ env.BUILD_DIR }} -S .
-        cmake --build ${{ env.BUILD_DIR }} --config ${{ matrix.build_mode }} -j4
+        cmake --build ${{ env.BUILD_DIR }} -j4
     - name: Run tests
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
