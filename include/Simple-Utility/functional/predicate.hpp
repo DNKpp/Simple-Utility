@@ -12,45 +12,49 @@
 
 namespace sl::functional::detail
 {
-	struct binary_conjunction_fn
+	struct conjunction_caller_fn
 	{
-		template <class TFunc1, class TFunc2, class... TArgs>
+		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::prefer_join };
+
+		template <class TFunctionsTuple, class... TCallArgs>
 		[[nodiscard]]
-		constexpr decltype(auto) operator ()
+		constexpr auto operator ()
 		(
-			TFunc1&& func1,
-			TFunc2&& func2,
-			const TArgs&... v
+			TFunctionsTuple&& functionsTuple,
+			const TCallArgs&... callArgs
 		) const
-		noexcept(std::is_nothrow_invocable_v<TFunc1, std::add_lvalue_reference_t<std::add_const_t<TArgs>>...>
-				&& std::is_nothrow_invocable_v<TFunc2, std::add_lvalue_reference_t<std::add_const_t<TArgs>>...>
-		)
-			requires std::predicate<TFunc1, TArgs...>
-					&& std::predicate<TFunc2, TArgs...>
+		noexcept(detail::is_type_list_nothrow_invokable_v<TFunctionsTuple, const TCallArgs&...>)
 		{
-			return std::invoke(std::forward<TFunc1>(func1), v...)
-					&& std::invoke(std::forward<TFunc2>(func2), v...);
+			return std::apply(
+				[&]<std::predicate<const TCallArgs&...>... TFunctions>(TFunctions&&... functions)
+				{
+					return (std::invoke(std::forward<TFunctions>(functions), callArgs...) && ...);
+				},
+				std::forward<TFunctionsTuple>(functionsTuple)
+			);
 		}
 	};
 
-	struct binary_disjunction_fn
+	struct disjunction_caller_fn
 	{
-		template <class TFunc1, class TFunc2, class... TArgs>
+		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::prefer_join };
+
+		template <class TFunctionsTuple, class... TCallArgs>
 		[[nodiscard]]
-		constexpr decltype(auto) operator ()
+		constexpr auto operator ()
 		(
-			TFunc1&& func1,
-			TFunc2&& func2,
-			const TArgs&... v
+			TFunctionsTuple&& functionsTuple,
+			const TCallArgs&... callArgs
 		) const
-		noexcept(std::is_nothrow_invocable_v<TFunc1, std::add_lvalue_reference_t<std::add_const_t<TArgs>>...>
-				&& std::is_nothrow_invocable_v<TFunc2, std::add_lvalue_reference_t<std::add_const_t<TArgs>>...>
-		)
-			requires std::predicate<TFunc1, TArgs...>
-					&& std::predicate<TFunc2, TArgs...>
+		noexcept(detail::is_type_list_nothrow_invokable_v<TFunctionsTuple, const TCallArgs&...>)
 		{
-			return std::invoke(std::forward<TFunc1>(func1), v...)
-					|| std::invoke(std::forward<TFunc2>(func2), v...);
+			return std::apply(
+				[&]<std::predicate<const TCallArgs&...>... TFunctions>(TFunctions&&... functions)
+				{
+					return (std::invoke(std::forward<TFunctions>(functions), callArgs...) || ...);
+				},
+				std::forward<TFunctionsTuple>(functionsTuple)
+			);
 		}
 	};
 
@@ -80,7 +84,7 @@ namespace sl::functional
 		: private unified_base<detail::conjunction_base_tag>
 	{
 	private:
-		using composer_t = detail::composer<TClosureBase, detail::binary_conjunction_fn>;
+		using composer_t = detail::compose_helper_t<TClosureBase, detail::conjunction_caller_fn>;
 
 	public:
 		/**
@@ -94,9 +98,9 @@ namespace sl::functional
 		constexpr auto operator &&
 		(
 			TOther&& other
-		) && noexcept(detail::is_nothrow_composable_v<composer_t, TDerived&&, TOther>)
+		) && noexcept(std::is_nothrow_invocable_v<composer_t, TDerived&&, TOther>)
 		{
-			return composer_t::compose(static_cast<TDerived&&>(*this), std::forward<TOther>(other));
+			return composer_t{}(static_cast<TDerived&&>(*this), std::forward<TOther>(other));
 		}
 
 		/**
@@ -107,9 +111,9 @@ namespace sl::functional
 		constexpr auto operator &&
 		(
 			TOther&& other
-		) const & noexcept(detail::is_nothrow_composable_v<composer_t, const TDerived&, TOther>)
+		) const & noexcept(std::is_nothrow_invocable_v<composer_t, const TDerived&, TOther>)
 		{
-			return composer_t::compose(static_cast<const TDerived&>(*this), std::forward<TOther>(other));
+			return composer_t{}(static_cast<const TDerived&>(*this), std::forward<TOther>(other));
 		}
 
 		/**
@@ -126,10 +130,9 @@ namespace sl::functional
 		(
 			TLhs&& lhs,
 			conjunction_operator&& rhs
-		)
-		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, TDerived&&>)
+		) noexcept(std::is_nothrow_invocable_v<composer_t, TLhs, TDerived&&>)
 		{
-			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
+			return composer_t{}(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
 		}
 
 		/**
@@ -142,10 +145,9 @@ namespace sl::functional
 		(
 			TLhs&& lhs,
 			const conjunction_operator& rhs
-		)
-		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, const TDerived&>)
+		) noexcept(std::is_nothrow_invocable_v<composer_t, TLhs, const TDerived&>)
 		{
-			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
+			return composer_t{}(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
 		}
 	};
 
@@ -160,7 +162,7 @@ namespace sl::functional
 		: private unified_base<detail::disjunction_base_tag>
 	{
 	private:
-		using composer_t = detail::composer<TClosureBase, detail::binary_disjunction_fn>;
+		using composer_t = detail::compose_helper_t<TClosureBase, detail::disjunction_caller_fn>;
 
 	public:
 		/**
@@ -174,9 +176,9 @@ namespace sl::functional
 		constexpr auto operator ||
 		(
 			TOther&& other
-		) && noexcept(detail::is_nothrow_composable_v<composer_t, TDerived&&, TOther>)
+		) && noexcept(std::is_nothrow_invocable_v<composer_t, TDerived&&, TOther>)
 		{
-			return composer_t::compose(static_cast<TDerived&&>(*this), std::forward<TOther>(other));
+			return composer_t{}(static_cast<TDerived&&>(*this), std::forward<TOther>(other));
 		}
 
 		/**
@@ -187,9 +189,9 @@ namespace sl::functional
 		constexpr auto operator ||
 		(
 			TOther&& other
-		) const & noexcept(detail::is_nothrow_composable_v<composer_t, const TDerived&, TOther>)
+		) const & noexcept(std::is_nothrow_invocable_v<composer_t, const TDerived&, TOther>)
 		{
-			return composer_t::compose(static_cast<const TDerived&>(*this), std::forward<TOther>(other));
+			return composer_t{}(static_cast<const TDerived&>(*this), std::forward<TOther>(other));
 		}
 
 		/**
@@ -206,10 +208,9 @@ namespace sl::functional
 		(
 			TLhs&& lhs,
 			disjunction_operator&& rhs
-		)
-		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, TDerived&&>)
+		) noexcept(std::is_nothrow_invocable_v<composer_t, TLhs, TDerived&&>)
 		{
-			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
+			return composer_t{}(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
 		}
 
 		/**
@@ -222,10 +223,9 @@ namespace sl::functional
 		(
 			TLhs&& lhs,
 			const disjunction_operator& rhs
-		)
-		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, const TDerived&>)
+		) noexcept(std::is_nothrow_invocable_v<composer_t, TLhs, const TDerived&>)
 		{
-			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
+			return composer_t{}(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
 		}
 	};
 

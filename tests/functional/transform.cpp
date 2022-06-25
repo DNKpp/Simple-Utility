@@ -21,7 +21,7 @@ TEST_CASE("transform_fn invokes internal function on invocation.", "[functional]
 {
 	functional::transform_fn proj{ add42 };
 
-	REQUIRE(std::invoke(proj, 1) == 43);
+	REQUIRE(proj(1) == 43);
 }
 
 TEST_CASE("transform_fn can be used on the right side of operator | expressions.", "[functional][transform]")
@@ -29,7 +29,7 @@ TEST_CASE("transform_fn can be used on the right side of operator | expressions.
 	functional::transform_fn comp = times3
 									| functional::transform_fn{ add42 };
 
-	REQUIRE(std::invoke(comp, 1) == 45);
+	REQUIRE(comp(1) == 45);
 }
 
 TEST_CASE("transform_fn can be used on the left side of operator | expressions.", "[functional][transform]")
@@ -37,7 +37,7 @@ TEST_CASE("transform_fn can be used on the left side of operator | expressions."
 	functional::transform_fn comp = functional::transform_fn{ add42 }
 									| times3;
 
-	REQUIRE(std::invoke(comp, 1) == 129);
+	REQUIRE(comp(1) == 129);
 }
 
 TEST_CASE("transform_fn can be chained in arbitrary length.", "[functional][transform]")
@@ -46,7 +46,7 @@ TEST_CASE("transform_fn can be chained in arbitrary length.", "[functional][tran
 									| functional::transform_fn{ add42 }
 									| functional::transform_fn{ add42 };
 
-	REQUIRE(std::invoke(comp, 1) == 127);
+	REQUIRE(comp(1) == 127);
 }
 
 TEST_CASE("transform_fn can be used to project to different types.", "[functional][transform]")
@@ -61,13 +61,16 @@ TEST_CASE("transform_fn can be used to project to different types.", "[functiona
 
 TEST_CASE("more complex composition_fn is evaluated in deterministic manner.", "[functional][transform]")
 {
-	functional::transform_fn comp = (functional::transform_fn{ add42 }
-									| times3)
-									|
-									(functional::transform_fn{ [](int x) { return x - 5; } }
-									| times3);
+	functional::transform_fn comp = (
+										functional::transform_fn{ add42 }
+										| times3
+									)
+									| (
+										functional::transform_fn{ [](int x) { return x - 5; } }
+										| times3
+									);
 
-	REQUIRE(std::invoke(comp, 3) == 390);
+	REQUIRE(comp(3) == 390);
 }
 
 #pragma warning(disable: 26444)
