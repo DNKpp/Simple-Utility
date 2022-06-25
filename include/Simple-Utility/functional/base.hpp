@@ -235,7 +235,7 @@ namespace sl::functional
 		constexpr decltype(auto) operator ()
 		(
 			TCallArgs&&... callArgs
-		) & //noexcept(std::is_nothrow_invocable_v<operation_t&, function_storage_t&, TCallArgs...>)
+		) & noexcept(std::is_nothrow_invocable_v<operation_t&, function_storage_t&, TCallArgs...>)
 		{
 			return std::invoke(m_Operation, m_Functions, std::forward<TCallArgs>(callArgs)...);
 		}
@@ -292,7 +292,7 @@ namespace sl::functional
 		{}
 
 		[[nodiscard]]
-		constexpr reference_type operator ()() const & noexcept
+		constexpr reference_type operator ()() const & noexcept(std::is_nothrow_convertible_v<reference_type, value_type>)
 		{
 			return m_Value;
 		}
