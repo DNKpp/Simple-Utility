@@ -12,6 +12,7 @@
 
 #include <algorithm>
 #include <vector>
+#include <optional>
 
 using namespace sl::functional;
 
