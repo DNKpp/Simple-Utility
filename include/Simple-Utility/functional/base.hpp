@@ -274,17 +274,50 @@ namespace sl::functional
 		function_storage_t m_Functions{};
 	};
 
+	/**
+	 * \brief Deduction guide.
+	 * \tparam TOperator Type of the given operation type.
+	 * \tparam TFunctions Type of the given functions type.
+	 */
 	template <class TOperator, class... TFunctions>
-	composition_fn
-	(
-		TOperator,
-		TFunctions ...
+	composition_fn(TOperator, TFunctions ...) -> composition_fn<TOperator, detail::unwrap_functional_r_t<TFunctions>...>;
 
-	
-	) -> composition_fn<
-		std::remove_cvref_t<TOperator>,
-		std::remove_cvref_t<detail::unwrap_functional_r_t<TFunctions>>...
-	>;
+	template <class T>
+		requires std::same_as<T, std::remove_cvref_t<T>>
+	class value_fn
+	{
+	public:
+		using value_type = T;
+
+		template <class... TArgs>
+		[[nodiscard]]
+		explicit (1 == sizeof...(TArgs))
+		constexpr value_fn(TArgs&&... args) noexcept(std::is_nothrow_constructible_v<value_type, TArgs...>)
+			: m_Value{ std::forward<TArgs>(args)... }
+		{}
+
+		[[nodiscard]]
+		constexpr const value_type& operator ()() const & noexcept
+		{
+			return m_Value;
+		}
+
+		[[nodiscard]]
+		constexpr value_type operator ()() && noexcept(std::is_nothrow_move_constructible_v<value_type>)
+		{
+			return std::move(m_Value);
+		}
+
+	private:
+		value_type m_Value{};
+	};
+
+	/**
+	 * \brief Deduction guide.
+	 * \tparam TValue Type of the given value.
+	 */
+	template <class TValue>
+	value_fn(TValue) -> value_fn<TValue>;
 }
 
 namespace sl::functional::detail

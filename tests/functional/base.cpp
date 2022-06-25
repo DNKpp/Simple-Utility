@@ -5,6 +5,8 @@
 
 #include <catch2/catch_template_test_macros.hpp>
 
+#include "../helper.hpp"
+
 #include "Simple-Utility/functional/base.hpp"
 
 using namespace sl::functional;
@@ -32,12 +34,6 @@ namespace
 
 	inline constexpr closure_base_fn<std::remove_cvref_t<decltype(trueFunc)>> envelopedTrueFunc{ trueFunc };
 	inline constexpr closure_base_fn<std::remove_cvref_t<decltype(falseFunc)>> envelopedFalseFunc{ falseFunc };
-}
-
-template <template <class> class TMod, class T>
-constexpr decltype(auto) apply_mod(T&& v)
-{
-	return static_cast<TMod<std::remove_cvref_t<T>>>(v);
 }
 
 TEST_CASE("closure_base_fn satisfies derived_from_unified_base concept with closure_base_tag>.", "[functional][base]")
@@ -92,8 +88,12 @@ TEMPLATE_TEST_CASE_SIG(
 	"composition_fn is invocable in arbitrary state.",
 	"[functional][base]",
 	((template <class> class TTypeMod, auto... VArgs), TTypeMod, VArgs...),
-	(std::add_lvalue_reference_t, 0),
-	(std::add_lvalue_reference_t, 1, nullptr)
+	(as_lvalue_ref_t, 0),
+	(as_lvalue_ref_t, 1, nullptr),
+	(as_const_lvalue_ref_t, 0),
+	(as_const_lvalue_ref_t, 1, nullptr),
+	(as_rvalue_ref_t, 0),
+	(as_rvalue_ref_t, 1, nullptr)
 )
 {
 	composition_fn trueComposition{ operation_mock_fn{}, falseFunc, envelopedFalseFunc };
@@ -101,4 +101,34 @@ TEMPLATE_TEST_CASE_SIG(
 
 	REQUIRE(apply_mod<TTypeMod>(trueComposition)(VArgs...));
 	REQUIRE(!apply_mod<TTypeMod>(falseComposition)(VArgs...));
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"value_fn holds decayed value.",
+	"[functional][base]",
+	((bool VDummy, class TSource, class TExpected), VDummy, TSource, TExpected),
+	(true, int, int),
+	(true, int&, int),
+	(true, int*, int*)
+)
+{
+	using result_t = typename decltype(value_fn{ std::declval<TSource>() })::value_type;
+
+	STATIC_REQUIRE(std::same_as<result_t, TExpected>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"value_fn's value is retrievable via operator ().",
+	"[functional][base]",
+	((bool VDummy, template <class> class TTypeMod, class TValue, class TExpected), VDummy, TTypeMod, TValue, TExpected),
+	(true, as_lvalue_ref_t, int, const int&),
+	(true, as_const_lvalue_ref_t, int, const int&),
+	(true, as_rvalue_ref_t, int, int)
+)
+{
+	value_fn value{ TValue{} };
+
+	using result_t = decltype(apply_mod<TTypeMod>(value)());
+
+	REQUIRE(std::same_as<result_t, TExpected>);
 }
