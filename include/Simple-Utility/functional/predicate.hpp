@@ -48,7 +48,7 @@ namespace sl::functional
 	 * \tparam TFunc Type of the given functional.
 	 */
 	template <class TFunc>
-	predicate_fn(TFunc) -> predicate_fn<std::remove_cvref_t<TFunc>>;
+	predicate_fn(TFunc) -> predicate_fn<TFunc>;
 
 	/**
 	 * \defgroup GROUP_FUNCTIONAL_PREDICATE predicate

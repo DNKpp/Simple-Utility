@@ -43,7 +43,7 @@ namespace sl::functional
 	 * \tparam TFunc Type of the given functional.
 	 */
 	template <class TFunc>
-	transform_fn(TFunc) -> transform_fn<std::remove_cvref_t<TFunc>>;
+	transform_fn(TFunc) -> transform_fn<TFunc>;
 
 	/**
 	 * \defgroup GROUP_FUNCTIONAL_TRANSFORM transform

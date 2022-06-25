@@ -143,7 +143,7 @@ namespace sl::functional::tuple
 	 * \tparam TFunc Type of the given functional.
 	 */
 	template <class TFunc>
-	apply_fn(TFunc) -> apply_fn<std::remove_cvref_t<TFunc>>;
+	apply_fn(TFunc) -> apply_fn<TFunc>;
 
 	/** @} */
 }
