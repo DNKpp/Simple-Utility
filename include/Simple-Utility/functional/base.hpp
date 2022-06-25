@@ -225,9 +225,7 @@ namespace sl::functional
 		constexpr decltype(auto) operator ()
 		(
 			TCallArgs&&... callArgs
-		) const & noexcept(
-			std::is_nothrow_invocable_v<const operation_t&, const function_storage_t&, TCallArgs...>
-		)
+		) const & noexcept(std::is_nothrow_invocable_v<const operation_t&, const function_storage_t&, TCallArgs...>)
 		{
 			return std::invoke(m_Operation, m_Functions, std::forward<TCallArgs>(callArgs)...);
 		}
@@ -237,9 +235,7 @@ namespace sl::functional
 		constexpr decltype(auto) operator ()
 		(
 			TCallArgs&&... callArgs
-		) & noexcept(
-			std::is_nothrow_invocable_v<operation_t&, function_storage_t&, TCallArgs...>
-		)
+		) & //noexcept(std::is_nothrow_invocable_v<operation_t&, function_storage_t&, TCallArgs...>)
 		{
 			return std::invoke(m_Operation, m_Functions, std::forward<TCallArgs>(callArgs)...);
 		}
@@ -249,9 +245,7 @@ namespace sl::functional
 		constexpr decltype(auto) operator ()
 		(
 			TCallArgs&&... callArgs
-		) && noexcept(
-			std::is_nothrow_invocable_v<operation_t&&, function_storage_t&&, TCallArgs...>
-		)
+		) && noexcept(std::is_nothrow_invocable_v<operation_t&&, function_storage_t&&, TCallArgs...>)
 		{
 			return std::invoke(std::move(m_Operation), std::move(m_Functions), std::forward<TCallArgs>(callArgs)...);
 		}
