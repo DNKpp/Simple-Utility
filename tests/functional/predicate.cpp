@@ -144,8 +144,9 @@ TEMPLATE_TEST_CASE_SIG(
 TEST_CASE("operator && composed predicates get flattened", "[functional][predicate]")
 {
 	using result_t = std::remove_cvref_t<decltype(truePredicate && truePredicate && truePredicate)>;
-	using expected_t = predicate_fn<composition_fn<detail::conjunction_caller_fn, empty_predicate_t, empty_predicate_t,
-													empty_predicate_t>>;
+	using expected_t = predicate_fn<composition_fn<
+			operators::detail::conjunction_caller_fn, empty_predicate_t, empty_predicate_t, empty_predicate_t>
+	>;
 
 	STATIC_REQUIRE(std::same_as<result_t, expected_t>);
 }
@@ -226,8 +227,9 @@ TEMPLATE_TEST_CASE_SIG(
 TEST_CASE("operator || composed predicates get flattened", "[functional][predicate]")
 {
 	using result_t = std::remove_cvref_t<decltype(truePredicate || truePredicate || truePredicate)>;
-	using expected_t = predicate_fn<composition_fn<detail::disjunction_caller_fn, empty_predicate_t, empty_predicate_t,
-													empty_predicate_t>>;
+	using expected_t = predicate_fn<composition_fn<
+			operators::detail::disjunction_caller_fn, empty_predicate_t, empty_predicate_t, empty_predicate_t>
+	>;
 
 	STATIC_REQUIRE(std::same_as<result_t, expected_t>);
 }

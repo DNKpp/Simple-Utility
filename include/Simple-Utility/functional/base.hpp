@@ -348,6 +348,11 @@ namespace sl::functional::detail
 	inline constexpr bool is_type_list_nothrow_invokable_v{
 		is_type_list_nothrow_invokable<std::remove_cvref_t<T>, TCallArgs...>::value
 	};
+}
+
+namespace sl::functional::operators::detail
+{
+	using functional::detail::unwrap_functional;
 
 	enum class composition_strategy_t
 	{
@@ -360,7 +365,7 @@ namespace sl::functional::detail
 
 	template <class T, class TJoinableOperation>
 	concept joinable_with = joinable_operation<TJoinableOperation>
-							&& derived_from_unified_base<T, composition_base_tag>
+							&& derived_from_unified_base<T, functional::detail::composition_base_tag>
 							&& std::same_as<typename std::remove_cvref_t<T>::operation_t, TJoinableOperation>;
 
 	template <class TOperation, class... TTupleElements>
@@ -368,7 +373,7 @@ namespace sl::functional::detail
 	constexpr auto make_composition_from_tuple
 	(
 		std::tuple<TTupleElements...>&& functionsTuple
-	) noexcept(is_nothrow_composable_v<TOperation, TTupleElements...> )
+	) noexcept(functional::detail::is_nothrow_composable_v<TOperation, TTupleElements...> )
 	{
 		return std::apply(
 			[]<class... TFunctions>(TFunctions&&... functions)
@@ -431,7 +436,11 @@ namespace sl::functional::detail
 	{
 		template <class TFunc1, class TFunc2>
 		[[nodiscard]]
-		constexpr auto operator ()(TFunc1&& func1, TFunc2&& func2) const noexcept(is_nothrow_composable_v<TOperation, TFunc1, TFunc2>)
+		constexpr auto operator ()
+		(
+			TFunc1&& func1,
+			TFunc2&& func2
+		) const noexcept(functional::detail::is_nothrow_composable_v<TOperation, TFunc1, TFunc2>)
 		{
 			using composition_t = decltype(make_composition<TOperation>(
 				unwrap_functional(std::forward<TFunc1>(func1)),
