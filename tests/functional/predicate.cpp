@@ -494,6 +494,94 @@ TEST_CASE("predicate_fn is equal compare composable with operator in arbitrary d
 	REQUIRE(((falsePredicate == falsePredicate) == (falsePredicate == falsePredicate))());
 }
 
+TEMPLATE_TEST_CASE_SIG(
+	"predicate_fn is not_equal compare composable with operator != as left-hand-side",
+	"[functional][predicate]",
+	((bool VDummy, template <class> class TMod), VDummy, TMod),
+	(true, as_lvalue_ref_t),
+	(true, as_const_lvalue_ref_t),
+	(true, as_rvalue_ref_t)
+)
+{
+	const auto& [chainedFunction, expectedResult] = GENERATE(
+		table<empty_predicate_t,
+		bool>({
+			{ trueFunc, true },
+			{ falseFunc, false }
+			})
+	);
+
+	predicate_fn predicate{ falsePredicate };
+	const predicate_fn composedPredicate = apply_mod<TMod>(predicate) != chainedFunction;
+
+	REQUIRE(composedPredicate() == expectedResult);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"predicate_fn is not_equal compare composable with operator != as right-hand-side",
+	"[functional][predicate]",
+	((bool VDummy, template <class> class TMod), VDummy, TMod),
+	(true, as_lvalue_ref_t),
+	(true, as_const_lvalue_ref_t),
+	(true, as_rvalue_ref_t)
+)
+{
+	const auto& [chainedFunction, expectedResult] = GENERATE(
+		table<empty_predicate_t,
+		bool>({
+			{ trueFunc, true },
+			{ falseFunc, false }
+			})
+	);
+
+	predicate_fn predicate{ falsePredicate };
+	const predicate_fn composedPredicate = chainedFunction != apply_mod<TMod>(predicate);
+
+	REQUIRE(composedPredicate() == expectedResult);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"predicate_fn is not_equal comapre composable as param on both sides of operator !=.",
+	"[functional][predicate]",
+	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
+	(true, as_lvalue_ref_t, as_lvalue_ref_t),
+	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
+	(true, as_lvalue_ref_t, as_rvalue_ref_t),
+	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
+	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
+	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
+	(true, as_rvalue_ref_t, as_lvalue_ref_t),
+	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
+	(true, as_rvalue_ref_t, as_rvalue_ref_t)
+)
+{
+	const auto& [lhsPredicate, rhsPredicate, expectedResult] = GENERATE(
+		table<empty_predicate_t,
+		empty_predicate_t,
+		bool>({
+			{ falseFunc, falseFunc, false },
+			{ trueFunc, falseFunc, true },
+			{ falseFunc, trueFunc, true },
+			{ trueFunc, trueFunc, false }
+			})
+	);
+	predicate_fn lhs{ lhsPredicate };
+	predicate_fn rhs{ rhsPredicate };
+
+	const predicate_fn composedPredicate = apply_mod<TLhsMod>(lhs) != apply_mod<TRhsMod>(rhs);
+
+	REQUIRE(composedPredicate() == expectedResult);
+}
+
+TEST_CASE("predicate_fn is not_equal compare composable with operator in arbitrary depth.", "[functional][predicate]")
+{
+	REQUIRE((falsePredicate != truePredicate != falsePredicate)());
+	REQUIRE(!(falsePredicate != falsePredicate != falsePredicate)());
+	REQUIRE((truePredicate != (falsePredicate != falsePredicate))());
+	REQUIRE((falsePredicate != falsePredicate != truePredicate)());
+	REQUIRE(((falsePredicate != falsePredicate) != (falsePredicate != truePredicate))());
+}
+
 TEMPLATE_TEST_CASE("less compares its two parameters", "[functional][predicate]", int, float)
 {
 	const auto& [value1, value2, expectedResult] = GENERATE(

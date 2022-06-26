@@ -51,7 +51,8 @@ namespace sl::functional
 		public operators::negation<predicate_fn<TFunc>, predicate_fn>,
 		public operators::bind_front<predicate_fn<TFunc>, predicate_fn>,
 		public operators::bind_back<predicate_fn<TFunc>, predicate_fn>,
-		public operators::equal_compare<predicate_fn<TFunc>, predicate_fn>
+		public operators::equal_compare<predicate_fn<TFunc>, predicate_fn>,
+		public operators::not_equal_compare<predicate_fn<TFunc>, predicate_fn>
 	{
 		using closure_t = closure_base_fn<TFunc>;
 	public:
