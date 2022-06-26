@@ -84,7 +84,7 @@ namespace sl::functional::operators
 		}
 
 		/**
-		 * \copydoc operator==(equal_compare&&, TRhs&&)
+		 * \copydoc operator<=>(equivalent_compare&&, TRhs&&)
 		 */
 		template <class TRhs>
 			requires (!derived_from_unified_base<TRhs, detail::equivalent_compare_base_tag>)
@@ -118,7 +118,7 @@ namespace sl::functional::operators
 		}
 
 		/**
-		 * \copydoc operator==(TLhs&&, equal_compare&&)
+		 * \copydoc operator<=>(TLhs&&, equivalent_compare&&)
 		 */
 		template <class TLhs>
 			requires (!derived_from_unified_base<TLhs, detail::equivalent_compare_base_tag>)
@@ -153,7 +153,7 @@ namespace sl::functional::operators
 		}
 
 		/**
-		 * \copydoc operator==(const equal_compare&, const equal_compare<UDerived, UBaseDerived>&)
+		 * \copydoc operator<=>(const equivalent_compare&, const equivalent_compare<UDerived, UBaseDerived>&)
 		 */
 		template <class UDerived, template <class> class UBaseDerived>
 		[[nodiscard]]
@@ -168,7 +168,7 @@ namespace sl::functional::operators
 		}
 
 		/**
-		 * \copydoc operator==(const equal_compare&, const equal_compare<UDerived, UBaseDerived>&)
+		 * \copydoc operator<=>(const equivalent_compare&, const equivalent_compare<UDerived, UBaseDerived>&)
 		 */
 		template <class UDerived, template <class> class UBaseDerived>
 		[[nodiscard]]
@@ -183,7 +183,7 @@ namespace sl::functional::operators
 		}
 
 		/**
-		 * \copydoc operator==(const equal_compare&, const equal_compare<UDerived, UBaseDerived>&)
+		 * \copydoc operator<=>(const equivalent_compare&, const equivalent_compare<UDerived, UBaseDerived>&)
 		 */
 		template <class UDerived, template <class> class UBaseDerived>
 		[[nodiscard]]
