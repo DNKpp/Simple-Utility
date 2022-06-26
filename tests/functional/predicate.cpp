@@ -322,7 +322,7 @@ TEST_CASE("front curried arguments to predicate_fn will be applied in correct or
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"predicate_fn can be front curried with operator < in arbitrary length",
+	"predicate_fn can be front curried with operator << in arbitrary length",
 	"[functional][predicate]",
 	((template <class> class TMod, bool VExpected, int... VValues), TMod, VExpected, VValues...),
 	(as_lvalue_ref_t, true, 42),
@@ -404,6 +404,94 @@ TEST_CASE("predicate_fn accepts functional objects wrapped into a std::reference
 
 	REQUIRE(result == 3);
 	//! [predicate wrapped]
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"predicate_fn is equal compare composable with operator == as left-hand-side",
+	"[functional][predicate]",
+	((bool VDummy, template <class> class TMod), VDummy, TMod),
+	(true, as_lvalue_ref_t),
+	(true, as_const_lvalue_ref_t),
+	(true, as_rvalue_ref_t)
+)
+{
+	const auto& [chainedFunction, expectedResult] = GENERATE(
+		table<empty_predicate_t,
+		bool>({
+			{ trueFunc, false },
+			{ falseFunc, true }
+			})
+	);
+
+	predicate_fn predicate{ falsePredicate };
+	const predicate_fn composedPredicate = apply_mod<TMod>(predicate) == chainedFunction;
+
+	REQUIRE(composedPredicate() == expectedResult);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"predicate_fn is equal compare composable with operator == as right-hand-side",
+	"[functional][predicate]",
+	((bool VDummy, template <class> class TMod), VDummy, TMod),
+	(true, as_lvalue_ref_t),
+	(true, as_const_lvalue_ref_t),
+	(true, as_rvalue_ref_t)
+)
+{
+	const auto& [chainedFunction, expectedResult] = GENERATE(
+		table<empty_predicate_t,
+		bool>({
+			{ trueFunc, false },
+			{ falseFunc, true }
+			})
+	);
+
+	predicate_fn predicate{ falsePredicate };
+	const predicate_fn composedPredicate = chainedFunction == apply_mod<TMod>(predicate);
+
+	REQUIRE(composedPredicate() == expectedResult);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"predicate_fn is equal comapre composable as param on both sides of operator ==.",
+	"[functional][predicate]",
+	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
+	(true, as_lvalue_ref_t, as_lvalue_ref_t),
+	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
+	(true, as_lvalue_ref_t, as_rvalue_ref_t),
+	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
+	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
+	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
+	(true, as_rvalue_ref_t, as_lvalue_ref_t),
+	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
+	(true, as_rvalue_ref_t, as_rvalue_ref_t)
+)
+{
+	const auto& [lhsPredicate, rhsPredicate, expectedResult] = GENERATE(
+		table<empty_predicate_t,
+		empty_predicate_t,
+		bool>({
+			{ falseFunc, falseFunc, true },
+			{ trueFunc, falseFunc, false },
+			{ falseFunc, trueFunc, false },
+			{ trueFunc, trueFunc, true }
+			})
+	);
+	predicate_fn lhs{ lhsPredicate };
+	predicate_fn rhs{ rhsPredicate };
+
+	const predicate_fn composedPredicate = apply_mod<TLhsMod>(lhs) == apply_mod<TRhsMod>(rhs);
+
+	REQUIRE(composedPredicate() == expectedResult);
+}
+
+TEST_CASE("predicate_fn is equal compare composable with operator in arbitrary depth.", "[functional][predicate]")
+{
+	REQUIRE((falsePredicate == falsePredicate == truePredicate)());
+	REQUIRE(!(falsePredicate == falsePredicate == falsePredicate)());
+	REQUIRE((truePredicate == (falsePredicate == falsePredicate))());
+	REQUIRE((truePredicate == truePredicate == truePredicate)());
+	REQUIRE(((falsePredicate == falsePredicate) == (falsePredicate == falsePredicate))());
 }
 
 TEMPLATE_TEST_CASE("less compares its two parameters", "[functional][predicate]", int, float)

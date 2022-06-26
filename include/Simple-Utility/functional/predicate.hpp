@@ -14,6 +14,7 @@
 #include "Simple-Utility/functional/operators/conjunction.hpp"
 #include "Simple-Utility/functional/operators/disjunction.hpp"
 #include "Simple-Utility/functional/operators/negation.hpp"
+#include "Simple-Utility/functional/operators/equal.hpp"
 
 namespace sl::functional
 {
@@ -49,7 +50,8 @@ namespace sl::functional
 		public operators::disjunction<predicate_fn<TFunc>, predicate_fn>,
 		public operators::negation<predicate_fn<TFunc>, predicate_fn>,
 		public operators::bind_front<predicate_fn<TFunc>, predicate_fn>,
-		public operators::bind_back<predicate_fn<TFunc>, predicate_fn>
+		public operators::bind_back<predicate_fn<TFunc>, predicate_fn>,
+		public operators::equal_compare<predicate_fn<TFunc>, predicate_fn>
 	{
 		using closure_t = closure_base_fn<TFunc>;
 	public:
