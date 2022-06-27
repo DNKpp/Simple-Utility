@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "Simple-Utility/unified_base.hpp"
 #include "Simple-Utility/functional/base.hpp"
 
 namespace sl::functional::operators::detail
@@ -37,57 +36,33 @@ namespace sl::functional::operators::detail
 			);
 		}
 	};
-
-	struct equivalent_compare_base_tag
-	{};
 }
 
 namespace sl::functional::operators
 {
 	/**
-	 * \addtogroup GROUP_FUNCTIONAL_OPERATORS operators
+	 * \addtogroup GROUP_FUNCTIONAL_OPERATORS
 	 * \ingroup GROUP_FUNCTIONAL
 	 * @{
 	 */
 
 	/**
-	 * \brief Helper type which enables equivalence compare composition of two functional objects via operator <=>.
-	 * \tparam TDerived The most derived class type.
-	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
+	 * \brief Tag type which enables equivalence compare composition of two functional objects via operator <=>.
+	 * \relatesalso sl::functional::enable_operation
 	 */
-	template <class TDerived, template <class> class TClosureBase>
-		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
-	struct equivalent_compare
-		: private unified_base<detail::equivalent_compare_base_tag>
+	struct equivalent
+	{};
+
+	/**
+	 * \brief Specialized traits for \ref equivalent.
+	 * \relatesalso equivalent
+	 */
+	template <>
+	struct tag_traits<equivalent>
 	{
-		using composer_t = detail::compose_helper_t<TClosureBase, detail::equivalent_caller_fn>;
+		using operation_t = detail::equivalent_caller_fn;
 	};
-}
 
-namespace sl::functional::operators::detail
-{
-	template <class TDerived, template <class> class TClosureBase>
-	constexpr auto make_equivalent_compare_composer_impl([[maybe_unused]] const equivalent_compare<TDerived, TClosureBase>&) noexcept
-	{
-		return typename equivalent_compare<TDerived, TClosureBase>::composer_t{};
-	}
-
-	template <class TLhs, class TRhs>
-		requires derived_from_unified_base<TLhs, equivalent_compare_base_tag>
-				|| derived_from_unified_base<TRhs, equivalent_compare_base_tag>
-	constexpr auto make_equivalent_compare_composer([[maybe_unused]] const TLhs& lhs, [[maybe_unused]] const TRhs& rhs) noexcept
-	{
-		if constexpr (derived_from_unified_base<TLhs, equivalent_compare_base_tag>)
-		{
-			return make_equivalent_compare_composer_impl(lhs);
-		}
-		else
-			return make_equivalent_compare_composer_impl(rhs);
-	}
-}
-
-namespace sl::functional::operators
-{
 	/**
 	 * \brief Composes both functional objects as equivalence comparison.
 	 * \relatesto equivalent_compare
@@ -98,11 +73,19 @@ namespace sl::functional::operators
 	 * \return The equivalence compare composition of both functional objects as new functional object.
 	 */
 	template <class TLhs, class TRhs>
-		requires derived_from_unified_base<TLhs, detail::equivalent_compare_base_tag>
-				|| derived_from_unified_base<TRhs, detail::equivalent_compare_base_tag>
-	constexpr auto operator <=>(TLhs&& lhs, TRhs&& rhs)
+		requires (std::derived_from<std::remove_cvref_t<TLhs>, equivalent>
+				&& derived_from_unified_base<TLhs, functional::detail::enable_operators_base_tag>)
+				|| (std::derived_from<std::remove_cvref_t<TRhs>, equivalent>
+					&& derived_from_unified_base<TRhs, functional::detail::enable_operators_base_tag>)
+	[[nodiscard]]
+	constexpr auto operator <=>
+	(
+		TLhs&& lhs,
+		TRhs&& rhs
+	)
+	noexcept(is_nothrow_composable_v<equivalent, TLhs, TRhs>)
 	{
-		return detail::make_equivalent_compare_composer(lhs, rhs)(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
+		return functional::detail::make_composition_from_tag<equivalent>(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
 	}
 
 	/** @} */
