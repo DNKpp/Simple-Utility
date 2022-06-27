@@ -14,6 +14,8 @@
 #include "Simple-Utility/functional/operators/conjunction.hpp"
 #include "Simple-Utility/functional/operators/disjunction.hpp"
 #include "Simple-Utility/functional/operators/negation.hpp"
+#include "Simple-Utility/functional/operators/equal.hpp"
+#include "Simple-Utility/functional/operators/equivalent.hpp"
 
 namespace sl::functional
 {
@@ -32,6 +34,26 @@ namespace sl::functional
 	 * - disjunction
 	 * - bind_front
 	 * - bind_back
+	 * - equivalent_compare
+	 *
+	 * \note Predicates are also composable via operator ==, != and <=>, but there is one subtle difference between operator == and <=>, which comes into
+	 * play when chaining three or more predicates together. For two predicates the result is equivalent.
+	 * Operator == compares predicates in a nested manner, thus
+	 * \code{.cpp}
+	 * pred1 == pred2 == pred3;
+	 * \endcode
+	 * is in fact
+	 * \code{.cpp}
+	 * (pred1 == pred2) == pred3;
+	 * \endcode
+	 * That results is sometimes unexpected behaviour when ``pred1``, ``pred2`` and ``pred3`` are for example all ``false``. This will result in
+	 * ``(false == false) == false`` which is obviously not true. Operator <=> in contrast takes the result of the first function and compares
+	 * it to all other predicate results. The above example will then result in the following comparison:
+	 * \code{.cpp}
+	 * bool init = pred1();
+	 * bool result = init == pred2() && init == pred3();
+	 * \endcode
+	 * and therefore actually check if all results are equal.
 	 * @{
 	 */
 
@@ -49,7 +71,10 @@ namespace sl::functional
 		public operators::disjunction<predicate_fn<TFunc>, predicate_fn>,
 		public operators::negation<predicate_fn<TFunc>, predicate_fn>,
 		public operators::bind_front<predicate_fn<TFunc>, predicate_fn>,
-		public operators::bind_back<predicate_fn<TFunc>, predicate_fn>
+		public operators::bind_back<predicate_fn<TFunc>, predicate_fn>,
+		public operators::equal_compare<predicate_fn<TFunc>, predicate_fn>,
+		public operators::not_equal_compare<predicate_fn<TFunc>, predicate_fn>,
+		public operators::equivalent_compare<predicate_fn<TFunc>, predicate_fn>
 	{
 		using closure_t = closure_base_fn<TFunc>;
 	public:
