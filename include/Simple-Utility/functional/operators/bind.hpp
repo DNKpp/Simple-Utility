@@ -3,11 +3,6 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-//          Copyright Dominic Koepke 2019 - 2022.
-// Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          https://www.boost.org/LICENSE_1_0.txt)
-
 #ifndef SL_UTILITY_FUNCTIONAL_OPERATORS_BIND_HPP
 #define SL_UTILITY_FUNCTIONAL_OPERATORS_BIND_HPP
 
@@ -89,96 +84,94 @@ namespace sl::functional::operators::detail
 namespace sl::functional::operators
 {
 	/**
-	 * \addtogroup GROUP_FUNCTIONAL_OPERATORS operators
+	 * \addtogroup GROUP_FUNCTIONAL_OPERATORS
 	 * \ingroup GROUP_FUNCTIONAL
 	 * @{
 	 */
 
-	 /**
-	 * \brief Helper type which enables unary front currying on functionals via operator <<.
-	 * \tparam TDerived The most derived class type.
-	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
+	/**
+	 * \brief Tag type which enables front currying on functionals via operator <<.
+	 * \relatesalso sl::functional::enable_operation
 	 */
-	template <class TDerived, template <class> class TClosureBase>
-		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
 	struct bind_front
+	{};
+
+	/**
+	 * \brief Specialized traits for \ref bind_front.
+	 * \relatesalso bind_front
+	 */
+	template <>
+	struct tag_traits<bind_front>
 	{
-	private:
-		using composer_t = detail::compose_helper_t<TClosureBase, detail::bind_front_caller_fn>;
-
-	public:
-		/**
-		 * \brief Curries the front parameter of this functional object.
-		 * \tparam TValue The type of the curried value.
-		 * \param value The value to be curried.
-		 * \return The curried functional, as a new functional object.
-		 */
-		template <class TValue>
-		[[nodiscard]]
-		constexpr auto operator <<
-		(
-			TValue&& value
-		) const & noexcept(std::is_nothrow_invocable_v<composer_t, const TDerived&, value_fn<std::remove_cvref_t<TValue>>&&>)
-		{
-			return composer_t{}(static_cast<const TDerived&>(*this), value_fn{ std::forward<TValue>(value) });
-		}
-
-		/**
-		 * \copydoc operator<<
-		 */
-		template <class TValue>
-		[[nodiscard]]
-		constexpr auto operator <<
-		(
-			TValue&& value
-		) && noexcept(std::is_nothrow_invocable_v<composer_t, TDerived&&, value_fn<std::remove_cvref_t<TValue>>&&>)
-		{
-			return composer_t{}(static_cast<TDerived&&>(*this), value_fn{ std::forward<TValue>(value) });
-		}
+		using operation_t = detail::bind_front_caller_fn;
 	};
 
 	/**
-	 * \brief Helper type which enables unary back currying on functionals via operator >>.
-	 * \tparam TDerived The most derived class type.
-	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
+	 * \brief Curries the front parameter of the functional object.
+	 * \relatesalso bind_front
+	 * \tparam TFunc The functional type.
+	 * \tparam TValue The type of the curried value.
+	 * \param func The functional object.
+	 * \param value The value to be curried.
+	 * \return The curried functional, as a new functional object.
 	 */
-	template <class TDerived, template <class> class TClosureBase>
-		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
-	struct bind_back
+	template <derived_from_unified_base<functional::detail::enable_operators_base_tag> TFunc, class TValue>
+		requires std::derived_from<std::remove_cvref_t<TFunc>, bind_front>
+	[[nodiscard]]
+	constexpr auto operator <<
+	(
+		TFunc&& func,
+		TValue&& value
+	)
+	noexcept(is_nothrow_composable_v<bind_front, TFunc, value_fn<std::remove_cvref_t<TValue>>&&>)
 	{
-	private:
-		using composer_t = detail::compose_helper_t<TClosureBase, detail::bind_back_caller_fn>;
+		return functional::detail::make_composition_from_tag<bind_front>(
+			std::forward<TFunc>(func),
+			value_fn{ std::forward<TValue>(value) }
+		);
+	}
 
-	public:
-		/**
-		 * \brief Curries the back parameter of this functional object.
-		 * \tparam TValue The type of the curried value.
-		 * \param value The value to be curried.
-		 * \return The curried functional, as a new functional object.
-		 */
-		template <class TValue>
-		[[nodiscard]]
-		constexpr auto operator >>
-		(
-			TValue&& value
-		) const & noexcept(std::is_nothrow_invocable_v<composer_t, const TDerived&, value_fn<std::remove_cvref_t<TValue>>&&>)
-		{
-			return composer_t{}(static_cast<const TDerived&>(*this), value_fn{ std::forward<TValue>(value) });
-		}
+	/**
+	 * \brief Tag type which enables back currying on functionals via operator >>.
+	 * \relatesalso sl::functional::enable_operation
+	 */
+	struct bind_back
+	{};
 
-		/**
-		 * \copydoc operator>>
-		 */
-		template <class TValue>
-		[[nodiscard]]
-		constexpr auto operator >>
-		(
-			TValue&& value
-		) && noexcept(std::is_nothrow_invocable_v<composer_t, TDerived&&, value_fn<std::remove_cvref_t<TValue>>&&>)
-		{
-			return composer_t{}(static_cast<TDerived&&>(*this), value_fn{ std::forward<TValue>(value) });
-		}
+	/**
+	 * \brief Specialized traits for \ref back_front.
+	 * \relatesalso bind_back
+	 */
+	template <>
+	struct tag_traits<bind_back>
+	{
+		using operation_t = detail::bind_back_caller_fn;
 	};
+
+	/**
+	 * \brief Curries the back parameter of the functional object.
+	 * \relatesalso bind_front
+	 * \tparam TFunc The functional type.
+	 * \tparam TValue The type of the curried value.
+	 * \param func The functional object.
+	 * \param value The value to be curried.
+	 * \return The curried functional, as a new functional object.
+	 */
+	template <derived_from_unified_base<functional::detail::enable_operators_base_tag> TFunc, class TValue>
+		requires std::derived_from<std::remove_cvref_t<TFunc>, bind_back>
+	[[nodiscard]]
+	constexpr auto operator >>
+	(
+		TFunc&& func,
+		TValue&& value
+	)
+	noexcept(is_nothrow_composable_v<bind_back, TFunc, value_fn<std::remove_cvref_t<TValue>>&&>)
+	{
+		return functional::detail::make_composition_from_tag<bind_back>(
+			std::forward<TFunc>(func),
+			value_fn{ std::forward<TValue>(value) }
+		);
+	}
 
 	/** @} */
 }
