@@ -30,16 +30,18 @@ namespace sl::functional
 	 */
 
 	/**
-	 * \brief Helper type which accepts a functional type and enables pipe chaining.
+	 * \brief Adapter type which accepts a functional type and enables pipe chaining and currying.
 	 * \tparam TFunc The functional type.
 	 */
 	template <class TFunc>
 		requires std::same_as<TFunc, std::remove_cvref_t<TFunc>>
-	class transform_fn
+	class transform_fn final
 		: public closure_base_fn<TFunc>,
-		public operators::pipe<transform_fn<TFunc>, transform_fn>,
-		public operators::bind_front<transform_fn<TFunc>, transform_fn>,
-		public operators::bind_back<transform_fn<TFunc>, transform_fn>
+		public enable_operation<transform_fn,
+								operators::pipe,
+								operators::bind_front,
+								operators::bind_back
+		>
 	{
 		using closure_t = closure_base_fn<TFunc>;
 	public:
@@ -61,8 +63,6 @@ namespace sl::functional
 	inline constexpr transform_fn as{
 		[]<class T>(T&& v) -> TTarget { return static_cast<TTarget>(std::forward<T>(v)); }
 	};
-
-	/** @} */
 
 	/** @} */
 }
