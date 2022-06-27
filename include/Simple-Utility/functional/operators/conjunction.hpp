@@ -59,7 +59,7 @@ namespace sl::functional::operators
 	struct tag_traits<conjunction>
 	{
 		using operation_t = detail::conjunction_caller_fn;
-		inline static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::prefer_join };
+		inline static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::join };
 	};
 
 	/**

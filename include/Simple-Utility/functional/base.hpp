@@ -32,8 +32,8 @@ namespace sl::functional::operators
 {
 	enum class composition_strategy_t
 	{
-		nested_only,
-		prefer_join
+		nested,
+		join
 	};
 
 
@@ -346,7 +346,7 @@ namespace sl::functional::operators::detail
 {
 	template <class T>
 	concept joinable_operation = tag<T>
-								&& tag_composition_strategy_v<T> == composition_strategy_t::prefer_join;
+								&& tag_composition_strategy_v<T> == composition_strategy_t::join;
 
 	template <class T, class TJoinableOperation>
 	concept joinable_with = joinable_operation<TJoinableOperation>
