@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "Simple-Utility/unified_base.hpp"
 #include "Simple-Utility/functional/base.hpp"
 
 namespace sl::functional::operators::detail
