@@ -14,8 +14,6 @@ namespace sl::functional::operators::detail
 {
 	struct disjunction_caller_fn
 	{
-		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::prefer_join };
-
 		template <class TFunctionsTuple, class... TCallArgs>
 		[[nodiscard]]
 		constexpr auto operator ()
@@ -59,6 +57,7 @@ namespace sl::functional::operators
 	struct tag_traits<disjunction>
 	{
 		using operation_t = detail::disjunction_caller_fn;
+		inline static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::prefer_join };
 	};
 
 	/**

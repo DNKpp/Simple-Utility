@@ -30,16 +30,30 @@ namespace sl::functional::detail
 
 namespace sl::functional::operators
 {
+	enum class composition_strategy_t
+	{
+		nested_only,
+		prefer_join
+	};
+
+
 	template <class T>
 	struct tag_traits;
 
 	template <class T>
 	concept tag = std::is_class_v<T>
 				&& std::same_as<T, std::remove_cvref_t<T>>
-				&& requires { typename tag_traits<T>::operation_t; };
+				&& requires
+				{
+					typename tag_traits<T>::operation_t;
+					{ tag_traits<T>::composition_strategy } -> std::convertible_to<composition_strategy_t>;
+				};
 
 	template <tag T>
 	using tag_operation_t = typename tag_traits<T>::operation_t;
+
+	template <tag T>
+	inline constexpr composition_strategy_t tag_composition_strategy_v{ tag_traits<T>::composition_strategy };
 }
 
 namespace sl::functional
@@ -330,15 +344,9 @@ namespace sl::functional
 
 namespace sl::functional::operators::detail
 {
-	enum class composition_strategy_t
-	{
-		nested_only,
-		prefer_join
-	};
-
 	template <class T>
 	concept joinable_operation = tag<T>
-								&& tag_operation_t<T>::composition_strategy == composition_strategy_t::prefer_join;
+								&& tag_composition_strategy_v<T> == composition_strategy_t::prefer_join;
 
 	template <class T, class TJoinableOperation>
 	concept joinable_with = joinable_operation<TJoinableOperation>

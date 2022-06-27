@@ -14,8 +14,6 @@ namespace sl::functional::operators::detail
 {
 	struct equivalent_caller_fn
 	{
-		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::prefer_join };
-
 		template <class TFunctionsTuple, class... TCallArgs>
 		[[nodiscard]]
 		constexpr auto operator ()
@@ -61,6 +59,7 @@ namespace sl::functional::operators
 	struct tag_traits<equivalent>
 	{
 		using operation_t = detail::equivalent_caller_fn;
+		inline static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::prefer_join };
 	};
 
 	/**

@@ -14,8 +14,6 @@ namespace sl::functional::operators::detail
 {
 	struct bind_front_caller_fn
 	{
-		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::prefer_join };
-
 		template <class TFunctionsTuple, class... TCallArgs>
 		[[nodiscard]]
 		constexpr decltype(auto) operator ()
@@ -48,8 +46,6 @@ namespace sl::functional::operators::detail
 
 	struct bind_back_caller_fn
 	{
-		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::prefer_join };
-
 		template <class TFunctionsTuple, class... TCallArgs>
 		[[nodiscard]]
 		constexpr decltype(auto) operator ()
@@ -104,6 +100,7 @@ namespace sl::functional::operators
 	struct tag_traits<bind_front>
 	{
 		using operation_t = detail::bind_front_caller_fn;
+		inline static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::prefer_join };
 	};
 
 	/**
@@ -146,6 +143,7 @@ namespace sl::functional::operators
 	struct tag_traits<bind_back>
 	{
 		using operation_t = detail::bind_back_caller_fn;
+		inline static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::prefer_join };
 	};
 
 	/**
