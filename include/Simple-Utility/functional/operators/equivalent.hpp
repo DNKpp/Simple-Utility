@@ -60,143 +60,50 @@ namespace sl::functional::operators
 	struct equivalent_compare
 		: private unified_base<detail::equivalent_compare_base_tag>
 	{
-	private:
 		using composer_t = detail::compose_helper_t<TClosureBase, detail::equivalent_caller_fn>;
-
-	public:
-		/**
-		 * \brief Composes both functional objects via equivalent comparison.
-		 * \tparam TRhs The right-hand-side functional type.
-		 * \param lhs The left-hand-side functional object.
-		 * \param rhs The right-hand-side functional object.
-		 * \return The equivalent comparison of both functional objects as new functional object.
-		 */
-		template <class TRhs>
-			requires (!derived_from_unified_base<TRhs, detail::equivalent_compare_base_tag>)
-		[[nodiscard]]
-		friend constexpr auto operator <=>
-		(
-			equivalent_compare&& lhs,
-			TRhs&& rhs
-		) noexcept(std::is_nothrow_invocable_v<composer_t, TDerived&&, TRhs>)
-		{
-			return composer_t{}(static_cast<TDerived&&>(lhs), std::forward<TRhs>(rhs));
-		}
-
-		/**
-		 * \copydoc operator<=>(equivalent_compare&&, TRhs&&)
-		 */
-		template <class TRhs>
-			requires (!derived_from_unified_base<TRhs, detail::equivalent_compare_base_tag>)
-		[[nodiscard]]
-		friend constexpr auto operator <=>
-		(
-			const equivalent_compare& lhs,
-			TRhs&& rhs
-		) noexcept(std::is_nothrow_invocable_v<composer_t, const TDerived&, TRhs>)
-		{
-			return composer_t{}(static_cast<const TDerived&>(lhs), std::forward<TRhs>(rhs));
-		}
-
-		/**
-		 * \brief Composes both functional objects via equivalent comparison.
-		 * \tparam TLhs The left-hand-side functional type.
-		 * \param lhs The left-hand-side functional object.
-		 * \param rhs The right-hand-side functional object.
-		 * \return The equivalent comparison of both functional objects as new functional object.
-		 */
-		template <class TLhs>
-			requires (!derived_from_unified_base<TLhs, detail::equivalent_compare_base_tag>)
-		[[nodiscard]]
-		friend constexpr auto operator <=>
-		(
-			TLhs&& lhs,
-			equivalent_compare&& rhs
-		) noexcept(std::is_nothrow_invocable_v<composer_t, TLhs, TDerived&&>)
-		{
-			return composer_t{}(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
-		}
-
-		/**
-		 * \copydoc operator<=>(TLhs&&, equivalent_compare&&)
-		 */
-		template <class TLhs>
-			requires (!derived_from_unified_base<TLhs, detail::equivalent_compare_base_tag>)
-		[[nodiscard]]
-		friend constexpr auto operator <=>
-		(
-			TLhs&& lhs,
-			const equivalent_compare& rhs
-		) noexcept(std::is_nothrow_invocable_v<composer_t, TLhs, const TDerived&>)
-		{
-			return composer_t{}(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
-		}
-
-		/**
-		 * \brief Composes both functional objects via equivalent comparison.
-		 * \tparam UDerived The derived class of right-hand-side.
-		 * \tparam UBaseDerived The base derived class of right-hand-side.
-		 * \param lhs The left-hand-side functional object.
-		 * \param rhs The right-hand-side functional object.
-		 * \return The equivalent comparison of both functional objects as new functional object.
-		 */
-		template <class UDerived, template <class> class UBaseDerived>
-		[[nodiscard]]
-		friend constexpr auto operator <=>
-		(
-			const equivalent_compare& lhs,
-			const equivalent_compare<UDerived, UBaseDerived>& rhs
-		)
-		noexcept(std::is_nothrow_invocable_v<composer_t, const TDerived&, const UDerived&>)
-		{
-			return composer_t{}(static_cast<const TDerived&>(lhs), static_cast<const UDerived&>(rhs));
-		}
-
-		/**
-		 * \copydoc operator<=>(const equivalent_compare&, const equivalent_compare<UDerived, UBaseDerived>&)
-		 */
-		template <class UDerived, template <class> class UBaseDerived>
-		[[nodiscard]]
-		friend constexpr auto operator <=>
-		(
-			equivalent_compare&& lhs,
-			const equivalent_compare<UDerived, UBaseDerived>& rhs
-		)
-		noexcept(std::is_nothrow_invocable_v<composer_t, TDerived&&, const UDerived&>)
-		{
-			return composer_t{}(static_cast<TDerived&&>(lhs), static_cast<const UDerived&>(rhs));
-		}
-
-		/**
-		 * \copydoc operator<=>(const equivalent_compare&, const equivalent_compare<UDerived, UBaseDerived>&)
-		 */
-		template <class UDerived, template <class> class UBaseDerived>
-		[[nodiscard]]
-		friend constexpr auto operator <=>
-		(
-			const equivalent_compare& lhs,
-			equivalent_compare<UDerived, UBaseDerived>&& rhs
-		)
-		noexcept(std::is_nothrow_invocable_v<composer_t, const TDerived&, UDerived&&>)
-		{
-			return composer_t{}(static_cast<const TDerived&>(lhs), static_cast<UDerived&&>(rhs));
-		}
-
-		/**
-		 * \copydoc operator<=>(const equivalent_compare&, const equivalent_compare<UDerived, UBaseDerived>&)
-		 */
-		template <class UDerived, template <class> class UBaseDerived>
-		[[nodiscard]]
-		friend constexpr auto operator <=>
-		(
-			equivalent_compare&& lhs,
-			equivalent_compare<UDerived, UBaseDerived>&& rhs
-		)
-		noexcept(std::is_nothrow_invocable_v<composer_t, TDerived&&, UDerived&&>)
-		{
-			return composer_t{}(static_cast<TDerived&&>(lhs), static_cast<UDerived&&>(rhs));
-		}
 	};
+}
+
+namespace sl::functional::operators::detail
+{
+	template <class TDerived, template <class> class TClosureBase>
+	constexpr auto make_equivalent_compare_composer_impl([[maybe_unused]] const equivalent_compare<TDerived, TClosureBase>&) noexcept
+	{
+		return typename equivalent_compare<TDerived, TClosureBase>::composer_t{};
+	}
+
+	template <class TLhs, class TRhs>
+		requires derived_from_unified_base<TLhs, equivalent_compare_base_tag>
+				|| derived_from_unified_base<TRhs, equivalent_compare_base_tag>
+	constexpr auto make_equivalent_compare_composer([[maybe_unused]] const TLhs& lhs, [[maybe_unused]] const TRhs& rhs) noexcept
+	{
+		if constexpr (derived_from_unified_base<TLhs, equivalent_compare_base_tag>)
+		{
+			return make_equivalent_compare_composer_impl(lhs);
+		}
+		else
+			return make_equivalent_compare_composer_impl(rhs);
+	}
+}
+
+namespace sl::functional::operators
+{
+	/**
+	 * \brief Composes both functional objects as equivalence comparison.
+	 * \relatesto equivalent_compare
+	 * \tparam TLhs The left-hand-side functional type.
+	 * \tparam TRhs The right-hand-side functional type.
+	 * \param lhs The left-hand-side functional object.
+	 * \param rhs The right-hand-side functional object.
+	 * \return The equivalence compare composition of both functional objects as new functional object.
+	 */
+	template <class TLhs, class TRhs>
+		requires derived_from_unified_base<TLhs, detail::equivalent_compare_base_tag>
+				|| derived_from_unified_base<TRhs, detail::equivalent_compare_base_tag>
+	constexpr auto operator <=>(TLhs&& lhs, TRhs&& rhs)
+	{
+		return detail::make_equivalent_compare_composer(lhs, rhs)(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
+	}
 
 	/** @} */
 }

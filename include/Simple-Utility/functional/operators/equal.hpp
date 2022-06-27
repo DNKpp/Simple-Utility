@@ -158,7 +158,7 @@ namespace sl::functional::operators
 	 * \tparam TRhs The right-hand-side functional type.
 	 * \param lhs The left-hand-side functional object.
 	 * \param rhs The right-hand-side functional object.
-	 * \return The equal compare composition of both functional objects as new functional object.
+	 * \return The equality compare composition of both functional objects as new functional object.
 	 */
 	template <class TLhs, class TRhs>
 		requires derived_from_unified_base<TLhs, detail::equal_compare_base_tag>
@@ -175,7 +175,7 @@ namespace sl::functional::operators
 	 * \tparam TRhs The right-hand-side functional type.
 	 * \param lhs The left-hand-side functional object.
 	 * \param rhs The right-hand-side functional object.
-	 * \return The unequal compare composition of both functional objects as new functional object.
+	 * \return The inequality compare composition of both functional objects as new functional object.
 	 */
 	template <class TLhs, class TRhs>
 		requires derived_from_unified_base<TLhs, detail::not_equal_compare_base_tag>
