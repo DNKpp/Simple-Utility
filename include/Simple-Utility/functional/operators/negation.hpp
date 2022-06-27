@@ -9,52 +9,56 @@
 #pragma once
 
 #include "Simple-Utility/functional/base.hpp"
+#include "Simple-Utility/functional/operators/pipe.hpp"
+
+#include <functional>
 
 namespace sl::functional::operators
 {
 	/**
-	 * \addtogroup GROUP_FUNCTIONAL_OPERATORS operators
+	 * \addtogroup GROUP_FUNCTIONAL_OPERATORS
 	 * \ingroup GROUP_FUNCTIONAL
 	 * @{
 	 */
 
 	/**
-	 * \brief Helper type which enables negation on functionals via operator !.
-	 * \tparam TDerived The most derived class type.
-	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
+	 * \brief Tag type which enables negation on functionals via operator !.
+	 * \relatesalso sl::functional::enable_operation
 	 */
-	template <class TDerived, template <class> class TClosureBase>
-		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
-	struct negation
+	struct negate
+	{};
+
+	/**
+	 * \brief Specialized traits for \ref negate.
+	 * \relatesalso negate
+	 */
+	template <>
+	struct tag_traits<negate>
 	{
-	private:
-		template <class TFunc>
-		using negated_fn = std::remove_cvref_t<decltype(std::not_fn(std::declval<TFunc>()))>;
-
-	public:
-		/**
-		 * \brief Negates this functional object.
-		 * \return The negation of this functional, as a new functional object.
-		 */
-		[[nodiscard]]
-		constexpr auto operator !() && noexcept(
-			std::is_nothrow_constructible_v<TClosureBase<negated_fn<TDerived&&>>, negated_fn<TDerived&&>>
-		)
-		{
-			return TClosureBase<negated_fn<TDerived&&>>{ std::not_fn(static_cast<TDerived&&>(*this)) };
-		}
-
-		/**
-		 * \copydoc operator!()
-		 */
-		[[nodiscard]]
-		constexpr auto operator !() const & noexcept(
-			std::is_nothrow_constructible_v<TClosureBase<negated_fn<const TDerived&>>, negated_fn<const TDerived&>>
-		)
-		{
-			return TClosureBase<negated_fn<const TDerived&>>{ std::not_fn(static_cast<const TDerived&>(*this)) };
-		}
+		using operation_t = detail::nested_invoke_caller_fn;
 	};
+
+	/**
+	 * \brief Negates the the functional object.
+	 * \relatesalso negate
+	 * \tparam TFunc The functional type.
+	 * \param func The functional object.
+	 * \return The negated functional, as a new functional object.
+	 */
+	template <derived_from_unified_base<functional::detail::enable_operators_base_tag> TFunc>
+		requires std::derived_from<std::remove_cvref_t<TFunc>, negate>
+	[[nodiscard]]
+	constexpr auto operator !
+	(
+		TFunc&& func
+	)
+	noexcept(is_nothrow_composable_v<negate, TFunc, decltype(std::bind_front(std::equal_to{}, false))&&>)
+	{
+		return functional::detail::make_composition_from_tag<negate>(
+			std::forward<TFunc>(func),
+			std::bind_front(std::equal_to{}, false)
+		);
+	}
 
 	/** @} */
 }

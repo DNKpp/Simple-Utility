@@ -13,7 +13,7 @@
 #include "Simple-Utility/functional/operators/bind.hpp"
 #include "Simple-Utility/functional/operators/conjunction.hpp"
 #include "Simple-Utility/functional/operators/disjunction.hpp"
-//#include "Simple-Utility/functional/operators/negation.hpp"
+#include "Simple-Utility/functional/operators/negation.hpp"
 #include "Simple-Utility/functional/operators/equal.hpp"
 #include "Simple-Utility/functional/operators/equivalent.hpp"
 
@@ -74,7 +74,8 @@ namespace sl::functional
 								operators::conjunction,
 								operators::equal,
 								operators::not_equal,
-								operators::equivalent
+								operators::equivalent,
+								operators::negate
 		>
 	{
 		using closure_t = closure_base_fn<TFunc>;
