@@ -58,23 +58,25 @@ namespace sl::functional
 	 */
 
 	/**
-	 * \brief Base type for predicate functionals, which accepts a functional type and enables pipe, conjunctive and disjunctive chaining,
-	 * and front and back binding.
+	 * \brief Adapter type for predicates, which accepts a functional type and enables pipe, conjunctive and disjunctive chaining,
+	 * equal, inequality and equivalence comparison, and front and back binding.
 	 * \tparam TFunc The functional type.
 	 */
 	template <class TFunc>
 		requires std::same_as<TFunc, std::remove_cvref_t<TFunc>>
-	class predicate_fn
+	class predicate_fn final
 		: public closure_base_fn<TFunc>,
-		public operators::pipe<predicate_fn<TFunc>, predicate_fn>,
-		public operators::conjunction<predicate_fn<TFunc>, predicate_fn>,
-		public operators::disjunction<predicate_fn<TFunc>, predicate_fn>,
-		public operators::negation<predicate_fn<TFunc>, predicate_fn>,
-		public operators::bind_front<predicate_fn<TFunc>, predicate_fn>,
-		public operators::bind_back<predicate_fn<TFunc>, predicate_fn>,
-		public operators::equal_compare<predicate_fn<TFunc>, predicate_fn>,
-		public operators::not_equal_compare<predicate_fn<TFunc>, predicate_fn>,
-		public operators::equivalent_compare<predicate_fn<TFunc>, predicate_fn>
+		public enable_operation<predicate_fn,
+								operators::pipe,
+								operators::bind_front,
+								operators::bind_back,
+								operators::disjunction,
+								operators::conjunction,
+								operators::equal,
+								operators::not_equal,
+								operators::equivalent,
+								operators::negate
+		>
 	{
 		using closure_t = closure_base_fn<TFunc>;
 	public:

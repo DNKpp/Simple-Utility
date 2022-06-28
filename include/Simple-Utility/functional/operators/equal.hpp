@@ -8,152 +8,89 @@
 
 #pragma once
 
-#include "Simple-Utility/unified_base.hpp"
+#include "Simple-Utility/concepts/utility.hpp"
 #include "Simple-Utility/functional/base.hpp"
 
 namespace sl::functional::operators::detail
 {
 	struct equal_caller_fn
 	{
-		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::nested_only };
-
-		template <class TFunctionsTuple, class... TCallArgs>
+		template <class TCallArgsTuple, concepts::apply_invocable<TCallArgsTuple>... TFunctions>
 		[[nodiscard]]
 		constexpr auto operator ()
 		(
-			TFunctionsTuple&& functionsTuple,
-			const TCallArgs&... callArgs
+			TCallArgsTuple&& callArgsTuple,
+			TFunctions&&... functions
 		) const
-		noexcept(functional::detail::is_type_list_nothrow_invokable_v<TFunctionsTuple, const TCallArgs&...>)
+		noexcept((concepts::nothrow_apply_invocable<TFunctions, TCallArgsTuple> && ...))
 		{
-			return std::apply(
-				[&]<std::predicate<const TCallArgs&...>... TFunctions>(TFunctions&&... functions)
-				{
-					return (std::invoke(std::forward<TFunctions>(functions), callArgs...) == ...);
-				},
-				std::forward<TFunctionsTuple>(functionsTuple)
-			);
+			return (std::apply(std::forward<TFunctions>(functions), callArgsTuple) == ...);
 		}
 	};
 
 	struct not_equal_caller_fn
 	{
-		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::nested_only };
-
-		template <class TFunctionsTuple, class... TCallArgs>
+		template <class TCallArgsTuple, concepts::apply_invocable<TCallArgsTuple>... TFunctions>
 		[[nodiscard]]
 		constexpr auto operator ()
 		(
-			TFunctionsTuple&& functionsTuple,
-			const TCallArgs&... callArgs
+			TCallArgsTuple&& callArgsTuple,
+			TFunctions&&... functions
 		) const
-		noexcept(functional::detail::is_type_list_nothrow_invokable_v<TFunctionsTuple, const TCallArgs&...>)
+		noexcept((concepts::nothrow_apply_invocable<TFunctions, TCallArgsTuple> && ...))
 		{
-			return std::apply(
-				[&]<std::predicate<const TCallArgs&...>... TFunctions>(TFunctions&&... functions)
-				{
-					return (std::invoke(std::forward<TFunctions>(functions), callArgs...) != ...);
-				},
-				std::forward<TFunctionsTuple>(functionsTuple)
-			);
+			return (std::apply(std::forward<TFunctions>(functions), callArgsTuple) != ...);
 		}
 	};
-
-	struct equal_compare_base_tag
-	{};
-
-	struct not_equal_compare_base_tag
-	{};
-}
-
-namespace sl::functional::operators
-{
-	/**
-	 * \addtogroup GROUP_FUNCTIONAL_OPERATORS operators
-	 * \ingroup GROUP_FUNCTIONAL
-	 * @{
-	 */
-
-	/**
-	 * \brief Helper type which enables equal compare composition of two functional objects via operator ==.
-	 * \tparam TDerived The most derived class type.
-	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
-	 */
-	template <class TDerived, template <class> class TClosureBase>
-		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
-	struct equal_compare
-		: private unified_base<detail::equal_compare_base_tag>
-	{
-		using composer_t = detail::compose_helper_t<TClosureBase, detail::equal_caller_fn>;
-	};
-
-	/**
-	 * \brief Helper type which enables unequal compare composition of two functional objects via operator !=.
-	 * \tparam TDerived The most derived class type.
-	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
-	 */
-	template <class TDerived, template <class> class TClosureBase>
-		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
-	struct not_equal_compare
-		: private unified_base<detail::not_equal_compare_base_tag>
-	{
-		using composer_t = detail::compose_helper_t<TClosureBase, detail::not_equal_caller_fn>;
-	};
-
-	/** @} */
-}
-
-namespace sl::functional::operators::detail
-{
-	template <class TDerived, template <class> class TClosureBase>
-	constexpr auto make_equal_compare_composer_impl([[maybe_unused]] const equal_compare<TDerived, TClosureBase>&) noexcept
-	{
-		return typename equal_compare<TDerived, TClosureBase>::composer_t{};
-	}
-
-	template <class TLhs, class TRhs>
-		requires derived_from_unified_base<TLhs, equal_compare_base_tag>
-				|| derived_from_unified_base<TRhs, equal_compare_base_tag>
-	constexpr auto make_equal_compare_composer([[maybe_unused]] const TLhs& lhs, [[maybe_unused]] const TRhs& rhs) noexcept
-	{
-		if constexpr (derived_from_unified_base<TLhs, equal_compare_base_tag>)
-		{
-			return make_equal_compare_composer_impl(lhs);
-		}
-		else
-			return make_equal_compare_composer_impl(rhs);
-	}
-
-	template <class TDerived, template <class> class TClosureBase>
-	constexpr auto make_not_equal_compare_composer_impl([[maybe_unused]] const not_equal_compare<TDerived, TClosureBase>&) noexcept
-	{
-		return typename not_equal_compare<TDerived, TClosureBase>::composer_t{};
-	}
-
-	template <class TLhs, class TRhs>
-		requires derived_from_unified_base<TLhs, not_equal_compare_base_tag>
-				|| derived_from_unified_base<TRhs, not_equal_compare_base_tag>
-	constexpr auto make_not_equal_compare_composer([[maybe_unused]] const TLhs& lhs, [[maybe_unused]] const TRhs& rhs) noexcept
-	{
-		if constexpr (derived_from_unified_base<TLhs, not_equal_compare_base_tag>)
-		{
-			return make_not_equal_compare_composer_impl(lhs);
-		}
-		else
-			return make_not_equal_compare_composer_impl(rhs);
-	}
 }
 
 namespace sl::functional::operators
 {
 	/**
 	 * \addtogroup GROUP_FUNCTIONAL_OPERATORS
+	 * \ingroup GROUP_FUNCTIONAL
 	 * @{
 	 */
 
 	/**
+	 * \brief Tag type which enables equal compare composition of two functional objects via operator ==.
+	 * \relatesalso sl::functional::enable_operation
+	 */
+	struct equal
+	{};
+
+	/**
+	 * \brief Specialized traits for \ref equal.
+	 * \relatesalso equal
+	 */
+	template <>
+	struct tag_traits<equal>
+	{
+		using operation_t = detail::equal_caller_fn;
+		inline static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::nested };
+	};
+
+	/**
+	 * \brief Tag type which enables unequal compare composition of two functional objects via operator !=.
+	 * \relatesalso sl::functional::enable_operation
+	 */
+	struct not_equal
+	{};
+
+	/**
+	 * \brief Specialized traits for \ref not_equal.
+	 * \relatesalso not_equal
+	 */
+	template <>
+	struct tag_traits<not_equal>
+	{
+		using operation_t = detail::not_equal_caller_fn;
+		inline static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::nested };
+	};
+
+	/**
 	 * \brief Composes both functional objects as equal comparison.
-	 * \relatesto equal_compare
+	 * \relates equal
 	 * \tparam TLhs The left-hand-side functional type.
 	 * \tparam TRhs The right-hand-side functional type.
 	 * \param lhs The left-hand-side functional object.
@@ -161,16 +98,24 @@ namespace sl::functional::operators
 	 * \return The equality compare composition of both functional objects as new functional object.
 	 */
 	template <class TLhs, class TRhs>
-		requires derived_from_unified_base<TLhs, detail::equal_compare_base_tag>
-				|| derived_from_unified_base<TRhs, detail::equal_compare_base_tag>
-	constexpr auto operator ==(TLhs&& lhs, TRhs&& rhs)
+		requires (std::derived_from<std::remove_cvref_t<TLhs>, equal>
+				&& derived_from_unified_base<TLhs, functional::detail::enable_operators_base_tag>)
+				|| (std::derived_from<std::remove_cvref_t<TRhs>, equal>
+					&& derived_from_unified_base<TRhs, functional::detail::enable_operators_base_tag>)
+	[[nodiscard]]
+	constexpr auto operator ==
+	(
+		TLhs&& lhs,
+		TRhs&& rhs
+	)
+	noexcept(is_nothrow_composable_v<equal, TLhs, TRhs>)
 	{
-		return detail::make_equal_compare_composer(lhs, rhs)(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
+		return functional::detail::make_composition_from_tag<equal>(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
 	}
 
 	/**
 	 * \brief Composes both functional objects as unequal comparison.
-	 * \relatesto not_equal_compare
+	 * \relates not_equal
 	 * \tparam TLhs The left-hand-side functional type.
 	 * \tparam TRhs The right-hand-side functional type.
 	 * \param lhs The left-hand-side functional object.
@@ -178,11 +123,19 @@ namespace sl::functional::operators
 	 * \return The inequality compare composition of both functional objects as new functional object.
 	 */
 	template <class TLhs, class TRhs>
-		requires derived_from_unified_base<TLhs, detail::not_equal_compare_base_tag>
-				|| derived_from_unified_base<TRhs, detail::not_equal_compare_base_tag>
-	constexpr auto operator !=(TLhs&& lhs, TRhs&& rhs)
+		requires (std::derived_from<std::remove_cvref_t<TLhs>, not_equal>
+				&& derived_from_unified_base<TLhs, functional::detail::enable_operators_base_tag>)
+				|| (std::derived_from<std::remove_cvref_t<TRhs>, not_equal>
+					&& derived_from_unified_base<TRhs, functional::detail::enable_operators_base_tag>)
+	[[nodiscard]]
+	constexpr auto operator !=
+	(
+		TLhs&& lhs,
+		TRhs&& rhs
+	)
+	noexcept(is_nothrow_composable_v<not_equal, TLhs, TRhs>)
 	{
-		return detail::make_not_equal_compare_composer(lhs, rhs)(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
+		return functional::detail::make_composition_from_tag<not_equal>(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
 	}
 
 	/** @} */

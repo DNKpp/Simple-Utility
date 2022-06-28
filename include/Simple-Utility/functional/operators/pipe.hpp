@@ -8,151 +8,140 @@
 
 #pragma once
 
-#include "Simple-Utility/unified_base.hpp"
+#include "Simple-Utility/tuple_utility.hpp"
+#include "Simple-Utility/concepts/utility.hpp"
 #include "Simple-Utility/functional/base.hpp"
 
 namespace sl::functional::operators::detail
 {
-	struct nested_invoke_caller_fn
-	{
-		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::prefer_join };
+	template <class TInput, std::invocable<TInput> TFunc, class... TOthers>
+	struct is_recursive_supply_invocable
+		: std::bool_constant<
+			std::is_invocable_v<TFunc, TInput>
+			&& is_recursive_supply_invocable<std::invoke_result_t<TFunc, TInput>, TOthers...>::value
+		>
+	{ };
 
-		template <class TFunctionsTuple, class... TCallArgs>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()
-		(
-			TFunctionsTuple&& functionsTuple,
-			TCallArgs&&... callArgs
-		) const
+	template <class TInput, std::invocable<TInput> TFunc>
+	struct is_recursive_supply_invocable<TInput, TFunc>
+		: std::bool_constant<std::is_invocable_v<TFunc, TInput>>
+	{ };
+
+	template <class TInput, class... TFunctions>
+	concept recursive_supply_invocable = is_recursive_supply_invocable<TInput, TFunctions...>::value;
+
+	template <class TInput, std::invocable<TInput> TFunc, class... TOthers>
+	struct is_nothrow_recursive_supply_invocable
+		: std::bool_constant<
+			std::is_nothrow_invocable_v<TFunc, TInput>
+			&& is_nothrow_recursive_supply_invocable<std::invoke_result_t<TFunc, TInput>, TOthers...>::value
+		>
+	{ };
+
+	template <class TInput, std::invocable<TInput> TFunc>
+	struct is_nothrow_recursive_supply_invocable<TInput, TFunc>
+		: std::bool_constant<std::is_nothrow_invocable_v<TFunc, TInput>>
+	{ };
+
+	template <class TInput, class... TFunctions>
+	concept nothrow_recursive_supply_invocable = is_nothrow_recursive_supply_invocable<TInput, TFunctions...>::value;
+
+	template <class TInput, std::invocable<TInput> TFunc, class... TOthers>
+		requires recursive_supply_invocable<TInput, TFunc, TOthers...>
+	[[nodiscard]]
+	constexpr decltype(auto) recursive_supply_invoke
+	(
+		TInput&& input,
+		TFunc&& func,
+		TOthers&&... otherFunctions
+	)
+	noexcept(nothrow_recursive_supply_invocable<TInput, TFunc, TOthers...>)
+	{
+		if constexpr (0 < sizeof...(TOthers))
 		{
-			return std::apply(
-				[&]<std::invocable<TCallArgs...> TFunc, class... TOthers>(TFunc&& func, TOthers&&... otherFuncs) -> decltype(auto)
-				{
-					return recursive_invoke(
-						std::invoke(std::forward<TFunc>(func), std::forward<TCallArgs>(callArgs)...),
-						std::forward<TOthers>(otherFuncs)...
-					);
-				},
-				std::forward<TFunctionsTuple>(functionsTuple)
+			return recursive_supply_invoke(
+				std::invoke(std::forward<TFunc>(func), std::forward<TInput>(input)),
+				std::forward<TOthers>(otherFunctions)...
 			);
 		}
-
-	private:
-		template <class TInput, std::invocable<TInput> TFunc, class... TOthers>
-		[[nodiscard]]
-		static constexpr decltype(auto) recursive_invoke
-		(
-			TInput&& input,
-			TFunc&& func,
-			TOthers&&... otherFunctions
-		)
+		else
 		{
-			if constexpr (0 == sizeof...(TOthers))
-			{
-				return std::invoke(std::forward<TFunc>(func), std::forward<TInput>(input));
-			}
-			else
-			{
-				return recursive_invoke(
-					std::invoke(std::forward<TFunc>(func), std::forward<TInput>(input)),
-					std::forward<TOthers>(otherFunctions)...
-				);
-			}
+			return std::invoke(std::forward<TFunc>(func), std::forward<TInput>(input));
+		}
+	}
+
+	struct nested_invoke_caller_fn
+	{
+		template <class TCallArgsTuple, concepts::apply_invocable<TCallArgsTuple> TInitFunction, class... TFunctions>
+			requires recursive_supply_invocable<apply_invoke_result_t<TInitFunction, TCallArgsTuple>, TFunctions...>
+		[[nodiscard]]
+		constexpr auto operator ()
+		(
+			TCallArgsTuple&& callArgsTuple,
+			TInitFunction&& initFunction,
+			TFunctions&&... functions
+		) const
+		noexcept(concepts::nothrow_apply_invocable<TInitFunction, TCallArgsTuple>
+				&& nothrow_recursive_supply_invocable<apply_invoke_result_t<TInitFunction, TCallArgsTuple>, TFunctions...>)
+		{
+			return recursive_supply_invoke(
+				std::apply(std::forward<TInitFunction>(initFunction), std::forward<TCallArgsTuple>(callArgsTuple)),
+				std::forward<TFunctions>(functions)...
+			);
 		}
 	};
-
-	struct pipe_base_tag
-	{};
 }
 
 namespace sl::functional::operators
 {
 	/**
-	 * \addtogroup GROUP_FUNCTIONAL_OPERATORS operators
+	 * \defgroup GROUP_FUNCTIONAL_OPERATORS operators
 	 * \ingroup GROUP_FUNCTIONAL
 	 * @{
 	 */
 
 	/**
-	 * \brief Helper type which enables pipe composing of two functional objects via operator |.
-	 * \tparam TDerived The most derived class type.
-	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
+	 * \brief Tag type which enables pipe composing of two functional objects via operator |.
+	 * \relatesalso sl::functional::enable_operation
 	 */
-	template <class TDerived, template <class> class TClosureBase>
-		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
 	struct pipe
-		: private unified_base<detail::pipe_base_tag>
+	{};
+
+	/**
+	 * \brief Specialized traits for \ref pipe.
+	 * \relatesalso pipe
+	 */
+	template <>
+	struct tag_traits<pipe>
 	{
-	private:
-		using composer_t = detail::compose_helper_t<TClosureBase, detail::nested_invoke_caller_fn>;
-
-	public:
-		/**
-		 * \brief Composes this and the other functional object as nested function
-		 * (result of left-hand-side as argument for right-hand-side).
-		 * \tparam TOther The type of the other functional object.
-		 * \param other The right-hand-side functional object.
-		 * \return The nested composition of this and other as new functional object.
-		 */
-		template <class TOther>
-		[[nodiscard]]
-		constexpr auto operator |
-		(
-			TOther&& other
-		) const & noexcept(std::is_nothrow_invocable_v<composer_t, const TDerived&, TOther>)
-		{
-			return composer_t{}(static_cast<const TDerived&>(*this), std::forward<TOther>(other));
-		}
-
-		/**
-		 * \copydoc operator|()
-		 */
-		template <class TOther>
-		[[nodiscard]]
-		constexpr auto operator |
-		(
-			TOther&& other
-		) && noexcept(std::is_nothrow_invocable_v<composer_t, TDerived&&, TOther>)
-		{
-			return composer_t{}(static_cast<TDerived&&>(*this), std::forward<TOther>(other));
-		}
-
-		/**
-		 * \brief Composes both functional objects as nested function (result of left-hand-side as argument for right-hand-side).
-		 * \tparam TLhs The left-hand-side functional type.
-		 * \param lhs The left-hand-side functional object.
-		 * \param rhs The right-hand-side functional object.
-		 * \return The nested composition of both functional objects as new functional object.
-		 */
-		template <class TLhs>
-			requires (!derived_from_unified_base<TLhs, detail::pipe_base_tag>)
-		[[nodiscard]]
-		friend constexpr auto operator |
-		(
-			TLhs&& lhs,
-			pipe&& rhs
-		)
-		noexcept(std::is_nothrow_invocable_v<composer_t, TLhs, TDerived&&>)
-		{
-			return composer_t{}(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
-		}
-
-		/**
-		 * \copydoc operator|(TLhs&&, pipe&&)
-		 */
-		template <class TLhs>
-			requires (!derived_from_unified_base<TLhs, detail::pipe_base_tag>)
-		[[nodiscard]]
-		friend constexpr auto operator |
-		(
-			TLhs&& lhs,
-			const pipe& rhs
-		)
-		noexcept(std::is_nothrow_invocable_v<composer_t, TLhs, const TDerived&>)
-		{
-			return composer_t{}(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
-		}
+		using operation_t = detail::nested_invoke_caller_fn;
+		inline static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::join };
 	};
+
+	/**
+	 * \brief Composes both functional objects as nested function (result of left-hand-side as argument of right-hand-side).
+	 * \relatesalso pipe
+	 * \tparam TLhs The left-hand-side functional type.
+	 * \tparam TRhs The right-hand-side functional type.
+	 * \param lhs The left-hand-side functional object.
+	 * \param rhs The right-hand-side functional object.
+	 * \return The nested composition of both functional objects as new functional object.
+	 */
+	template <class TLhs, class TRhs>
+		requires (std::derived_from<std::remove_cvref_t<TLhs>, pipe>
+				&& derived_from_unified_base<TLhs, functional::detail::enable_operators_base_tag>)
+				|| (std::derived_from<std::remove_cvref_t<TRhs>, pipe>
+					&& derived_from_unified_base<TRhs, functional::detail::enable_operators_base_tag>)
+	[[nodiscard]]
+	constexpr auto operator |
+	(
+		TLhs&& lhs,
+		TRhs&& rhs
+	)
+	noexcept(is_nothrow_composable_v<pipe, TLhs, TRhs>)
+	{
+		return functional::detail::make_composition_from_tag<pipe>(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
+	}
 
 	/** @} */
 }

@@ -17,8 +17,8 @@
 namespace sl::functional::tuple
 {
 	/**
-	 * \defgroup GROUP_FUNCTIONAL_TUPLE tuple
-	 * \ingroup GROUP_FUNCTIONAL
+	 * \defgroup GROUP_FUNCTIONAL_TUPLE tuple functional
+	 * \ingroup GROUP_FUNCTIONAL GROUP_TUPLE_UTILITY
 	 * @{
 	 */
 
@@ -101,11 +101,13 @@ namespace sl::functional::tuple
 	 */
 	template <class TFunc>
 		requires std::same_as<TFunc, std::remove_cvref_t<TFunc>>
-	class apply_fn
-		: closure_base_fn<TFunc>,
-		public operators::pipe<apply_fn<TFunc>, apply_fn>,
-		public operators::bind_front<apply_fn<TFunc>, apply_fn>,
-		public operators::bind_back<apply_fn<TFunc>, apply_fn>
+	class apply_fn final
+		: public closure_base_fn<TFunc>,
+		public enable_operation<transform_fn,
+								operators::pipe,
+								operators::bind_front,
+								operators::bind_back
+		>
 	{
 		using closure_t = closure_base_fn<TFunc>;
 	public:
@@ -118,21 +120,30 @@ namespace sl::functional::tuple
 		* \return Return value of the underlying function, if any.
 		*/
 		template <class TType>
-		constexpr decltype(auto) operator()(TType&& args) const & noexcept(noexcept(std::apply(std::declval<const closure_t&>(), args)))
+		constexpr decltype(auto) operator()
+		(
+			TType&& args
+		) const & noexcept(noexcept(std::apply(std::declval<const closure_t&>(), args)))
 		{
 			return std::apply(static_cast<const closure_t&>(*this), std::forward<TType>(args));
 		}
 
 		/*! \copydoc operator()() */
 		template <class TType>
-		constexpr decltype(auto) operator()(TType&& args) & noexcept(noexcept(std::apply(std::declval<closure_t&>(), args)))
+		constexpr decltype(auto) operator()
+		(
+			TType&& args
+		) & noexcept(noexcept(std::apply(std::declval<closure_t&>(), args)))
 		{
 			return std::apply(static_cast<closure_t&>(*this), std::forward<TType>(args));
 		}
 
 		/*! \copydoc operator()() */
 		template <class TType>
-		constexpr decltype(auto) operator()(TType&& args) && noexcept(noexcept(std::apply(std::declval<closure_t&&>(), args)))
+		constexpr decltype(auto) operator()
+		(
+			TType&& args
+		) && noexcept(noexcept(std::apply(std::declval<closure_t&&>(), args)))
 		{
 			return std::apply(static_cast<closure_t&&>(*this), std::forward<TType>(args));
 		}
