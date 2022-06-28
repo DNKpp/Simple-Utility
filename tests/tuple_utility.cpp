@@ -40,3 +40,37 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(std::same_as<typename apply_invoke_result<get_front_t, TTuple>::type, TExpected>);
 	STATIC_REQUIRE(std::same_as<apply_invoke_result_t<get_front_t, TTuple>, TExpected>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"is_apply_invocable checks whether the function is invocable with tuple elements.",
+	"[tuple][trait]",
+	((bool VExpected, class TTuple), VExpected, TTuple),
+	(true, std::tuple<int, float&>),
+	(true, const std::tuple<int, float&>),
+	(true, std::tuple<int&, float&>),
+	(false, std::tuple<int&, const float&>),
+	(false, std::tuple<int>),
+	(false, std::tuple<int, char>)
+)
+{
+	using function_t = void(*)(int, float&);
+
+	STATIC_REQUIRE(is_apply_invocable<function_t, TTuple>::value == VExpected);
+	STATIC_REQUIRE(is_apply_invocable_v<function_t, TTuple> == VExpected);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"is_nothrow_apply_invocable checks whether the function is invocable with tuple elements without throwing.",
+	"[tuple][trait]",
+	((bool VExpected, class TTuple), VExpected, TTuple),
+	(true, std::tuple<int>),
+	(false, std::tuple<int&>),
+	(false, std::tuple<float>)
+)
+{
+	constexpr auto func = []<class T>(T&&) noexcept(std::same_as<int, T>) {};
+	using function_t = decltype(func);
+
+	STATIC_REQUIRE(is_nothrow_apply_invocable<function_t, TTuple>::value == VExpected);
+	STATIC_REQUIRE(is_nothrow_apply_invocable_v<function_t, TTuple> == VExpected);
+}

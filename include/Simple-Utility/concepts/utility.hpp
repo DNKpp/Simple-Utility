@@ -8,10 +8,9 @@
 
 #pragma once
 
+#include "Simple-Utility/tuple_utility.hpp"
+
 #include <concepts>
-#include <utility>
-#include <type_traits>
-#include <tuple>
 
 namespace sl::concepts
 {
@@ -42,49 +41,13 @@ namespace sl::concepts
 	 */
 	template <class... T>
 	concept unique_types = are_types_unique_v<T...>;
-}
 
-namespace sl::concepts::detail
-{
-	template <class...>
-	struct is_apply_invocable
-		: std::false_type
-	{};
-
-	template <class TFunc, class TTuple, std::size_t... VIndices>
-	struct is_apply_invocable<TFunc, TTuple, std::index_sequence<VIndices...>>
-		: std::bool_constant<std::invocable<TFunc, std::tuple_element_t<VIndices, TTuple>...>>
-	{};
-
-	template <class TFunc, class TTuple>
-	inline constexpr bool is_apply_invocable_v{
-		is_apply_invocable<TFunc, TTuple, std::make_index_sequence<std::tuple_size_v<TTuple>>>::value
-	};
-
-	template <class...>
-	struct is_nothrow_apply_invocable
-		: std::false_type
-	{};
-
-	template <class TFunc, class TTuple, std::size_t... VIndices>
-	struct is_nothrow_apply_invocable<TFunc, TTuple, std::index_sequence<VIndices...>>
-		: std::bool_constant<std::is_nothrow_invocable_v<TFunc, std::tuple_element_t<VIndices, TTuple>...>>
-	{};
-
-	template <class TFunc, class TTuple>
-	inline constexpr bool is_nothrow_apply_invocable_v{
-		is_nothrow_apply_invocable<TFunc, TTuple, std::make_index_sequence<std::tuple_size_v<TTuple>>>::value
-	};
-}
-
-namespace sl::concepts
-{
 	/**
 	 * \brief Determines whether the function is invocable with the elements of the given tuple.
 	 * \ingroup GROUP_TUPLE_UTILITY
 	 */
 	template <class TFunc, class TTuple>
-	concept apply_invocable = detail::is_apply_invocable_v<TFunc, std::remove_reference_t<TTuple>>;
+	concept apply_invocable = is_apply_invocable_v<TFunc, std::remove_reference_t<TTuple>>;
 
 	/**
 	 * \brief Determines whether the function is invocable with the elements of the given tuple without throwing.
@@ -92,7 +55,7 @@ namespace sl::concepts
 	 */
 	template <class TFunc, class TTuple>
 	concept nothrow_apply_invocable = apply_invocable<TFunc, TTuple>
-									&& detail::is_nothrow_apply_invocable_v<TFunc, std::remove_reference_t<TTuple>>;
+									&& is_nothrow_apply_invocable_v<TFunc, std::remove_reference_t<TTuple>>;
 
 	/** @} */
 }
