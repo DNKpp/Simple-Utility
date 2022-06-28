@@ -304,6 +304,13 @@ TEMPLATE_TEST_CASE_SIG(
 	REQUIRE(negatedPredicate() == expectedResult);
 }
 
+TEST_CASE("predicate_fn can be negated in arbitrary depth", "[functional][predicate]")
+{
+	REQUIRE((!!truePredicate)());
+	REQUIRE(!(!!!truePredicate)());
+	REQUIRE((!!!!truePredicate)());
+}
+
 TEST_CASE("predicate_fn is composable via operator |", "[functional][predicate]")
 {
 	const auto& [input, expectedResult] = GENERATE(
