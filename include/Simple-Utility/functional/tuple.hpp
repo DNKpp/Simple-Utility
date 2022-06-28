@@ -17,8 +17,8 @@
 namespace sl::functional::tuple
 {
 	/**
-	 * \defgroup GROUP_FUNCTIONAL_TUPLE tuple
-	 * \ingroup GROUP_FUNCTIONAL
+	 * \defgroup GROUP_FUNCTIONAL_TUPLE tuple functional
+	 * \ingroup GROUP_FUNCTIONAL GROUP_TUPLE_UTILITY
 	 * @{
 	 */
 

@@ -381,6 +381,8 @@ TEST_CASE("back curried arguments to predicate_fn will be applied in correct ord
 									} >> "42" >> std::nullopt;
 
 	REQUIRE(predicate(42));
+
+	//predicate();
 }
 
 TEMPLATE_TEST_CASE_SIG(

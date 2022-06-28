@@ -8,49 +8,38 @@
 
 #pragma once
 
+#include "Simple-Utility/concepts/utility.hpp"
 #include "Simple-Utility/functional/base.hpp"
 
 namespace sl::functional::operators::detail
 {
 	struct equal_caller_fn
 	{
-		template <class TFunctionsTuple, class... TCallArgs>
+		template <class TCallArgsTuple, concepts::apply_invocable<TCallArgsTuple>... TFunctions>
 		[[nodiscard]]
 		constexpr auto operator ()
 		(
-			TFunctionsTuple&& functionsTuple,
-			const TCallArgs&... callArgs
+			TCallArgsTuple&& callArgsTuple,
+			TFunctions&&... functions
 		) const
-		noexcept(functional::detail::is_type_list_nothrow_invokable_v<TFunctionsTuple, const TCallArgs&...>)
+		noexcept((concepts::nothrow_apply_invocable<TFunctions, TCallArgsTuple> && ...))
 		{
-			return std::apply(
-				[&]<std::predicate<const TCallArgs&...>... TFunctions>(TFunctions&&... functions)
-				{
-					return (std::invoke(std::forward<TFunctions>(functions), callArgs...) == ...);
-				},
-				std::forward<TFunctionsTuple>(functionsTuple)
-			);
+			return (std::apply(std::forward<TFunctions>(functions), callArgsTuple) == ...);
 		}
 	};
 
 	struct not_equal_caller_fn
 	{
-		template <class TFunctionsTuple, class... TCallArgs>
+		template <class TCallArgsTuple, concepts::apply_invocable<TCallArgsTuple>... TFunctions>
 		[[nodiscard]]
 		constexpr auto operator ()
 		(
-			TFunctionsTuple&& functionsTuple,
-			const TCallArgs&... callArgs
+			TCallArgsTuple&& callArgsTuple,
+			TFunctions&&... functions
 		) const
-		noexcept(functional::detail::is_type_list_nothrow_invokable_v<TFunctionsTuple, const TCallArgs&...>)
+		noexcept((concepts::nothrow_apply_invocable<TFunctions, TCallArgsTuple> && ...))
 		{
-			return std::apply(
-				[&]<std::predicate<const TCallArgs&...>... TFunctions>(TFunctions&&... functions)
-				{
-					return (std::invoke(std::forward<TFunctions>(functions), callArgs...) != ...);
-				},
-				std::forward<TFunctionsTuple>(functionsTuple)
-			);
+			return (std::apply(std::forward<TFunctions>(functions), callArgsTuple) != ...);
 		}
 	};
 }

@@ -8,30 +8,29 @@
 
 #pragma once
 
+#include "Simple-Utility/concepts/utility.hpp"
 #include "Simple-Utility/functional/base.hpp"
 
 namespace sl::functional::operators::detail
 {
 	struct equivalent_caller_fn
 	{
-		template <class TFunctionsTuple, class... TCallArgs>
+		template <class TCallArgsTuple,
+			concepts::apply_invocable<TCallArgsTuple> TInitFunction,
+			concepts::apply_invocable<TCallArgsTuple>... TFunctions
+		>
 		[[nodiscard]]
 		constexpr auto operator ()
 		(
-			TFunctionsTuple&& functionsTuple,
-			const TCallArgs&... callArgs
+			TCallArgsTuple&& callArgsTuple,
+			TInitFunction&& initFunction,
+			TFunctions&&... functions
 		) const
-		noexcept(functional::detail::is_type_list_nothrow_invokable_v<TFunctionsTuple, const TCallArgs&...>)
+		noexcept(concepts::nothrow_apply_invocable<TInitFunction, TCallArgsTuple>
+				&& (concepts::nothrow_apply_invocable<TFunctions, TCallArgsTuple> && ...))
 		{
-			return std::apply(
-				[&]<std::predicate<const TCallArgs&...> TInitFunction, std::predicate<const TCallArgs&...>... TOtherFunctions>
-			(TInitFunction&& initFunction, TOtherFunctions&&... otherFunctions)
-				{
-					const bool init = std::invoke(std::forward<TInitFunction>(initFunction), callArgs...);
-					return ((init == std::invoke(std::forward<TOtherFunctions>(otherFunctions), callArgs...)) && ...);
-				},
-				std::forward<TFunctionsTuple>(functionsTuple)
-			);
+			auto&& init{ std::apply(std::forward<TInitFunction>(initFunction), callArgsTuple) };
+			return ((init == std::apply(std::forward<TFunctions>(functions), callArgsTuple)) && ...);
 		}
 	};
 }
@@ -64,7 +63,7 @@ namespace sl::functional::operators
 
 	/**
 	 * \brief Composes both functional objects as equivalence comparison.
-	 * \relatesto equivalent_compare
+	 * \relates equivalent
 	 * \tparam TLhs The left-hand-side functional type.
 	 * \tparam TRhs The right-hand-side functional type.
 	 * \param lhs The left-hand-side functional object.

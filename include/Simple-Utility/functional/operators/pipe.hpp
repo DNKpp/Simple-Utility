@@ -8,53 +8,86 @@
 
 #pragma once
 
+#include "Simple-Utility/tuple_utility.hpp"
+#include "Simple-Utility/concepts/utility.hpp"
 #include "Simple-Utility/functional/base.hpp"
 
 namespace sl::functional::operators::detail
 {
-	struct nested_invoke_caller_fn
+	template <class TInput, std::invocable<TInput> TFunc, class... TOthers>
+	struct is_recursive_supply_invocable
+		: std::bool_constant<
+			std::is_invocable_v<TFunc, TInput>
+			&& is_recursive_supply_invocable<std::invoke_result_t<TFunc, TInput>, TOthers...>::value
+		>
+	{ };
+
+	template <class TInput, std::invocable<TInput> TFunc>
+	struct is_recursive_supply_invocable<TInput, TFunc>
+		: std::bool_constant<std::is_invocable_v<TFunc, TInput>>
+	{ };
+
+	template <class TInput, class... TFunctions>
+	concept recursive_supply_invocable = is_recursive_supply_invocable<TInput, TFunctions...>::value;
+
+	template <class TInput, std::invocable<TInput> TFunc, class... TOthers>
+	struct is_nothrow_recursive_supply_invocable
+		: std::bool_constant<
+			std::is_nothrow_invocable_v<TFunc, TInput>
+			&& is_nothrow_recursive_supply_invocable<std::invoke_result_t<TFunc, TInput>, TOthers...>::value
+		>
+	{ };
+
+	template <class TInput, std::invocable<TInput> TFunc>
+	struct is_nothrow_recursive_supply_invocable<TInput, TFunc>
+		: std::bool_constant<std::is_nothrow_invocable_v<TFunc, TInput>>
+	{ };
+
+	template <class TInput, class... TFunctions>
+	concept nothrow_recursive_supply_invocable = is_nothrow_recursive_supply_invocable<TInput, TFunctions...>::value;
+
+	template <class TInput, std::invocable<TInput> TFunc, class... TOthers>
+		requires recursive_supply_invocable<TInput, TFunc, TOthers...>
+	[[nodiscard]]
+	constexpr decltype(auto) recursive_supply_invoke
+	(
+		TInput&& input,
+		TFunc&& func,
+		TOthers&&... otherFunctions
+	)
+	noexcept(nothrow_recursive_supply_invocable<TInput, TFunc, TOthers...>)
 	{
-		template <class TFunctionsTuple, class... TCallArgs>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()
-		(
-			TFunctionsTuple&& functionsTuple,
-			TCallArgs&&... callArgs
-		) const
+		if constexpr (0 < sizeof...(TOthers))
 		{
-			return std::apply(
-				[&]<std::invocable<TCallArgs...> TFunc, class... TOthers>(TFunc&& func, TOthers&&... otherFuncs) -> decltype(auto)
-				{
-					return recursive_invoke(
-						std::invoke(std::forward<TFunc>(func), std::forward<TCallArgs>(callArgs)...),
-						std::forward<TOthers>(otherFuncs)...
-					);
-				},
-				std::forward<TFunctionsTuple>(functionsTuple)
+			return recursive_supply_invoke(
+				std::invoke(std::forward<TFunc>(func), std::forward<TInput>(input)),
+				std::forward<TOthers>(otherFunctions)...
 			);
 		}
-
-	private:
-		template <class TInput, std::invocable<TInput> TFunc, class... TOthers>
-		[[nodiscard]]
-		static constexpr decltype(auto) recursive_invoke
-		(
-			TInput&& input,
-			TFunc&& func,
-			TOthers&&... otherFunctions
-		)
+		else
 		{
-			if constexpr (0 == sizeof...(TOthers))
-			{
-				return std::invoke(std::forward<TFunc>(func), std::forward<TInput>(input));
-			}
-			else
-			{
-				return recursive_invoke(
-					std::invoke(std::forward<TFunc>(func), std::forward<TInput>(input)),
-					std::forward<TOthers>(otherFunctions)...
-				);
-			}
+			return std::invoke(std::forward<TFunc>(func), std::forward<TInput>(input));
+		}
+	}
+
+	struct nested_invoke_caller_fn
+	{
+		template <class TCallArgsTuple, concepts::apply_invocable<TCallArgsTuple> TInitFunction, class... TFunctions>
+			requires recursive_supply_invocable<apply_invoke_result_t<TInitFunction, TCallArgsTuple>, TFunctions...>
+		[[nodiscard]]
+		constexpr auto operator ()
+		(
+			TCallArgsTuple&& callArgsTuple,
+			TInitFunction&& initFunction,
+			TFunctions&&... functions
+		) const
+		noexcept(concepts::nothrow_apply_invocable<TInitFunction, TCallArgsTuple>
+				&& nothrow_recursive_supply_invocable<apply_invoke_result_t<TInitFunction, TCallArgsTuple>, TFunctions...>)
+		{
+			return recursive_supply_invoke(
+				std::apply(std::forward<TInitFunction>(initFunction), std::forward<TCallArgsTuple>(callArgsTuple)),
+				std::forward<TFunctions>(functions)...
+			);
 		}
 	};
 }
@@ -62,7 +95,7 @@ namespace sl::functional::operators::detail
 namespace sl::functional::operators
 {
 	/**
-	 * \addtogroup GROUP_FUNCTIONAL_OPERATORS
+	 * \defgroup GROUP_FUNCTIONAL_OPERATORS operators
 	 * \ingroup GROUP_FUNCTIONAL
 	 * @{
 	 */

@@ -15,17 +15,16 @@ namespace
 {
 	struct operation_mock_fn
 	{
-		template <class TFunctionsTuple, class... TCallArgs>
-			requires (1 < std::tuple_size_v<std::remove_cvref_t<TFunctionsTuple>>)
-		constexpr bool operator ()(TFunctionsTuple&& functionsTuple, TCallArgs&&... callArgs) const
+		template <class TCallArgsTuple, class... TFunctions>
+			requires (1 < sizeof...(TFunctions))
+		[[nodiscard]]
+		constexpr bool operator ()
+		(
+			TCallArgsTuple&& callArgsTuple,
+			TFunctions&&... functions
+		) const
 		{
-			return std::apply(
-				[&]<class... TArgs>(TArgs&&... functions) -> decltype(auto)
-				{
-					return (std::invoke(std::forward<TArgs>(functions), std::forward<TCallArgs>(callArgs)...) == ...);
-				},
-				std::forward<TFunctionsTuple>(functionsTuple)
-			);
+			return (std::apply(std::forward<TFunctions>(functions), callArgsTuple) == ...);
 		}
 	};
 

@@ -36,7 +36,6 @@ namespace sl::functional::operators
 		join
 	};
 
-
 	template <class T>
 	struct tag_traits;
 
@@ -155,6 +154,7 @@ namespace sl::functional
 		 * \return Returns as received by invocation.
 		 */
 		template <class... TArgs>
+			requires std::invocable<const function_type&, TArgs...>
 		[[nodiscard]]
 		constexpr decltype(auto) operator ()
 		(
@@ -168,6 +168,7 @@ namespace sl::functional
 		 * \copydoc operator()()
 		 */
 		template <class... TArgs>
+			requires std::invocable<function_type&, TArgs...>
 		[[nodiscard]]
 		constexpr decltype(auto) operator ()
 		(
@@ -181,6 +182,7 @@ namespace sl::functional
 		 * \copydoc operator()()
 		 */
 		template <class... TArgs>
+			requires std::invocable<function_type&&, TArgs...>
 		[[nodiscard]]
 		constexpr decltype(auto) operator ()
 		(
@@ -243,6 +245,28 @@ namespace sl::functional::detail
 	{
 		return unwrap_functional(*std::forward<TClosure>(closure));
 	}
+
+	template <class TCurOperation, class TFunctionsTuple, class... TCallArgs>
+	[[nodiscard]]
+	static constexpr decltype(auto) call_operation
+	(
+		TCurOperation&& op,
+		TFunctionsTuple&& functionsTuple,
+		TCallArgs&&... callArgs
+	)
+	{
+		return std::apply(
+			[&]<class... UFunctions>(UFunctions&&... functions)
+			{
+				return std::invoke(
+					std::forward<TCurOperation>(op),
+					std::forward_as_tuple(std::forward<TCallArgs>(callArgs)...),
+					std::forward<UFunctions>(functions)...
+				);
+			},
+			std::forward<TFunctionsTuple>(functionsTuple)
+		);
+	}
 }
 
 namespace sl::functional
@@ -286,33 +310,36 @@ namespace sl::functional
 		{}
 
 		template <class... TCallArgs>
+			requires std::invocable<const operation_t&, std::tuple<TCallArgs...>, const TFunctions&...>
 		[[nodiscard]]
 		constexpr decltype(auto) operator ()
 		(
 			TCallArgs&&... callArgs
-		) const & noexcept(std::is_nothrow_invocable_v<const operation_t&, const function_storage_t&, TCallArgs...>)
+		) const & noexcept(std::is_nothrow_invocable_v<const operation_t&, std::tuple<TCallArgs...>, const TFunctions&...>)
 		{
-			return std::invoke(m_Operation, m_Functions, std::forward<TCallArgs>(callArgs)...);
+			return detail::call_operation(m_Operation, m_Functions, std::forward<TCallArgs>(callArgs)...);
 		}
 
 		template <class... TCallArgs>
+			requires std::invocable<operation_t&, std::tuple<TCallArgs...>, TFunctions&...>
 		[[nodiscard]]
 		constexpr decltype(auto) operator ()
 		(
 			TCallArgs&&... callArgs
-		) & noexcept(std::is_nothrow_invocable_v<operation_t&, function_storage_t&, TCallArgs...>)
+		) & noexcept(std::is_nothrow_invocable_v<operation_t&, std::tuple<TCallArgs...>, TFunctions&...>)
 		{
-			return std::invoke(m_Operation, m_Functions, std::forward<TCallArgs>(callArgs)...);
+			return detail::call_operation(m_Operation, m_Functions, std::forward<TCallArgs>(callArgs)...);
 		}
 
 		template <class... TCallArgs>
+			requires std::invocable<operation_t&&, std::tuple<TCallArgs...>, TFunctions&&...>
 		[[nodiscard]]
 		constexpr decltype(auto) operator ()
 		(
 			TCallArgs&&... callArgs
-		) && noexcept(std::is_nothrow_invocable_v<operation_t&&, function_storage_t&&, TCallArgs...>)
+		) && noexcept(std::is_nothrow_invocable_v<operation_t&&, std::tuple<TCallArgs...>, TFunctions&&...>)
 		{
-			return std::invoke(std::move(m_Operation), std::move(m_Functions), std::forward<TCallArgs>(callArgs)...);
+			return detail::call_operation(std::move(m_Operation), std::move(m_Functions), std::forward<TCallArgs>(callArgs)...);
 		}
 
 		[[nodiscard]]
@@ -353,7 +380,6 @@ namespace sl::functional::operators::detail
 							&& derived_from_unified_base<T, functional::detail::composition_base_tag>
 							&& std::same_as<typename std::remove_cvref_t<T>::operation_t, tag_operation_t<TJoinableOperation>>;
 }
-
 
 namespace sl::functional::detail
 {
@@ -455,11 +481,22 @@ namespace sl::functional
 namespace sl::functional::detail
 {
 	template <class T, class... TCallArgs>
+	struct is_type_list_invokable;
+
+	template <class... TFunctions, class... TCallArgs>
+	struct is_type_list_invokable<std::tuple<TFunctions...>, TCallArgs...>
+		: std::bool_constant<std::conjunction_v<std::is_invocable<TFunctions, TCallArgs...>...>>
+	{};
+
+	template <class T, class... TCallArgs>
+	concept invocable_type_list = is_type_list_invokable<std::remove_cvref_t<T>, TCallArgs...>::value;
+
+	template <class T, class... TCallArgs>
 	struct is_type_list_nothrow_invokable;
 
 	template <class... TFunctions, class... TCallArgs>
 	struct is_type_list_nothrow_invokable<std::tuple<TFunctions...>, TCallArgs...>
-		: std::bool_constant<std::conjunction_v<std::is_nothrow_invocable<TFunctions>...>>
+		: std::bool_constant<std::conjunction_v<std::is_nothrow_invocable<TFunctions, TCallArgs...>...>>
 	{};
 
 	template <class T, class... TCallArgs>
@@ -488,7 +525,11 @@ namespace sl::functional::detail
 		requires (!operators::detail::joinable_with<TFunc1, TOperationTag>
 				&& !operators::detail::joinable_with<TFunc2, TOperationTag>)
 	[[nodiscard]]
-	constexpr auto make_composition(TFunc1&& func1, TFunc2&& func2)
+	constexpr auto make_composition
+	(
+		TFunc1&& func1,
+		TFunc2&& func2
+	)
 	noexcept(is_nothrow_composable_v<TOperationTag, TFunc1, TFunc2>)
 	{
 		return composition_fn{ operators::tag_operation_t<TOperationTag>{}, std::forward<TFunc1>(func1), std::forward<TFunc2>(func2) };

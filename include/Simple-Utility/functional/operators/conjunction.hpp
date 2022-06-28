@@ -8,33 +8,25 @@
 
 #pragma once
 
+#include "Simple-Utility/concepts/utility.hpp"
 #include "Simple-Utility/functional/base.hpp"
 
 namespace sl::functional::operators::detail
 {
 	struct conjunction_caller_fn
 	{
-		template <class TFunctionsTuple, class... TCallArgs>
+		template <class TCallArgsTuple, concepts::apply_invocable<TCallArgsTuple>... TFunctions>
 		[[nodiscard]]
 		constexpr auto operator ()
 		(
-			TFunctionsTuple&& functionsTuple,
-			const TCallArgs&... callArgs
+			TCallArgsTuple&& callArgsTuple,
+			TFunctions&&... functions
 		) const
-		noexcept(functional::detail::is_type_list_nothrow_invokable_v<TFunctionsTuple, const TCallArgs&...>)
+		noexcept((concepts::nothrow_apply_invocable<TFunctions, TCallArgsTuple> && ...))
 		{
-			return std::apply(
-				[&]<std::predicate<const TCallArgs&...>... TFunctions>(TFunctions&&... functions)
-				{
-					return (std::invoke(std::forward<TFunctions>(functions), callArgs...) && ...);
-				},
-				std::forward<TFunctionsTuple>(functionsTuple)
-			);
+			return (std::apply(std::forward<TFunctions>(functions), callArgsTuple) && ...);
 		}
 	};
-
-	struct conjunction_base_tag
-	{};
 }
 
 namespace sl::functional::operators
@@ -44,6 +36,7 @@ namespace sl::functional::operators
 	 * \ingroup GROUP_FUNCTIONAL
 	 * @{
 	 */
+
 	/**
 	 * \brief Tag type which enables conjunctive composing of two functional objects via operator &&.
 	 * \relatesalso sl::functional::enable_operation

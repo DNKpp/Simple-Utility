@@ -8,71 +8,77 @@
 
 #pragma once
 
+#include "Simple-Utility/tuple_utility.hpp"
+#include "Simple-Utility/concepts/utility.hpp"
 #include "Simple-Utility/functional/base.hpp"
 
 namespace sl::functional::operators::detail
 {
 	struct bind_front_caller_fn
 	{
-		template <class TFunctionsTuple, class... TCallArgs>
+		template <class TCallArgsTuple, class TFunction, class... TBoundFunctions>
+			requires concepts::apply_invocable<
+				TFunction, tuple_cat_result_t<std::tuple<std::invoke_result_t<TBoundFunctions>...>, TCallArgsTuple>
+			>
 		[[nodiscard]]
-		constexpr decltype(auto) operator ()
+		constexpr auto operator ()
 		(
-			TFunctionsTuple&& functionsTuple,
-			TCallArgs&&... callArgs
+			TCallArgsTuple&& callArgsTuple,
+			TFunction&& func,
+			TBoundFunctions&&... boundFunctions
 		) const
+		noexcept(concepts::nothrow_apply_invocable<
+			TFunction, tuple_cat_result_t<std::tuple<std::invoke_result_t<TBoundFunctions>...>, TCallArgsTuple>
+		>)
 		{
-			static_assert(1 < std::tuple_size_v<std::remove_cvref_t<TFunctionsTuple>>, "Tuple must at least contain two functions.");
+			return std::apply(
+				[&]<class... TCallArgs>(TCallArgs&&... callArgs) -> decltype(auto)
+				{
+					static_assert(std::invocable<TFunction, std::invoke_result_t<TBoundFunctions>..., TCallArgs...>,
+						"Functional is not invokable with bound and call arguments.");
 
-			const auto caller = [&]<class TFunction, std::invocable... TBoundArgs>
-			(
-				TFunction&& func,
-				TBoundArgs&&... boundArgs
-			) -> decltype(auto)
-			{
-				static_assert(std::invocable<TFunction, std::invoke_result_t<TBoundArgs>..., TCallArgs...>,
-					"Functional is not invokable with bound and call arguments.");
-
-				return std::invoke(
-					std::forward<TFunction>(func),
-					std::invoke(std::forward<TBoundArgs>(boundArgs))...,
-					std::forward<TCallArgs>(callArgs)...
-				);
-			};
-
-			return std::apply(caller, std::forward<TFunctionsTuple>(functionsTuple));
+					return std::invoke(
+						std::forward<TFunction>(func),
+						std::invoke(std::forward<TBoundFunctions>(boundFunctions))...,
+						std::forward<TCallArgs>(callArgs)...
+					);
+				},
+				std::forward<TCallArgsTuple>(callArgsTuple)
+			);
 		}
 	};
 
 	struct bind_back_caller_fn
 	{
-		template <class TFunctionsTuple, class... TCallArgs>
+		template <class TCallArgsTuple, class TFunction, class... TBoundFunctions>
+			requires concepts::apply_invocable<
+				TFunction, tuple_cat_result_t<TCallArgsTuple, std::tuple<std::invoke_result_t<TBoundFunctions>...>>
+			>
 		[[nodiscard]]
-		constexpr decltype(auto) operator ()
+		constexpr auto operator ()
 		(
-			TFunctionsTuple&& functionsTuple,
-			TCallArgs&&... callArgs
+			TCallArgsTuple&& callArgsTuple,
+			TFunction&& func,
+			TBoundFunctions&&... boundFunctions
 		) const
+		noexcept(concepts::nothrow_apply_invocable<
+			TFunction, tuple_cat_result_t<TCallArgsTuple, std::tuple<std::invoke_result_t<TBoundFunctions>...>>
+		>)
 		{
-			static_assert(1 < std::tuple_size_v<std::remove_cvref_t<TFunctionsTuple>>, "Tuple must at least contain two functions.");
+			return std::apply(
+				[&]<class... TCallArgs>(TCallArgs&&... callArgs) -> decltype(auto)
+				{
+					static_assert(std::invocable<TFunction, TCallArgs..., std::invoke_result_t<TBoundFunctions>...>,
+						"Functional is not invokable with bound and call arguments.");
 
-			const auto caller = [&]<class TFunction, std::invocable... TBoundArgs>
-			(
-				TFunction&& func,
-				TBoundArgs&&... boundArgs
-			) -> decltype(auto)
-			{
-				static_assert(std::invocable<TFunction, TCallArgs..., std::invoke_result_t<TBoundArgs>...>,
-					"Functional is not invokable with bound and call arguments.");
-
-				return std::invoke(
-					std::forward<TFunction>(func),
-					std::forward<TCallArgs>(callArgs)...,
-					std::invoke(std::forward<TBoundArgs>(boundArgs))...
-				);
-			};
-
-			return std::apply(caller, std::forward<TFunctionsTuple>(functionsTuple));
+					return std::invoke(
+						std::forward<TFunction>(func),
+						std::forward<TCallArgs>(callArgs)...,
+						std::invoke(std::forward<TBoundFunctions>(boundFunctions))...
+					);
+				},
+				std::forward<TCallArgsTuple>(callArgsTuple)
+			);
 		}
 	};
 }
@@ -136,7 +142,7 @@ namespace sl::functional::operators
 	{};
 
 	/**
-	 * \brief Specialized traits for \ref back_front.
+	 * \brief Specialized traits for \ref bind_back.
 	 * \relatesalso bind_back
 	 */
 	template <>
@@ -148,7 +154,7 @@ namespace sl::functional::operators
 
 	/**
 	 * \brief Curries the back parameter of the functional object.
-	 * \relatesalso bind_front
+	 * \relatesalso bind_back
 	 * \tparam TFunc The functional type.
 	 * \tparam TValue The type of the curried value.
 	 * \param func The functional object.
