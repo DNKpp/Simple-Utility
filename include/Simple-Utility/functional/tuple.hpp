@@ -101,7 +101,7 @@ namespace sl::functional::tuple
 	 */
 	template <class TFunc>
 		requires std::same_as<TFunc, std::remove_cvref_t<TFunc>>
-	class apply_fn
+	class apply_fn final
 		: public closure_base_fn<TFunc>,
 		public enable_operation<transform_fn,
 								operators::pipe,
