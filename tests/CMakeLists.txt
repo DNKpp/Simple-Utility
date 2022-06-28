@@ -19,7 +19,7 @@ add_executable(
 	"functional/transform.cpp"
 	"functional/predicate.cpp"
 	"functional/tuple.cpp"
-)
+ "tuple_utility.cpp")
 
 target_link_libraries(
 	${PROJECT_NAME}-Tests
