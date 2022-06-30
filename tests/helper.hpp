@@ -22,7 +22,7 @@ template <class T>
 using as_lvalue_ref_t = std::add_lvalue_reference_t<std::remove_cvref_t<T>>;
 
 template <class T>
-using as_const_lvalue_ref_t = std::add_const_t<as_lvalue_ref_t<T>>;
+using as_const_lvalue_ref_t = std::add_lvalue_reference_t<std::add_const_t<std::remove_cvref_t<T>>>;
 
 template <class T>
 using as_rvalue_ref_t = std::add_rvalue_reference_t<std::remove_cvref_t<T>>;
