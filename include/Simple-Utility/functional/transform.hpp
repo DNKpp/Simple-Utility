@@ -55,14 +55,26 @@ namespace sl::functional
 	template <class TFunc>
 	transform_fn(TFunc) -> transform_fn<TFunc>;
 
+	namespace detail
+	{
+		template <class TTarget>
+		inline constexpr auto as_impl = []<std::convertible_to<TTarget> T>
+		(
+			T&& v
+		)
+		noexcept(std::is_nothrow_convertible_v<T, TTarget>)
+		-> TTarget
+		{
+			return static_cast<TTarget>(std::forward<T>(v));
+		};
+	}
+
 	/**
 	 * \brief Functional object which static_cast the given argument to the target type on invocation.
 	 * \tparam TTarget The target type.
 	 */
 	template <class TTarget>
-	inline constexpr transform_fn as{
-		[]<std::convertible_to<TTarget> T>(T&& v) -> TTarget { return static_cast<TTarget>(std::forward<T>(v)); }
-	};
+	inline constexpr transform_fn as{ detail::as_impl<TTarget> };
 
 	/** @} */
 }
