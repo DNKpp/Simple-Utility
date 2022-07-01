@@ -44,6 +44,11 @@ namespace sl::nullables::detail
 namespace sl::nullables
 {
 	/**
+	 * \addtogroup GROUP_NULLABLES_ALGORITHMS
+	 * @{
+	 */
+
+	/**
 	 * \brief Passes the value of the \ref sl::nullables::input_nullable "input_nullable" to the function if it's not equal to its ``null``-object.
 	 * \tparam TFunc The type of the passed function. The function should be invokable with types returned by \ref sl::nullables::unwrap
 	 * ``unwrap``.
@@ -67,12 +72,21 @@ namespace sl::nullables
 		return algorithm_fn{ detail::fwd_value_caller_fn{} } >> std::forward<TFunc>(func);
 	}
 
+	/**
+	 * \brief Creates a functional object which can be used for composing with other functional objects.
+	 * \tparam TFunc The type of the passed function.
+	 * \param func The given functional object.
+	 * \note For details about the algorithm itself see \ref sl::nullables::fwd_value "fwd_value" function.
+	 * \return A \ref sl::nullables::fwd_value "fwd_value" algorithm as functional object.
+	 */
 	template <class TFunc>
 	[[nodiscard]]
 	constexpr auto fwd_value_fn(TFunc&& func)
 	{
 		return functional::transform_fn{ fwd_value(std::forward<TFunc>(func)) };
 	}
+	
+	/** @} */
 }
 
 #endif

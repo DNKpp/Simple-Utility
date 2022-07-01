@@ -51,12 +51,17 @@ namespace sl::nullables::detail
 namespace sl::nullables
 {
 	/**
+	 * \addtogroup GROUP_NULLABLES_ALGORITHMS
+	 * @{
+	 */
+
+	/**
 	 * \brief Passes the value of the \ref sl::nullables::input_nullable "input_nullable" to the function if it's not equal to its ``null``-object.
 	 * Returns the ``null``-object otherwise.
-	 * \ingroup GROUP_NULLABLES_ALGORITHMS
 	 * \tparam TFunc The type of the passed function. The function should be invokable with types returned by \ref sl::nullables::unwrap
 	 * "unwrap" and return a type which satisfies the \ref sl::nullables::nullable "nullable" concept (this type does not have to be
 	 * the same as the type already used in the expression).
+	 * \param func The given functional object.
 	 *
 	 * \details This algorithm uses the actual value of a \ref sl::nullables::input_nullable "input_nullable" and passes it to the given functional.
 	 * The functional should then return \b any \ref sl::nullables::nullable "nullable" \b compatible \b type as desired.
@@ -80,12 +85,21 @@ namespace sl::nullables
 		return algorithm_fn{ detail::and_then_caller_fn{} } >> std::forward<TFunc>(func);
 	}
 
+	/**
+	 * \brief Creates a functional object which can be used for composing with other functional objects.
+	 * \tparam TFunc The type of the passed function.
+	 * \param func The given functional object.
+	 * \note For details about the algorithm itself see \ref sl::nullables::and_then "and_then" function.
+	 * \return A \ref sl::nullables::and_then "and_then" algorithm as functional object.
+	 */
 	template <class TFunc>
 	[[nodiscard]]
 	constexpr auto and_then_fn(TFunc&& func)
 	{
 		return functional::transform_fn{ and_then(std::forward<TFunc>(func)) };
 	}
+
+	/** @} */
 }
 
 #endif

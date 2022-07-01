@@ -49,13 +49,20 @@ namespace sl::nullables::detail
 namespace sl::nullables
 {
 	/**
+	 * \addtogroup GROUP_NULLABLES_ALGORITHMS
+	 * @{
+	 */
+
+	/**
 	 * \brief Retrieves the value of a \ref sl::nullables::input_nullable "input_nullable" if it's not equal to its ''null''-object.
 	 * Returns the alternative otherwise.
-	 * \ingroup GROUP_NULLABLES_ALGORITHMS
 	 * \tparam TValue Type of alternative. Must initialize ``nullable_value_t<TNullable>`` objects.
+	 * \param value The provided alternative.
 	 *
 	 * \details This algorithm returns the alternative if the \ref sl::nullables::input_nullable "input_nullable" compares equal to its
 	 * ``null``-object. Otherwise the value of the \ref sl::nullables::input_nullable "input_nullable" is returned.
+	 *
+	 * The provided values will be stored in a \ref sl::functional::value_fn "value_fn" object.
 	 *
 	 * \note In the following examples the outcome is always presented within the ``REQUIRE()`` statement.
 	 *
@@ -73,12 +80,21 @@ namespace sl::nullables
 		return algorithm_fn{ detail::value_or_caller_fn{} } >> std::forward<TValue>(value);
 	}
 
+	/**
+	 * \brief Creates a functional object which can be used for composing with other functional objects.
+	 * \tparam TValue Type of alternative. Must initialize ``nullable_value_t<TNullable>`` objects.
+	 * \param value The provided alternative.
+	 * \note For details about the algorithm itself see \ref sl::nullables::value_or "value_or" function.
+	 * \return A \ref sl::nullables::value_or "value_or" algorithm as functional object.
+	 */
 	template <class TValue>
 	[[nodiscard]]
 	constexpr auto value_or_fn(TValue&& value)
 	{
 		return functional::transform_fn{ value_or(std::forward<TValue>(value)) };
 	}
+
+	/** @} */
 }
 
 #endif

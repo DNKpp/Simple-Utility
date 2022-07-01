@@ -59,8 +59,12 @@ namespace sl::nullables::detail
 namespace sl::nullables
 {
 	/**
+	 * \addtogroup GROUP_NULLABLES_ALGORITHMS
+	 * @{
+	 */
+
+	/**
 	 * \brief Returns the \ref sl::nullables::nullable "nullable" if it's not equal to its ''null''-object. Executes the passed function otherwise.
-	 * \ingroup GROUP_NULLABLES_ALGORITHMS
 	 * \tparam TFunc The type of the passed function. The return type must be either ```void`` or such that it can be
 	 * used to initialize a new nullable object with the same type as used on.
 	 *
@@ -76,12 +80,12 @@ namespace sl::nullables
 	 * 
 	 * This example shows the outcome when an invalid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression and the functional has a
 	 * return type other than ``void``.
-	 * \snippet algorithm.cpp or_else invalid value non-void return
+	 * \snippet algorithm.cpp or_else invalid non-void return
 	 * \---
 	 * 
 	 * This example shows the outcome when an invalid \ref sl::nullables::nullable "nullable" is used in a ``or_else`` expression and the functional does not
 	 * return anything.
-	 * \snippet algorithm.cpp or_else invalid value void return
+	 * \snippet algorithm.cpp or_else invalid void return
 	 */
 	template <std::invocable TFunc>
 	[[nodiscard]]
@@ -90,12 +94,21 @@ namespace sl::nullables
 		return algorithm_fn{ detail::or_else_caller_fn{} } >> std::forward<TFunc>(func);
 	}
 
+	/**
+	 * \brief Creates a functional object which can be used for composing with other functional objects.
+	 * \tparam TFunc The type of the passed function.
+	 * \param func The given functional object.
+	 * \note For details about the algorithm itself see \ref sl::nullables::or_else "or_else" function.
+	 * \return A \ref sl::nullables::or_else "or_else" algorithm as functional object.
+	 */
 	template <class TFunc>
 	[[nodiscard]]
 	constexpr auto or_else_fn(TFunc&& func)
 	{
 		return functional::transform_fn{ or_else(std::forward<TFunc>(func)) };
 	}
+	
+	/** @} */
 }
 
 #endif
