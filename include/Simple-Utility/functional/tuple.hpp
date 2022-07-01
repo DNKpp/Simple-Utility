@@ -95,66 +95,38 @@ namespace sl::functional::tuple
 		[](auto&... args) { return std::tie(args...); }
 	};
 
-	/**
-	 * \brief Utility class to forward-and-apply tuple objects.
-	 * \tparam TFunc Type of underlying invocable object.
-	 */
-	template <class TFunc>
-		requires std::same_as<TFunc, std::remove_cvref_t<TFunc>>
-	class apply_fn final
-		: public closure_base_fn<TFunc>,
-		public enable_operation<transform_fn,
-								operators::pipe,
-								operators::bind_front,
-								operators::bind_back
-		>
+	namespace detail
 	{
-		using closure_t = closure_base_fn<TFunc>;
-	public:
-		using closure_t::closure_t;
-
-		/**
-		* \brief Forwards and applies the arguments with the underlying function.
-		* \tparam TType Tuple-like type to forward to the underlying function.
-		* \param args Parameters to forward to the underlying function.
-		* \return Return value of the underlying function, if any.
-		*/
-		template <class TType>
-		constexpr decltype(auto) operator()
-		(
-			TType&& args
-		) const & noexcept(noexcept(std::apply(std::declval<const closure_t&>(), args)))
+		struct apply_fn
 		{
-			return std::apply(static_cast<const closure_t&>(*this), std::forward<TType>(args));
-		}
+			template <class TFunc, class TTuple>
+				requires concepts::apply_invocable<TFunc, TTuple>
+			[[nodiscard]]
+			constexpr decltype(auto) operator ()
+			(
+				TFunc&& func,
+				TTuple&& tuple
+			) const
+			noexcept(concepts::nothrow_apply_invocable<TFunc, TTuple>)
+			{
+				return std::apply(std::forward<TFunc>(func), std::forward<TTuple>(tuple));
+			}
+		};
 
-		/*! \copydoc operator()() */
-		template <class TType>
-		constexpr decltype(auto) operator()
+		inline constexpr auto make_apply = []<class TFunc>
 		(
-			TType&& args
-		) & noexcept(noexcept(std::apply(std::declval<closure_t&>(), args)))
+			TFunc&& func
+		)
+		noexcept(is_nothrow_composable_v<operators::bind_front, apply_fn, value_fn<std::remove_cvref_t<TFunc>>>)
 		{
-			return std::apply(static_cast<closure_t&>(*this), std::forward<TType>(args));
-		}
-
-		/*! \copydoc operator()() */
-		template <class TType>
-		constexpr decltype(auto) operator()
-		(
-			TType&& args
-		) && noexcept(noexcept(std::apply(std::declval<closure_t&&>(), args)))
-		{
-			return std::apply(static_cast<closure_t&&>(*this), std::forward<TType>(args));
-		}
-	};
+			return transform_fn{ apply_fn{} } << std::forward<TFunc>(func);
+		};
+	}
 
 	/**
-	 * \brief Deduction guide.
-	 * \tparam TFunc Type of the given functional.
-	 */
-	template <class TFunc>
-	apply_fn(TFunc) -> apply_fn<TFunc>;
+	* \brief Forwards and applies the tuple arguments to the provided function.
+	*/
+	inline constexpr transform_fn apply{ detail::make_apply };
 
 	/** @} */
 }

@@ -81,7 +81,7 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"apply_fn forwards tuple elements as given to std::apply.",
+	"apply forwards tuple elements as given to std::apply.",
 	"[functional][tuple]",
 	((auto... VValue), VValue...),
 	('c'),
@@ -90,7 +90,7 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	const std::tuple tuple{ VValue... };
 
-	tuple::apply_fn func{ tuple::tie | equal << tuple };
+	auto func = tuple::apply(tuple::tie | equal << tuple);
 
 	REQUIRE(func(tuple));
 	REQUIRE(std::as_const(func)(tuple));
