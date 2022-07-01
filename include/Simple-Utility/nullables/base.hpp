@@ -37,9 +37,9 @@ namespace sl::nullables
 	 *	- \ref sl::nullables::fwd_value "fwd_value"
 	 *
 	 *	### Quick algorithm example
-	 *	This example demonstrates that \ref sl::nullables::and_then ``and_then`` and \ref sl::nullables::or_else ``or_else`` algorithms can
-	 *	be chained in arbitrarily length. \ref sl::nullables::value_or ``fwd_value`` and \ref sl::nullables::fwd_value ``fwd_value`` on the
-	 *	other side act as a terminator (as they usually do not return a \ref sl::nullables::nullable ``nullable`` objects).
+	 *	This example demonstrates that \ref sl::nullables::and_then "and_then" and \ref sl::nullables::or_else "or_else" algorithms can
+	 *	be chained in arbitrarily length. \ref sl::nullables::value_or "value_or" and \ref sl::nullables::fwd_value "fwd_value" on the
+	 *	other side act as a terminator (as they usually do not return a \ref sl::nullables::nullable "nullable" objects).
 	 * \snippet algorithm.cpp algorithm chain
 	 *
 	 * This can be quite useful, but the library can even better than this. All nullable algorithms are designed to work properly with the functional
@@ -97,9 +97,18 @@ namespace sl::nullables
 	 */
 
 	/**
+	 * \defgroup GROUP_NULLABLES_CUSTOMIZATION_POINTS customization points
+	 *
+	 * \brief Contains several customization points, which users may hook for their custom types.
+	 * \details Nullables namespace are designed to work out of the box with types satisfying the corresponding concepts, but sometimes custom types
+	 * can not be tweaked freely. This is when the pre-defined customization points begin to shine, as users may simply put overloads in the types namespace
+	 * and let the ADL do the work finding it.
+	 */
+
+	/**
 	 * \defgroup GROUP_NULLABLES_TRAITS traits
 	 *
-	 * \brief These traits are used by the \ref GROUP_NULLABLES_ALGORITHMS "algorithms" and my be extended by users.
+	 * \brief These traits are used by the \ref GROUP_NULLABLES_ALGORITHMS "algorithms" and my be specialized by users for their custom types.
 	 * @{
 	 */
 
@@ -116,34 +125,6 @@ namespace sl::nullables
 	 */
 	template <class T>
 	using value_t = typename traits<std::remove_cvref_t<T>>::value_type;
-
-	namespace detail
-	{
-		template <class TNullable>
-			requires concepts::dereferencable_r<TNullable, value_t<TNullable>>
-		[[nodiscard]]
-		constexpr decltype(auto) unwrap
-		(
-			TNullable&& na
-		)
-		noexcept(noexcept(*std::forward<TNullable>(na)))
-		{
-			return *std::forward<TNullable>(na);
-		}
-
-		struct unwrap_fn
-		{
-			template <class TNullable>
-				requires requires { { unwrap(std::declval<TNullable>()) } -> std::convertible_to<value_t<TNullable>>; }
-			[[nodiscard]]
-			constexpr auto operator()(TNullable&& na) const noexcept(noexcept(unwrap(std::forward<TNullable>(na))))
-			{
-				return unwrap(std::forward<TNullable>(na));
-			}
-		};
-	}
-
-	inline constexpr detail::unwrap_fn unwrap{};
 
 	/**
 	 * \brief Convenience constant retrieving the null object of a \ref sl::nullables::nullable "nullable" type
@@ -163,6 +144,44 @@ namespace sl::nullables
 		using value_type = std::remove_pointer_t<T>;
 		inline static constexpr std::nullptr_t null{ nullptr };
 	};
+
+	/** @} */
+
+	namespace detail
+	{
+		template <class TNullable>
+			requires concepts::dereferencable_r<TNullable, value_t<TNullable>>
+		[[nodiscard]]
+		constexpr decltype(auto) unwrap
+		(
+			TNullable&& na
+		)
+		noexcept
+		{
+			return *std::forward<TNullable>(na);
+		}
+
+		struct unwrap_fn
+		{
+			template <class TNullable>
+				requires requires { { unwrap(std::declval<TNullable>()) } -> std::convertible_to<value_t<TNullable>>; }
+			[[nodiscard]]
+			constexpr auto operator()(TNullable&& na) const noexcept
+			{
+				return unwrap(std::forward<TNullable>(na));
+			}
+		};
+	}
+
+	/**
+	 * \brief Retrieves the value of the given \ref sl::nullables::input_nullable "input_nullable".
+	 * \ingroup GROUP_NULLABLES_CUSTOMIZATION_POINTS
+	 * \details This function is only called if the given \ref sl::nullables::input_nullable "input_nullable" compares unequal to its ``null``-object,
+	 * thus it will never access an invalid \ref sl::nullables::input_nullable "input_nullable" and therefore any additional checks in custom
+	 * overloads will be unnecessary overhead, which can be avoided.
+	 * \note Custom overloads should never throw.
+	 */
+	inline constexpr detail::unwrap_fn unwrap{};
 
 	/**
 	 * \brief Checks whether a type is an \ref sl::nullables::input_nullable "input_nullable".
@@ -201,6 +220,20 @@ namespace sl::nullables::detail
 
 namespace sl::nullables
 {
+	/**
+	 * \defgroup GROUP_NULLABLES_ALGORITHMS algorithms
+	 *
+	 * \brief Contains nullable algorithm related symbols.
+	 * \details There already exists several pre-defined algorithms, but users may easily write their own algorithm within a few lines.
+	 * \snippet nullables/base.cpp algorithm custom
+	 * @{
+	 */
+
+	/**
+	 * \brief The core algorithm helper, which executes the held algorithm when used as the right-hand-side of ``operator |`` expressions,
+	 * when the left-hand-side is a valid ``nullable`` type.
+	 * \tparam TFunc The function type.
+	 */
 	template <class TFunc>
 		requires std::same_as<TFunc, std::remove_cvref_t<TFunc>>
 	class algorithm_fn final
@@ -217,9 +250,21 @@ namespace sl::nullables
 		using closure_t::closure_t;
 	};
 
+	/**
+	 * \brief Deduction guide for \ref sl::nullables::algorithm_fn "algorithm_fn" types.
+	 * \tparam TFunc The function type.
+	 */
 	template <class TFunc>
 	algorithm_fn(TFunc) -> algorithm_fn<TFunc>;
 
+	/**
+	 * \brief The operator is used to chain nullables with algorithms.
+	 * \tparam TNullable The nullable type.
+	 * \tparam TAlgorithm The algorithm type. 
+	 * \param nullable The nullable object.
+	 * \param algorithm The algorithm object.
+	 * \return Returns the forwarded result of the algorithm invocation.
+	 */
 	template <input_nullable TNullable, derived_from_unified_base<detail::algorithm_tag> TAlgorithm>
 		requires std::invocable<TAlgorithm, TNullable>
 	[[nodiscard]]
@@ -232,6 +277,8 @@ namespace sl::nullables
 	{
 		return std::invoke(std::forward<TAlgorithm>(algorithm), std::forward<TNullable>(nullable));
 	}
+
+	/** @} */
 
 	/** @} */
 }
