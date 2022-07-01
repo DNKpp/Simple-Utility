@@ -47,7 +47,7 @@ TEMPLATE_TEST_CASE_SIG(
 )
 #pragma warning(default: 26444)
 {
-	REQUIRE(initializes<TSource, TTarget> == VExpected);
+	STATIC_REQUIRE(initializes<TSource, TTarget> == VExpected);
 }
 
 #pragma warning(disable: 26444)
@@ -62,7 +62,7 @@ TEMPLATE_TEST_CASE_SIG(
 )
 #pragma warning(default: 26444)
 {
-	REQUIRE(assignable_to<TSource, TTarget> == VExpected);
+	STATIC_REQUIRE(assignable_to<TSource, TTarget> == VExpected);
 }
 
 #pragma warning(disable: 26444)
@@ -77,7 +77,7 @@ TEMPLATE_TEST_CASE_SIG(
 )
 #pragma warning(default: 26444)
 {
-	REQUIRE(not_same_as<TSource, TTarget> == VExpected);
+	STATIC_REQUIRE(not_same_as<TSource, TTarget> == VExpected);
 }
 
 #pragma warning(disable: 26444)
@@ -90,8 +90,8 @@ TEMPLATE_TEST_CASE_SIG(
 )
 #pragma warning(default: 26444)
 {
-	REQUIRE(weakly_equality_comparable_with<T1, T2> == VExpected);
-	REQUIRE(weakly_equality_comparable_with<T2, T1> == VExpected);
+	STATIC_REQUIRE(weakly_equality_comparable_with<T1, T2> == VExpected);
+	STATIC_REQUIRE(weakly_equality_comparable_with<T2, T1> == VExpected);
 }
 
 TEMPLATE_TEST_CASE_SIG(
