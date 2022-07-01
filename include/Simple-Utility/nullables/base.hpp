@@ -1,3 +1,8 @@
+//          Copyright Dominic Koepke 2019 - 2022.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          https://www.boost.org/LICENSE_1_0.txt)
+
 #ifndef SL_UTILITY_NULLABLES_BASE_HPP
 #define SL_UTILITY_NULLABLES_BASE_HPP
 
@@ -49,49 +54,22 @@ namespace sl::nullables
 	 * There is a last step one may walk: Nullable algorithms also support functional composition out of the box, which means that
 	 * they are composable with any functional as a new functional object and can be invoked later on:
 	 * \snippet algorithm.cpp algorithm chain functional composition
-	 *
-	 * ## Working with movable types
-	 * If you have an object which you would like to move into the algorithm chain, either because its non-copyable or its simply more performant,
-	 * its totally fine to do so. But, as the library assumes taking over the ownership of objects received as ``rvalue ref`` use the remaining
-	 * object with care, as it might have or might have not been moved. Simply the same rules for moved object as usual apply.
-	 * \snippet nullables.cpp nullables algorithm chain movable
-	 *
-	 * ## Using custom or third party types
+
+	 * ## Using custom types
 	 * Well, that depends which interface your type offers. If it's already dereferencable via ``operator *`` and it has an explicit ``null``-object,
 	 * which it can equality compared to, than you are in a good position.
-	 * Otherwise you may specialize the \ref sl::nullables::value_unchecked "value_unchecked" function or simply adjust your interface (if possible).
-	 * Either way, a explicit constant ``null``-object is mandatory and can not be avoided.
 	 *
-	 * If that's done, you should specialize the \ref sl::nullables::nullable_traits "traits":
-	 * \snippet nullables.cpp nullables custom type traits
+	 * ### There exists a dedicated type or constexpr null object
+	 * Just specialize \ref sl::nullable::traits "nullable traits". If your type then doesn't offer a ``operator *`` access or it
+	 * doesn't follow the semantics, you can hook the ``unwrap`` customization point and simply create an overload in the types namespace.
 	 *
-	 * After that everything is already setup and your type can be at least used as a \ref sl::nullables::input_nullable "input_nullable" (which makes
-	 * it usable as input in \ref sl::nullables::and_then "and_then" and \ref sl::nullables::value_or "value_or" algorithms).
-	 * Making it actually a \ref sl::nullables::nullable "nullable" type, it must be assignable and constructible by its ``null``-object, which
-	 * might be achieved by overloading the conversion operator of the ``null``-type (which can't be declared explicit).
+	 * ### No dedicated type or constexpr null object exists
+	 * If your type doesn't have a dedicated null object or it is simply not constexpr, you can wrap your type and a null object into
+	 * \ref sl::nullables::adapter "adapter" object. Depending how your type behaves with the null object, this adapter will be either a ``input_nullable``
+	 * or even a ``nullable``.
 	 *
-	 * Additionally if there is an actual need for that step, you may also specialize the algorithm implementations. Have a look at these members:
-	 *	- \ref sl::nullables::value_or_func_t "value_or_func_t"
-	 *	- \ref sl::nullables::value_or_func_t "and_then_func_t"
-	 *	- \ref sl::nullables::value_or_func_t "or_else_func_t"
-	 *	- \ref sl::nullables::fwd_value_func_t "fwd_value_func_t"
-	 *
-	 *	#### Example: How to make a type ready as nullable
-	 *	Given a type which you can not adjust (here ``your_type``, which is quite similar to ``std::optional``), which you would like to use with
-	 *	these algorithms.
-	 *	\snippet nullables.cpp nullables your_type definition
-	 *
-	 *	Your first step should then defining a dedicated ``null``-type:
-	 *	\snippet nullables.cpp nullables your_type null-type
-	 *
-	 *	Second you need to specialize the \ref sl::nullables::value_unchecked "value_unchecked" function, because ``your_type`` can not dereferenced
-	 *	via ``operator *``.
-	 *	\snippet nullables.cpp nullables your_type value_unchecked
-	 *
-	 *	Last you need to specialize the type traits for that type:
-	 *	\snippet nullables.cpp nullables your_type traits
-	 *
-	 *	That's it. Now ``your_type`` is ready to be used as \ref sl::nullables::nullable "nullable" type.
+	 * If your type doesn't offer a ``operator *`` access or it´doesn't follow the semantics, you can hook the ``unwrap_adapted`` customization point and
+	 * simply create an overload in the types namespace.
 	 *
 	 * @{
 	 */

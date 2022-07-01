@@ -48,19 +48,48 @@ namespace sl::nullables
 
 namespace sl::nullables
 {
+	/**
+	 * \defgroup GROUP_NULLABLES_ADAPTER adapter
+	 * \ingroup GROUP_NULLABLES
+	 *  @{
+	 */
+
+	/**
+	 * \brief Dedicated null type for \ref sl::nullables::adapter "adapters".
+	 * \relates sl::nullables::adapter
+	 */
 	struct adapter_null_t
 	{};
 
+	/**
+	 * \brief Dedicated null object for \ref sl::nullables::adapter "adapters".
+	 * \relates sl::nullables::adapter
+	 */
 	inline constexpr adapter_null_t adapter_null{};
 
+	/**
+	 * \brief Tag type for \ref sl::nullables::adapter "adapters", which can be used to disambiguate the construction
+	 * with just a null-object.
+	 * \relates sl::nullables::adapter
+	 */
 	struct in_place_null_t
 	{};
 
+	/**
+	 * \brief Tag object for \ref sl::nullables::adapter "adapters", which can be used to disambiguate the construction
+	 * with just a null-object.
+	 * \relates sl::nullables::adapter
+	 */
 	inline constexpr in_place_null_t in_place_null{};
 
 	template <class T>
 	using adapted_value_t = std::remove_cvref_t<decltype(unwrap_adapted(std::declval<T>()))>;
 
+	/**
+	 * \brief Determines whether the given adapted and null type satisfy the requirements to be used within a \ref sl::nullables::adapter "adapter".
+	 * \tparam TAdapted The adapted type.
+	 * \tparam TNull The null type.
+	 */
 	template <class TAdapted, class TNull>
 	concept adaptable_with = std::movable<TNull>
 							&& std::movable<TAdapted>
@@ -100,6 +129,13 @@ namespace sl::nullables::detail
 
 namespace sl::nullables
 {
+	/**
+	 * \brief Converts the given argument to a \ref sl::nullables::adapter "adapter" object.
+	 * \ingroup GROUP_NULLABLES_CUSTOMIZATION_POINTS
+	 * \relates sl::nullables::adapter
+	 * \details This is a customization point, which users may hook to add convenient conversions from there
+	 * types to adapters.
+	 */
 	inline constexpr detail::to_nullables_adapter_fn to_nullables_adapter{};
 
 	namespace detail
@@ -111,6 +147,16 @@ namespace sl::nullables
 		};
 	}
 
+	/**
+	 * \brief A adapter class, mimic the behaviour of nullable types.
+	 * \tparam TNull The null type.
+	 * \tparam TAdapted The adapted type.
+	 * \details This class aims to provide a layer of abstraction for types, which logically have a null-state but no dedicated null-object to compare with.
+	 * For example an arbitrary iterator can be compared to its end iterator, but that end iterator usually must be retrieved from the container (unless
+	 * end iterator is a dedicated sentinel type). adapter aims to fill the gap and therefore accepts a state object and a null object. The adapter itself
+	 * can be then compared to its dedicated ``adapter_null`` object and thus satisfying at least the ``input_nullable`` concept. If the state object
+	 * is then initializable and constructible via the given null-object, the ``nullable`` concept is also satisfied.
+	 */
 	template <class TNull, adaptable_with<TNull> TAdapted>
 		requires std::same_as<TNull, std::remove_cvref_t<TNull>>
 				&& std::same_as<TAdapted, std::remove_cvref_t<TAdapted>>
@@ -121,8 +167,15 @@ namespace sl::nullables
 		using value_type = adapted_value_t<TAdapted>;
 		using null_type = TNull;
 
+		/**
+		 * \brief Default destructor.
+		 */
 		constexpr ~adapter() noexcept = default;
 
+		/**
+		 * \brief Default copy constructor.
+		 * \param other The other adapter.
+		 */
 		[[nodiscard]]
 		constexpr adapter
 		(
@@ -131,6 +184,10 @@ namespace sl::nullables
 					&& std::is_nothrow_copy_constructible_v<TAdapted>)
 		= default;
 
+		/**
+		 * \brief Default copy assignment operator.
+		 * \param other The other adapter.
+		 */
 		constexpr adapter& operator =
 		(
 			const adapter& other
@@ -138,6 +195,10 @@ namespace sl::nullables
 					&& std::is_nothrow_copy_assignable_v<TAdapted>)
 		= default;
 
+		/**
+		 * \brief Default move constructor.
+		 * \param other The other adapter.
+		 */
 		[[nodiscard]]
 		constexpr adapter
 		(
@@ -146,6 +207,10 @@ namespace sl::nullables
 					&& std::is_nothrow_move_constructible_v<TAdapted>)
 		= default;
 
+		/**
+		 * \brief Default move assignment operator.
+		 * \param other The other adapter.
+		 */
 		constexpr adapter& operator =
 		(
 			adapter&& other
@@ -153,6 +218,12 @@ namespace sl::nullables
 					&& std::is_nothrow_move_assignable_v<TAdapted>)
 		= default;
 
+		/**
+		 * \brief Constructs the null object with the given argument and then constructs the adapted object with the null object.
+		 * \tparam TNullArg The constructor argument type for the null object.
+		 * \param nullArg  The constructor argument for the null object.
+		 * \attention The behaviour is undefined if after the construction adapted does not compare equal to the null object.
+		 */
 		template <concepts::initializes<null_type> TNullArg>
 			requires std::constructible_from<adapted_type, const null_type&>
 		[[nodiscard]]
@@ -170,6 +241,10 @@ namespace sl::nullables
 			assert(*this == adapter_null && "Default constructed adapted_type must comapare equally to the provided null object.");
 		}
 
+		/**
+		 * \brief Default constructs the null object and then constructs the adapted object with the null object.
+		 * \attention The behaviour is undefined if after the construction adapted does not compare equal to the null object.
+		 */
 		[[nodiscard]]
 		explicit
 		constexpr adapter
@@ -183,6 +258,9 @@ namespace sl::nullables
 			: adapter{ in_place_null, null_type{} }
 		{}
 
+		/**
+		 * \copydoc adapter(in_place_null_t, TNullArg&&)
+		 */
 		template <concepts::initializes<null_type> TNullArg>
 			requires concepts::not_same_as<adapter_null_t, std::remove_cvref_t<TNullArg>>
 					&& concepts::not_same_as<in_place_null_t, std::remove_cvref_t<TNullArg>>
@@ -198,6 +276,13 @@ namespace sl::nullables
 			: adapter{ in_place_null, nullArg }
 		{}
 
+		/**
+		 * \brief Constructs the null object and the adapted with the given arguments.
+		 * \tparam TNullArg The constructor argument type for the null object.
+		 * \tparam TAdaptedArg The constructor argument type for the adapted object.
+		 * \param nullArg  The constructor argument for the null object.
+		 * \param adaptedArg  The constructor argument for the adapted object.
+		 */
 		template <concepts::initializes<null_type> TNullArg, concepts::initializes<adapted_type> TAdaptedArg>
 			requires concepts::not_same_as<adapter_null_t, std::remove_cvref_t<TNullArg>>
 					&& concepts::not_same_as<in_place_null_t, std::remove_cvref_t<TNullArg>>
@@ -215,6 +300,13 @@ namespace sl::nullables
 			m_Adapted{ std::forward<TAdaptedArg>(adaptedArg) }
 		{}
 
+		/**
+		 * \brief Constructs the adapter with the result of a \ref sl::nullables::to_nullables_adapter "to_nullables_adapter" invocation.
+		 * \tparam TArg The argument type.
+		 * \param arg The argument.
+		 * \note This function makes use of the customization point \ref sl::nullables::to_nullables_adapter "to_nullables_adapter", which may
+		 * be hooked by users.
+		 */
 		template <detail::convertible_to_adapter TArg>
 			requires concepts::not_same_as<adapter_null_t, std::remove_cvref_t<TArg>>
 					&& concepts::not_same_as<in_place_null_t, std::remove_cvref_t<TArg>>
@@ -229,6 +321,11 @@ namespace sl::nullables
 			: adapter{ to_nullables_adapter(std::forward<TArg>(arg)) }
 		{ }
 
+		/**
+		 * \brief Assigns null to the adapted object.
+		 * \attention The behaviour is undefined if adapted does not compare equal to the null object after the assignment.
+		 * \return Reference to this.
+		 */
 		constexpr adapter& operator =
 		(
 			[[maybe_unused]] adapter_null_t
@@ -237,10 +334,15 @@ namespace sl::nullables
 			requires std::assignable_from<adapted_type&, null_type&>
 		{
 			m_Adapted = m_Null;
+			assert(*this == adapter_null && "adapted_type must comapare equally to the null object.");
 
 			return *this;
 		}
 
+		/**
+		 * \brief Assigns the adapted object.
+		 * \return Reference to this.
+		 */
 		template <concepts::assignable_to<adapted_type&> TAdaptedArg>
 			requires concepts::not_same_as<adapter_null_t, std::remove_cvref_t<TAdaptedArg>>
 		constexpr adapter& operator =
@@ -254,6 +356,12 @@ namespace sl::nullables
 			return *this;
 		}
 
+		/**
+		 * \brief Retrieves the value from the adapted object.
+		 * \note This function makes use of the ``unwrap_adapter`` customization point, which may be hooked by users.
+		 * \attention If the adapted object compares equal to the null object, the behaviour is undefined.
+		 * \return Returns the result as received.
+		 */
 		[[nodiscard]]
 		constexpr decltype(auto) operator *() const &
 		{
@@ -262,6 +370,9 @@ namespace sl::nullables
 			return unwrap_adapted(m_Adapted);
 		}
 
+		/**
+		 * \copydoc operator*
+		 */
 		[[nodiscard]]
 		constexpr decltype(auto) operator *() &
 		{
@@ -270,6 +381,9 @@ namespace sl::nullables
 			return unwrap_adapted(m_Adapted);
 		}
 
+		/**
+		 * \copydoc operator*
+		 */
 		[[nodiscard]]
 		constexpr decltype(auto) operator *() &&
 		{
@@ -278,14 +392,10 @@ namespace sl::nullables
 			return unwrap_adapted(std::move(m_Adapted));
 		}
 
-		[[nodiscard]]
-		constexpr bool operator ==
-		(
-			const adapter& other
-		) const
-		noexcept(concepts::nothrow_weakly_equality_comparable_with<TAdapted, TNull>)
-		= default;
-
+		/**
+		 * \brief Comparison operator with its ``adapter_null```object.
+		 * \return Returns true if the adapted object compares equal to the null object.
+		 */
 		[[nodiscard]]
 		constexpr bool operator ==
 		(
@@ -302,9 +412,20 @@ namespace sl::nullables
 		adapted_type m_Adapted{};
 	};
 
+	/**
+	 * \brief Deduction guide.
+	 * \relates sl::nullables::adapter
+	 * \tparam TNull The null type.
+	 * \tparam TAdapted The adapted type.
+	 */
 	template <class TNull, class TAdapted>
 	adapter(TNull, TAdapted) -> adapter<TNull, TAdapted>;
 
+	/**
+	 * \brief Deduction guide, which makes use of \ref sl::nullables::to_nullables_adapter "to_nullables_adapter" customization point.
+	 * \relates sl::nullables::adapter
+	 * \tparam T The argument type.
+	 */
 	template <class T>
 		requires requires { to_nullables_adapter(std::declval<T>()); }
 	adapter
@@ -315,12 +436,21 @@ namespace sl::nullables
 		typename std::remove_cvref_t<decltype(to_nullables_adapter(std::declval<T>()))>::adapted_type
 	>;
 
+	/**
+	 * \brief Specialization for raw pointers
+	 * \ingroup GROUP_NULLABLES_TRAITS
+	 * \relates sl::nullables::adapter
+	 * \tparam TNull Null type
+	 * \tparam TAdapted Adapted type
+	 */
 	template <class TNull, class TAdapted>
 	struct traits<adapter<TNull, TAdapted>>
 	{
 		using value_type = adapted_value_t<TAdapted>;
 		constexpr static adapter_null_t null{ adapter_null };
 	};
+
+	/** @} */
 }
 
 #endif
