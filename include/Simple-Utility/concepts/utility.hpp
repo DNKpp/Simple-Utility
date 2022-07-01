@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "Simple-Utility/tuple_utility.hpp"
+
 #include <concepts>
 
 namespace sl::concepts
@@ -39,6 +41,21 @@ namespace sl::concepts
 	 */
 	template <class... T>
 	concept unique_types = are_types_unique_v<T...>;
+
+	/**
+	 * \brief Determines whether the function is invocable with the elements of the given tuple.
+	 * \ingroup GROUP_TUPLE_UTILITY
+	 */
+	template <class TFunc, class TTuple>
+	concept apply_invocable = is_apply_invocable_v<TFunc, std::remove_reference_t<TTuple>>;
+
+	/**
+	 * \brief Determines whether the function is invocable with the elements of the given tuple without throwing.
+	 * \ingroup GROUP_TUPLE_UTILITY
+	 */
+	template <class TFunc, class TTuple>
+	concept nothrow_apply_invocable = apply_invocable<TFunc, TTuple>
+									&& is_nothrow_apply_invocable_v<TFunc, std::remove_reference_t<TTuple>>;
 
 	/** @} */
 }

@@ -19,19 +19,25 @@ namespace
 
 		// ReSharper disable once CppNonExplicitConvertingConstructor
 		target_t(int)
-		{
-		}
+		{ }
 
 		target_t& operator =(int)
 		{
 			return *this;
 		}
 	};
+
+	template <bool VNoexcept>
+	struct comparable_type
+	{
+		constexpr bool operator ==(const comparable_type&) const noexcept(VNoexcept) = default;
+
+		constexpr bool operator ==(const comparable_type<!VNoexcept>&) const noexcept(false) { return true; }
+	};
 }
 
 #pragma warning(disable: 26444)
-TEMPLATE_TEST_CASE_SIG
-(
+TEMPLATE_TEST_CASE_SIG(
 	"initializes should behave as the symmetrical counterpart of std::constructible_from with one constructor argument",
 	"[concepts][stl_ext]",
 	((class TSource, class TTarget, bool VExpected), TSource, TTarget, VExpected),
@@ -41,12 +47,11 @@ TEMPLATE_TEST_CASE_SIG
 )
 #pragma warning(default: 26444)
 {
-	REQUIRE(initializes<TSource, TTarget> == VExpected);
+	STATIC_REQUIRE(initializes<TSource, TTarget> == VExpected);
 }
 
 #pragma warning(disable: 26444)
-TEMPLATE_TEST_CASE_SIG
-(
+TEMPLATE_TEST_CASE_SIG(
 	"assignable_to should behave as the symmetrical counterpart of std::assignable_from.",
 	"[concepts][stl_ext]",
 	((class TSource, class TTarget, bool VExpected), TSource, TTarget, VExpected),
@@ -57,12 +62,11 @@ TEMPLATE_TEST_CASE_SIG
 )
 #pragma warning(default: 26444)
 {
-	REQUIRE(assignable_to<TSource, TTarget> == VExpected);
+	STATIC_REQUIRE(assignable_to<TSource, TTarget> == VExpected);
 }
 
 #pragma warning(disable: 26444)
-TEMPLATE_TEST_CASE_SIG
-(
+TEMPLATE_TEST_CASE_SIG(
 	"not_same_as should behave as the inverted counterpart of std::same_as.",
 	"[concepts][stl_ext]",
 	((class TSource, class TTarget, bool VExpected), TSource, TTarget, VExpected),
@@ -73,12 +77,11 @@ TEMPLATE_TEST_CASE_SIG
 )
 #pragma warning(default: 26444)
 {
-	REQUIRE(not_same_as<TSource, TTarget> == VExpected);
+	STATIC_REQUIRE(not_same_as<TSource, TTarget> == VExpected);
 }
 
 #pragma warning(disable: 26444)
-TEMPLATE_TEST_CASE_SIG
-(
+TEMPLATE_TEST_CASE_SIG(
 	"weakly_equality_comparable_with Checks whether a symmetrical set of operators == and != to compare both types with each other exists.",
 	"[concepts][stl_ext]",
 	((class T1, class T2, bool VExpected), T1, T2, VExpected),
@@ -87,6 +90,22 @@ TEMPLATE_TEST_CASE_SIG
 )
 #pragma warning(default: 26444)
 {
-	REQUIRE(weakly_equality_comparable_with<T1, T2> == VExpected);
-	REQUIRE(weakly_equality_comparable_with<T2, T1> == VExpected);
+	STATIC_REQUIRE(weakly_equality_comparable_with<T1, T2> == VExpected);
+	STATIC_REQUIRE(weakly_equality_comparable_with<T2, T1> == VExpected);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"nothrow_weakly_equality_comparable_with checks whether a symmetrical set of operators == and != to compare both types with each other exists and has noexcept specifier.",
+	"[concepts][stl_ext]",
+	((class T1, class T2, bool VExpected), T1, T2, VExpected),
+	(int, int, true),
+	(target_t, int, false),
+	// simply not comparable
+	(comparable_type<true>, comparable_type<true>, true),
+	(comparable_type<false>, comparable_type<true>, false),
+	(comparable_type<false>, comparable_type<false>, false)
+)
+{
+	STATIC_REQUIRE(nothrow_weakly_equality_comparable_with<T1, T2> == VExpected);
+	STATIC_REQUIRE(nothrow_weakly_equality_comparable_with<T2, T1> == VExpected);
 }

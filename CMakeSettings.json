@@ -1,0 +1,71 @@
+﻿{
+	"configurations": [
+		{
+			"name": "x64-Debug",
+			"generator": "Ninja",
+			"configurationType": "Debug",
+			"inheritEnvironments": [ "msvc_x64_x64" ],
+			"buildRoot": "${projectDir}\\out\\build\\${name}",
+			"installRoot": "${projectDir}\\out\\install\\${name}",
+			"cmakeCommandArgs": "",
+			"buildCommandArgs": "",
+			"ctestCommandArgs": "",
+			"variables": [
+				{
+					"name": "Simple-Utility_BUILD_TESTS",
+					"value": "True",
+					"type": "BOOL"
+				}
+			]
+		},
+		{
+			"name": "clang-x64-Debug",
+			"generator": "Ninja",
+			"configurationType": "Debug",
+			"buildRoot": "${projectDir}\\out\\build\\${name}",
+			"installRoot": "${projectDir}\\out\\install\\${name}",
+			"cmakeCommandArgs": "",
+			"buildCommandArgs": "",
+			"ctestCommandArgs": "",
+			"inheritEnvironments": [ "clang_cl_x64_x64" ],
+			"variables": [
+				{
+					"name": "Simple-Utility_BUILD_TESTS",
+					"value": "True",
+					"type": "BOOL"
+				}
+			]
+		},
+		{
+			"name": "Linux-GCC-Debug",
+			"generator": "Ninja",
+			"configurationType": "Debug",
+			"cmakeExecutable": "cmake",
+			"remoteCopySourcesExclusionList": [ ".vs", ".git", "out" ],
+			"cmakeCommandArgs": "",
+			"buildCommandArgs": "",
+			"ctestCommandArgs": "",
+			"inheritEnvironments": [ "linux_x64" ],
+			"remoteMachineName": "${defaultRemoteMachineName}",
+			"remoteCMakeListsRoot": "$HOME/.vs/${projectDirName}/${workspaceHash}/src",
+			"remoteBuildRoot": "$HOME/.vs/${projectDirName}/${workspaceHash}/out/build/${name}",
+			"remoteInstallRoot": "$HOME/.vs/${projectDirName}/${workspaceHash}/out/install/${name}",
+			"remoteCopySources": true,
+			"rsyncCommandArgs": "-t --delete --delete-excluded",
+			"remoteCopyBuildOutput": false,
+			"remoteCopySourcesMethod": "rsync",
+			"variables": [
+				{
+					"name": "CATCH_BUILD_TESTING",
+					"value": "False",
+					"type": "BOOL"
+				},
+				{
+					"name": "Simple-Utility_BUILD_TESTS",
+					"value": "True",
+					"type": "BOOL"
+				}
+			]
+		}
+	]
+}

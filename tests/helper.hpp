@@ -12,6 +12,21 @@
 #include <concepts>
 #include <type_traits>
 
+template <template <class> class TMod, class T>
+constexpr decltype(auto) apply_mod(T&& v)
+{
+	return static_cast<TMod<std::remove_cvref_t<T>>>(v);
+}
+
+template <class T>
+using as_lvalue_ref_t = std::add_lvalue_reference_t<std::remove_cvref_t<T>>;
+
+template <class T>
+using as_const_lvalue_ref_t = std::add_lvalue_reference_t<std::add_const_t<std::remove_cvref_t<T>>>;
+
+template <class T>
+using as_rvalue_ref_t = std::add_rvalue_reference_t<std::remove_cvref_t<T>>;
+
 struct empty_t
 {
 };

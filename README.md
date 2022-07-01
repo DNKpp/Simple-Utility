@@ -25,8 +25,30 @@ This library is merely a collection of useful utilities. It is not ment as an re
 on future projects. All parts are well tested and the documentation can be found either on the gh-pages section or directly at [docsforge.com](https://simple-utility.docsforge.com/). If you run into any kind of bugs or have ideas for
 improvements, feel free to add an issue or even compile a pull-request.
 
+### functional
+In the last few versions, the functional part of this library grew. This library lets you simply couple together functions, whithout the need to explicitly create a lambda or something like this. As a quick example:
+
+```cpp
+namespace fn = sl::functional;
+
+constexpr fn::transform_fn square = [](const int i) { return i * i; };
+constexpr fn::transform_fn sum = [](const int lhs, const int rhs) { return lhs + rhs; };
+
+std::vector<int> ints{ 1, 2, 3, 4 };
+std::ranges::transform(
+	ints,
+	std::begin(ints),
+	square
+	| sum << 42	// this binds 42 as the first param of sum
+);
+```
+Well, this calculates the square of each element, adds 42 on it and writes it back into the vector. As a side note, you may also pipe ``raw functionals`` (e.g. function pointers or plain lambdas) into.
+Either the first or the second argument must be of that special type.
+
+Additionally there also exist ``predicate_fn`` objects, which offer even more composition operations.
+
 ### nullables & unique_handle
-The current main features are without doubt the ``sl::nullables`` namespace and the ``sl::unique_handle`` type, which benefit from each other. ``sl::unique_handle`` is an optional like class (in fact it wraps currently an ``std::optional``) but
+One of the current main features are the ``sl::nullables`` namespace and the ``sl::unique_handle`` type, which benefit from each other. ``sl::unique_handle`` is an optional like class (in fact it wraps currently an ``std::optional``) but
 offers only a movable interface and guarantees resetting the internal value after a move happend, and is thus semantically closer at ``std::unique_ptr`` but holds its value still on the stack.
 
 The ``sl::nullables`` namespace offers four simple algorithms:
@@ -58,7 +80,7 @@ include(FetchContent)
 FetchContent_Declare(
 	Simple-Utility
 	GIT_REPOSITORY	https://github.com/DNKpp/Simple-Utility
-	GIT_TAG		"v1.0.0"	# or any other tag name
+	GIT_TAG		"v2.0.0"	# or any other tag name
 )
 
 FetchContent_MakeAvailable(Simple-Utility)
@@ -73,6 +95,6 @@ from the latest release into your project folder and include it into your ``CMak
 include(CPM.cmake) # or include(get_cpm.cmake)
 
 
-CPMAddPackage("gh:DNKpp/Simple-Utility#v1.0.0") # or any other tag name
+CPMAddPackage("gh:DNKpp/Simple-Utility#v2.0.0") # or any other tag name
 # do not forget linking via target_link_libraries as shown above
 ```

@@ -8,246 +8,65 @@
 
 #pragma once
 
-#include "Simple-Utility/bind_back.hpp"
+#include "Simple-Utility/unified_base.hpp"
 #include "Simple-Utility/functional/base.hpp"
-
-namespace sl::functional::detail
-{
-	struct binary_nesting_fn
-	{
-		template <class TFunc1, class TFunc2, class... TArgs>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()
-		(
-			TFunc1&& func1,
-			TFunc2&& func2,
-			TArgs&&... v
-		) const
-		noexcept(std::is_nothrow_invocable_v<TFunc1, TArgs...>
-				&& std::is_nothrow_invocable_v<TFunc2, std::invoke_result_t<TFunc1, TArgs...>>)
-			requires std::invocable<TFunc1, TArgs...>
-					&& std::invocable<TFunc2, std::invoke_result_t<TFunc1, TArgs...>>
-		{
-			return std::invoke(
-				std::forward<TFunc2>(func2),
-				std::invoke(std::forward<TFunc1>(func1), std::forward<TArgs>(v)...)
-			);
-		}
-	};
-}
+#include "Simple-Utility/functional/operators/pipe.hpp"
+#include "Simple-Utility/functional/operators/bind.hpp"
 
 namespace sl::functional
 {
 	/**
-	 * \addtogroup GROUP_FUNCTIONAL
-	 *
+	 * \defgroup GROUP_FUNCTIONAL_TRANSFORM transform
+	 * \brief Contains the base ``transform_fn`` and several pre-defined transform objects.
+	 * \ingroup GROUP_FUNCTIONAL
+	 * \details Transform types aim to simplify the composition of multiple transformations on objects and are therefore composable via
+	 * pipe operator (operator |). Transforms also aim to be flat as possible, which means, if users chain multiple transforms, instead of simply
+	 * building a tree like structure, the functional objects will be combined into one ``composition_fn``. This keeps the calling-hierarchy as
+	 * flat as possible and also supports easier debugging. Operations following this strategy are:
+	 * - pipe
+	 * - bind_front
+	 * - bind_back
 	 * @{
 	 */
 
 	/**
-	 * \brief Helper type which enables pipe composing of two functional objects via operator |.
-	 * \tparam TDerived The most derived class type.
-	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
-	 */
-	template <class TDerived, template <class> class TClosureBase>
-		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
-	struct pipe_operator
-	{
-	private:
-		using composer_t = detail::composer<TClosureBase, detail::binary_nesting_fn>;
-
-	public:
-		/**
-		 * \brief Composes this and the other functional object as nested function
-		 * (result of left-hand-side as argument for right-hand-side).
-		 * \tparam TOther The type of the other functional object.
-		 * \param other The right-hand-side functional object.
-		 * \return The nested composition of this and other as new functional object.
-		 */
-		template <class TOther>
-		[[nodiscard]]
-		constexpr auto operator |
-		(
-			TOther&& other
-		) && noexcept(detail::is_nothrow_composable_v<composer_t, TDerived&&, TOther>)
-		{
-			return composer_t::compose(static_cast<TDerived&&>(*this), std::forward<TOther>(other));
-		}
-
-		/**
-		 * \copydoc operator|()
-		 */
-		template <class TOther>
-		[[nodiscard]]
-		constexpr auto operator |
-		(
-			TOther&& other
-		) const & noexcept(detail::is_nothrow_composable_v<composer_t, const TDerived&, TOther>)
-		{
-			return composer_t::compose(static_cast<const TDerived&>(*this), std::forward<TOther>(other));
-		}
-
-		/**
-		 * \brief Composes both functional objects as nested function (result of left-hand-side as argument for right-hand-side).
-		 * \tparam TLhs The left-hand-side functional type.
-		 * \param lhs The left-hand-side functional object.
-		 * \param rhs The right-hand-side functional object.
-		 * \return The nested composition of both functional objects as new functional object.
-		 */
-		template <class TLhs>
-		[[nodiscard]]
-		friend constexpr auto operator |
-		(
-			TLhs&& lhs,
-			pipe_operator&& rhs
-		)
-		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, TDerived&&>)
-			requires (!requires { lhs.operator|(std::move(rhs)); })
-
-		{
-			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
-		}
-
-		/**
-		 * \copydoc operator|(TLhs&&, pipe_operator&&)
-		 */
-		template <class TLhs>
-		[[nodiscard]]
-		friend constexpr auto operator |
-		(
-			TLhs&& lhs,
-			const pipe_operator& rhs
-		)
-		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, const TDerived&>)
-			requires (!requires { lhs.operator|(rhs); })
-		{
-			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
-		}
-	};
-
-	/**
-	 * \brief Helper type which enables unary front currying on functionals via operator <<.
-	 * \tparam TDerived The most derived class type.
-	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
-	 */
-	template <class TDerived, template <class> class TClosureBase>
-		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
-	struct bind_front_operator
-	{
-	private:
-		template <class TFunc, class TValue>
-		using bind_front_fn = std::remove_cvref_t<decltype(std::bind_front(std::declval<TFunc>(), std::declval<TValue>()))>;
-
-	public:
-		/**
-		 * \brief Curries the front parameter of this functional object.
-		 * \tparam TValue The type of the curried value.
-		 * \param value The value to be curried.
-		 * \return The curried functional, as a new functional object.
-		 */
-		template <class TValue>
-		[[nodiscard]]
-		constexpr auto operator <<
-		(
-			TValue&& value
-		) && noexcept(
-			std::is_nothrow_constructible_v<TClosureBase<bind_front_fn<TDerived&&, TValue>>, bind_front_fn<TDerived&&, TValue>>
-		)
-		{
-			return TClosureBase<bind_front_fn<TDerived&&, TValue>>{
-				std::bind_front(static_cast<TDerived&&>(*this), std::forward<TValue>(value))
-			};
-		}
-
-		/**
-		 * \copydoc operator!()
-		 */
-		template <class TValue>
-		[[nodiscard]]
-		constexpr auto operator <<
-		(
-			TValue&& value
-		) const & noexcept(
-			std::is_nothrow_constructible_v<TClosureBase<bind_front_fn<const TDerived&, TValue>>,
-											bind_front_fn<const TDerived&, TValue>
-			>
-		)
-		{
-			return TClosureBase<bind_front_fn<const TDerived&, TValue>>{
-				std::bind_front(static_cast<const TDerived&>(*this), std::forward<TValue>(value))
-			};
-		}
-	};
-
-	/**
-	 * \brief Helper type which enables unary back currying on functionals via operator >>.
-	 * \tparam TDerived The most derived class type.
-	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
-	 */
-	template <class TDerived, template <class> class TClosureBase>
-		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
-	struct bind_back_operator
-	{
-	private:
-		template <class TFunc, class TValue>
-		using bind_back_fn = std::remove_cvref_t<decltype(bind_back(std::declval<TFunc>(), std::declval<TValue>()))>;
-
-	public:
-		/**
-		 * \brief Curries the back parameter of this functional object.
-		 * \tparam TValue The type of the curried value.
-		 * \param value The value to be curried.
-		 * \return The curried functional, as a new functional object.
-		 */
-		template <class TValue>
-		[[nodiscard]]
-		constexpr auto operator >>
-		(
-			TValue&& value
-		) && noexcept(
-			std::is_nothrow_constructible_v<TClosureBase<bind_back_fn<TDerived&&, TValue>>, bind_back_fn<TDerived&&, TValue>>
-		)
-		{
-			return TClosureBase<bind_back_fn<TDerived&&, TValue>>{
-				bind_back(static_cast<TDerived&&>(*this), std::forward<TValue>(value))
-			};
-		}
-
-		/**
-		 * \copydoc operator!()
-		 */
-		template <class TValue>
-		[[nodiscard]]
-		constexpr auto operator >>
-		(
-			TValue&& value
-		) const & noexcept(
-			std::is_nothrow_constructible_v<TClosureBase<bind_back_fn<const TDerived&, TValue>>,
-											bind_back_fn<const TDerived&, TValue>
-			>
-		)
-		{
-			return TClosureBase<bind_back_fn<const TDerived&, TValue>>{
-				bind_back(static_cast<const TDerived&>(*this), std::forward<TValue>(value))
-			};
-		}
-	};
-
-	/**
-	 * \brief Helper type which accepts a functional type and enables pipe chaining.
+	 * \brief Adapter type which accepts a functional type and enables pipe chaining and currying.
 	 * \tparam TFunc The functional type.
 	 */
 	template <class TFunc>
 		requires std::same_as<TFunc, std::remove_cvref_t<TFunc>>
-	class transform_fn
+	class transform_fn final
 		: public closure_base_fn<TFunc>,
-		public pipe_operator<transform_fn<TFunc>, transform_fn>,
-		public bind_front_operator<transform_fn<TFunc>, transform_fn>,
-		public bind_back_operator<transform_fn<TFunc>, transform_fn>
+		public enable_operation<transform_fn,
+								operators::pipe,
+								operators::bind_front,
+								operators::bind_back
+		>
 	{
 		using closure_t = closure_base_fn<TFunc>;
 	public:
-		using closure_t::closure_t;
+		//using closure_t::closure_t;
+
+		/**
+		 * \brief Explicitly created forwarding constructor.
+		 * \tparam TArgs Argument types.
+		 * \param args Arguments, forwarded to the base class constructor.
+		 * \note This is only here, to keep clang <= 11 happy, when creating constexpr functional objects.
+		 */
+		template <class... TArgs>
+			requires std::constructible_from<closure_t, TArgs...>
+		[[nodiscard]]
+		constexpr
+		/**\cond conditional-explicit*/
+		explicit(detail::force_explicit_constructor_v<closure_t, TArgs...>)
+		/**\endcond*/
+		transform_fn
+		(
+			TArgs&&... args
+		)
+		noexcept(std::is_nothrow_constructible_v<closure_t, TArgs...>)
+			: closure_t{ std::forward<TArgs>(args)... }
+		{}
 	};
 
 	/**
@@ -255,23 +74,32 @@ namespace sl::functional
 	 * \tparam TFunc Type of the given functional.
 	 */
 	template <class TFunc>
-	transform_fn(TFunc) -> transform_fn<std::remove_cvref_t<TFunc>>;
+	transform_fn(TFunc) -> transform_fn<TFunc>;
 
-	/**
-	 * \defgroup GROUP_FUNCTIONAL_TRANSFORM transform
-	 * @{
-	 */
+	namespace detail
+	{
+		template <class TTarget>
+		struct as_fn
+		{
+			template <std::convertible_to<TTarget> TFrom>
+			[[nodiscard]]
+			constexpr TTarget operator ()
+			(
+				TFrom&& v
+			) const
+			noexcept(std::is_nothrow_convertible_v<TFrom, TTarget>)
+			{
+				return static_cast<TTarget>(std::forward<TFrom>(v));
+			};
+		};
+	}
 
 	/**
 	 * \brief Functional object which static_cast the given argument to the target type on invocation.
 	 * \tparam TTarget The target type.
 	 */
 	template <class TTarget>
-	inline constexpr transform_fn as{
-		[]<class T>(T&& v) -> TTarget { return static_cast<TTarget>(std::forward<T>(v)); }
-	};
-
-	/** @} */
+	inline constexpr transform_fn as{ detail::as_fn<TTarget>{} };
 
 	/** @} */
 }

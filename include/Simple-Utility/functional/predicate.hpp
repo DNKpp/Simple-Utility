@@ -8,276 +8,100 @@
 
 #pragma once
 
-#include "Simple-Utility/functional/transform.hpp"
-
-namespace sl::functional::detail
-{
-	struct binary_conjunction_fn
-	{
-		template <class TFunc1, class TFunc2, class... TArgs>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()
-		(
-			TFunc1&& func1,
-			TFunc2&& func2,
-			const TArgs&... v
-		) const
-		noexcept(std::is_nothrow_invocable_v<TFunc1, std::add_lvalue_reference_t<std::add_const_t<TArgs>>...>
-				&& std::is_nothrow_invocable_v<TFunc2, std::add_lvalue_reference_t<std::add_const_t<TArgs>>...>
-		)
-			requires std::predicate<TFunc1, TArgs...>
-					&& std::predicate<TFunc2, TArgs...>
-		{
-			return std::invoke(std::forward<TFunc1>(func1), v...)
-					&& std::invoke(std::forward<TFunc2>(func2), v...);
-		}
-	};
-
-	struct binary_disjunction_fn
-	{
-		template <class TFunc1, class TFunc2, class... TArgs>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()
-		(
-			TFunc1&& func1,
-			TFunc2&& func2,
-			const TArgs&... v
-		) const
-		noexcept(std::is_nothrow_invocable_v<TFunc1, std::add_lvalue_reference_t<std::add_const_t<TArgs>>...>
-				&& std::is_nothrow_invocable_v<TFunc2, std::add_lvalue_reference_t<std::add_const_t<TArgs>>...>
-		)
-			requires std::predicate<TFunc1, TArgs...>
-					&& std::predicate<TFunc2, TArgs...>
-		{
-			return std::invoke(std::forward<TFunc1>(func1), v...)
-					|| std::invoke(std::forward<TFunc2>(func2), v...);
-		}
-	};
-}
+#include "Simple-Utility/functional/base.hpp"
+#include "Simple-Utility/functional/operators/pipe.hpp"
+#include "Simple-Utility/functional/operators/bind.hpp"
+#include "Simple-Utility/functional/operators/conjunction.hpp"
+#include "Simple-Utility/functional/operators/disjunction.hpp"
+#include "Simple-Utility/functional/operators/negation.hpp"
+#include "Simple-Utility/functional/operators/equal.hpp"
+#include "Simple-Utility/functional/operators/equivalent.hpp"
 
 namespace sl::functional
 {
 	/**
-	 * \addtogroup GROUP_FUNCTIONAL
+	 * \defgroup GROUP_FUNCTIONAL_PREDICATE predicate
+	 * \ingroup GROUP_FUNCTIONAL
+	 * \brief Contains the base ``predicate_fn`` and several pre-defined predicate objects.
+	 * \details Predicate types aim to simplify the composition of multiple conditions and are even fully compatible with the transformer
+	 * functions. Predicates are therefore pipe-able with any other functional type (the params and return types still have to match, which can't
+	 * be checked before the actual invocation) and offer many more composing operators.
+	 * Predicates also aim to be flat as possible, which means, if users chain multiple predicates via supported operators, instead of simply
+	 * building a tree like structure, the functional objects will be combined into one ``composition_fn``. This keeps the calling-hierarchy as
+	 * flat as possible and also supports easier debugging. Operations following this strategy are:
+	 * - pipe
+	 * - conjunction
+	 * - disjunction
+	 * - bind_front
+	 * - bind_back
+	 * - equivalent_compare
 	 *
+	 * \note Predicates are also composable via operator ==, != and <=>, but there is one subtle difference between operator == and <=>, which comes into
+	 * play when chaining three or more predicates together. For two predicates the result is equivalent.
+	 * Operator == compares predicates in a nested manner, thus
+	 * \code{.cpp}
+	 * pred1 == pred2 == pred3;
+	 * \endcode
+	 * is in fact
+	 * \code{.cpp}
+	 * (pred1 == pred2) == pred3;
+	 * \endcode
+	 * That results is sometimes unexpected behaviour when ``pred1``, ``pred2`` and ``pred3`` are for example all ``false``. This will result in
+	 * ``(false == false) == false`` which is obviously not true. Operator <=> in contrast takes the result of the first function and compares
+	 * it to all other predicate results. The above example will then result in the following comparison:
+	 * \code{.cpp}
+	 * bool init = pred1();
+	 * bool result = init == pred2() && init == pred3();
+	 * \endcode
+	 * and therefore actually check if all results are equal.
 	 * @{
 	 */
 
 	/**
-	 * \brief Helper type which enables conjunctive composing of two functional objects via operator &&.
-	 * \tparam TDerived The most derived class type.
-	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
-	 */
-	template <class TDerived, template <class> class TClosureBase>
-		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
-	struct conjunction_operator
-	{
-	private:
-		using composer_t = detail::composer<TClosureBase, detail::binary_conjunction_fn>;
-
-	public:
-		/**
-		 * \brief Composes this and the other functional object as conjunction.
-		 * \tparam TOther The type of the other functional object.
-		 * \param other The right-hand-side functional object.
-		 * \return The conjunctive composition of this and other as new functional object.
-		 */
-		template <class TOther>
-		[[nodiscard]]
-		constexpr auto operator &&
-		(
-			TOther&& other
-		) && noexcept(detail::is_nothrow_composable_v<composer_t, TDerived&&, TOther>)
-		{
-			return composer_t::compose(static_cast<TDerived&&>(*this), std::forward<TOther>(other));
-		}
-
-		/**
-		 * \copydoc operator&&()
-		 */
-		template <class TOther>
-		[[nodiscard]]
-		constexpr auto operator &&
-		(
-			TOther&& other
-		) const & noexcept(detail::is_nothrow_composable_v<composer_t, const TDerived&, TOther>)
-		{
-			return composer_t::compose(static_cast<const TDerived&>(*this), std::forward<TOther>(other));
-		}
-
-		/**
-		 * \brief Composes both functional objects as conjunction.
-		 * \tparam TLhs The left-hand-side functional type.
-		 * \param lhs The left-hand-side functional object.
-		 * \param rhs The right-hand-side functional object.
-		 * \return The conjunctive composition of both functional objects as new functional object.
-		 */
-		template <class TLhs>
-		[[nodiscard]]
-		friend constexpr auto operator &&
-		(
-			TLhs&& lhs,
-			conjunction_operator&& rhs
-		)
-		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, TDerived&&>)
-			requires (!requires { lhs.operator&&(std::move(rhs)); })
-
-		{
-			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
-		}
-
-		/**
-		 * \copydoc operator&&(TLhs&&, conjunction_operator&&)
-		 */
-		template <class TLhs>
-		[[nodiscard]]
-		friend constexpr auto operator &&
-		(
-			TLhs&& lhs,
-			const conjunction_operator& rhs
-		)
-		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, const TDerived&>)
-			requires (!requires { lhs.operator&&(rhs); })
-		{
-			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
-		}
-	};
-
-	/**
-	 * \brief Helper type which enables disjunctive composing of two functional objects via operator ||.
-	 * \tparam TDerived The most derived class type.
-	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
-	 */
-	template <class TDerived, template <class> class TClosureBase>
-		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
-	struct disjunction_operator
-	{
-	private:
-		using composer_t = detail::composer<TClosureBase, detail::binary_disjunction_fn>;
-
-	public:
-		/**
-		 * \brief Composes this and the other functional object as disjunction.
-		 * \tparam TOther The type of the other functional object.
-		 * \param other The right-hand-side functional object.
-		 * \return The disjunctive composition of this and other as new functional object.
-		 */
-		template <class TOther>
-		[[nodiscard]]
-		constexpr auto operator ||
-		(
-			TOther&& other
-		) && noexcept(detail::is_nothrow_composable_v<composer_t, TDerived&&, TOther>)
-		{
-			return composer_t::compose(static_cast<TDerived&&>(*this), std::forward<TOther>(other));
-		}
-
-		/**
-		 * \copydoc operator||()
-		 */
-		template <class TOther>
-		[[nodiscard]]
-		constexpr auto operator ||
-		(
-			TOther&& other
-		) const & noexcept(detail::is_nothrow_composable_v<composer_t, const TDerived&, TOther>)
-		{
-			return composer_t::compose(static_cast<const TDerived&>(*this), std::forward<TOther>(other));
-		}
-
-		/**
-		 * \brief Composes both functional objects as disjunction.
-		 * \tparam TLhs The left-hand-side functional type.
-		 * \param lhs The left-hand-side functional object.
-		 * \param rhs The right-hand-side functional object.
-		 * \return The disjunctive composition of both functional objects as new functional object.
-		 */
-		template <class TLhs>
-		[[nodiscard]]
-		friend constexpr auto operator ||
-		(
-			TLhs&& lhs,
-			disjunction_operator&& rhs
-		)
-		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, TDerived&&>)
-			requires (!requires { lhs.operator||(std::move(rhs)); })
-		{
-			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<TDerived&&>(rhs));
-		}
-
-		/**
-		 * \copydoc operator||(TLhs&&, disjunction_operator&&)
-		 */
-		template <class TLhs>
-		[[nodiscard]]
-		friend constexpr auto operator ||
-		(
-			TLhs&& lhs,
-			const disjunction_operator& rhs
-		)
-		noexcept(detail::is_nothrow_composable_v<composer_t, TLhs, const TDerived&>)
-			requires (!requires { lhs.operator||(rhs); })
-		{
-			return composer_t::compose(std::forward<TLhs>(lhs), static_cast<const TDerived&>(rhs));
-		}
-	};
-
-	/**
-	 * \brief Helper type which enables negation on functionals via operator !.
-	 * \tparam TDerived The most derived class type.
-	 * \tparam TClosureBase The base closure type (with one template argument left to be specified).
-	 */
-	template <class TDerived, template <class> class TClosureBase>
-		requires std::is_class_v<TDerived> && std::same_as<TDerived, std::remove_cvref_t<TDerived>>
-	struct negation_operator
-	{
-	private:
-		template <class TFunc>
-		using negated_fn = std::remove_cvref_t<decltype(std::not_fn(std::declval<TFunc>()))>;
-
-	public:
-		/**
-		 * \brief Negates this functional object.
-		 * \return The negation of this functional, as a new functional object.
-		 */
-		[[nodiscard]]
-		constexpr auto operator !() && noexcept(
-			std::is_nothrow_constructible_v<TClosureBase<negated_fn<TDerived&&>>, negated_fn<TDerived&&>>
-		)
-		{
-			return TClosureBase<negated_fn<TDerived&&>>{ std::not_fn(static_cast<TDerived&&>(*this)) };
-		}
-
-		/**
-		 * \copydoc operator!()
-		 */
-		[[nodiscard]]
-		constexpr auto operator !() const & noexcept(
-			std::is_nothrow_constructible_v<TClosureBase<negated_fn<const TDerived&>>, negated_fn<const TDerived&>>
-		)
-		{
-			return TClosureBase<negated_fn<const TDerived&>>{ std::not_fn(static_cast<const TDerived&>(*this)) };
-		}
-	};
-
-	/**
-	 * \brief Helper type which accepts a functional type and enables pipe, conjunctive and disjunctive chaining.
+	 * \brief Adapter type for predicates, which accepts a functional type and enables pipe, conjunctive and disjunctive chaining,
+	 * equal, inequality and equivalence comparison, and front and back binding.
 	 * \tparam TFunc The functional type.
 	 */
 	template <class TFunc>
 		requires std::same_as<TFunc, std::remove_cvref_t<TFunc>>
-	class predicate_fn
+	class predicate_fn final
 		: public closure_base_fn<TFunc>,
-		public pipe_operator<predicate_fn<TFunc>, predicate_fn>,
-		public conjunction_operator<predicate_fn<TFunc>, predicate_fn>,
-		public disjunction_operator<predicate_fn<TFunc>, predicate_fn>,
-		public negation_operator<predicate_fn<TFunc>, predicate_fn>,
-		public bind_front_operator<predicate_fn<TFunc>, predicate_fn>,
-		public bind_back_operator<predicate_fn<TFunc>, predicate_fn>
+		public enable_operation<predicate_fn,
+								operators::pipe,
+								operators::bind_front,
+								operators::bind_back,
+								operators::disjunction,
+								operators::conjunction,
+								operators::equal,
+								operators::not_equal,
+								operators::equivalent,
+								operators::negate
+		>
 	{
 		using closure_t = closure_base_fn<TFunc>;
 	public:
-		using closure_t::closure_t;
+		//using closure_t::closure_t;
+
+		/**
+		 * \brief Explicitly created forwarding constructor.
+		 * \tparam TArgs Argument types.
+		 * \param args Arguments, forwarded to the base class constructor.
+		 * \note This is only here, to keep clang <= 11 happy, when creating constexpr functional objects.
+		 */
+		template <class... TArgs>
+			requires std::constructible_from<closure_t, TArgs...>
+		[[nodiscard]]
+		constexpr
+		/**\cond conditional-explicit*/
+		explicit(detail::force_explicit_constructor_v<closure_t, TArgs...>)
+		/**\endcond*/
+		predicate_fn
+		(
+			TArgs&&... args
+		)
+		noexcept(std::is_nothrow_constructible_v<closure_t, TArgs...>)
+			: closure_t{ std::forward<TArgs>(args)... }
+		{}
 	};
 
 	/**
@@ -285,12 +109,7 @@ namespace sl::functional
 	 * \tparam TFunc Type of the given functional.
 	 */
 	template <class TFunc>
-	predicate_fn(TFunc) -> predicate_fn<std::remove_cvref_t<TFunc>>;
-
-	/**
-	 * \defgroup GROUP_FUNCTIONAL_PREDICATE predicate
-	 * @{
-	 */
+	predicate_fn(TFunc) -> predicate_fn<TFunc>;
 
 	/**
 	 * \brief Functional object, which compares its two operands less.
@@ -387,8 +206,6 @@ namespace sl::functional
 				return std::forward<TLhs>(lhs) != std::forward<TRhs>(rhs);
 		}
 	};
-
-	/** @} */
 
 	/** @} */
 }
