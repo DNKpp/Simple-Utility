@@ -21,7 +21,7 @@ namespace
 }
 
 template <>
-struct traits<test_nullable>
+struct sl::nullables::traits<test_nullable>
 {
 	using value_type = int;
 	inline static constexpr test_nullable_null_t null{};
