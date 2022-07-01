@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v1.3.0</span>
+   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v2.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,23 +90,21 @@ $(document).ready(function(){initNavTree('d2/d7e/predicate_8hpp.html','../../');
   <div class="headertitle"><div class="title">predicate.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d6/deb/transform_8hpp_source.html">Simple-Utility/functional/transform.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d1/d76/functional_2base_8hpp_source.html">Simple-Utility/functional/base.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d5/db7/pipe_8hpp_source.html">Simple-Utility/functional/operators/pipe.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d9/d76/bind_8hpp_source.html">Simple-Utility/functional/operators/bind.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../df/d80/conjunction_8hpp_source.html">Simple-Utility/functional/operators/conjunction.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d4/d7c/disjunction_8hpp_source.html">Simple-Utility/functional/operators/disjunction.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d8/dea/negation_8hpp_source.html">Simple-Utility/functional/operators/negation.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../dc/d0a/equal_8hpp_source.html">Simple-Utility/functional/operators/equal.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d7/dd0/equivalent_8hpp_source.html">Simple-Utility/functional/operators/equivalent.hpp</a>&quot;</code><br />
 </div>
 <p><a href="../../d2/d7e/predicate_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d42/structsl_1_1functional_1_1conjunction__operator.html">sl::functional::conjunction_operator&lt; TDerived, TClosureBase &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which enables conjunctive composing of two functional objects via operator &amp;&amp;.  <a href="../../db/d42/structsl_1_1functional_1_1conjunction__operator.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/db7/structsl_1_1functional_1_1disjunction__operator.html">sl::functional::disjunction_operator&lt; TDerived, TClosureBase &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which enables disjunctive composing of two functional objects via operator ||.  <a href="../../d5/db7/structsl_1_1functional_1_1disjunction__operator.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da5/structsl_1_1functional_1_1negation__operator.html">sl::functional::negation_operator&lt; TDerived, TClosureBase &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which enables negation on functionals via operator !.  <a href="../../dc/da5/structsl_1_1functional_1_1negation__operator.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d86/classsl_1_1functional_1_1predicate__fn.html">sl::functional::predicate_fn&lt; TFunc &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which accepts a functional type and enables pipe, conjunctive and disjunctive chaining.  <a href="../../df/d86/classsl_1_1functional_1_1predicate__fn.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adapter type for predicates, which accepts a functional type and enables pipe, conjunctive and disjunctive chaining, equal, inequality and equivalence comparison, and front and back binding.  <a href="../../df/d86/classsl_1_1functional_1_1predicate__fn.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -118,10 +116,10 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gad80174982ec9de5b965f774c44b4113f"><td class="memTemplParams" colspan="2">template&lt;class TFunc &gt; </td></tr>
-<tr class="memitem:gad80174982ec9de5b965f774c44b4113f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#gad80174982ec9de5b965f774c44b4113f">sl::functional::predicate_fn</a> (TFunc) -&gt; predicate_fn&lt; std::remove_cvref_t&lt; TFunc &gt; &gt;</td></tr>
-<tr class="memdesc:gad80174982ec9de5b965f774c44b4113f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deduction guide.  <a href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#gad80174982ec9de5b965f774c44b4113f">More...</a><br /></td></tr>
-<tr class="separator:gad80174982ec9de5b965f774c44b4113f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac429255e9fa1928f52a9dc0d401b603a"><td class="memTemplParams" colspan="2">template&lt;class TFunc &gt; </td></tr>
+<tr class="memitem:gac429255e9fa1928f52a9dc0d401b603a"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html#gac429255e9fa1928f52a9dc0d401b603a">sl::functional::predicate_fn</a> (TFunc) -&gt; predicate_fn&lt; TFunc &gt;</td></tr>
+<tr class="memdesc:gac429255e9fa1928f52a9dc0d401b603a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deduction guide.  <a href="../../dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html#gac429255e9fa1928f52a9dc0d401b603a">More...</a><br /></td></tr>
+<tr class="separator:gac429255e9fa1928f52a9dc0d401b603a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>

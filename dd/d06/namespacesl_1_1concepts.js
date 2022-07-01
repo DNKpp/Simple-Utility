@@ -78,7 +78,10 @@ var namespacesl_1_1concepts =
     [ "initializes", "d1/ded/conceptsl_1_1concepts_1_1initializes.html", null ],
     [ "assignable_to", "dd/d00/conceptsl_1_1concepts_1_1assignable__to.html", null ],
     [ "weakly_equality_comparable_with", "d3/da6/conceptsl_1_1concepts_1_1weakly__equality__comparable__with.html", null ],
+    [ "nothrow_weakly_equality_comparable_with", "d2/d84/conceptsl_1_1concepts_1_1nothrow__weakly__equality__comparable__with.html", null ],
     [ "unique_types", "d8/d76/conceptsl_1_1concepts_1_1unique__types.html", null ],
+    [ "apply_invocable", "d2/d91/conceptsl_1_1concepts_1_1apply__invocable.html", null ],
+    [ "nothrow_apply_invocable", "d1/df2/conceptsl_1_1concepts_1_1nothrow__apply__invocable.html", null ],
     [ "are_types_unique_v", "dc/d1b/group___g_r_o_u_p___u_t_i_l_i_t_y___c_o_n_c_e_p_t_s.html#gacf72f6719ed250347970c242e05d6fe4", null ],
     [ "are_types_unique_v< T >", "dc/d1b/group___g_r_o_u_p___u_t_i_l_i_t_y___c_o_n_c_e_p_t_s.html#ga4669d20e55241bea0b98bc63ef83cb5d", null ]
 ];

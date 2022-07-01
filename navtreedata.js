@@ -26,14 +26,15 @@ var NAVTREE =
 [
   [ "Simple-Utility", "index.html", [
     [ "Simple-Utility C++20 header-only library", "index.html", [
-      [ "Author", "index.html#autotoc_md7", null ],
-      [ "License", "index.html#autotoc_md8", null ],
-      [ "Description", "index.html#autotoc_md9", [
-        [ "nullables & unique_handle", "index.html#autotoc_md10", null ]
+      [ "Author", "index.html#autotoc_md9", null ],
+      [ "License", "index.html#autotoc_md10", null ],
+      [ "Description", "index.html#autotoc_md11", [
+        [ "functional", "index.html#autotoc_md12", null ],
+        [ "nullables & unique_handle", "index.html#autotoc_md13", null ]
       ] ],
-      [ "Installation with CMake", "index.html#autotoc_md11", [
-        [ "FetchContent", "index.html#autotoc_md12", null ],
-        [ "CPM", "index.html#autotoc_md13", null ]
+      [ "Installation with CMake", "index.html#autotoc_md14", [
+        [ "FetchContent", "index.html#autotoc_md15", null ],
+        [ "CPM", "index.html#autotoc_md16", null ]
       ] ]
     ] ],
     [ "Modules", "modules.html", "modules" ],
@@ -43,7 +44,8 @@ var NAVTREE =
         [ "All", "namespacemembers.html", null ],
         [ "Functions", "namespacemembers_func.html", null ],
         [ "Variables", "namespacemembers_vars.html", null ],
-        [ "Typedefs", "namespacemembers_type.html", null ]
+        [ "Typedefs", "namespacemembers_type.html", null ],
+        [ "Enumerations", "namespacemembers_enum.html", null ]
       ] ]
     ] ],
     [ "Concepts", "concepts.html", "concepts" ],
@@ -55,8 +57,7 @@ var NAVTREE =
         [ "All", "functions.html", null ],
         [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", null ],
-        [ "Typedefs", "functions_type.html", null ],
-        [ "Related Functions", "functions_rela.html", null ]
+        [ "Typedefs", "functions_type.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
@@ -72,7 +73,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"dd/d2b/namespacesl_1_1functional_1_1tuple_1_1detail.html"
+"d9/d4a/conceptsl_1_1concepts_1_1fully__logical__with.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

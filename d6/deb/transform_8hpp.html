@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v1.3.0</span>
+   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v2.0.0</span>
    </div>
   </td>
  </tr>
@@ -90,24 +90,17 @@ $(document).ready(function(){initNavTree('d6/deb/transform_8hpp.html','../../');
   <div class="headertitle"><div class="title">transform.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d2/dc8/bind__back_8hpp_source.html">Simple-Utility/bind_back.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../dd/d3c/base_8hpp_source.html">Simple-Utility/functional/base.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d4/d1c/unified__base_8hpp_source.html">Simple-Utility/unified_base.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d1/d76/functional_2base_8hpp_source.html">Simple-Utility/functional/base.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d5/db7/pipe_8hpp_source.html">Simple-Utility/functional/operators/pipe.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d9/d76/bind_8hpp_source.html">Simple-Utility/functional/operators/bind.hpp</a>&quot;</code><br />
 </div>
 <p><a href="../../d6/deb/transform_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d1b/structsl_1_1functional_1_1pipe__operator.html">sl::functional::pipe_operator&lt; TDerived, TClosureBase &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which enables pipe composing of two functional objects via operator |.  <a href="../../df/d1b/structsl_1_1functional_1_1pipe__operator.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/dc6/structsl_1_1functional_1_1bind__front__operator.html">sl::functional::bind_front_operator&lt; TDerived, TClosureBase &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which enables unary front currying on functionals via operator &lt;&lt;.  <a href="../../de/dc6/structsl_1_1functional_1_1bind__front__operator.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dff/structsl_1_1functional_1_1bind__back__operator.html">sl::functional::bind_back_operator&lt; TDerived, TClosureBase &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which enables unary back currying on functionals via operator &gt;&gt;.  <a href="../../d8/dff/structsl_1_1functional_1_1bind__back__operator.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">sl::functional::transform_fn&lt; TFunc &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which accepts a functional type and enables pipe chaining.  <a href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adapter type which accepts a functional type and enables pipe chaining and currying.  <a href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
@@ -119,15 +112,15 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gafec5c38b9845d0717b3edb72f9497913"><td class="memTemplParams" colspan="2">template&lt;class TFunc &gt; </td></tr>
-<tr class="memitem:gafec5c38b9845d0717b3edb72f9497913"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#gafec5c38b9845d0717b3edb72f9497913">sl::functional::transform_fn</a> (TFunc) -&gt; transform_fn&lt; std::remove_cvref_t&lt; TFunc &gt; &gt;</td></tr>
-<tr class="memdesc:gafec5c38b9845d0717b3edb72f9497913"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deduction guide.  <a href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#gafec5c38b9845d0717b3edb72f9497913">More...</a><br /></td></tr>
-<tr class="separator:gafec5c38b9845d0717b3edb72f9497913"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga17ee867e55b62fe1afea2654e8f93d8b"><td class="memTemplParams" colspan="2">template&lt;class TFunc &gt; </td></tr>
+<tr class="memitem:ga17ee867e55b62fe1afea2654e8f93d8b"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#ga17ee867e55b62fe1afea2654e8f93d8b">sl::functional::transform_fn</a> (TFunc) -&gt; transform_fn&lt; TFunc &gt;</td></tr>
+<tr class="memdesc:ga17ee867e55b62fe1afea2654e8f93d8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deduction guide.  <a href="../../df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#ga17ee867e55b62fe1afea2654e8f93d8b">More...</a><br /></td></tr>
+<tr class="separator:ga17ee867e55b62fe1afea2654e8f93d8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:ga555e31695184686e3e6150b2832e18b8"><td class="memTemplParams" colspan="2">template&lt;class TTarget &gt; </td></tr>
-<tr class="memitem:ga555e31695184686e3e6150b2832e18b8"><td class="memTemplItemLeft" align="right" valign="top">constexpr transform_fn&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#ga555e31695184686e3e6150b2832e18b8">sl::functional::as</a></td></tr>
+<tr class="memitem:ga555e31695184686e3e6150b2832e18b8"><td class="memTemplItemLeft" align="right" valign="top">constexpr transform_fn&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#ga555e31695184686e3e6150b2832e18b8">sl::functional::as</a> { detail::as_fn&lt;TTarget&gt;{} }</td></tr>
 <tr class="memdesc:ga555e31695184686e3e6150b2832e18b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional object which static_cast the given argument to the target type on invocation.  <a href="../../df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#ga555e31695184686e3e6150b2832e18b8">More...</a><br /></td></tr>
 <tr class="separator:ga555e31695184686e3e6150b2832e18b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

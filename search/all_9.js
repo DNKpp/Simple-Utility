@@ -1,19 +1,6 @@
 var searchData=
 [
-  ['negation_5foperator_0',['negation_operator',['../dc/da5/structsl_1_1functional_1_1negation__operator.html',1,'sl::functional']]],
-  ['negation_5foperator_3c_20predicate_5ffn_3c_20tfunc_20_3e_2c_20predicate_5ffn_20_3e_1',['negation_operator&lt; predicate_fn&lt; TFunc &gt;, predicate_fn &gt;',['../dc/da5/structsl_1_1functional_1_1negation__operator.html',1,'sl::functional']]],
-  ['not_5fequal_2',['not_equal',['../dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html#ga0c719ea579a930f37c5c933c523ca5d9',1,'sl::functional']]],
-  ['null_3',['null',['../d9/d48/structsl_1_1nullables_1_1nullable__traits_3_01unique__handle_3_01_t_args_8_8_8_01_4_01_4.html#ae6c9dbe14f01eccff85b2c401f0c35f0',1,'sl::nullables::nullable_traits&lt; unique_handle&lt; TArgs... &gt; &gt;::null()'],['../de/dc1/structsl_1_1nullables_1_1nullable__traits_3_01_t_01_4.html#a5b6b10e076400239797de7a3ec8aa8c2',1,'sl::nullables::nullable_traits&lt; T &gt;::null()'],['../da/d78/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html#a8d359580de7d8492cd989411ab736a09',1,'sl::nullables::nullable_traits&lt; std::shared_ptr&lt; TArgs... &gt; &gt;::null()'],['../da/d35/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html#a8e344d6db714a03609d42de869af6bc5',1,'sl::nullables::nullable_traits&lt; std::unique_ptr&lt; TArgs... &gt; &gt;::null()'],['../db/dcf/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html#a6be04c49f6c4b34ebae5f9f65eccc7e2',1,'sl::nullables::nullable_traits&lt; std::optional&lt; TArgs... &gt; &gt;::null()']]],
-  ['nullable_5fnull_5fv_4',['nullable_null_v',['../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga638fc40a4d6950b7180c820178920d0b',1,'sl::nullables']]],
-  ['nullable_5ftraits_5',['nullable_traits',['../db/dfb/structsl_1_1nullables_1_1nullable__traits.html',1,'sl::nullables']]],
-  ['nullable_5ftraits_3c_20std_3a_3aoptional_3c_20targs_2e_2e_2e_20_3e_20_3e_6',['nullable_traits&lt; std::optional&lt; TArgs... &gt; &gt;',['../db/dcf/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html',1,'sl::nullables']]],
-  ['nullable_5ftraits_3c_20std_3a_3ashared_5fptr_3c_20targs_2e_2e_2e_20_3e_20_3e_7',['nullable_traits&lt; std::shared_ptr&lt; TArgs... &gt; &gt;',['../da/d78/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html',1,'sl::nullables']]],
-  ['nullable_5ftraits_3c_20std_3a_3aunique_5fptr_3c_20targs_2e_2e_2e_20_3e_20_3e_8',['nullable_traits&lt; std::unique_ptr&lt; TArgs... &gt; &gt;',['../da/d35/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html',1,'sl::nullables']]],
-  ['nullable_5ftraits_3c_20t_20_3e_9',['nullable_traits&lt; T &gt;',['../de/dc1/structsl_1_1nullables_1_1nullable__traits_3_01_t_01_4.html',1,'sl::nullables']]],
-  ['nullable_5ftraits_3c_20unique_5fhandle_3c_20targs_2e_2e_2e_20_3e_20_3e_10',['nullable_traits&lt; unique_handle&lt; TArgs... &gt; &gt;',['../d9/d48/structsl_1_1nullables_1_1nullable__traits_3_01unique__handle_3_01_t_args_8_8_8_01_4_01_4.html',1,'sl::nullables']]],
-  ['nullable_5fvalue_5ft_11',['nullable_value_t',['../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga30b2386500938406f95e13450ffa7c7f',1,'sl::nullables']]],
-  ['nullables_12',['nullables',['../d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html',1,'']]],
-  ['nullables_2ehpp_13',['nullables.hpp',['../d3/ddc/nullables_8hpp.html',1,'']]],
-  ['nullhandle_14',['nullhandle',['../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga3351a5e5ccde1cbc9cfd3d4a819e5995',1,'sl']]],
-  ['nullhandle_5ft_15',['nullhandle_t',['../d9/db6/structsl_1_1nullhandle__t.html',1,'sl']]]
+  ['less_0',['less',['../dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html#gabbcff535b4a7410ec97f28ba16562dbb',1,'sl::functional']]],
+  ['less_5fequal_1',['less_equal',['../dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html#gaaad79e024efdc827b7103784364ff0be',1,'sl::functional']]],
+  ['logical_20arithmetic_20operators_2',['logical arithmetic operators',['../d7/d37/group___g_r_o_u_p___l_o_g_i_c_a_l___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html',1,'']]]
 ];

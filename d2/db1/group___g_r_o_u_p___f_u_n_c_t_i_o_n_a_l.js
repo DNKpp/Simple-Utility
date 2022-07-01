@@ -1,74 +1,48 @@
 var group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l =
 [
+    [ "operators", "d1/d53/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___o_p_e_r_a_t_o_r_s.html", "d1/d53/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___o_p_e_r_a_t_o_r_s" ],
     [ "predicate", "dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html", "dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e" ],
     [ "transform", "df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html", "df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m" ],
+    [ "tuple functional", "dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html", "dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e" ],
     [ "sl::functional::closure_base_fn< TFunc >", "d9/de4/classsl_1_1functional_1_1closure__base__fn.html", [
       [ "function_type", "d9/de4/classsl_1_1functional_1_1closure__base__fn.html#a93517e1b727ec2e05ae0b44511c570a8", null ],
       [ "closure_base_fn", "d9/de4/classsl_1_1functional_1_1closure__base__fn.html#a2c6e5422cfc6b215943f2aed286183a5", null ],
-      [ "operator()", "d9/de4/classsl_1_1functional_1_1closure__base__fn.html#ae2976c7dd73dfc024e3cdc5f60752828", null ],
-      [ "operator()", "d9/de4/classsl_1_1functional_1_1closure__base__fn.html#aa36057e0516cbd5dc1885e60936a9557", null ],
-      [ "operator()", "d9/de4/classsl_1_1functional_1_1closure__base__fn.html#a9664476137d54437176f95666ca246c8", null ]
+      [ "operator()", "d9/de4/classsl_1_1functional_1_1closure__base__fn.html#af09016a33915d7d54ae055209302650a", null ],
+      [ "operator()", "d9/de4/classsl_1_1functional_1_1closure__base__fn.html#a2d8332368257e3722cd16bc9fba1bd3f", null ],
+      [ "operator()", "d9/de4/classsl_1_1functional_1_1closure__base__fn.html#ad0658b8fbb2707725ad89412863c19e4", null ],
+      [ "operator*", "d9/de4/classsl_1_1functional_1_1closure__base__fn.html#a4e6a64d832137c8c8b3147c9cc9d9344", null ],
+      [ "operator*", "d9/de4/classsl_1_1functional_1_1closure__base__fn.html#a21993d4fb42f6d0d6f241bc99935e4c4", null ]
     ] ],
-    [ "sl::functional::conjunction_operator< TDerived, TClosureBase >", "db/d42/structsl_1_1functional_1_1conjunction__operator.html", [
-      [ "operator&&", "db/d42/structsl_1_1functional_1_1conjunction__operator.html#a9782e2de2e5b060fd9150b0f80eacf0d", null ],
-      [ "operator&&", "db/d42/structsl_1_1functional_1_1conjunction__operator.html#a96cbdb436a0ceadce8fe82b296864044", null ],
-      [ "operator&&", "db/d42/structsl_1_1functional_1_1conjunction__operator.html#a95f53f7fe2c9a1030144dd994a3ed997", null ],
-      [ "operator&&", "db/d42/structsl_1_1functional_1_1conjunction__operator.html#ab34e21853d55341e756a80a23676bef0", null ]
+    [ "sl::functional::composition_fn< TOperation, TFunctions >", "d9/d09/classsl_1_1functional_1_1composition__fn.html", [
+      [ "function_storage_t", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga3dd4cd323a9e290ee4c781c84e44b5f9", null ],
+      [ "operation_t", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga2f6f3e0dc472f0ac24160939731d84ea", null ],
+      [ "composition_fn", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga8fda180de7af581034aa963d3d261205", null ],
+      [ "operator()", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga009da8b327da0a484c64677de5423363", null ],
+      [ "operator()", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga1c0bce87c35413d84201d11787405b87", null ],
+      [ "operator()", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga40fb6b4418951b49ec2216a1e2565aec", null ],
+      [ "operator*", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga63a13a43133b9aafa24678d283b25800", null ],
+      [ "operator*", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga5315afa8605ee314352cad719cc155a8", null ]
     ] ],
-    [ "sl::functional::disjunction_operator< TDerived, TClosureBase >", "d5/db7/structsl_1_1functional_1_1disjunction__operator.html", [
-      [ "operator||", "d5/db7/structsl_1_1functional_1_1disjunction__operator.html#a76d39471f6ab4b7018875d1a987634b3", null ],
-      [ "operator||", "d5/db7/structsl_1_1functional_1_1disjunction__operator.html#af602ae74c410ee3c00ac7fb539609c66", null ],
-      [ "operator||", "d5/db7/structsl_1_1functional_1_1disjunction__operator.html#a4bdb3e271d1b66db8cfb7250deff4e2d", null ],
-      [ "operator||", "d5/db7/structsl_1_1functional_1_1disjunction__operator.html#ae36cf9a8d320c877c966526f4af25dac", null ]
+    [ "sl::functional::value_fn< T >", "da/d72/classsl_1_1functional_1_1value__fn.html", [
+      [ "reference_type", "da/d72/classsl_1_1functional_1_1value__fn.html#ab116e6548f183f2b38d13431a8ba1e84", null ],
+      [ "value_type", "da/d72/classsl_1_1functional_1_1value__fn.html#acab6faecca15808b679a29bf5bf86f27", null ],
+      [ "value_fn", "da/d72/classsl_1_1functional_1_1value__fn.html#a357e008fd82f4a3087146ff3abd8951d", null ],
+      [ "operator()", "da/d72/classsl_1_1functional_1_1value__fn.html#a4693b402801f425c7ae439633b6e492e", null ],
+      [ "operator()", "da/d72/classsl_1_1functional_1_1value__fn.html#a959af9f1c96e0344dd850afbb2175393", null ]
     ] ],
-    [ "sl::functional::negation_operator< TDerived, TClosureBase >", "dc/da5/structsl_1_1functional_1_1negation__operator.html", [
-      [ "operator!", "dc/da5/structsl_1_1functional_1_1negation__operator.html#a04b23353423aed8d33862da72c906031", null ],
-      [ "operator!", "dc/da5/structsl_1_1functional_1_1negation__operator.html#a7c6bf1702083f735f2dc5b732044bc5b", null ]
+    [ "sl::functional::enable_operation< TClosureTemplate, TOperationTags >", "d0/d50/structsl_1_1functional_1_1enable__operation.html", [
+      [ "closure_t", "d0/d50/structsl_1_1functional_1_1enable__operation.html#a5959831fe5590fbd100f6bb4fb8fe54b", null ]
     ] ],
-    [ "sl::functional::predicate_fn< TFunc >", "df/d86/classsl_1_1functional_1_1predicate__fn.html", [
-      [ "function_type", "df/d86/classsl_1_1functional_1_1predicate__fn.html#a93517e1b727ec2e05ae0b44511c570a8", null ],
-      [ "operator!", "df/d86/classsl_1_1functional_1_1predicate__fn.html#a04b23353423aed8d33862da72c906031", null ],
-      [ "operator!", "df/d86/classsl_1_1functional_1_1predicate__fn.html#a7c6bf1702083f735f2dc5b732044bc5b", null ],
-      [ "operator&&", "df/d86/classsl_1_1functional_1_1predicate__fn.html#a9782e2de2e5b060fd9150b0f80eacf0d", null ],
-      [ "operator&&", "df/d86/classsl_1_1functional_1_1predicate__fn.html#a96cbdb436a0ceadce8fe82b296864044", null ],
-      [ "operator()", "df/d86/classsl_1_1functional_1_1predicate__fn.html#ae2976c7dd73dfc024e3cdc5f60752828", null ],
-      [ "operator()", "df/d86/classsl_1_1functional_1_1predicate__fn.html#aa36057e0516cbd5dc1885e60936a9557", null ],
-      [ "operator()", "df/d86/classsl_1_1functional_1_1predicate__fn.html#a9664476137d54437176f95666ca246c8", null ],
-      [ "operator<<", "df/d86/classsl_1_1functional_1_1predicate__fn.html#a65bf4a6734d64f0756e5da8497b18fbe", null ],
-      [ "operator<<", "df/d86/classsl_1_1functional_1_1predicate__fn.html#a1d90eed422aa8dfab374e140eec030dd", null ],
-      [ "operator>>", "df/d86/classsl_1_1functional_1_1predicate__fn.html#aad8ef3971d491dcfb15daff5d5717a14", null ],
-      [ "operator>>", "df/d86/classsl_1_1functional_1_1predicate__fn.html#ad40cfff89c372849951fe4cc5c4d49bb", null ],
-      [ "operator|", "df/d86/classsl_1_1functional_1_1predicate__fn.html#a785dd3627a2bd5b9190c465907d94606", null ],
-      [ "operator|", "df/d86/classsl_1_1functional_1_1predicate__fn.html#a5015d12ebc5172522b2791adad0c0d31", null ],
-      [ "operator||", "df/d86/classsl_1_1functional_1_1predicate__fn.html#a76d39471f6ab4b7018875d1a987634b3", null ],
-      [ "operator||", "df/d86/classsl_1_1functional_1_1predicate__fn.html#af602ae74c410ee3c00ac7fb539609c66", null ]
-    ] ],
-    [ "sl::functional::pipe_operator< TDerived, TClosureBase >", "df/d1b/structsl_1_1functional_1_1pipe__operator.html", [
-      [ "operator|", "df/d1b/structsl_1_1functional_1_1pipe__operator.html#a785dd3627a2bd5b9190c465907d94606", null ],
-      [ "operator|", "df/d1b/structsl_1_1functional_1_1pipe__operator.html#a5015d12ebc5172522b2791adad0c0d31", null ],
-      [ "operator|", "df/d1b/structsl_1_1functional_1_1pipe__operator.html#a9b37c427fd8f1475e69cef9c835ad243", null ],
-      [ "operator|", "df/d1b/structsl_1_1functional_1_1pipe__operator.html#aef93825e3537e222d5ae62b8af94a259", null ]
-    ] ],
-    [ "sl::functional::bind_front_operator< TDerived, TClosureBase >", "de/dc6/structsl_1_1functional_1_1bind__front__operator.html", [
-      [ "operator<<", "de/dc6/structsl_1_1functional_1_1bind__front__operator.html#a65bf4a6734d64f0756e5da8497b18fbe", null ],
-      [ "operator<<", "de/dc6/structsl_1_1functional_1_1bind__front__operator.html#a1d90eed422aa8dfab374e140eec030dd", null ]
-    ] ],
-    [ "sl::functional::bind_back_operator< TDerived, TClosureBase >", "d8/dff/structsl_1_1functional_1_1bind__back__operator.html", [
-      [ "operator>>", "d8/dff/structsl_1_1functional_1_1bind__back__operator.html#aad8ef3971d491dcfb15daff5d5717a14", null ],
-      [ "operator>>", "d8/dff/structsl_1_1functional_1_1bind__back__operator.html#ad40cfff89c372849951fe4cc5c4d49bb", null ]
-    ] ],
-    [ "sl::functional::transform_fn< TFunc >", "da/dbe/classsl_1_1functional_1_1transform__fn.html", [
-      [ "function_type", "da/dbe/classsl_1_1functional_1_1transform__fn.html#a93517e1b727ec2e05ae0b44511c570a8", null ],
-      [ "operator()", "da/dbe/classsl_1_1functional_1_1transform__fn.html#ae2976c7dd73dfc024e3cdc5f60752828", null ],
-      [ "operator()", "da/dbe/classsl_1_1functional_1_1transform__fn.html#aa36057e0516cbd5dc1885e60936a9557", null ],
-      [ "operator()", "da/dbe/classsl_1_1functional_1_1transform__fn.html#a9664476137d54437176f95666ca246c8", null ],
-      [ "operator<<", "da/dbe/classsl_1_1functional_1_1transform__fn.html#a65bf4a6734d64f0756e5da8497b18fbe", null ],
-      [ "operator<<", "da/dbe/classsl_1_1functional_1_1transform__fn.html#a1d90eed422aa8dfab374e140eec030dd", null ],
-      [ "operator>>", "da/dbe/classsl_1_1functional_1_1transform__fn.html#aad8ef3971d491dcfb15daff5d5717a14", null ],
-      [ "operator>>", "da/dbe/classsl_1_1functional_1_1transform__fn.html#ad40cfff89c372849951fe4cc5c4d49bb", null ],
-      [ "operator|", "da/dbe/classsl_1_1functional_1_1transform__fn.html#a785dd3627a2bd5b9190c465907d94606", null ],
-      [ "operator|", "da/dbe/classsl_1_1functional_1_1transform__fn.html#a5015d12ebc5172522b2791adad0c0d31", null ]
-    ] ],
-    [ "sl::functional::predicate_fn", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#gad80174982ec9de5b965f774c44b4113f", null ],
-    [ "sl::functional::transform_fn", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#gafec5c38b9845d0717b3edb72f9497913", null ]
+    [ "sl::functional::closure_function_t", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga219bf23f133d37fe64c6b69ef399bf53", null ],
+    [ "sl::functional::composition_fn::function_storage_t", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga3dd4cd323a9e290ee4c781c84e44b5f9", null ],
+    [ "sl::functional::composition_fn::operation_t", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga2f6f3e0dc472f0ac24160939731d84ea", null ],
+    [ "sl::functional::composition_fn::composition_fn", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga8fda180de7af581034aa963d3d261205", null ],
+    [ "sl::functional::composition_fn", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#gac7145d92a7c811714945576c96f972b3", null ],
+    [ "sl::functional::composition_fn::operator()", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga009da8b327da0a484c64677de5423363", null ],
+    [ "sl::functional::composition_fn::operator()", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga1c0bce87c35413d84201d11787405b87", null ],
+    [ "sl::functional::composition_fn::operator()", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga40fb6b4418951b49ec2216a1e2565aec", null ],
+    [ "sl::functional::composition_fn::operator*", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga63a13a43133b9aafa24678d283b25800", null ],
+    [ "sl::functional::composition_fn::operator*", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga5315afa8605ee314352cad719cc155a8", null ],
+    [ "sl::functional::value_fn", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga9a5f398f6bc226fda5d50e52a53130fb", null ],
+    [ "sl::functional::is_nothrow_composable_v", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga6ecccc3d30a49c358c1e43ee4a77f5a2", null ]
 ];

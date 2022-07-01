@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v1.3.0</span>
+   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v2.0.0</span>
    </div>
   </td>
  </tr>
@@ -106,7 +106,7 @@ $(document).ready(function(){initNavTree('d2/dc8/bind__back_8hpp_source.html','.
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">template</span> &lt;<span class="keyword">class </span>TFunc, <span class="keyword">class </span>TBoundArgsTuple, <span class="keyword">class</span>... TCallArgs&gt;</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">decltype</span>(<span class="keyword">auto</span>) bind_back_caller(TFunc&amp;&amp; func, TBoundArgsTuple&amp;&amp; boundArgsTuple, TCallArgs&amp;&amp;... callArgs)</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    {</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="keywordflow">return</span> std::apply(</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="keywordflow">return</span> <a class="code hl_variable" href="../../dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#ga175e806e80ae7deb22230eaa0db2f90c">std::apply</a>(</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>            [&amp;]&lt;<span class="keyword">class</span>... TArgs&gt;(TArgs&amp;&amp;... boundArgs) -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>)</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>            {</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>                <span class="keywordflow">return</span> std::invoke(</div>
@@ -176,6 +176,7 @@ $(document).ready(function(){initNavTree('d2/dc8/bind__back_8hpp_source.html','.
 <div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>}</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="agroup___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e_html_ga175e806e80ae7deb22230eaa0db2f90c"><div class="ttname"><a href="../../dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#ga175e806e80ae7deb22230eaa0db2f90c">sl::functional::tuple::apply</a></div><div class="ttdeci">constexpr transform_fn apply</div><div class="ttdoc">Forwards and applies the tuple arguments to the provided function.</div><div class="ttdef"><b>Definition:</b> tuple.hpp:129</div></div>
 <div class="ttc" id="anamespacesl_html"><div class="ttname"><a href="../../dd/d2c/namespacesl.html">sl</a></div><div class="ttdef"><b>Definition:</b> bind_back.hpp:18</div></div>
 <div class="ttc" id="anamespacesl_html_a3337828e727605664b69dfeeda1a9220"><div class="ttname"><a href="../../dd/d2c/namespacesl.html#a3337828e727605664b69dfeeda1a9220">sl::bind_back</a></div><div class="ttdeci">constexpr auto bind_back</div><div class="ttdoc">Helper function, which generates a forwarding call wrapper for the given function and curries the par...</div><div class="ttdef"><b>Definition:</b> bind_back.hpp:89</div></div>
 </div><!-- fragment --></div><!-- contents -->

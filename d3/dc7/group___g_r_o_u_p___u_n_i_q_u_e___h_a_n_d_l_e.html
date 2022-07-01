@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v1.3.0</span>
+   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v2.0.0</span>
    </div>
   </td>
  </tr>
@@ -105,6 +105,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle&lt; T, TDeleteAction &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This type models some kind of <code>std::optional</code> behaviour but resets itself on move operations.  <a href="../../da/da9/classsl_1_1unique__handle.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html">sl::nullables::traits&lt; unique_handle&lt; T, TDeleteAction &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> types.  <a href="../../d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -178,7 +181,7 @@ Variables</h2></td></tr>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// no cleanup necessary</span></div>
 <div class="line">}</div>
-<div class="ttc" id="aclasssl_1_1unique__handle_html"><div class="ttname"><a href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a></div><div class="ttdoc">This type models some kind of std::optional behaviour but resets itself on move operations.</div><div class="ttdef"><b>Definition:</b> unique_handle.hpp:164</div></div>
+<div class="ttc" id="aclasssl_1_1unique__handle_html"><div class="ttname"><a href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a></div><div class="ttdoc">This type models some kind of std::optional behaviour but resets itself on move operations.</div><div class="ttdef"><b>Definition:</b> unique_handle.hpp:165</div></div>
 </div><!-- fragment --><p >Of course, at a first glance this seems quite more verbose, but in the long term nobody has to care about that entity anymore. This is what <code>RAII</code> is about. Note that <code>unique_handles</code> also can be stored as a member, then they really begin to shine, because if one would like to bind that entity to the lifetime of an other object that would of course lead to custom move constructor, assignment operator and destructor and explicitly deleted copy. With a <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> none of this is necessary (and this is in fact the main reason why I decided to implement this).</p>
 <dl class="section note"><dt>Note</dt><dd>As using lambdas as delete action is usually fine, using capturing lambdas will fail to compile because they are non-copy-assignable. Use a old-school invokable struct as in the example instead.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a href="https://en.cppreference.com/w/cpp/utility/optional">https://en.cppreference.com/w/cpp/utility/optional</a> </dd>

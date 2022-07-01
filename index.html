@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v1.3.0</span>
+   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v2.0.0</span>
    </div>
   </td>
  </tr>
@@ -86,23 +86,42 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p ><a class="anchor" id="md__github_workspace_README"></a> <a href="https://www.codacy.com/gh/DNKpp/Simple-Utility/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DNKpp/Simple-Utility&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/ffee59527a4d43f09b5aeabbac1eaa52" alt="Codacy Badge" class="inline"/></a> <a href="https://www.codacy.com/gh/DNKpp/Simple-Utility/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DNKpp/Simple-Utility&amp;utm_campaign=Badge_Coverage"><img src="https://app.codacy.com/project/badge/Coverage/ffee59527a4d43f09b5aeabbac1eaa52" alt="Codacy Badge" class="inline"/></a> <a href="https://codecov.io/gh/DNKpp/Simple-Utility"><img src="https://codecov.io/gh/DNKpp/Simple-Utility/branch/master/graph/badge.svg?token=R5ZUSJPZ57" alt="codecov" style="pointer-events: none;" class="inline"/></a> <a href="https://simple-utility.docsforge.com/"><img src="https://img.shields.io/badge/docs-docsforge-blue" alt="Documentation" class="inline"/></a></p>
-<h1><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="autotoc_md9"></a>
 Author</h1>
 <p >Dominic Koepke <br  />
  Mail: <a href="#" onclick="location.href='mai'+'lto:'+'dnk'+'pp'+'201'+'1@'+'gma'+'il'+'.co'+'m'; return false;">DNKpp2011@gmail.com</a></p>
-<h1><a class="anchor" id="autotoc_md8"></a>
+<h1><a class="anchor" id="autotoc_md10"></a>
 License</h1>
 <p ><a href="LICENSE_1_0.txt">BSL-1.0</a> (free, open source)</p>
 <div class="fragment"><div class="line">         Copyright Dominic Koepke 2019 - 2022.</div>
 <div class="line">Distributed under the Boost Software License, Version 1.0.</div>
 <div class="line">   (See accompanying file LICENSE_1_0.txt or copy at</div>
 <div class="line">         https://www.boost.org/LICENSE_1_0.txt)</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md9"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md11"></a>
 Description</h1>
 <p >This library is merely a collection of useful utilities. It is not ment as an replacement for anything out there, it just couples things nicely into one library which doesn't relate closely to anything else but might be useful on future projects. All parts are well tested and the documentation can be found either on the gh-pages section or directly at <a href="https://simple-utility.docsforge.com/">docsforge.com</a>. If you run into any kind of bugs or have ideas for improvements, feel free to add an issue or even compile a pull-request.</p>
-<h2><a class="anchor" id="autotoc_md10"></a>
+<h2><a class="anchor" id="autotoc_md12"></a>
+functional</h2>
+<p >In the last few versions, the functional part of this library grew. This library lets you simply couple together functions, whithout the need to explicitly create a lambda or something like this. As a quick example:</p>
+<div class="fragment"><div class="line"><span class="keyword">namespace </span>fn = <a class="code hl_namespace" href="d9/da2/namespacesl_1_1functional.html">sl::functional</a>;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">constexpr</span> <a class="code hl_function" href="df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#ga17ee867e55b62fe1afea2654e8f93d8b">fn::transform_fn</a> square = [](<span class="keyword">const</span> <span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> i * i; };</div>
+<div class="line"><span class="keyword">constexpr</span> <a class="code hl_function" href="df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#ga17ee867e55b62fe1afea2654e8f93d8b">fn::transform_fn</a> sum = [](<span class="keyword">const</span> <span class="keywordtype">int</span> lhs, <span class="keyword">const</span> <span class="keywordtype">int</span> rhs) { <span class="keywordflow">return</span> lhs + rhs; };</div>
+<div class="line"> </div>
+<div class="line">std::vector&lt;int&gt; ints{ 1, 2, 3, 4 };</div>
+<div class="line">std::ranges::transform(</div>
+<div class="line">    ints,</div>
+<div class="line">    std::begin(ints),</div>
+<div class="line">    square</div>
+<div class="line">    | sum &lt;&lt; 42 <span class="comment">// this binds 42 as the first param of sum</span></div>
+<div class="line">);</div>
+<div class="ttc" id="agroup___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m_html_ga17ee867e55b62fe1afea2654e8f93d8b"><div class="ttname"><a href="df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#ga17ee867e55b62fe1afea2654e8f93d8b">sl::functional::transform_fn</a></div><div class="ttdeci">transform_fn(TFunc) -&gt; transform_fn&lt; TFunc &gt;</div><div class="ttdoc">Deduction guide.</div></div>
+<div class="ttc" id="anamespacesl_1_1functional_html"><div class="ttname"><a href="d9/da2/namespacesl_1_1functional.html">sl::functional</a></div><div class="ttdef"><b>Definition:</b> base.hpp:20</div></div>
+</div><!-- fragment --><p> Well, this calculates the square of each element, adds 42 on it and writes it back into the vector. As a side note, you may also pipe <code>raw functionals</code> (e.g. function pointers or plain lambdas) into. Either the first or the second argument must be of that special type.</p>
+<p >Additionally there also exist <code>predicate_fn</code> objects, which offer even more composition operations.</p>
+<h2><a class="anchor" id="autotoc_md13"></a>
 nullables &amp; unique_handle</h2>
-<p >The current main features are without doubt the <code><a class="el" href="d0/de0/namespacesl_1_1nullables.html">sl::nullables</a></code> namespace and the <code><a class="el" href="da/da9/classsl_1_1unique__handle.html" title="This type models some kind of std::optional behaviour but resets itself on move operations.">sl::unique_handle</a></code> type, which benefit from each other. <code><a class="el" href="da/da9/classsl_1_1unique__handle.html" title="This type models some kind of std::optional behaviour but resets itself on move operations.">sl::unique_handle</a></code> is an optional like class (in fact it wraps currently an <code>std::optional</code>) but offers only a movable interface and guarantees resetting the internal value after a move happend, and is thus semantically closer at <code>std::unique_ptr</code> but holds its value still on the stack.</p>
+<p >One of the current main features are the <code><a class="el" href="d0/de0/namespacesl_1_1nullables.html">sl::nullables</a></code> namespace and the <code><a class="el" href="da/da9/classsl_1_1unique__handle.html" title="This type models some kind of std::optional behaviour but resets itself on move operations.">sl::unique_handle</a></code> type, which benefit from each other. <code><a class="el" href="da/da9/classsl_1_1unique__handle.html" title="This type models some kind of std::optional behaviour but resets itself on move operations.">sl::unique_handle</a></code> is an optional like class (in fact it wraps currently an <code>std::optional</code>) but offers only a movable interface and guarantees resetting the internal value after a move happend, and is thus semantically closer at <code>std::unique_ptr</code> but holds its value still on the stack.</p>
 <p >The <code><a class="el" href="d0/de0/namespacesl_1_1nullables.html">sl::nullables</a></code> namespace offers four simple algorithms:</p><ul>
 <li><code>and_then</code></li>
 <li><code>or_else</code></li>
@@ -110,7 +129,7 @@ nullables &amp; unique_handle</h2>
 <li><code>fwd_value</code></li>
 </ul>
 <p >which are chainable and can be applied on objects which satisfy the <code>nullable</code> concept. What's a <code>nullable</code> you may ask? It's a type which has an explicit invalid state; e.g. <code>std::optional</code>, <code>std::unique_ptr</code> or the <code><a class="el" href="da/da9/classsl_1_1unique__handle.html" title="This type models some kind of std::optional behaviour but resets itself on move operations.">sl::unique_handle</a></code>. Feel free to have a look into the docs pages.</p>
-<h1><a class="anchor" id="autotoc_md11"></a>
+<h1><a class="anchor" id="autotoc_md14"></a>
 Installation with CMake</h1>
 <p >This library can easily be integrated into your project via CMake target_link_libraries command.</p>
 <div class="fragment"><div class="line">target_link_libraries(</div>
@@ -118,7 +137,7 @@ Installation with CMake</h1>
 <div class="line">    PRIVATE</div>
 <div class="line">    Simple-Utility::Simple-Utility</div>
 <div class="line">)</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md12"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md15"></a>
 FetchContent</h2>
 <p >It is possible fetching this library via CMakes FetchContent module.</p>
 <div class="fragment"><div class="line">include(FetchContent)</div>
@@ -126,18 +145,18 @@ FetchContent</h2>
 <div class="line">FetchContent_Declare(</div>
 <div class="line">    Simple-Utility</div>
 <div class="line">    GIT_REPOSITORY  https://github.com/DNKpp/Simple-Utility</div>
-<div class="line">    GIT_TAG     &quot;v1.0.0&quot;    # or any other tag name</div>
+<div class="line">    GIT_TAG     &quot;v2.0.0&quot;    # or any other tag name</div>
 <div class="line">)</div>
 <div class="line"> </div>
 <div class="line">FetchContent_MakeAvailable(Simple-Utility)</div>
 <div class="line"># do not forget linking via target_link_libraries as shown above</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md13"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md16"></a>
 CPM</h2>
 <p >The <a href="https://github.com/cpm-cmake/CPM.cmake">CPM</a> CMake module is a featureful wrapper around the <code>FetchContent</code> module. To use it simply add <code>CPM.cmake</code> or <code>get_cmp.make</code> (which will pull <code>CPM.cmake</code> on the fly) from the latest release into your project folder and include it into your <code>CMakeLists.txt</code>.</p>
 <div class="fragment"><div class="line">include(CPM.cmake) # or include(get_cpm.cmake)</div>
 <div class="line"> </div>
 <div class="line"> </div>
-<div class="line">CPMAddPackage(&quot;gh:DNKpp/Simple-Utility#v1.0.0&quot;) # or any other tag name</div>
+<div class="line">CPMAddPackage(&quot;gh:DNKpp/Simple-Utility#v2.0.0&quot;) # or any other tag name</div>
 <div class="line"># do not forget linking via target_link_libraries as shown above</div>
 </div><!-- fragment --> </div></div><!-- PageDoc -->
 </div><!-- contents -->

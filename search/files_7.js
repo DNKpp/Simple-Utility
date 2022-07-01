@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['unique_5fhandle_2ehpp_0',['unique_handle.hpp',['../d0/d0f/unique__handle_8hpp.html',1,'']]],
-  ['utility_2ehpp_1',['utility.hpp',['../d1/d4e/utility_8hpp.html',1,'']]]
+  ['operators_2ehpp_0',['operators.hpp',['../dd/dcd/operators_8hpp.html',1,'']]],
+  ['or_5felse_2ehpp_1',['or_else.hpp',['../d2/d0e/or__else_8hpp.html',1,'']]]
 ];

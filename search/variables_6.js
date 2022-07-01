@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['not_5fequal_0',['not_equal',['../dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html#ga0c719ea579a930f37c5c933c523ca5d9',1,'sl::functional']]],
-  ['null_1',['null',['../d9/d48/structsl_1_1nullables_1_1nullable__traits_3_01unique__handle_3_01_t_args_8_8_8_01_4_01_4.html#ae6c9dbe14f01eccff85b2c401f0c35f0',1,'sl::nullables::nullable_traits&lt; unique_handle&lt; TArgs... &gt; &gt;::null()'],['../db/dcf/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html#a6be04c49f6c4b34ebae5f9f65eccc7e2',1,'sl::nullables::nullable_traits&lt; std::optional&lt; TArgs... &gt; &gt;::null()'],['../da/d35/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html#a8e344d6db714a03609d42de869af6bc5',1,'sl::nullables::nullable_traits&lt; std::unique_ptr&lt; TArgs... &gt; &gt;::null()'],['../da/d78/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html#a8d359580de7d8492cd989411ab736a09',1,'sl::nullables::nullable_traits&lt; std::shared_ptr&lt; TArgs... &gt; &gt;::null()'],['../de/dc1/structsl_1_1nullables_1_1nullable__traits_3_01_t_01_4.html#a5b6b10e076400239797de7a3ec8aa8c2',1,'sl::nullables::nullable_traits&lt; T &gt;::null()']]],
-  ['nullable_5fnull_5fv_2',['nullable_null_v',['../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga638fc40a4d6950b7180c820178920d0b',1,'sl::nullables']]],
-  ['nullhandle_3',['nullhandle',['../d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga3351a5e5ccde1cbc9cfd3d4a819e5995',1,'sl']]]
+  ['less_0',['less',['../dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html#gabbcff535b4a7410ec97f28ba16562dbb',1,'sl::functional']]],
+  ['less_5fequal_1',['less_equal',['../dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html#gaaad79e024efdc827b7103784364ff0be',1,'sl::functional']]]
 ];

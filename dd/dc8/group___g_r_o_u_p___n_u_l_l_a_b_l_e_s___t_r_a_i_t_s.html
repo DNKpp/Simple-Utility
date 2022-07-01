@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v1.3.0</span>
+   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v2.0.0</span>
    </div>
   </td>
  </tr>
@@ -83,7 +83,6 @@ $(document).ready(function(){initNavTree('dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b
 
 <div class="header">
   <div class="summary">
-<a href="#concepts">Concepts</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#var-members">Variables</a>  </div>
@@ -91,28 +90,22 @@ $(document).ready(function(){initNavTree('dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b
 </div><!--header-->
 <div class="contents">
 
-<p>These traits are used by the <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html">algorithms</a> and my be extended by users.  
+<p>These traits are used by the <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html">algorithms</a> and my be specialized by users for their custom types.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
-Concepts</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">sl::nullables::input_nullable</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether a type is an <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a>. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">sl::nullables::nullable</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether a type is <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a>. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dfb/structsl_1_1nullables_1_1nullable__traits.html">sl::nullables::nullable_traits&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main trait, which may be specialized from.  <a href="../../db/dfb/structsl_1_1nullables_1_1nullable__traits.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d60/structsl_1_1nullables_1_1traits_3_01adapter_3_01_t_null_00_01_t_adapted_01_4_01_4.html">sl::nullables::traits&lt; adapter&lt; TNull, TAdapted &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for raw pointers.  <a href="../../dc/d60/structsl_1_1nullables_1_1traits_3_01adapter_3_01_t_null_00_01_t_adapted_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d48/structsl_1_1nullables_1_1nullable__traits_3_01unique__handle_3_01_t_args_8_8_8_01_4_01_4.html">sl::nullables::nullable_traits&lt; unique_handle&lt; TArgs... &gt; &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for <a class="el" href="../../da/da9/classsl_1_1unique__handle.html" title="This type models some kind of std::optional behaviour but resets itself on move operations.">sl::unique_handle</a>.  <a href="../../d9/d48/structsl_1_1nullables_1_1nullable__traits_3_01unique__handle_3_01_t_args_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/db1/structsl_1_1nullables_1_1traits.html">sl::nullables::traits&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main trait, which may be specialized from.  <a href="../../d7/db1/structsl_1_1nullables_1_1traits.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/dcf/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html">sl::nullables::nullable_traits&lt; std::optional&lt; TArgs... &gt; &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for std::optional.  <a href="../../db/dcf/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d5e/structsl_1_1nullables_1_1traits_3_01_t_01_4.html">sl::nullables::traits&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for raw pointers.  <a href="../../db/d5e/structsl_1_1nullables_1_1traits_3_01_t_01_4.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/dcc/structsl_1_1nullables_1_1traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html">sl::nullables::traits&lt; std::optional&lt; TArgs... &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for std::optional.  <a href="../../d0/dcc/structsl_1_1nullables_1_1traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d35/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html">sl::nullables::nullable_traits&lt; std::unique_ptr&lt; TArgs... &gt; &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for std::unique_ptr.  <a href="../../da/d35/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
@@ -120,29 +113,29 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d78/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html">sl::nullables::nullable_traits&lt; std::shared_ptr&lt; TArgs... &gt; &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for std::shared_ptr.  <a href="../../da/d78/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/dc1/structsl_1_1nullables_1_1nullable__traits_3_01_t_01_4.html">sl::nullables::nullable_traits&lt; T &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for raw pointers.  <a href="../../de/dc1/structsl_1_1nullables_1_1nullable__traits_3_01_t_01_4.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html">sl::nullables::traits&lt; unique_handle&lt; T, TDeleteAction &gt; &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialization for <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> types.  <a href="../../d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga30b2386500938406f95e13450ffa7c7f"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:ga30b2386500938406f95e13450ffa7c7f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga30b2386500938406f95e13450ffa7c7f">sl::nullables::nullable_value_t</a> = typename <a class="el" href="../../db/dfb/structsl_1_1nullables_1_1nullable__traits.html">nullable_traits</a>&lt; std::remove_cvref_t&lt; T &gt; &gt;::value_type</td></tr>
-<tr class="memdesc:ga30b2386500938406f95e13450ffa7c7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias retrieving the value type of a <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> type.  <a href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga30b2386500938406f95e13450ffa7c7f">More...</a><br /></td></tr>
-<tr class="separator:ga30b2386500938406f95e13450ffa7c7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga63e5e4922ecbd0f7541c45dce49bde5f"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ga63e5e4922ecbd0f7541c45dce49bde5f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga63e5e4922ecbd0f7541c45dce49bde5f">sl::nullables::value_t</a> = typename <a class="el" href="../../d7/db1/structsl_1_1nullables_1_1traits.html">traits</a>&lt; std::remove_cvref_t&lt; T &gt; &gt;::value_type</td></tr>
+<tr class="memdesc:ga63e5e4922ecbd0f7541c45dce49bde5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience alias retrieving the value type of a <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> type.  <a href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga63e5e4922ecbd0f7541c45dce49bde5f">More...</a><br /></td></tr>
+<tr class="separator:ga63e5e4922ecbd0f7541c45dce49bde5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga638fc40a4d6950b7180c820178920d0b"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:ga638fc40a4d6950b7180c820178920d0b"><td class="memTemplItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga638fc40a4d6950b7180c820178920d0b">sl::nullables::nullable_null_v</a> { <a class="el" href="../../db/dfb/structsl_1_1nullables_1_1nullable__traits.html">nullable_traits</a>&lt;std::remove_cvref_t&lt;T&gt;&gt;::null }</td></tr>
-<tr class="memdesc:ga638fc40a4d6950b7180c820178920d0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience constant retrieving the null object of a <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> type.  <a href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga638fc40a4d6950b7180c820178920d0b">More...</a><br /></td></tr>
-<tr class="separator:ga638fc40a4d6950b7180c820178920d0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga40a3e97793e5e3c66e9caba58d1b5399"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ga40a3e97793e5e3c66e9caba58d1b5399"><td class="memTemplItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga40a3e97793e5e3c66e9caba58d1b5399">sl::nullables::null_v</a> { <a class="el" href="../../d7/db1/structsl_1_1nullables_1_1traits.html">traits</a>&lt;std::remove_cvref_t&lt;T&gt;&gt;::null }</td></tr>
+<tr class="memdesc:ga40a3e97793e5e3c66e9caba58d1b5399"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience constant retrieving the null object of a <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> type.  <a href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga40a3e97793e5e3c66e9caba58d1b5399">More...</a><br /></td></tr>
+<tr class="separator:ga40a3e97793e5e3c66e9caba58d1b5399"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p >These traits are used by the <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html">algorithms</a> and my be extended by users. </p>
+<p >These traits are used by the <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html">algorithms</a> and my be specialized by users for their custom types. </p>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="ga30b2386500938406f95e13450ffa7c7f" name="ga30b2386500938406f95e13450ffa7c7f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga30b2386500938406f95e13450ffa7c7f">&#9670;&nbsp;</a></span>nullable_value_t</h2>
+<a id="ga63e5e4922ecbd0f7541c45dce49bde5f" name="ga63e5e4922ecbd0f7541c45dce49bde5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga63e5e4922ecbd0f7541c45dce49bde5f">&#9670;&nbsp;</a></span>value_t</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -150,7 +143,7 @@ Variables</h2></td></tr>
 template&lt;class T &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga30b2386500938406f95e13450ffa7c7f">sl::nullables::nullable_value_t</a> = typedef typename <a class="el" href="../../db/dfb/structsl_1_1nullables_1_1nullable__traits.html">nullable_traits</a>&lt;std::remove_cvref_t&lt;T&gt; &gt;::value_type</td>
+          <td class="memname">using <a class="el" href="../../dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html#ga63e5e4922ecbd0f7541c45dce49bde5f">sl::nullables::value_t</a> = typedef typename <a class="el" href="../../d7/db1/structsl_1_1nullables_1_1traits.html">traits</a>&lt;std::remove_cvref_t&lt;T&gt; &gt;::value_type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -166,8 +159,8 @@ template&lt;class T &gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="ga638fc40a4d6950b7180c820178920d0b" name="ga638fc40a4d6950b7180c820178920d0b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga638fc40a4d6950b7180c820178920d0b">&#9670;&nbsp;</a></span>nullable_null_v</h2>
+<a id="ga40a3e97793e5e3c66e9caba58d1b5399" name="ga40a3e97793e5e3c66e9caba58d1b5399"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga40a3e97793e5e3c66e9caba58d1b5399">&#9670;&nbsp;</a></span>null_v</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -178,7 +171,7 @@ template&lt;class T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr auto sl::nullables::nullable_null_v { <a class="el" href="../../db/dfb/structsl_1_1nullables_1_1nullable__traits.html">nullable_traits</a>&lt;std::remove_cvref_t&lt;T&gt;&gt;::null }</td>
+          <td class="memname">constexpr auto sl::nullables::null_v { <a class="el" href="../../d7/db1/structsl_1_1nullables_1_1traits.html">traits</a>&lt;std::remove_cvref_t&lt;T&gt;&gt;::null }</td>
         </tr>
       </table>
   </td>

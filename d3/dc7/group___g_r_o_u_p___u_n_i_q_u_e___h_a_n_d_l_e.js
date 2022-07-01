@@ -37,6 +37,10 @@ var group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e =
       [ "unique_handle", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga11e70248f3089b94985e679de58130a1", null ],
       [ "unique_handle", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga62d461cc085b3438bf3f4987c8708350", null ]
     ] ],
+    [ "sl::nullables::traits< unique_handle< T, TDeleteAction > >", "d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html", [
+      [ "value_type", "d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html#a3b3bf3fda299ac26a72840a826a2d3be", null ],
+      [ "null", "d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html#ab8ab47e0f8932edc5a191325a3ed15a6", null ]
+    ] ],
     [ "sl::bad_handle_access", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga4ba9c826372bfbb9f9cc169eef579271", null ],
     [ "sl::unique_handle::unique_handle", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga11e70248f3089b94985e679de58130a1", null ],
     [ "sl::unique_handle::unique_handle", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga62d461cc085b3438bf3f4987c8708350", null ],

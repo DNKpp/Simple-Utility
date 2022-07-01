@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['and_5fthen_0',['and_then',['../de/ddf/classsl_1_1nullables_1_1and__then.html',1,'sl::nullables']]],
-  ['and_5fthen_5ffunc_5ft_1',['and_then_func_t',['../d7/d05/structsl_1_1nullables_1_1and__then__func__t.html',1,'sl::nullables']]],
-  ['and_5fthen_5ffunc_5ft_3c_20tnullable_2c_20tfunc_20_3e_2',['and_then_func_t&lt; TNullable, TFunc &gt;',['../d5/de9/structsl_1_1nullables_1_1and__then__func__t_3_01_t_nullable_00_01_t_func_01_4.html',1,'sl::nullables']]],
-  ['apply_5ffn_3',['apply_fn',['../d0/d97/classsl_1_1functional_1_1tuple_1_1apply__fn.html',1,'sl::functional::tuple']]]
+  ['adapter_0',['adapter',['../d1/dc6/classsl_1_1nullables_1_1adapter.html',1,'sl::nullables']]],
+  ['adapter_5fnull_5ft_1',['adapter_null_t',['../d2/d03/structsl_1_1nullables_1_1adapter__null__t.html',1,'sl::nullables']]],
+  ['algorithm_5ffn_2',['algorithm_fn',['../d6/d3b/classsl_1_1nullables_1_1algorithm__fn.html',1,'sl::nullables']]],
+  ['apply_5finvoke_5fresult_3',['apply_invoke_result',['../dc/d9d/structsl_1_1apply__invoke__result.html',1,'sl']]]
 ];

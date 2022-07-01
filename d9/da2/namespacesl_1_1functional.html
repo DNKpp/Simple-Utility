@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v1.3.0</span>
+   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v2.0.0</span>
    </div>
   </td>
  </tr>
@@ -85,6 +85,7 @@ $(document).ready(function(){initNavTree('d9/da2/namespacesl_1_1functional.html'
   <div class="summary">
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">sl::functional Namespace Reference</div></div>
@@ -93,52 +94,61 @@ $(document).ready(function(){initNavTree('d9/da2/namespacesl_1_1functional.html'
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
 Namespaces</h2></td></tr>
+<tr class="memitem:d9/df8/namespacesl_1_1functional_1_1operators"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/df8/namespacesl_1_1functional_1_1operators.html">operators</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:d7/dce/namespacesl_1_1functional_1_1tuple"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dce/namespacesl_1_1functional_1_1tuple.html">tuple</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dff/structsl_1_1functional_1_1bind__back__operator.html">bind_back_operator</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which enables unary back currying on functionals via operator &gt;&gt;.  <a href="../../d8/dff/structsl_1_1functional_1_1bind__back__operator.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/dc6/structsl_1_1functional_1_1bind__front__operator.html">bind_front_operator</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which enables unary front currying on functionals via operator &lt;&lt;.  <a href="../../de/dc6/structsl_1_1functional_1_1bind__front__operator.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/de4/classsl_1_1functional_1_1closure__base__fn.html">closure_base_fn</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which simply stores functional objects or function pointers.  <a href="../../d9/de4/classsl_1_1functional_1_1closure__base__fn.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d42/structsl_1_1functional_1_1conjunction__operator.html">conjunction_operator</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which enables conjunctive composing of two functional objects via operator &amp;&amp;.  <a href="../../db/d42/structsl_1_1functional_1_1conjunction__operator.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d09/classsl_1_1functional_1_1composition__fn.html">composition_fn</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional type, which composes multiple functional objects via the given operation.  <a href="../../d9/d09/classsl_1_1functional_1_1composition__fn.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/db7/structsl_1_1functional_1_1disjunction__operator.html">disjunction_operator</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which enables disjunctive composing of two functional objects via operator ||.  <a href="../../d5/db7/structsl_1_1functional_1_1disjunction__operator.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da5/structsl_1_1functional_1_1negation__operator.html">negation_operator</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which enables negation on functionals via operator !.  <a href="../../dc/da5/structsl_1_1functional_1_1negation__operator.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d1b/structsl_1_1functional_1_1pipe__operator.html">pipe_operator</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which enables pipe composing of two functional objects via operator |.  <a href="../../df/d1b/structsl_1_1functional_1_1pipe__operator.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d50/structsl_1_1functional_1_1enable__operation.html">enable_operation</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d86/classsl_1_1functional_1_1predicate__fn.html">predicate_fn</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which accepts a functional type and enables pipe, conjunctive and disjunctive chaining.  <a href="../../df/d86/classsl_1_1functional_1_1predicate__fn.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adapter type for predicates, which accepts a functional type and enables pipe, conjunctive and disjunctive chaining, equal, inequality and equivalence comparison, and front and back binding.  <a href="../../df/d86/classsl_1_1functional_1_1predicate__fn.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type which accepts a functional type and enables pipe chaining.  <a href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adapter type which accepts a functional type and enables pipe chaining and currying.  <a href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d72/classsl_1_1functional_1_1value__fn.html">value_fn</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional helper type, which takes a value and returns them on invocation.  <a href="../../da/d72/classsl_1_1functional_1_1value__fn.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga219bf23f133d37fe64c6b69ef399bf53"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ga219bf23f133d37fe64c6b69ef399bf53"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga219bf23f133d37fe64c6b69ef399bf53">closure_function_t</a> = typename std::remove_cvref_t&lt; T &gt;::function_type</td></tr>
+<tr class="separator:ga219bf23f133d37fe64c6b69ef399bf53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gad80174982ec9de5b965f774c44b4113f"><td class="memTemplParams" colspan="2">template&lt;class TFunc &gt; </td></tr>
-<tr class="memitem:gad80174982ec9de5b965f774c44b4113f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#gad80174982ec9de5b965f774c44b4113f">predicate_fn</a> (TFunc) -&gt; <a class="el" href="../../df/d86/classsl_1_1functional_1_1predicate__fn.html">predicate_fn</a>&lt; std::remove_cvref_t&lt; TFunc &gt; &gt;</td></tr>
-<tr class="memdesc:gad80174982ec9de5b965f774c44b4113f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deduction guide.  <a href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#gad80174982ec9de5b965f774c44b4113f">More...</a><br /></td></tr>
-<tr class="separator:gad80174982ec9de5b965f774c44b4113f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafec5c38b9845d0717b3edb72f9497913"><td class="memTemplParams" colspan="2">template&lt;class TFunc &gt; </td></tr>
-<tr class="memitem:gafec5c38b9845d0717b3edb72f9497913"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#gafec5c38b9845d0717b3edb72f9497913">transform_fn</a> (TFunc) -&gt; <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a>&lt; std::remove_cvref_t&lt; TFunc &gt; &gt;</td></tr>
-<tr class="memdesc:gafec5c38b9845d0717b3edb72f9497913"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deduction guide.  <a href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#gafec5c38b9845d0717b3edb72f9497913">More...</a><br /></td></tr>
-<tr class="separator:gafec5c38b9845d0717b3edb72f9497913"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac7145d92a7c811714945576c96f972b3"><td class="memTemplParams" colspan="2">template&lt;class TOperation , class... TFunctions&gt; </td></tr>
+<tr class="memitem:gac7145d92a7c811714945576c96f972b3"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#gac7145d92a7c811714945576c96f972b3">composition_fn</a> (TOperation, TFunctions ...) -&gt; <a class="el" href="../../d9/d09/classsl_1_1functional_1_1composition__fn.html">composition_fn</a>&lt; TOperation, detail::unwrap_functional_r_t&lt; TFunctions &gt;... &gt;</td></tr>
+<tr class="memdesc:gac7145d92a7c811714945576c96f972b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deduction guide.  <a href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#gac7145d92a7c811714945576c96f972b3">More...</a><br /></td></tr>
+<tr class="separator:gac7145d92a7c811714945576c96f972b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9a5f398f6bc226fda5d50e52a53130fb"><td class="memTemplParams" colspan="2">template&lt;class TValue &gt; </td></tr>
+<tr class="memitem:ga9a5f398f6bc226fda5d50e52a53130fb"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga9a5f398f6bc226fda5d50e52a53130fb">value_fn</a> (TValue) -&gt; <a class="el" href="../../da/d72/classsl_1_1functional_1_1value__fn.html">value_fn</a>&lt; TValue &gt;</td></tr>
+<tr class="memdesc:ga9a5f398f6bc226fda5d50e52a53130fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deduction guide.  <a href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga9a5f398f6bc226fda5d50e52a53130fb">More...</a><br /></td></tr>
+<tr class="separator:ga9a5f398f6bc226fda5d50e52a53130fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac429255e9fa1928f52a9dc0d401b603a"><td class="memTemplParams" colspan="2">template&lt;class TFunc &gt; </td></tr>
+<tr class="memitem:gac429255e9fa1928f52a9dc0d401b603a"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html#gac429255e9fa1928f52a9dc0d401b603a">predicate_fn</a> (TFunc) -&gt; <a class="el" href="../../df/d86/classsl_1_1functional_1_1predicate__fn.html">predicate_fn</a>&lt; TFunc &gt;</td></tr>
+<tr class="memdesc:gac429255e9fa1928f52a9dc0d401b603a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deduction guide.  <a href="../../dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html#gac429255e9fa1928f52a9dc0d401b603a">More...</a><br /></td></tr>
+<tr class="separator:gac429255e9fa1928f52a9dc0d401b603a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga17ee867e55b62fe1afea2654e8f93d8b"><td class="memTemplParams" colspan="2">template&lt;class TFunc &gt; </td></tr>
+<tr class="memitem:ga17ee867e55b62fe1afea2654e8f93d8b"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#ga17ee867e55b62fe1afea2654e8f93d8b">transform_fn</a> (TFunc) -&gt; <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a>&lt; TFunc &gt;</td></tr>
+<tr class="memdesc:ga17ee867e55b62fe1afea2654e8f93d8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deduction guide.  <a href="../../df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#ga17ee867e55b62fe1afea2654e8f93d8b">More...</a><br /></td></tr>
+<tr class="separator:ga17ee867e55b62fe1afea2654e8f93d8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:ga6ecccc3d30a49c358c1e43ee4a77f5a2"><td class="memTemplParams" colspan="2">template&lt;operators::tag TOperationTag, class... TFunctions&gt; </td></tr>
+<tr class="memitem:ga6ecccc3d30a49c358c1e43ee4a77f5a2"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga6ecccc3d30a49c358c1e43ee4a77f5a2">is_nothrow_composable_v</a></td></tr>
+<tr class="separator:ga6ecccc3d30a49c358c1e43ee4a77f5a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gabbcff535b4a7410ec97f28ba16562dbb"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="../../df/d86/classsl_1_1functional_1_1predicate__fn.html">predicate_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html#gabbcff535b4a7410ec97f28ba16562dbb">less</a></td></tr>
 <tr class="memdesc:gabbcff535b4a7410ec97f28ba16562dbb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional object, which compares its two operands less.  <a href="../../dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html#gabbcff535b4a7410ec97f28ba16562dbb">More...</a><br /></td></tr>
 <tr class="separator:gabbcff535b4a7410ec97f28ba16562dbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -158,7 +168,7 @@ Variables</h2></td></tr>
 <tr class="memdesc:ga0c719ea579a930f37c5c933c523ca5d9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional object, which compares its two operands not-equal.  <a href="../../dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html#ga0c719ea579a930f37c5c933c523ca5d9">More...</a><br /></td></tr>
 <tr class="separator:ga0c719ea579a930f37c5c933c523ca5d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga555e31695184686e3e6150b2832e18b8"><td class="memTemplParams" colspan="2">template&lt;class TTarget &gt; </td></tr>
-<tr class="memitem:ga555e31695184686e3e6150b2832e18b8"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#ga555e31695184686e3e6150b2832e18b8">as</a></td></tr>
+<tr class="memitem:ga555e31695184686e3e6150b2832e18b8"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#ga555e31695184686e3e6150b2832e18b8">as</a> { detail::as_fn&lt;TTarget&gt;{} }</td></tr>
 <tr class="memdesc:ga555e31695184686e3e6150b2832e18b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional object which static_cast the given argument to the target type on invocation.  <a href="../../df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#ga555e31695184686e3e6150b2832e18b8">More...</a><br /></td></tr>
 <tr class="separator:ga555e31695184686e3e6150b2832e18b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

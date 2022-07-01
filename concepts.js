@@ -80,11 +80,21 @@ var concepts =
         [ "initializes", "d1/ded/conceptsl_1_1concepts_1_1initializes.html", null ],
         [ "assignable_to", "dd/d00/conceptsl_1_1concepts_1_1assignable__to.html", null ],
         [ "weakly_equality_comparable_with", "d3/da6/conceptsl_1_1concepts_1_1weakly__equality__comparable__with.html", null ],
-        [ "unique_types", "d8/d76/conceptsl_1_1concepts_1_1unique__types.html", null ]
+        [ "nothrow_weakly_equality_comparable_with", "d2/d84/conceptsl_1_1concepts_1_1nothrow__weakly__equality__comparable__with.html", null ],
+        [ "unique_types", "d8/d76/conceptsl_1_1concepts_1_1unique__types.html", null ],
+        [ "apply_invocable", "d2/d91/conceptsl_1_1concepts_1_1apply__invocable.html", null ],
+        [ "nothrow_apply_invocable", "d1/df2/conceptsl_1_1concepts_1_1nothrow__apply__invocable.html", null ]
+      ] ],
+      [ "functional", "d9/da2/namespacesl_1_1functional.html", [
+        [ "operators", "d9/df8/namespacesl_1_1functional_1_1operators.html", [
+          [ "tag", "db/d47/conceptsl_1_1functional_1_1operators_1_1tag.html", null ]
+        ] ]
       ] ],
       [ "nullables", "d0/de0/namespacesl_1_1nullables.html", [
+        [ "adaptable_with", "d7/d84/conceptsl_1_1nullables_1_1adaptable__with.html", null ],
         [ "input_nullable", "d1/d54/conceptsl_1_1nullables_1_1input__nullable.html", null ],
         [ "nullable", "de/dd6/conceptsl_1_1nullables_1_1nullable.html", null ]
-      ] ]
+      ] ],
+      [ "derived_from_unified_base", "d1/df9/conceptsl_1_1derived__from__unified__base.html", null ]
     ] ]
 ];
