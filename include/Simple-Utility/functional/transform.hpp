@@ -58,14 +58,16 @@ namespace sl::functional
 	namespace detail
 	{
 		template <class TTarget>
-		inline constexpr auto as_impl = []<std::convertible_to<TTarget> T>
+		inline constexpr auto as_impl = []<class TFrom>
 		(
-			T&& v
+			TFrom&& v
 		)
-		noexcept(std::is_nothrow_convertible_v<T, TTarget>)
+		noexcept(std::is_nothrow_convertible_v<TFrom, TTarget>)
 		-> TTarget
+		// put constraint here, because v142 toolset doesn't like it anywhere else
+				requires std::convertible_to<TFrom, TTarget>
 		{
-			return static_cast<TTarget>(std::forward<T>(v));
+			return static_cast<TTarget>(std::forward<TFrom>(v));
 		};
 	}
 
