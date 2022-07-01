@@ -79,6 +79,10 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(std::same_as<std::remove_cvref_t<decltype(null_v<TNullable>)>, TExpected>);
 }
 
+/*
+ * LCOV_EXCL_START
+ */
+
 TEST_CASE("algorithm_fn can wrap user defined functions.", "[nullables][algorithm][example]")
 {
 	//! [algorithm custom]
@@ -117,3 +121,7 @@ TEST_CASE("algorithm_fn can wrap user defined functions.", "[nullables][algorith
 	REQUIRE(resultOfInvalid == 1337);
 	//! [algorithm custom]
 }
+
+/*
+ * LCOV_EXCL_STOP
+ */
