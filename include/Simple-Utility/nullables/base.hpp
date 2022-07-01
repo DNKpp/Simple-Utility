@@ -27,10 +27,10 @@ namespace sl::nullables
 	 * ## General
 	 * The algorithms may be chained in arbitrary combination and deepness, as long as it makes sense to the compiler. Such a
 	 * chain may involve multiple different \ref sl::nullables::nullable "nullable" types. Of this library explicitly supported types are:
-	 * - \ref sl::unique_handle
-	 * - [std::optional](https://en.cppreference.com/w/cpp/utility/optional)
-	 * - [std::unique_ptr](https://en.cppreference.com/w/cpp/memory/unique_ptr)
-	 * - [std::shared_ptr](https://en.cppreference.com/w/cpp/memory/shared_ptr)
+	 * - \ref sl::unique_handle ("Simple-Utility/unique_handle.hpp" header must be included)
+	 * - [std::optional](https://en.cppreference.com/w/cpp/utility/optional) ("Simple-Utility/nullables/std_optional.hpp" header must be included)
+	 * - [std::unique_ptr](https://en.cppreference.com/w/cpp/memory/unique_ptr) ("Simple-Utility/nullables/std_pointers.hpp" header must be included)
+	 * - [std::shared_ptr](https://en.cppreference.com/w/cpp/memory/shared_ptr) ("Simple-Utility/nullables/std_pointers.hpp" header must be included)
 	 * - and ``raw pointers``
 	 *
 	 * The general idea is making the handling with types e.g. ``std::optional`` less verbose and more enjoyable. The syntax is inspired by
@@ -54,21 +54,25 @@ namespace sl::nullables
 	 * There is a last step one may walk: Nullable algorithms also support functional composition out of the box, which means that
 	 * they are composable with any functional as a new functional object and can be invoked later on:
 	 * \snippet algorithm.cpp algorithm chain functional composition
-
+	 *
+	 * At last I would like to quickly present a naive comparison between the usual stl style and the style this library offers.
+	 * In this example I utilize a adapter, which already supports iterator adapting out of the box.
+	 * \snippet adapter.cpp adapter comparison
+	 *
 	 * ## Using custom types
 	 * Well, that depends which interface your type offers. If it's already dereferencable via ``operator *`` and it has an explicit ``null``-object,
 	 * which it can equality compared to, than you are in a good position.
 	 *
 	 * ### There exists a dedicated type or constexpr null object
-	 * Just specialize \ref sl::nullable::traits "nullable traits". If your type then doesn't offer a ``operator *`` access or it
+	 * Just specialize \ref sl::nullables::traits "nullable traits". If your type then doesn't offer a ``operator *`` access or it
 	 * doesn't follow the semantics, you can hook the ``unwrap`` customization point and simply create an overload in the types namespace.
 	 *
 	 * ### No dedicated type or constexpr null object exists
-	 * If your type doesn't have a dedicated null object or it is simply not constexpr, you can wrap your type and a null object into
+	 * If your type doesn't have a dedicated null object or it is simply not constexpr constructible, you can wrap your type and a null object into
 	 * \ref sl::nullables::adapter "adapter" object. Depending how your type behaves with the null object, this adapter will be either a ``input_nullable``
 	 * or even a ``nullable``.
 	 *
-	 * If your type doesn't offer a ``operator *`` access or it´doesn't follow the semantics, you can hook the ``unwrap_adapted`` customization point and
+	 * If your type doesn't offer a ``operator *`` access or it doesn't follow the semantics, you can hook the ``unwrap_adapted`` customization point and
 	 * simply create an overload in the types namespace.
 	 *
 	 * @{

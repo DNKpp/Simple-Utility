@@ -16,8 +16,11 @@
 
 #include "Simple-Utility/nullables/std_optional.hpp"
 
+#include "Simple-Utility/functional/tuple.hpp"
+
 #include <algorithm>
 #include <vector>
+#include <map>
 
 namespace your_ns
 {
@@ -170,3 +173,43 @@ TEST_CASE("adapter can be used with custom types.", "[nullables][adapter][custom
 
 	REQUIRE(value == 42);
 }
+
+/*
+ * LCOV_EXCL_START
+ */
+
+TEST_CASE("adapter can simplfy code dealing with iterators.", "[nullables][adapter][example]")
+{
+	//! [adapter comparison]
+	namespace fn = sl::functional;
+	namespace na = sl::nullables;
+
+	const std::map<int, const char*> global_storage{
+		{ 42, "Hello, World!" },
+		{ 1337, "Insert Coin" }
+	};
+
+	constexpr auto get_from_storage_stl = [&](const int key) -> std::optional<std::string_view>
+	{
+		if (const auto itr = global_storage.find(key); itr != std::end(global_storage))
+		{
+			return itr->second;
+		}
+		return std::nullopt;
+	};
+
+	constexpr auto get_from_storage_adapted = [&](const int key)
+	{
+		return na::adapter{ global_storage.end(), global_storage.find(key) }
+				| na::and_then(fn::tuple::get_at<1> | fn::as<std::optional<std::string_view>>);
+	};
+	//! [adapter comparison]
+
+	REQUIRE(get_from_storage_stl(1337) == get_from_storage_adapted(1337));
+	REQUIRE(get_from_storage_stl(42) == get_from_storage_adapted(42));
+	REQUIRE(get_from_storage_stl(1) == get_from_storage_adapted(1));
+}
+
+/*
+ * LCOV_EXCL_STOP
+ */

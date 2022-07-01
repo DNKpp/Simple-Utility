@@ -301,11 +301,10 @@ namespace sl::nullables
 		{}
 
 		/**
-		 * \brief Constructs the adapter with the result of a \ref sl::nullables::to_nullables_adapter "to_nullables_adapter" invocation.
+		 * \brief Constructs the adapter with the result of a ``to_nullables_adapter`` invocation.
 		 * \tparam TArg The argument type.
 		 * \param arg The argument.
-		 * \note This function makes use of the customization point \ref sl::nullables::to_nullables_adapter "to_nullables_adapter", which may
-		 * be hooked by users.
+		 * \note This function makes use of the customization point ``to_nullables_adapter``, which may be hooked by users.
 		 */
 		template <detail::convertible_to_adapter TArg>
 			requires concepts::not_same_as<adapter_null_t, std::remove_cvref_t<TArg>>
@@ -422,7 +421,7 @@ namespace sl::nullables
 	adapter(TNull, TAdapted) -> adapter<TNull, TAdapted>;
 
 	/**
-	 * \brief Deduction guide, which makes use of \ref sl::nullables::to_nullables_adapter "to_nullables_adapter" customization point.
+	 * \brief Deduction guide, which makes use of ``to_nullables_adapter`` customization point.
 	 * \relates sl::nullables::adapter
 	 * \tparam T The argument type.
 	 */
