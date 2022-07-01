@@ -1,3 +1,8 @@
+//          Copyright Dominic Koepke 2019 - 2022.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          https://www.boost.org/LICENSE_1_0.txt)
+
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
 
@@ -5,75 +10,82 @@
 
 #include "Simple-Utility/nullables/adapter.hpp"
 #include "Simple-Utility/nullables/value_or.hpp"
+#include "Simple-Utility/nullables/and_then.hpp"
+#include "Simple-Utility/nullables/or_else.hpp"
+#include "Simple-Utility/nullables/fwd_value.hpp"
+
+#include "Simple-Utility/nullables/std_optional.hpp"
 
 #include <algorithm>
 #include <vector>
 
-namespace third_party
+namespace your_ns
 {
-	struct third_party_type
+	struct your_type
 	{
 		int value{};
 
-		int operator *() const
-		{
-			return value;
-		}
-
 		[[nodiscard]]
-		constexpr bool operator ==(const third_party_type&) const = default;
+		constexpr bool operator ==(const your_type&) const = default;
 	};
-}
 
-//
-//template <class T>
-//	requires std::same_as<T, third_party::third_party_type&>
-//			|| std::same_as<T, const third_party::third_party_type&>
-//			|| std::same_as<T, third_party::third_party_type&&>
-//struct sl::nullables::customize::to_nullables_adapter_fn<T>
-//{
-//	using adapter_t = adapter<third_party::third_party_type, third_party::third_party_type>;
-//
-//	[[nodiscard]]
-//	constexpr adapter_t operator()(const third_party::third_party_type& object) const
-//	{
-//		return adapter_t{ third_party::third_party_type{ 0 }, object };
-//	}
-//};
-//
-//template <class T>
-//	requires std::same_as<T, third_party::third_party_type&>
-//			|| std::same_as<T, const third_party::third_party_type&>
-//			|| std::same_as<T, third_party::third_party_type&&>
-//struct sl::nullables::customize::unwrap_adapted_fn<T>
-//{
-//	using value_type = int;
-//
-//	template <class TU>
-//	[[nodiscard]]
-//	constexpr decltype(auto) operator()(TU&& object) const
-//	{
-//		return std::forward<TU>(object).value;
-//	}
-//};
+	[[nodiscard]]
+	constexpr int unwrap_adapted(const your_type& object)
+	{
+		return object.value;
+	}
+
+	[[nodiscard]]
+	constexpr sl::nullables::adapter<your_type, your_type> to_nullables_adapter(const your_type& object)
+	{
+		return { your_type{ 0 }, object };
+	}
+}
 
 using namespace sl::nullables;
 
-TEST_CASE("adapter adapting container iterators is valid input nullable", "[nullables][adapter][concept]")
+TEMPLATE_TEST_CASE_SIG(
+	"adaptable_with determines whether two types satisfy the requirements.",
+	"[nullables][adapter][concept]",
+	((bool VExpected, class TNull, class TAdapted), VExpected, TNull, TAdapted),
+	(true, std::vector<int>::iterator, std::vector<int>::iterator),
+	(false, int, std::vector<int>::iterator),
+	(false, int, int)
+)
 {
-	using itr_t = std::vector<int>::iterator;
-
-	STATIC_REQUIRE(input_nullable<adapter<itr_t, itr_t>>);
+	STATIC_REQUIRE(adaptable_with<TAdapted, TNull> == VExpected);
 }
 
-//TEST_CASE("adapter is constructible with null object.", "[nullables][adapter]")
-//{
-//	using itr_t = std::vector<int>::const_iterator;
-//	const std::vector v{ 1, 2, 3, 4 };
-//	adapter<itr_t, itr_t> a{ std::end(v) };
-//
-//	REQUIRE(a == adapter_null);
-//}
+TEST_CASE("adapter satisfies the requirements of input_nullables.", "[nullables][adapter][concept]")
+{
+	STATIC_REQUIRE(input_nullable<adapter<std::vector<int>::iterator, std::vector<int>::iterator>>);
+}
+
+TEST_CASE("adapter is constructible with null object.", "[nullables][adapter]")
+{
+	using itr_t = std::vector<int>::const_iterator;
+	const std::vector v{ 1, 2, 3, 4 };
+	adapter<itr_t, itr_t> a{ std::end(v) };
+
+	REQUIRE(a == adapter_null);
+}
+
+TEST_CASE("adapter is constructible with adapter_null_t when null object can be default constructed.", "[nullables][adapter]")
+{
+	using itr_t = std::vector<int>::const_iterator;
+	adapter<itr_t, itr_t> a{ adapter_null };
+
+	REQUIRE(a == adapter_null);
+}
+
+TEST_CASE("adapter is constructible with null object with explizit in_place_null tag.", "[nullables][adapter]")
+{
+	using itr_t = std::vector<int>::const_iterator;
+	const std::vector v{ 1, 2, 3, 4 };
+	adapter<itr_t, itr_t> a{ in_place_null, std::end(v) };
+
+	REQUIRE(a == adapter_null);
+}
 
 TEST_CASE("adapter is constructible from pair of iterators.", "[nullables][adapter]")
 {
@@ -83,16 +95,27 @@ TEST_CASE("adapter is constructible from pair of iterators.", "[nullables][adapt
 	REQUIRE(a != adapter_null);
 }
 
-//TEST_CASE("adapter can be re-assigned later on.", "[nullables][adapter]")
-//{
-//	using itr_t = std::vector<int>::const_iterator;
-//	const std::vector v{ 1, 2, 3, 4 };
-//	adapter<itr_t, itr_t> a{ std::end(v) };
-//
-//	a = std::begin(v);
-//
-//	REQUIRE(a != adapter_null);
-//}
+TEST_CASE("adapter can be null-assigned.", "[nullables][adapter]")
+{
+	using itr_t = std::vector<int>::const_iterator;
+	const std::vector v{ 1, 2, 3, 4 };
+	adapter<itr_t, itr_t> a{ std::end(v) };
+
+	a = adapter_null;
+
+	REQUIRE(a == adapter_null);
+}
+
+TEST_CASE("adapter can be re-assigned later on.", "[nullables][adapter]")
+{
+	using itr_t = std::vector<int>::const_iterator;
+	const std::vector v{ 1, 2, 3, 4 };
+	adapter<itr_t, itr_t> a{ std::end(v) };
+
+	a = std::begin(v);
+
+	REQUIRE(a != adapter_null);
+}
 
 TEMPLATE_TEST_CASE_SIG(
 	"adapter can be used with value_or algorithms.",
@@ -118,7 +141,7 @@ TEMPLATE_TEST_CASE_SIG(
 	REQUIRE(value == expectedValue);
 }
 
-TEST_CASE("lsjfl")
+TEST_CASE("adapter can be constructed from borrowed ranges and reassigned later on.", "[nullables][adapter]")
 {
 	const std::vector v{ 1, 2, 3, 4 };
 
@@ -128,9 +151,22 @@ TEST_CASE("lsjfl")
 	REQUIRE(value == 2);
 }
 
-//TEST_CASE("adapter can be used with custom types.", "[nullables][adapter][customization]")
-//{
-//	const third_party::third_party_type object{ 42 };
-//
-//	const int value = adapter{ object } | value_or(1337);
-//}
+TEST_CASE("fsdadapter can be constructed from borrowed ranges and reassigned later on.", "[nullables][adapter]")
+{
+	const std::vector v{ 1, 2, 3, 4 };
+
+	const int value = (adapter{ v } = std::ranges::find(v, 2))
+					| and_then(sl::functional::as<std::optional<int>>)
+					| value_or(1337);
+
+	REQUIRE(value == 2);
+}
+
+TEST_CASE("adapter can be used with custom types.", "[nullables][adapter][customization]")
+{
+	const your_ns::your_type object{ 42 };
+
+	const int value = adapter{ object } | value_or(1337);
+
+	REQUIRE(value == 42);
+}
