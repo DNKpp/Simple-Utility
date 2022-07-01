@@ -259,6 +259,10 @@ TEMPLATE_TEST_CASE_SIG(
 		REQUIRE_NOTHROW(predicate(apply_mod<TMod>(sourceOptional)));
 }
 
+/*
+ * LCOV_EXCL_START
+ */
+
 TEST_CASE("value_or example showing the outcome when used with a non-null nullable.", "[nullables][algorithm][example]")
 {
 	//! [value_or valid]
@@ -423,3 +427,7 @@ TEST_CASE(
 	REQUIRE(result == "1764");
 	//! [algorithm chain functional composition]
 }
+
+/*
+ * LCOV_EXCL_STOP
+ */
