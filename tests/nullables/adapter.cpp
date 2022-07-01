@@ -189,7 +189,7 @@ TEST_CASE("adapter can simplfy code dealing with iterators.", "[nullables][adapt
 		{ 1337, "Insert Coin" }
 	};
 
-	constexpr auto get_from_storage_stl = [&](const int key) -> std::optional<std::string_view>
+	const auto get_from_storage_stl = [&](const int key) -> std::optional<std::string_view>
 	{
 		if (const auto itr = global_storage.find(key); itr != std::end(global_storage))
 		{
@@ -198,7 +198,7 @@ TEST_CASE("adapter can simplfy code dealing with iterators.", "[nullables][adapt
 		return std::nullopt;
 	};
 
-	constexpr auto get_from_storage_adapted = [&](const int key)
+	const auto get_from_storage_adapted = [&](const int key)
 	{
 		return na::adapter{ global_storage.end(), global_storage.find(key) }
 				| na::and_then(fn::tuple::get_at<1> | fn::as<std::optional<std::string_view>>);
