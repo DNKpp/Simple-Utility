@@ -61,7 +61,7 @@ namespace sl::functional
 	 */
 	template <class TTarget>
 	inline constexpr transform_fn as{
-		[]<class T>(T&& v) -> TTarget { return static_cast<TTarget>(std::forward<T>(v)); }
+		[]<std::convertible_to<TTarget> T>(T&& v) -> TTarget { return static_cast<TTarget>(std::forward<T>(v)); }
 	};
 
 	/** @} */
