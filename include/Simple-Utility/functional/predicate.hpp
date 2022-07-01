@@ -80,7 +80,28 @@ namespace sl::functional
 	{
 		using closure_t = closure_base_fn<TFunc>;
 	public:
-		using closure_t::closure_t;
+		//using closure_t::closure_t;
+
+		/**
+		 * \brief Explicitly created forwarding constructor.
+		 * \tparam TArgs Argument types.
+		 * \param args Arguments, forwarded to the base class constructor.
+		 * \note This is only here, to keep clang <= 11 happy, when creating constexpr functional objects.
+		 */
+		template <class... TArgs>
+			requires std::constructible_from<closure_t, TArgs...>
+		[[nodiscard]]
+		constexpr
+		/**\cond conditional-explicit*/
+		explicit(detail::force_explicit_constructor_v<closure_t, TArgs...>)
+		/**\endcond*/
+		predicate_fn
+		(
+			TArgs&&... args
+		)
+		noexcept(std::is_nothrow_constructible_v<closure_t, TArgs...>)
+			: closure_t{ std::forward<TArgs>(args)... }
+		{}
 	};
 
 	/**

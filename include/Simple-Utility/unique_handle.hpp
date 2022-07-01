@@ -14,6 +14,7 @@
 #include <optional>
 
 #include "Simple-Utility/concepts/stl_extensions.hpp"
+#include "Simple-Utility/nullables/base.hpp"
 
 // some of the std::optional interface hasn't been declared constexpr before
 #if __cpp_lib_optional >= 202106
@@ -501,6 +502,19 @@ namespace sl
 	 */
 	template <class T>
 	unique_handle(T) -> unique_handle<T>;
+
+	/**
+	 * \brief Specialization for \ref sl::unique_handle "unique_handle" types.
+	 * \ingroup GROUP_NULLABLES_TRAITS
+	 * \tparam T Value type.
+	 * \tparam TDeleteAction Delete action type.
+	 */
+	template <class T, class TDeleteAction>
+	struct nullables::traits<unique_handle<T, TDeleteAction>>
+	{
+		using value_type = typename unique_handle<T, TDeleteAction>::value_type;
+		inline static constexpr nullhandle_t null{ nullhandle };
+	};
 
 	/** @} */
 }

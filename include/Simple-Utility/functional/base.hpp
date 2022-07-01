@@ -436,7 +436,9 @@ namespace sl::functional
 		 */
 		template <class... TArgs>
 		[[nodiscard]]
+		/**\cond conditional-explicit*/
 		explicit(detail::force_explicit_constructor_v<value_type, TArgs...>)
+		/**\endcond*/
 		constexpr value_fn(TArgs&&... args) noexcept(std::is_nothrow_constructible_v<value_type, TArgs...>)
 			: m_Value{ std::forward<TArgs>(args)... }
 		{}

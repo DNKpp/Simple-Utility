@@ -8,8 +8,8 @@ include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
 add_executable(
 	${PROJECT_NAME}-Tests
 	"bind_back.cpp"
-	"nullables.cpp"
 	"unique_handle.cpp"
+	"tuple_utility.cpp"
 	"concepts/access_operators.cpp"
 	"concepts/shift_operators.cpp"
 	"concepts/logical_arithmetic_operators.cpp"
@@ -19,7 +19,9 @@ add_executable(
 	"functional/transform.cpp"
 	"functional/predicate.cpp"
 	"functional/tuple.cpp"
- "tuple_utility.cpp")
+)
+
+add_subdirectory("nullables")
 
 target_link_libraries(
 	${PROJECT_NAME}-Tests
