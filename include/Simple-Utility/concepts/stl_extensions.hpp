@@ -65,6 +65,22 @@ namespace sl::concepts
 		{ t2 != t1 } -> std::convertible_to<bool>;
 	};
 
+	/**
+	 * \brief Checks whether a symmetrical set of operators == and != to compare both types with each other exists and has noexcept specifier. 
+	 * \details This is a less restrictive version of the ``std::equality_comparable_with`` function, but with additional noexcept check.
+	 * \see https://en.cppreference.com/w/cpp/concepts/equality_comparable
+	 * \tparam T1 The first type to check
+	 * \tparam T2 The second type to check
+	 */
+	template <class T1, class T2>
+	concept nothrow_weakly_equality_comparable_with = requires(const std::remove_cvref_t<T1>& t1, const std::remove_cvref_t<T2>& t2)
+	{
+		{ t1 == t2 } noexcept -> std::convertible_to<bool>;
+		{ t1 != t2 } noexcept -> std::convertible_to<bool>;
+		{ t2 == t1 } noexcept -> std::convertible_to<bool>;
+		{ t2 != t1 } noexcept -> std::convertible_to<bool>;
+	};
+
 	/** @} */
 }
 
