@@ -26,6 +26,13 @@ namespace sl::functional::detail
 
 	struct enable_operators_base_tag
 	{};
+
+	template <class TTo, class... TArgs>
+	inline constexpr bool force_explicit_constructor_v{ false };
+
+	template <class TTo, class T>
+	inline constexpr bool force_explicit_constructor_v<TTo, T>{ !std::is_convertible_v<T, TTo> };
+
 }
 
 namespace sl::functional::operators
@@ -137,7 +144,7 @@ namespace sl::functional
 		[[nodiscard]]
 		constexpr
 		/**\cond conditional-explicit*/
-		explicit(sizeof...(TArgs) == 1)
+		explicit(detail::force_explicit_constructor_v<function_type, TArgs...>)
 		/**\endcond*/
 		closure_base_fn
 		(
@@ -429,7 +436,7 @@ namespace sl::functional
 		 */
 		template <class... TArgs>
 		[[nodiscard]]
-		explicit (1 == sizeof...(TArgs))
+		explicit(detail::force_explicit_constructor_v<value_type, TArgs...>)
 		constexpr value_fn(TArgs&&... args) noexcept(std::is_nothrow_constructible_v<value_type, TArgs...>)
 			: m_Value{ std::forward<TArgs>(args)... }
 		{}
