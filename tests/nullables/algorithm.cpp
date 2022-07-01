@@ -271,12 +271,12 @@ TEST_CASE("value_or example showing the outcome when used with a non-null nullab
 
 TEST_CASE("value_or example showing the outcome when used with a null nullable.", "[nullables][algorithm][example]")
 {
-	//! [value_or valid]
+	//! [value_or invalid]
 	const std::optional result = std::optional<int>{}
 								| value_or(1337);
 
 	REQUIRE(result == 1337);
-	//! [value_or valid]
+	//! [value_or invalid]
 }
 
 TEST_CASE("fwd_value example showing the outcome when used with a non-null nullable.", "[nullables][algorithm][example]")
