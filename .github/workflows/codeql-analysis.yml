@@ -11,6 +11,11 @@
 #
 name: "CodeQL"
 
+env:
+    GXX_VERSION: 11
+    TESTS_DIR: out/tests
+    TEST_BUILD_FLAG: Simple-Utility_BUILD_TESTS
+
 on:
   push:
     branches: [ "ci/code_analysis" ]
@@ -52,12 +57,6 @@ jobs:
         # Details on CodeQL's query packs refer to : https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
         # queries: security-extended,security-and-quality
 
-        
-    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
-    # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v2
-
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
 
@@ -67,6 +66,20 @@ jobs:
     # - run: |
     #   echo "Run, Build Application using script"
     #   ./location_of_script_within_repo/buildscript.sh
+    
+    - name: Install compiler
+      run: |
+          sudo apt-get update
+          sudo apt-get install g++-${{ env.GXX_VERSION }} -y
+          sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${{ env.GXX_VERSION }} ${{ env.GXX_VERSION }}00 --slave /usr/bin/gcc gcc /usr/bin/gcc-${{ env.GXX_VERSION }}
+    
+    - name: Compile tests
+      env:
+        CC: gcc
+        CXX: g++
+      run: |
+        cmake -D${{ env.TEST_BUILD_FLAG }}=ON -B ${{ env.TESTS_DIR }}/.. -S .
+        cmake --build ${{ env.TESTS_DIR }}/.. -j4
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
