@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v2.0.0</span>
+   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v2.0.1</span>
    </div>
   </td>
  </tr>
@@ -142,7 +142,7 @@ $(document).ready(function(){initNavTree('d6/dbe/nullables_2base_8hpp_source.htm
 <div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            <span class="keyword">template</span> &lt;<span class="keyword">class</span> TNullable&gt;</div>
 <div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>                <span class="keyword">requires</span> <span class="keyword">requires</span> { { <a class="code hl_variable" href="../../d5/d8f/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___c_u_s_t_o_m_i_z_a_t_i_o_n___p_o_i_n_t_s.html#gabb2dc218508befe7dc348b40c3c5b113">unwrap</a>(std::declval&lt;TNullable&gt;()) } -&gt; std::convertible_to&lt;value_t&lt;TNullable&gt;&gt;; }</div>
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            [[nodiscard]]</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            <span class="keyword">constexpr</span> <span class="keyword">auto</span> operator()(TNullable&amp;&amp; na) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            <span class="keyword">constexpr</span> <span class="keyword">decltype</span>(<span class="keyword">auto</span>) <span class="keyword">operator</span>()(TNullable&amp;&amp; na) <span class="keyword">const</span> <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            {</div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>                <span class="keywordflow">return</span> <a class="code hl_variable" href="../../d5/d8f/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___c_u_s_t_o_m_i_z_a_t_i_o_n___p_o_i_n_t_s.html#gabb2dc218508befe7dc348b40c3c5b113">unwrap</a>(std::forward&lt;TNullable&gt;(na));</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>            }</div>
@@ -215,7 +215,7 @@ $(document).ready(function(){initNavTree('d6/dbe/nullables_2base_8hpp_source.htm
 <div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span> </div>
 <div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="abind_8hpp_html"><div class="ttname"><a href="../../d9/d76/bind_8hpp.html">bind.hpp</a></div></div>
-<div class="ttc" id="aclasssl_1_1functional_1_1closure__base__fn_html"><div class="ttname"><a href="../../d9/de4/classsl_1_1functional_1_1closure__base__fn.html">sl::functional::closure_base_fn</a></div><div class="ttdoc">Helper type which simply stores functional objects or function pointers.</div><div class="ttdef"><b>Definition:</b> base.hpp:133</div></div>
+<div class="ttc" id="aclasssl_1_1functional_1_1closure__base__fn_html"><div class="ttname"><a href="../../d9/de4/classsl_1_1functional_1_1closure__base__fn.html">sl::functional::closure_base_fn</a></div><div class="ttdoc">Helper type which simply stores functional objects or function pointers.</div><div class="ttdef"><b>Definition:</b> base.hpp:132</div></div>
 <div class="ttc" id="aclasssl_1_1nullables_1_1algorithm__fn_html"><div class="ttname"><a href="../../d6/d3b/classsl_1_1nullables_1_1algorithm__fn.html">sl::nullables::algorithm_fn</a></div><div class="ttdoc">The core algorithm helper, which executes the held algorithm when used as the right-hand-side of oper...</div><div class="ttdef"><b>Definition:</b> base.hpp:229</div></div>
 <div class="ttc" id="aconceptsl_1_1concepts_1_1dereferencable__r_html"><div class="ttname"><a href="../../d3/dd4/conceptsl_1_1concepts_1_1dereferencable__r.html">sl::concepts::dereferencable_r</a></div><div class="ttdoc">Determines whether a type can be used in unary operator * expressions and if the return type is conve...</div><div class="ttdef"><b>Definition:</b> operators.hpp:734</div></div>
 <div class="ttc" id="aconceptsl_1_1concepts_1_1initializes_html"><div class="ttname"><a href="../../d1/ded/conceptsl_1_1concepts_1_1initializes.html">sl::concepts::initializes</a></div><div class="ttdoc">Checks whether the target type is constructible from the source type.</div><div class="ttdef"><b>Definition:</b> stl_extensions.hpp:41</div></div>
@@ -231,7 +231,7 @@ $(document).ready(function(){initNavTree('d6/dbe/nullables_2base_8hpp_source.htm
 <div class="ttc" id="anamespacesl_1_1nullables_html"><div class="ttname"><a href="../../d0/de0/namespacesl_1_1nullables.html">sl::nullables</a></div><div class="ttdef"><b>Definition:</b> adapter.hpp:18</div></div>
 <div class="ttc" id="aoperators_8hpp_html"><div class="ttname"><a href="../../dd/dcd/operators_8hpp.html">operators.hpp</a></div></div>
 <div class="ttc" id="astl__extensions_8hpp_html"><div class="ttname"><a href="../../dd/d5c/stl__extensions_8hpp.html">stl_extensions.hpp</a></div></div>
-<div class="ttc" id="astructsl_1_1functional_1_1enable__operation_html"><div class="ttname"><a href="../../d0/d50/structsl_1_1functional_1_1enable__operation.html">sl::functional::enable_operation</a></div><div class="ttdef"><b>Definition:</b> base.hpp:482</div></div>
+<div class="ttc" id="astructsl_1_1functional_1_1enable__operation_html"><div class="ttname"><a href="../../d0/d50/structsl_1_1functional_1_1enable__operation.html">sl::functional::enable_operation</a></div><div class="ttdef"><b>Definition:</b> base.hpp:481</div></div>
 <div class="ttc" id="astructsl_1_1nullables_1_1traits_html"><div class="ttname"><a href="../../d7/db1/structsl_1_1nullables_1_1traits.html">sl::nullables::traits</a></div><div class="ttdoc">The main trait, which may be specialized from.</div><div class="ttdef"><b>Definition:</b> base.hpp:102</div></div>
 <div class="ttc" id="astructsl_1_1unified__base_html"><div class="ttname"><a href="../../d6/d62/structsl_1_1unified__base.html">sl::unified_base</a></div><div class="ttdoc">Helper type, which can be used to create a unified base class for templated derived classes and thus ...</div><div class="ttdef"><b>Definition:</b> unified_base.hpp:24</div></div>
 <div class="ttc" id="aunified__base_8hpp_html"><div class="ttname"><a href="../../d4/d1c/unified__base_8hpp.html">unified_base.hpp</a></div></div>

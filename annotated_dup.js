@@ -35,11 +35,11 @@ var annotated_dup =
         [ "adapter_null_t", "d2/d03/structsl_1_1nullables_1_1adapter__null__t.html", null ],
         [ "algorithm_fn", "d6/d3b/classsl_1_1nullables_1_1algorithm__fn.html", "d6/d3b/classsl_1_1nullables_1_1algorithm__fn" ],
         [ "in_place_null_t", "dd/d09/structsl_1_1nullables_1_1in__place__null__t.html", null ],
-        [ "nullable_traits< std::shared_ptr< TArgs... > >", "da/d78/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html", "da/d78/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4" ],
-        [ "nullable_traits< std::unique_ptr< TArgs... > >", "da/d35/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html", "da/d35/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4" ],
         [ "traits", "d7/db1/structsl_1_1nullables_1_1traits.html", null ],
         [ "traits< adapter< TNull, TAdapted > >", "dc/d60/structsl_1_1nullables_1_1traits_3_01adapter_3_01_t_null_00_01_t_adapted_01_4_01_4.html", "dc/d60/structsl_1_1nullables_1_1traits_3_01adapter_3_01_t_null_00_01_t_adapted_01_4_01_4" ],
         [ "traits< std::optional< TArgs... > >", "d0/dcc/structsl_1_1nullables_1_1traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html", "d0/dcc/structsl_1_1nullables_1_1traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4" ],
+        [ "traits< std::shared_ptr< TArgs... > >", "d7/da4/structsl_1_1nullables_1_1traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html", "d7/da4/structsl_1_1nullables_1_1traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4" ],
+        [ "traits< std::unique_ptr< TArgs... > >", "d7/d4d/structsl_1_1nullables_1_1traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html", "d7/d4d/structsl_1_1nullables_1_1traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4" ],
         [ "traits< T >", "db/d5e/structsl_1_1nullables_1_1traits_3_01_t_01_4.html", "db/d5e/structsl_1_1nullables_1_1traits_3_01_t_01_4" ],
         [ "traits< unique_handle< T, TDeleteAction > >", "d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html", "d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4" ]
       ] ],

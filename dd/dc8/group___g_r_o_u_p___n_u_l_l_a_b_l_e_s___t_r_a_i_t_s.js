@@ -13,13 +13,13 @@ var group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s =
       [ "value_type", "d0/dcc/structsl_1_1nullables_1_1traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html#a261c25f51a6f71bcebd9a1cf97bc37a5", null ],
       [ "null", "d0/dcc/structsl_1_1nullables_1_1traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html#ab8adc29f0fbfde284f852cc81152a120", null ]
     ] ],
-    [ "sl::nullables::nullable_traits< std::unique_ptr< TArgs... > >", "da/d35/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html", [
-      [ "value_type", "da/d35/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html#a2369eac1f061eba8c2a4c6b9343af2b2", null ],
-      [ "null", "da/d35/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html#a8e344d6db714a03609d42de869af6bc5", null ]
+    [ "sl::nullables::traits< std::unique_ptr< TArgs... > >", "d7/d4d/structsl_1_1nullables_1_1traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html", [
+      [ "value_type", "d7/d4d/structsl_1_1nullables_1_1traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html#a3649f60b9ed8c4af8119f6fbacc78dfb", null ],
+      [ "null", "d7/d4d/structsl_1_1nullables_1_1traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html#a3017893bb125db35466e15b7bc0ac763", null ]
     ] ],
-    [ "sl::nullables::nullable_traits< std::shared_ptr< TArgs... > >", "da/d78/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html", [
-      [ "value_type", "da/d78/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html#a58d4ba9d870a0abdf0a7752d049435d7", null ],
-      [ "null", "da/d78/structsl_1_1nullables_1_1nullable__traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html#a8d359580de7d8492cd989411ab736a09", null ]
+    [ "sl::nullables::traits< std::shared_ptr< TArgs... > >", "d7/da4/structsl_1_1nullables_1_1traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html", [
+      [ "value_type", "d7/da4/structsl_1_1nullables_1_1traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html#a1543a9f5831b328839a9b572c84af6d8", null ],
+      [ "null", "d7/da4/structsl_1_1nullables_1_1traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html#ae81faad41b5c9b0fe6e4c2d9a49d8007", null ]
     ] ],
     [ "sl::nullables::traits< unique_handle< T, TDeleteAction > >", "d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html", [
       [ "value_type", "d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html#a3b3bf3fda299ac26a72840a826a2d3be", null ],

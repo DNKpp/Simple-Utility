@@ -25,7 +25,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v2.0.0</span>
+   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v2.0.1</span>
    </div>
   </td>
  </tr>
@@ -107,32 +107,10 @@ $(document).ready(function(){initNavTree('d9/d20/std__optional_8hpp_source.html'
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="../../d0/dcc/structsl_1_1nullables_1_1traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html#a261c25f51a6f71bcebd9a1cf97bc37a5">   25</a></span>        <span class="keyword">using </span><a class="code hl_typedef" href="../../d0/dcc/structsl_1_1nullables_1_1traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html#a261c25f51a6f71bcebd9a1cf97bc37a5">value_type</a> = <span class="keyword">typename</span> std::optional&lt;TArgs...&gt;::value_type;</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="../../d0/dcc/structsl_1_1nullables_1_1traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html#ab8adc29f0fbfde284f852cc81152a120">   26</a></span>        <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">constexpr</span> std::nullopt_t null{ std::nullopt };</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    };</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> TAlternative&gt;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="../../d0/de0/namespacesl_1_1nullables.html#aeefb718ba3a12c693e2be9097b0883e9">   31</a></span>    <span class="keyword">constexpr</span> T <a class="code hl_function" href="../../d0/de0/namespacesl_1_1nullables.html#aeefb718ba3a12c693e2be9097b0883e9">value_or_algorithm</a>(<span class="keyword">const</span> std::optional&lt;T&gt;&amp; opt, TAlternative&amp;&amp; alternative)</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    {</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        <span class="keywordflow">return</span> opt.value_or(std::forward&lt;TAlternative&gt;(alternative));</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    }</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> TAlternative&gt;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="../../d0/de0/namespacesl_1_1nullables.html#a59ee29892ad569d5a346b4db140145e7">   38</a></span>    <span class="keyword">constexpr</span> T <a class="code hl_function" href="../../d0/de0/namespacesl_1_1nullables.html#aeefb718ba3a12c693e2be9097b0883e9">value_or_algorithm</a>(std::optional&lt;T&gt;&amp; opt, TAlternative&amp;&amp; alternative)</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>        <span class="keywordflow">return</span> opt.value_or(std::forward&lt;TAlternative&gt;(alternative));</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    }</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> T, <span class="keyword">class</span> TAlternative&gt;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="../../d0/de0/namespacesl_1_1nullables.html#a98cee1c9070428626c3fafe4ff1de4aa">   45</a></span>    <span class="keyword">constexpr</span> T <a class="code hl_function" href="../../d0/de0/namespacesl_1_1nullables.html#aeefb718ba3a12c693e2be9097b0883e9">value_or_algorithm</a>(std::optional&lt;T&gt;&amp;&amp; opt, TAlternative&amp;&amp; alternative)</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    {</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>        <span class="keywordflow">return</span> std::move(opt).value_or(std::forward&lt;TAlternative&gt;(alternative));</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    }</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>}</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>}</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="anamespacesl_1_1nullables_html"><div class="ttname"><a href="../../d0/de0/namespacesl_1_1nullables.html">sl::nullables</a></div><div class="ttdef"><b>Definition:</b> adapter.hpp:18</div></div>
-<div class="ttc" id="anamespacesl_1_1nullables_html_aeefb718ba3a12c693e2be9097b0883e9"><div class="ttname"><a href="../../d0/de0/namespacesl_1_1nullables.html#aeefb718ba3a12c693e2be9097b0883e9">sl::nullables::value_or_algorithm</a></div><div class="ttdeci">constexpr T value_or_algorithm(const std::optional&lt; T &gt; &amp;opt, TAlternative &amp;&amp;alternative)</div><div class="ttdef"><b>Definition:</b> std_optional.hpp:31</div></div>
 <div class="ttc" id="anullables_2base_8hpp_html"><div class="ttname"><a href="../../d6/dbe/nullables_2base_8hpp.html">base.hpp</a></div></div>
 <div class="ttc" id="astructsl_1_1nullables_1_1traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4_html_a261c25f51a6f71bcebd9a1cf97bc37a5"><div class="ttname"><a href="../../d0/dcc/structsl_1_1nullables_1_1traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html#a261c25f51a6f71bcebd9a1cf97bc37a5">sl::nullables::traits&lt; std::optional&lt; TArgs... &gt; &gt;::value_type</a></div><div class="ttdeci">typename std::optional&lt; TArgs... &gt;::value_type value_type</div><div class="ttdef"><b>Definition:</b> std_optional.hpp:25</div></div>
 <div class="ttc" id="astructsl_1_1nullables_1_1traits_html"><div class="ttname"><a href="../../d7/db1/structsl_1_1nullables_1_1traits.html">sl::nullables::traits</a></div><div class="ttdoc">The main trait, which may be specialized from.</div><div class="ttdef"><b>Definition:</b> base.hpp:102</div></div>

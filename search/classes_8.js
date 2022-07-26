@@ -13,8 +13,10 @@ var searchData=
   ['traits_10',['traits',['../d7/db1/structsl_1_1nullables_1_1traits.html',1,'sl::nullables']]],
   ['traits_3c_20adapter_3c_20tnull_2c_20tadapted_20_3e_20_3e_11',['traits&lt; adapter&lt; TNull, TAdapted &gt; &gt;',['../dc/d60/structsl_1_1nullables_1_1traits_3_01adapter_3_01_t_null_00_01_t_adapted_01_4_01_4.html',1,'sl::nullables']]],
   ['traits_3c_20std_3a_3aoptional_3c_20targs_2e_2e_2e_20_3e_20_3e_12',['traits&lt; std::optional&lt; TArgs... &gt; &gt;',['../d0/dcc/structsl_1_1nullables_1_1traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html',1,'sl::nullables']]],
-  ['traits_3c_20t_20_3e_13',['traits&lt; T &gt;',['../db/d5e/structsl_1_1nullables_1_1traits_3_01_t_01_4.html',1,'sl::nullables']]],
-  ['traits_3c_20unique_5fhandle_3c_20t_2c_20tdeleteaction_20_3e_20_3e_14',['traits&lt; unique_handle&lt; T, TDeleteAction &gt; &gt;',['../d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html',1,'sl::nullables']]],
-  ['transform_5ffn_15',['transform_fn',['../da/dbe/classsl_1_1functional_1_1transform__fn.html',1,'sl::functional']]],
-  ['tuple_5fcat_5fresult_16',['tuple_cat_result',['../df/d65/structsl_1_1tuple__cat__result.html',1,'sl']]]
+  ['traits_3c_20std_3a_3ashared_5fptr_3c_20targs_2e_2e_2e_20_3e_20_3e_13',['traits&lt; std::shared_ptr&lt; TArgs... &gt; &gt;',['../d7/da4/structsl_1_1nullables_1_1traits_3_01std_1_1shared__ptr_3_01_t_args_8_8_8_01_4_01_4.html',1,'sl::nullables']]],
+  ['traits_3c_20std_3a_3aunique_5fptr_3c_20targs_2e_2e_2e_20_3e_20_3e_14',['traits&lt; std::unique_ptr&lt; TArgs... &gt; &gt;',['../d7/d4d/structsl_1_1nullables_1_1traits_3_01std_1_1unique__ptr_3_01_t_args_8_8_8_01_4_01_4.html',1,'sl::nullables']]],
+  ['traits_3c_20t_20_3e_15',['traits&lt; T &gt;',['../db/d5e/structsl_1_1nullables_1_1traits_3_01_t_01_4.html',1,'sl::nullables']]],
+  ['traits_3c_20unique_5fhandle_3c_20t_2c_20tdeleteaction_20_3e_20_3e_16',['traits&lt; unique_handle&lt; T, TDeleteAction &gt; &gt;',['../d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html',1,'sl::nullables']]],
+  ['transform_5ffn_17',['transform_fn',['../da/dbe/classsl_1_1functional_1_1transform__fn.html',1,'sl::functional']]],
+  ['tuple_5fcat_5fresult_18',['tuple_cat_result',['../df/d65/structsl_1_1tuple__cat__result.html',1,'sl']]]
 ];
