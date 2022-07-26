@@ -17,7 +17,7 @@
 #include "Simple-Utility/nullables/base.hpp"
 
 // some of the std::optional interface hasn't been declared constexpr before
-#if __cpp_lib_optional >= 202106
+#if __cpp_lib_optional >= 202106L
 #define SL_UNIQUE_HANDLE_FULL_CONSTEXPR constexpr
 #else
 #define SL_UNIQUE_HANDLE_FULL_CONSTEXPR
