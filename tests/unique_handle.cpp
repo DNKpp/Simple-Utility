@@ -20,14 +20,12 @@ namespace
 
 		constexpr value_t(int a)
 			: a{ a }
-		{
-		}
+		{ }
 
 		constexpr value_t(int a, int z)
 			: a{ a },
 			z{ z }
-		{
-		}
+		{ }
 
 		constexpr value_t(value_t&&) noexcept = default;
 		constexpr value_t& operator =(value_t&&) noexcept = default;
@@ -91,8 +89,7 @@ TEST_CASE("unique_handle should be empty constructible by nullhandle and deleteA
 
 TEST_CASE("unique_handle should be assignable by nullhandle.", "[unique_handle]")
 {
-	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
-	const test_handle handle = []
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR const test_handle handle = []
 	{
 		// ReSharper disable once CppInitializedValueIsAlwaysRewritten
 		test_handle temp{};
@@ -140,8 +137,7 @@ TEST_CASE("unique_handle should be constructible by value and deleteAction.", "[
 
 TEST_CASE("unique_handle should be assignable by value.", "[unique_handle]")
 {
-	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
-	const test_handle handle = []
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR const test_handle handle = []
 	{
 		// ReSharper disable once CppInitializedValueIsAlwaysRewritten
 		test_handle temp{};
@@ -153,8 +149,7 @@ TEST_CASE("unique_handle should be assignable by value.", "[unique_handle]")
 	REQUIRE(handle);
 }
 
-TEST_CASE
-(
+TEST_CASE(
 	"unique_handle should automatically deduct its template arguments when constructed by value and deleteAction.",
 	"[unique_handle]"
 )
@@ -181,8 +176,7 @@ TEST_CASE("unique_handle should be explicitly in-place construct value when std:
 	STATIC_REQUIRE(handle->z == 1337);
 }
 
-TEST_CASE
-(
+TEST_CASE(
 	"unique_handle should be explicitly in-place construct value and deleteAction when std::in_place token is used.",
 	"[unique_handle]"
 )
@@ -202,8 +196,7 @@ TEST_CASE
 
 TEST_CASE("unique_handle::emplace constructs value in place.", "[unique_handle]")
 {
-	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
-	const bool result = []
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR const bool result = []
 	{
 		unique_handle<value_t> handle{};
 		handle.emplace(1337, 42);
@@ -214,8 +207,7 @@ TEST_CASE("unique_handle::emplace constructs value in place.", "[unique_handle]"
 }
 
 #pragma warning(disable: 26444)
-TEMPLATE_TEST_CASE_SIG
-(
+TEMPLATE_TEST_CASE_SIG(
 	"delete action on assignment must only be invoked if unique_handle holds a value.",
 	"[unique_handle]",
 	((class TInit, class TAssign, bool VExpected), TInit, TAssign, VExpected),
@@ -226,8 +218,7 @@ TEMPLATE_TEST_CASE_SIG
 )
 #pragma warning(disable: 26444)
 {
-	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
-	const bool result = []
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR const bool result = []
 	{
 		int counter{};
 		test_handle temp{ TInit{}, delete_action_mock{ .invoke_counter = &counter } };
@@ -240,8 +231,7 @@ TEMPLATE_TEST_CASE_SIG
 
 TEST_CASE("unique_handle should be move constructible and invalidate the source.", "[unique_handle]")
 {
-	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
-	const bool result = []
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR const bool result = []
 	{
 		test_handle source{ 42 };
 		const test_handle target{ std::move(source) };
@@ -253,8 +243,7 @@ TEST_CASE("unique_handle should be move constructible and invalidate the source.
 
 TEST_CASE("unique_handle should be move constructible and receive the value of other.", "[unique_handle]")
 {
-	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
-	const bool result = []
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR const bool result = []
 	{
 		// ReSharper disable once CppInitializedValueIsAlwaysRewritten
 		test_handle source{ 42 };
@@ -267,8 +256,7 @@ TEST_CASE("unique_handle should be move constructible and receive the value of o
 
 TEST_CASE("unique_handle should be move assignable and invalidate the source.", "[unique_handle]")
 {
-	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
-	const bool result = []
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR const bool result = []
 	{
 		test_handle source{ 42 };
 		// ReSharper disable once CppInitializedValueIsAlwaysRewritten
@@ -282,8 +270,7 @@ TEST_CASE("unique_handle should be move assignable and invalidate the source.", 
 
 TEST_CASE("unique_handle should be move assignable and receive the value of other.", "[unique_handle]")
 {
-	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
-	const bool result = []
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR const bool result = []
 	{
 		test_handle source{ 1337 };
 		// ReSharper disable once CppInitializedValueIsAlwaysRewritten
@@ -297,8 +284,7 @@ TEST_CASE("unique_handle should be move assignable and receive the value of othe
 
 TEST_CASE("moving unique_handle with itself should change nothing.", "[unique_handle]")
 {
-	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
-	const bool result = []
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR const bool result = []
 	{
 		test_handle handle{ 1337 };
 		handle = std::move(handle);
@@ -310,8 +296,7 @@ TEST_CASE("moving unique_handle with itself should change nothing.", "[unique_ha
 
 TEST_CASE("swapping unique_handle with itself should change nothing.", "[unique_handle]")
 {
-	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
-	const bool result = []
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR const bool result = []
 	{
 		test_handle handle{ 1337 };
 		handle.swap(handle);
@@ -323,8 +308,7 @@ TEST_CASE("swapping unique_handle with itself should change nothing.", "[unique_
 
 TEST_CASE("unique_handle should be swapable.", "[unique_handle]")
 {
-	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
-	const bool result = []
+	SL_UNIQUE_HANDLE_FULL_CONSTEXPR const bool result = []
 	{
 		test_handle lhs{ 1337 };
 		test_handle rhs{ 42 };
@@ -366,8 +350,7 @@ TEST_CASE("unique_handle's operator * should expose a const reference of its val
 	REQUIRE(result);
 }
 
-TEMPLATE_TEST_CASE
-(
+TEMPLATE_TEST_CASE(
 	"unique_handle's operator -> overload should expose a pointer to its value.",
 	"[unique_handle]",
 	test_handle,
@@ -387,20 +370,19 @@ TEMPLATE_TEST_CASE
 TEST_CASE("unique_handle::reset should reset to a nullhandle.", "[unique_handle]")
 {
 	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
-	const bool isValid = []
-	{
-		test_handle temp{ 42 };
-		temp.reset();
-		return temp.is_valid();
-	}();
+		bool isValid = []
+		{
+			test_handle temp{ 42 };
+			temp.reset();
+			return temp.is_valid();
+		}();
 
 	REQUIRE(!isValid);
 }
 
 TEST_CASE("resetting a handle without value should do nothing.", "[unique_handle]")
 {
-	REQUIRE_NOTHROW
-	(
+	REQUIRE_NOTHROW(
 		[]
 		{
 		test_handle temp{ nullhandle };
@@ -410,8 +392,7 @@ TEST_CASE("resetting a handle without value should do nothing.", "[unique_handle
 }
 
 #pragma warning(disable: 26444)
-TEMPLATE_TEST_CASE_SIG
-(
+TEMPLATE_TEST_CASE_SIG(
 	"delete action on reset must only be invoked if unique_handle holds a value.",
 	"[unique_handle]",
 	((class TInit, bool VExpected), TInit, VExpected),
@@ -421,13 +402,13 @@ TEMPLATE_TEST_CASE_SIG
 #pragma warning(disable: 26444)
 {
 	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
-	const bool result = []
-	{
-		int counter{};
-		test_handle temp{ TInit{}, delete_action_mock{ .invoke_counter = &counter } };
-		temp.reset();
-		return counter == 1;
-	}();
+		bool result = []
+		{
+			int counter{};
+			test_handle temp{ TInit{}, delete_action_mock{ .invoke_counter = &counter } };
+			temp.reset();
+			return counter == 1;
+		}();
 
 	REQUIRE(result == VExpected);
 }
@@ -445,8 +426,7 @@ TEST_CASE("unique_handle::delete_action should return a reference to the used de
 }
 
 #pragma warning(disable: 26444)
-TEMPLATE_TEST_CASE_SIG
-(
+TEMPLATE_TEST_CASE_SIG(
 	"delete action on destruction must only be invoked if unique_handle holds a value.",
 	"[unique_handle]",
 	((class TInit, bool VExpected), TInit, VExpected),
