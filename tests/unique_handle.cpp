@@ -387,14 +387,14 @@ TEMPLATE_TEST_CASE
 TEST_CASE("unique_handle::reset should reset to a nullhandle.", "[unique_handle]")
 {
 	SL_UNIQUE_HANDLE_FULL_CONSTEXPR
-	const test_handle handle = []
+	const bool isValid = []
 	{
 		test_handle temp{ 42 };
 		temp.reset();
-		return temp;
+		return temp.is_valid();
 	}();
 
-	REQUIRE(!handle);
+	REQUIRE(!isValid);
 }
 
 TEST_CASE("resetting a handle without value should do nothing.", "[unique_handle]")
