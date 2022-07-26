@@ -148,7 +148,7 @@ namespace sl::nullables
 			template <class TNullable>
 				requires requires { { unwrap(std::declval<TNullable>()) } -> std::convertible_to<value_t<TNullable>>; }
 			[[nodiscard]]
-			constexpr auto operator()(TNullable&& na) const noexcept
+			constexpr decltype(auto) operator()(TNullable&& na) const noexcept
 			{
 				return unwrap(std::forward<TNullable>(na));
 			}
