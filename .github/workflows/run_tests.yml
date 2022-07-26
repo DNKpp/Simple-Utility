@@ -22,10 +22,18 @@ jobs:
         compiler:
           - pkg: g++-12
             exe: g++-12
+          - pkg: g++-11
+            exe: g++-11
+          - pkg: g++-10
+            exe: g++-10
           - pkg: clang-14
             exe: clang++-14
           - pkg: clang-13
             exe: clang++-13
+          - pkg: clang-12
+            exe: clang++-12
+          - pkg: clang-11
+            exe: clang++-11
             
     steps:
     - uses: actions/checkout@v2
