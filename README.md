@@ -3,7 +3,6 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/ffee59527a4d43f09b5aeabbac1eaa52)](https://www.codacy.com/gh/DNKpp/Simple-Utility/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DNKpp/Simple-Utility&amp;utm_campaign=Badge_Grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/ffee59527a4d43f09b5aeabbac1eaa52)](https://www.codacy.com/gh/DNKpp/Simple-Utility/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DNKpp/Simple-Utility&amp;utm_campaign=Badge_Coverage)
 [![codecov](https://codecov.io/gh/DNKpp/Simple-Utility/branch/master/graph/badge.svg?token=R5ZUSJPZ57)](https://codecov.io/gh/DNKpp/Simple-Utility)
-[![Documentation](https://img.shields.io/badge/docs-docsforge-blue)](https://simple-utility.docsforge.com/)
 
 ## Author
 Dominic Koepke  
@@ -22,7 +21,7 @@ Mail: [DNKpp2011@gmail.com](mailto:dnkpp2011@gmail.com)
 
 ## Description
 This library is merely a collection of useful utilities. It is not ment as an replacement for anything out there, it just couples things nicely into one library which doesn't relate closely to anything else but might be useful
-on future projects. All parts are well tested and the documentation can be found either on the gh-pages section or directly at [docsforge.com](https://simple-utility.docsforge.com/). If you run into any kind of bugs or have ideas for
+on future projects. All parts are well tested and the documentation can be found either on the gh-pages section. If you run into any kind of bugs or have ideas for
 improvements, feel free to add an issue or even compile a pull-request.
 
 ### functional
