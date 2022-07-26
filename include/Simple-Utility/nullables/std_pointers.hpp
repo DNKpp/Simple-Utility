@@ -18,7 +18,7 @@
  * \tparam TArgs Arguments of std::unique_ptr
  */
 template <class... TArgs>
-struct sl::nullables::nullable_traits<std::unique_ptr<TArgs...>>
+struct sl::nullables::traits<std::unique_ptr<TArgs...>>
 {
 	using value_type = typename std::unique_ptr<TArgs...>::element_type;
 	inline static constexpr std::nullptr_t null{ nullptr };
@@ -30,7 +30,7 @@ struct sl::nullables::nullable_traits<std::unique_ptr<TArgs...>>
  * \tparam TArgs Arguments of std::shared_ptr
  */
 template <class... TArgs>
-struct sl::nullables::nullable_traits<std::shared_ptr<TArgs...>>
+struct sl::nullables::traits<std::shared_ptr<TArgs...>>
 {
 	using value_type = typename std::shared_ptr<TArgs...>::element_type;
 	inline static constexpr std::nullptr_t null{ nullptr };

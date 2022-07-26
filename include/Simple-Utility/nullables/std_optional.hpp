@@ -25,27 +25,6 @@ namespace sl::nullables
 		using value_type = typename std::optional<TArgs...>::value_type;
 		inline static constexpr std::nullopt_t null{ std::nullopt };
 	};
-
-	template <class T, class TAlternative>
-	[[nodiscard]]
-	constexpr T value_or_algorithm(const std::optional<T>& opt, TAlternative&& alternative)
-	{
-		return opt.value_or(std::forward<TAlternative>(alternative));
-	}
-
-	template <class T, class TAlternative>
-	[[nodiscard]]
-	constexpr T value_or_algorithm(std::optional<T>& opt, TAlternative&& alternative)
-	{
-		return opt.value_or(std::forward<TAlternative>(alternative));
-	}
-
-	template <class T, class TAlternative>
-	[[nodiscard]]
-	constexpr T value_or_algorithm(std::optional<T>&& opt, TAlternative&& alternative)
-	{
-		return std::move(opt).value_or(std::forward<TAlternative>(alternative));
-	}
 }
 
 #endif

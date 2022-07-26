@@ -32,7 +32,6 @@ namespace sl::functional::detail
 
 	template <class TTo, class T>
 	inline constexpr bool force_explicit_constructor_v<TTo, T>{ !std::is_convertible_v<T, TTo> };
-
 }
 
 namespace sl::functional::operators
@@ -489,30 +488,6 @@ namespace sl::functional
 
 namespace sl::functional::detail
 {
-	template <class T, class... TCallArgs>
-	struct is_type_list_invokable;
-
-	template <class... TFunctions, class... TCallArgs>
-	struct is_type_list_invokable<std::tuple<TFunctions...>, TCallArgs...>
-		: std::bool_constant<std::conjunction_v<std::is_invocable<TFunctions, TCallArgs...>...>>
-	{};
-
-	template <class T, class... TCallArgs>
-	concept invocable_type_list = is_type_list_invokable<std::remove_cvref_t<T>, TCallArgs...>::value;
-
-	template <class T, class... TCallArgs>
-	struct is_type_list_nothrow_invokable;
-
-	template <class... TFunctions, class... TCallArgs>
-	struct is_type_list_nothrow_invokable<std::tuple<TFunctions...>, TCallArgs...>
-		: std::bool_constant<std::conjunction_v<std::is_nothrow_invocable<TFunctions, TCallArgs...>...>>
-	{};
-
-	template <class T, class... TCallArgs>
-	inline constexpr bool is_type_list_nothrow_invokable_v{
-		is_type_list_nothrow_invokable<std::remove_cvref_t<T>, TCallArgs...>::value
-	};
-
 	template <operators::tag TOperationTag, class... TTupleElements>
 	[[nodiscard]]
 	constexpr auto make_composition_from_tuple

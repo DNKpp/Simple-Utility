@@ -66,6 +66,37 @@
 					"type": "BOOL"
 				}
 			]
+		},
+		{
+			"name": "Linux-Clang-Debug",
+			"generator": "Ninja",
+			"configurationType": "Debug",
+			"cmakeExecutable": "cmake",
+			"remoteCopySourcesExclusionList": [ ".vs", ".git", "out" ],
+			"cmakeCommandArgs": "",
+			"buildCommandArgs": "",
+			"ctestCommandArgs": "",
+			"inheritEnvironments": [ "linux_clang_x64" ],
+			"variables": [
+				{
+					"name": "CATCH_BUILD_TESTING",
+					"value": "False",
+					"type": "BOOL"
+				},
+				{
+					"name": "Simple-Utility_BUILD_TESTS",
+					"value": "True",
+					"type": "BOOL"
+				}
+			],
+			"remoteMachineName": "${defaultRemoteMachineName}",
+			"remoteCMakeListsRoot": "$HOME/.vs/${projectDirName}/${workspaceHash}/src",
+			"remoteBuildRoot": "$HOME/.vs/${projectDirName}/${workspaceHash}/out/build/${name}",
+			"remoteInstallRoot": "$HOME/.vs/${projectDirName}/${workspaceHash}/out/install/${name}",
+			"remoteCopySources": true,
+			"rsyncCommandArgs": "-t --delete --delete-excluded",
+			"remoteCopyBuildOutput": false,
+			"remoteCopySourcesMethod": "rsync"
 		}
 	]
 }

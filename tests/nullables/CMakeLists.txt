@@ -4,4 +4,5 @@ target_sources(
 	"base.cpp"
 	"adapter.cpp"
 	"algorithm.cpp"
+	"additional.cpp"
 )
