@@ -6,15 +6,13 @@ env:
   CMAKE_OPTIONS: -DSimple-Utility_BUILD_TESTS=ON
 
 on:
-  schedule:
-  - cron: '0 0 * * *'
   push:
     branches: [master, development]
   pull_request:
-    branches: [development]
+    branches: [master, development]
 
 jobs:
-  linux:
+  linux-latest:
     runs-on: ubuntu-22.04
     timeout-minutes: 10
 
@@ -24,12 +22,40 @@ jobs:
         compiler:
           - pkg: g++-12
             exe: g++-12
+          - pkg: clang-14
+            exe: clang++-14
+          - pkg: clang-13
+            exe: clang++-13
+            
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install compiler
+      run: |
+        sudo apt-get update
+        sudo apt-get install ${{ matrix.compiler.pkg }} -y
+    - name: Compile tests
+      env:
+        CXX: ${{ matrix.compiler.exe }}
+      run: |
+        cmake ${{ env.CMAKE_OPTIONS }} -B ${{ env.BUILD_DIR }} -S .
+        cmake --build ${{ env.BUILD_DIR }} -j4
+    - name: Run tests
+      env:
+        CTEST_OUTPUT_ON_FAILURE: 1
+      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.TEST_DIR }} --timeout 30 -C Debug -j4
+
+  linux-ubuntu-20_04:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 10
+
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler:
           - pkg: g++-11
             exe: g++-11
           - pkg: g++-10
             exe: g++-10
-          - pkg: clang-13
-            exe: clang++-13
           - pkg: clang-12
             exe: clang++-12
           - pkg: clang-11
