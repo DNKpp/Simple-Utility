@@ -20,7 +20,7 @@ namespace sl::nullables
 	{
 		template <class TAdapted>
 			requires concepts::dereferencable<TAdapted>
-					&& requires(TAdapted t) { { *std::forward<TAdapted>(t) } -> concepts::not_same_as<void>; }
+					&& requires{ { *std::declval<TAdapted>() } -> concepts::not_same_as<void>; }
 		[[nodiscard]]
 		constexpr decltype(auto) unwrap_adapted(TAdapted&& adapted)
 		{
@@ -94,10 +94,10 @@ namespace sl::nullables
 	concept adaptable_with = std::movable<TNull>
 							&& std::movable<TAdapted>
 							&& concepts::weakly_equality_comparable_with<TAdapted, TNull>
-							&& requires(TAdapted&& t)
+							&& requires
 							{
 								typename adapted_value_t<TAdapted>;
-								{ unwrap_adapted(std::forward<TAdapted>(t)) } -> std::convertible_to<adapted_value_t<TAdapted>>;
+								{ unwrap_adapted(std::declval<TAdapted>()) } -> std::convertible_to<adapted_value_t<TAdapted>>;
 							};
 
 	template <class TNull, adaptable_with<TNull> TAdapted>
@@ -141,9 +141,9 @@ namespace sl::nullables
 	namespace detail
 	{
 		template <class T>
-		concept convertible_to_adapter = requires(T&& arg)
+		concept convertible_to_adapter = requires
 		{
-			adapter{ nullables::to_nullables_adapter(std::forward<T>(arg)) };
+			adapter{ nullables::to_nullables_adapter(std::declval<T>()) };
 		};
 	}
 
