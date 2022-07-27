@@ -576,11 +576,10 @@ namespace sl::functional::detail
 	}
 
 	template <class TFunc, template <class> class TClosureTemplate, operators::tag... TOperations>
+	// ReSharper disable once CppFunctionIsNotImplemented
 	typename enable_operation<TClosureTemplate, TOperations...>::template closure_t<TFunc> lookup_closure
 	(
-		const enable_operation<TClosureTemplate, TOperations...>&
-
-	
+		const enable_operation<TClosureTemplate, TOperations...>& op	
 	);
 
 	template <class TFunc, derived_from_unified_base<enable_operators_base_tag> T>
