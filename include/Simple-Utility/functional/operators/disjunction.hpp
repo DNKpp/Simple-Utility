@@ -52,7 +52,7 @@ namespace sl::functional::operators
 	struct tag_traits<disjunction>
 	{
 		using operation_t = detail::disjunction_caller_fn;
-		inline static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::join };
+		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::join };
 	};
 
 	/**

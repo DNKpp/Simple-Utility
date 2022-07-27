@@ -106,7 +106,7 @@ namespace sl::functional::operators
 	struct tag_traits<bind_front>
 	{
 		using operation_t = detail::bind_front_caller_fn;
-		inline static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::join };
+		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::join };
 	};
 
 	/**
@@ -149,7 +149,7 @@ namespace sl::functional::operators
 	struct tag_traits<bind_back>
 	{
 		using operation_t = detail::bind_back_caller_fn;
-		inline static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::join };
+		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::join };
 	};
 
 	/**

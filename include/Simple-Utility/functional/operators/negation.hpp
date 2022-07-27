@@ -36,7 +36,7 @@ namespace sl::functional::operators
 	struct tag_traits<negate>
 	{
 		using operation_t = detail::nested_invoke_caller_fn;
-		inline static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::nested };
+		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::nested };
 	};
 
 	/**
