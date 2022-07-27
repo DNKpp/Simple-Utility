@@ -15,6 +15,11 @@
 					"name": "Simple-Utility_BUILD_TESTS",
 					"value": "True",
 					"type": "BOOL"
+				},
+				{
+					"name": "CMAKE_EXPORT_COMPILE_COMMANDS",
+					"value": "True",
+					"type": "BOOL"
 				}
 			]
 		},
