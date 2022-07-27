@@ -124,7 +124,7 @@ namespace sl::nullables
 	struct traits<T>
 	{
 		using value_type = std::remove_pointer_t<T>;
-		inline static constexpr std::nullptr_t null{ nullptr };
+		static constexpr std::nullptr_t null{ nullptr };
 	};
 
 	/** @} */

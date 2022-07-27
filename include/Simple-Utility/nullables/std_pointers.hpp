@@ -21,7 +21,7 @@ template <class... TArgs>
 struct sl::nullables::traits<std::unique_ptr<TArgs...>>
 {
 	using value_type = typename std::unique_ptr<TArgs...>::element_type;
-	inline static constexpr std::nullptr_t null{ nullptr };
+	static constexpr std::nullptr_t null{ nullptr };
 };
 
 /**
@@ -33,7 +33,7 @@ template <class... TArgs>
 struct sl::nullables::traits<std::shared_ptr<TArgs...>>
 {
 	using value_type = typename std::shared_ptr<TArgs...>::element_type;
-	inline static constexpr std::nullptr_t null{ nullptr };
+	static constexpr std::nullptr_t null{ nullptr };
 };
 
 #endif

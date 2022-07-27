@@ -23,7 +23,7 @@ namespace sl::nullables
 	struct traits<std::optional<TArgs...>>
 	{
 		using value_type = typename std::optional<TArgs...>::value_type;
-		inline static constexpr std::nullopt_t null{ std::nullopt };
+		static constexpr std::nullopt_t null{ std::nullopt };
 	};
 }
 
