@@ -290,7 +290,8 @@ TEST_CASE("moving unique_handle with itself should change nothing.", "[unique_ha
 	{
 		test_handle handle{ 1337 };
 		handle = std::move(handle);  // NOLINT(clang-diagnostic-self-move)
-		return handle.is_valid() && *handle == 1337;  // NOLINT(bugprone-use-after-move)
+		return handle.is_valid()  // NOLINT(bugprone-use-after-move)
+			&& *handle == 1337;  // NOLINT(bugprone-use-after-move)
 	}();
 
 	REQUIRE(result);
