@@ -221,6 +221,8 @@ TEMPLATE_TEST_CASE_SIG(
 	SL_UNIQUE_HANDLE_FULL_CONSTEXPR const bool result = []
 	{
 		int counter{};
+		// ReSharper disable once CppInitializedValueIsAlwaysRewritten
+		// ReSharper disable once CppEntityAssignedButNoRead
 		test_handle temp{ TInit{}, delete_action_mock{ .invoke_counter = &counter } };
 		temp = TAssign{};
 		return counter == 1;
@@ -235,7 +237,7 @@ TEST_CASE("unique_handle should be move constructible and invalidate the source.
 	{
 		test_handle source{ 42 };
 		const test_handle target{ std::move(source) };
-		return !source.is_valid() && target.is_valid();
+		return !source.is_valid() && target.is_valid();  // NOLINT(bugprone-use-after-move)
 	}();
 
 	REQUIRE(result);
@@ -262,7 +264,7 @@ TEST_CASE("unique_handle should be move assignable and invalidate the source.", 
 		// ReSharper disable once CppInitializedValueIsAlwaysRewritten
 		test_handle target{ nullhandle };
 		target = std::move(source);
-		return !source.is_valid() && target.is_valid();
+		return !source.is_valid() && target.is_valid();  // NOLINT(bugprone-use-after-move)
 	}();
 
 	REQUIRE(result);
@@ -287,8 +289,8 @@ TEST_CASE("moving unique_handle with itself should change nothing.", "[unique_ha
 	SL_UNIQUE_HANDLE_FULL_CONSTEXPR const bool result = []
 	{
 		test_handle handle{ 1337 };
-		handle = std::move(handle);
-		return handle.is_valid() && *handle == 1337;
+		handle = std::move(handle);  // NOLINT(clang-diagnostic-self-move)
+		return handle.is_valid() && *handle == 1337;  // NOLINT(bugprone-use-after-move)
 	}();
 
 	REQUIRE(result);
