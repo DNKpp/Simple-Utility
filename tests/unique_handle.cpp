@@ -40,7 +40,9 @@ namespace
 		constexpr void operator ()(auto&) noexcept
 		{
 			if (invoke_counter)
+			{
 				++(*invoke_counter);
+			}
 		}
 	};
 
@@ -291,7 +293,7 @@ TEST_CASE("moving unique_handle with itself should change nothing.", "[unique_ha
 		test_handle handle{ 1337 };
 		handle = std::move(handle);  // NOLINT(clang-diagnostic-self-move)
 		return handle.is_valid()  // NOLINT(bugprone-use-after-move)
-			&& *handle == 1337;  // NOLINT(bugprone-use-after-move)
+				&& *handle == 1337;  // NOLINT(bugprone-use-after-move)
 	}();
 
 	REQUIRE(result);
@@ -458,7 +460,10 @@ TEST_CASE("unique_handle should be three-way-comparable with unqiue_handle of sa
 	STATIC_REQUIRE((test_handle{42 } <=> test_handle{1337}) == std::strong_ordering::less);
 }
 
-TEST_CASE("unique_handle should be three-way-comparable with unqiue_handle containing different but comparable type.", "[unique_handle]")
+TEST_CASE(
+	"unique_handle should be three-way-comparable with unqiue_handle containing different but comparable type.",
+	"[unique_handle]"
+)
 {
 	STATIC_REQUIRE((unique_handle<short>{0} <=> unique_handle{0}) == std::strong_ordering::equal);
 	STATIC_REQUIRE((unique_handle<short>{0} <=> unique_handle{42}) == std::strong_ordering::less);
@@ -508,8 +513,9 @@ TEST_CASE("unique_handle should be equality-comparable with specific types.", "[
 TEST_CASE("unique_handle can hold non-comparable value types.", "[unique_handle]")
 {
 	// just a compile time check for the comparison operators
-	struct non_comparable {};
-	constexpr unique_handle<non_comparable> handle{non_comparable{}};
+	struct non_comparable
+	{};
+	constexpr unique_handle<non_comparable> handle{ non_comparable{} };
 
 	STATIC_REQUIRE(handle.is_valid());
 }
