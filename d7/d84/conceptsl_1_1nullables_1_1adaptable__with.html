@@ -95,10 +95,10 @@ $(document).ready(function(){initNavTree('d7/d84/conceptsl_1_1nullables_1_1adapt
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../d7/d84/conceptsl_1_1nullables_1_1adaptable__with.html">sl::nullables::adaptable_with</a> =  std::movable&lt;TNull&gt;</div>
 <div class="line">                            &amp;&amp; std::movable&lt;TAdapted&gt;</div>
 <div class="line">                            &amp;&amp; <a class="code hl_concept" href="../../d3/da6/conceptsl_1_1concepts_1_1weakly__equality__comparable__with.html">concepts::weakly_equality_comparable_with&lt;TAdapted, TNull&gt;</a></div>
-<div class="line">                            &amp;&amp; <span class="keyword">requires</span>(TAdapted&amp;&amp; t)</div>
+<div class="line">                            &amp;&amp; <span class="keyword">requires</span></div>
 <div class="line">                            {</div>
 <div class="line">                                <span class="keyword">typename</span> adapted_value_t&lt;TAdapted&gt;;</div>
-<div class="line">                                { <a class="code hl_variable" href="../../d0/de0/namespacesl_1_1nullables.html#a1724b628bbc54d330e4ca538b05a70a2">unwrap_adapted</a>(std::forward&lt;TAdapted&gt;(t)) } -&gt; std::convertible_to&lt;adapted_value_t&lt;TAdapted&gt;&gt;;</div>
+<div class="line">                                { <a class="code hl_variable" href="../../d0/de0/namespacesl_1_1nullables.html#a1724b628bbc54d330e4ca538b05a70a2">unwrap_adapted</a>(std::declval&lt;TAdapted&gt;()) } -&gt; std::convertible_to&lt;adapted_value_t&lt;TAdapted&gt;&gt;;</div>
 <div class="line">                            }</div>
 <div class="ttc" id="aconceptsl_1_1concepts_1_1weakly__equality__comparable__with_html"><div class="ttname"><a href="../../d3/da6/conceptsl_1_1concepts_1_1weakly__equality__comparable__with.html">sl::concepts::weakly_equality_comparable_with</a></div><div class="ttdoc">Checks whether a symmetrical set of operators == and != to compare both types with each other exists.</div><div class="ttdef"><b>Definition:</b> stl_extensions.hpp:60</div></div>
 <div class="ttc" id="aconceptsl_1_1nullables_1_1adaptable__with_html"><div class="ttname"><a href="../../d7/d84/conceptsl_1_1nullables_1_1adaptable__with.html">sl::nullables::adaptable_with</a></div><div class="ttdoc">Determines whether the given adapted and null type satisfy the requirements to be used within a adapt...</div><div class="ttdef"><b>Definition:</b> adapter.hpp:94</div></div>

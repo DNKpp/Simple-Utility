@@ -12,6 +12,8 @@ var namespacesl =
     [ "unified_base", "d6/d62/structsl_1_1unified__base.html", null ],
     [ "unique_handle", "da/da9/classsl_1_1unique__handle.html", "da/da9/classsl_1_1unique__handle" ],
     [ "derived_from_unified_base", "d1/df9/conceptsl_1_1derived__from__unified__base.html", null ],
+    [ "value", "d6/d66/conceptsl_1_1value.html", null ],
+    [ "delete_action_for", "d2/df1/conceptsl_1_1delete__action__for.html", null ],
     [ "apply_invoke_result_t", "d5/dde/group___g_r_o_u_p___t_u_p_l_e___u_t_i_l_i_t_y.html#ga10e61e72c46a5cdcf4aded03c4c57425", null ],
     [ "bad_handle_access", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html#ga4ba9c826372bfbb9f9cc169eef579271", null ],
     [ "tuple_cat_result_t", "d5/dde/group___g_r_o_u_p___t_u_p_l_e___u_t_i_l_i_t_y.html#ga044ce2d3054e477226849ee835ddd660", null ],

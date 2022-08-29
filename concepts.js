@@ -95,6 +95,8 @@ var concepts =
         [ "input_nullable", "d1/d54/conceptsl_1_1nullables_1_1input__nullable.html", null ],
         [ "nullable", "de/dd6/conceptsl_1_1nullables_1_1nullable.html", null ]
       ] ],
-      [ "derived_from_unified_base", "d1/df9/conceptsl_1_1derived__from__unified__base.html", null ]
+      [ "derived_from_unified_base", "d1/df9/conceptsl_1_1derived__from__unified__base.html", null ],
+      [ "value", "d6/d66/conceptsl_1_1value.html", null ],
+      [ "delete_action_for", "d2/df1/conceptsl_1_1delete__action__for.html", null ]
     ] ]
 ];

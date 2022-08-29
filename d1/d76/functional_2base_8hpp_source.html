@@ -537,51 +537,50 @@ $(document).ready(function(){initNavTree('d1/d76/functional_2base_8hpp_source.ht
 <div class="line"><a id="l00576" name="l00576"></a><span class="lineno">  576</span>    }</div>
 <div class="line"><a id="l00577" name="l00577"></a><span class="lineno">  577</span> </div>
 <div class="line"><a id="l00578" name="l00578"></a><span class="lineno">  578</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> TFunc, <span class="keyword">template</span> &lt;<span class="keyword">class</span>&gt; <span class="keyword">class </span>TClosureTemplate, operators::tag... TOperations&gt;</div>
-<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>    <span class="keyword">typename</span> enable_operation&lt;TClosureTemplate, TOperations...&gt;::template closure_t&lt;TFunc&gt; lookup_closure</div>
-<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>    (</div>
-<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>        <span class="keyword">const</span> enable_operation&lt;TClosureTemplate, TOperations...&gt;&amp;</div>
-<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span> </div>
-<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>    </div>
-<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span>    );</div>
-<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span> </div>
-<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> TFunc, derived_from_unified_base&lt;enable_operators_base_tag&gt; T&gt;</div>
-<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span>    <span class="keyword">using </span>closure_t = <span class="keyword">decltype</span>(lookup_closure&lt;TFunc&gt;(std::declval&lt;T&gt;()));</div>
-<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span> </div>
-<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>    <span class="keyword">template</span> &lt;operators::tag TOperationTag, <span class="keyword">class</span> TFunc1, <span class="keyword">class</span> TFunc2&gt;</div>
-<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>        <span class="keyword">requires</span> (std::derived_from&lt;std::remove_cvref_t&lt;TFunc1&gt;, TOperationTag&gt;</div>
-<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>                &amp;&amp; derived_from_unified_base&lt;TFunc1, enable_operators_base_tag&gt;)</div>
-<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>                || (std::derived_from&lt;std::remove_cvref_t&lt;TFunc2&gt;, TOperationTag&gt;</div>
-<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>                    &amp;&amp; derived_from_unified_base&lt;TFunc2, enable_operators_base_tag&gt;)</div>
-<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> make_composition_from_tag</div>
-<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>    (</div>
-<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>        TFunc1&amp;&amp; func1,</div>
-<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>        TFunc2&amp;&amp; func2</div>
-<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>    )</div>
-<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>    <span class="keyword">noexcept</span>(is_nothrow_composable_v&lt;TOperationTag, TFunc1, TFunc2&gt;)</div>
-<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>    {</div>
-<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>        <span class="keyword">using </span>composition_t = <span class="keyword">decltype</span>(make_composition&lt;TOperationTag&gt;(</div>
-<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>            unwrap_functional(std::declval&lt;TFunc1&gt;()),</div>
-<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>            unwrap_functional(std::declval&lt;TFunc2&gt;())</div>
-<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>        ));</div>
-<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>        <span class="keyword">using </span>composition_closure_t = closure_t&lt;</div>
-<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>            composition_t,</div>
-<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>            std::conditional_t&lt;</div>
-<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>                derived_from_unified_base&lt;TFunc1, enable_operators_base_tag&gt;,</div>
-<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>                TFunc1,</div>
-<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span>                TFunc2</div>
-<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>            &gt;</div>
-<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>        &gt;;</div>
-<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span> </div>
-<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>        <span class="keywordflow">return</span> composition_closure_t{</div>
-<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>            make_composition&lt;TOperationTag&gt;(</div>
-<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span>                unwrap_functional(std::forward&lt;TFunc1&gt;(func1)),</div>
-<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>                unwrap_functional(std::forward&lt;TFunc2&gt;(func2))</div>
-<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>            )</div>
-<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>        };</div>
-<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>    }</div>
-<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>}</div>
-<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span> </div>
-<div class="line"><a id="l00623" name="l00623"></a><span class="lineno">  623</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00579" name="l00579"></a><span class="lineno">  579</span>    <span class="comment">// ReSharper disable once CppFunctionIsNotImplemented</span></div>
+<div class="line"><a id="l00580" name="l00580"></a><span class="lineno">  580</span>    <span class="keyword">typename</span> enable_operation&lt;TClosureTemplate, TOperations...&gt;::template closure_t&lt;TFunc&gt; lookup_closure</div>
+<div class="line"><a id="l00581" name="l00581"></a><span class="lineno">  581</span>    (</div>
+<div class="line"><a id="l00582" name="l00582"></a><span class="lineno">  582</span>        <span class="keyword">const</span> enable_operation&lt;TClosureTemplate, TOperations...&gt;&amp; op    </div>
+<div class="line"><a id="l00583" name="l00583"></a><span class="lineno">  583</span>    );</div>
+<div class="line"><a id="l00584" name="l00584"></a><span class="lineno">  584</span> </div>
+<div class="line"><a id="l00585" name="l00585"></a><span class="lineno">  585</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> TFunc, derived_from_unified_base&lt;enable_operators_base_tag&gt; T&gt;</div>
+<div class="line"><a id="l00586" name="l00586"></a><span class="lineno">  586</span>    <span class="keyword">using </span>closure_t = <span class="keyword">decltype</span>(lookup_closure&lt;TFunc&gt;(std::declval&lt;T&gt;()));</div>
+<div class="line"><a id="l00587" name="l00587"></a><span class="lineno">  587</span> </div>
+<div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span>    <span class="keyword">template</span> &lt;operators::tag TOperationTag, <span class="keyword">class</span> TFunc1, <span class="keyword">class</span> TFunc2&gt;</div>
+<div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span>        <span class="keyword">requires</span> (std::derived_from&lt;std::remove_cvref_t&lt;TFunc1&gt;, TOperationTag&gt;</div>
+<div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span>                &amp;&amp; derived_from_unified_base&lt;TFunc1, enable_operators_base_tag&gt;)</div>
+<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span>                || (std::derived_from&lt;std::remove_cvref_t&lt;TFunc2&gt;, TOperationTag&gt;</div>
+<div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span>                    &amp;&amp; derived_from_unified_base&lt;TFunc2, enable_operators_base_tag&gt;)</div>
+<div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> make_composition_from_tag</div>
+<div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span>    (</div>
+<div class="line"><a id="l00595" name="l00595"></a><span class="lineno">  595</span>        TFunc1&amp;&amp; func1,</div>
+<div class="line"><a id="l00596" name="l00596"></a><span class="lineno">  596</span>        TFunc2&amp;&amp; func2</div>
+<div class="line"><a id="l00597" name="l00597"></a><span class="lineno">  597</span>    )</div>
+<div class="line"><a id="l00598" name="l00598"></a><span class="lineno">  598</span>    <span class="keyword">noexcept</span>(is_nothrow_composable_v&lt;TOperationTag, TFunc1, TFunc2&gt;)</div>
+<div class="line"><a id="l00599" name="l00599"></a><span class="lineno">  599</span>    {</div>
+<div class="line"><a id="l00600" name="l00600"></a><span class="lineno">  600</span>        <span class="keyword">using </span>composition_t = <span class="keyword">decltype</span>(make_composition&lt;TOperationTag&gt;(</div>
+<div class="line"><a id="l00601" name="l00601"></a><span class="lineno">  601</span>            unwrap_functional(std::declval&lt;TFunc1&gt;()),</div>
+<div class="line"><a id="l00602" name="l00602"></a><span class="lineno">  602</span>            unwrap_functional(std::declval&lt;TFunc2&gt;())</div>
+<div class="line"><a id="l00603" name="l00603"></a><span class="lineno">  603</span>        ));</div>
+<div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span>        <span class="keyword">using </span>composition_closure_t = closure_t&lt;</div>
+<div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span>            composition_t,</div>
+<div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span>            std::conditional_t&lt;</div>
+<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span>                derived_from_unified_base&lt;TFunc1, enable_operators_base_tag&gt;,</div>
+<div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span>                TFunc1,</div>
+<div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>                TFunc2</div>
+<div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span>            &gt;</div>
+<div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>        &gt;;</div>
+<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span> </div>
+<div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>        <span class="keywordflow">return</span> composition_closure_t{</div>
+<div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>            make_composition&lt;TOperationTag&gt;(</div>
+<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>                unwrap_functional(std::forward&lt;TFunc1&gt;(func1)),</div>
+<div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span>                unwrap_functional(std::forward&lt;TFunc2&gt;(func2))</div>
+<div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>            )</div>
+<div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>        };</div>
+<div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>    }</div>
+<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>}</div>
+<div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span> </div>
+<div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aclasssl_1_1functional_1_1closure__base__fn_html"><div class="ttname"><a href="../../d9/de4/classsl_1_1functional_1_1closure__base__fn.html">sl::functional::closure_base_fn</a></div><div class="ttdoc">Helper type which simply stores functional objects or function pointers.</div><div class="ttdef"><b>Definition:</b> base.hpp:132</div></div>
 <div class="ttc" id="aclasssl_1_1functional_1_1closure__base__fn_html_a21993d4fb42f6d0d6f241bc99935e4c4"><div class="ttname"><a href="../../d9/de4/classsl_1_1functional_1_1closure__base__fn.html#a21993d4fb42f6d0d6f241bc99935e4c4">sl::functional::closure_base_fn::operator*</a></div><div class="ttdeci">constexpr function_type operator*() const &amp;noexcept(std::is_nothrow_copy_constructible_v&lt; function_type &gt;)</div><div class="ttdef"><b>Definition:</b> base.hpp:202</div></div>
 <div class="ttc" id="aclasssl_1_1functional_1_1closure__base__fn_html_a93517e1b727ec2e05ae0b44511c570a8"><div class="ttname"><a href="../../d9/de4/classsl_1_1functional_1_1closure__base__fn.html#a93517e1b727ec2e05ae0b44511c570a8">sl::functional::closure_base_fn::function_type</a></div><div class="ttdeci">TFunc function_type</div><div class="ttdef"><b>Definition:</b> base.hpp:134</div></div>

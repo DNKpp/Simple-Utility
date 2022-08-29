@@ -83,6 +83,7 @@ $(document).ready(function(){initNavTree('d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e
 
 <div class="header">
   <div class="summary">
+<a href="#concepts">Concepts</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
@@ -94,6 +95,15 @@ $(document).ready(function(){initNavTree('d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e
 <p>A helper type, which acts as a nullable resource handle with self-cleanup support.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
+Concepts</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d66/conceptsl_1_1value.html">sl::value</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the given template type is usable as value type for <code>unique_handle</code> types. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/df1/conceptsl_1_1delete__action__for.html">sl::delete_action_for</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the given template type is usable as delete action type for <code>unique_handle</code> types. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/db6/structsl_1_1nullhandle__t.html">sl::nullhandle_t</a></td></tr>
@@ -181,7 +191,7 @@ Variables</h2></td></tr>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// no cleanup necessary</span></div>
 <div class="line">}</div>
-<div class="ttc" id="aclasssl_1_1unique__handle_html"><div class="ttname"><a href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a></div><div class="ttdoc">This type models some kind of std::optional behaviour but resets itself on move operations.</div><div class="ttdef"><b>Definition:</b> unique_handle.hpp:165</div></div>
+<div class="ttc" id="aclasssl_1_1unique__handle_html"><div class="ttname"><a href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a></div><div class="ttdoc">This type models some kind of std::optional behaviour but resets itself on move operations.</div><div class="ttdef"><b>Definition:</b> unique_handle.hpp:177</div></div>
 </div><!-- fragment --><p >Of course, at a first glance this seems quite more verbose, but in the long term nobody has to care about that entity anymore. This is what <code>RAII</code> is about. Note that <code>unique_handles</code> also can be stored as a member, then they really begin to shine, because if one would like to bind that entity to the lifetime of an other object that would of course lead to custom move constructor, assignment operator and destructor and explicitly deleted copy. With a <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a> none of this is necessary (and this is in fact the main reason why I decided to implement this).</p>
 <dl class="section note"><dt>Note</dt><dd>As using lambdas as delete action is usually fine, using capturing lambdas will fail to compile because they are non-copy-assignable. Use a old-school invokable struct as in the example instead.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a href="https://en.cppreference.com/w/cpp/utility/optional">https://en.cppreference.com/w/cpp/utility/optional</a> </dd>
