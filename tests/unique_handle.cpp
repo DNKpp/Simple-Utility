@@ -458,6 +458,14 @@ TEST_CASE("unique_handle should be three-way-comparable with unqiue_handle of sa
 	STATIC_REQUIRE((test_handle{42 } <=> test_handle{1337}) == std::strong_ordering::less);
 }
 
+TEST_CASE("unique_handle should be three-way-comparable with unqiue_handle containing different but comparable type.", "[unique_handle]")
+{
+	STATIC_REQUIRE((unique_handle<short>{0} <=> unique_handle{0}) == std::strong_ordering::equal);
+	STATIC_REQUIRE((unique_handle<short>{0} <=> unique_handle{42}) == std::strong_ordering::less);
+	STATIC_REQUIRE((unique_handle<short>{42} <=> unique_handle{0}) == std::strong_ordering::greater);
+	STATIC_REQUIRE((unique_handle<short>{42} <=> unique_handle{1337}) == std::strong_ordering::less);
+}
+
 TEST_CASE("unique_handle should be three-way-comparable with nullhandle.", "[unique_handle]")
 {
 	STATIC_REQUIRE((nullhandle <=> test_handle{ 42 }) == std::strong_ordering::less);
@@ -488,6 +496,10 @@ TEST_CASE("unique_handle should be equality-comparable with specific types.", "[
 	STATIC_REQUIRE(test_handle{ 1337 } != test_handle{});
 	STATIC_REQUIRE(test_handle{ 1337 } != test_handle{ 42 });
 	STATIC_REQUIRE(test_handle{ 1337 } == test_handle{ 1337 });
+
+	STATIC_REQUIRE(unique_handle<short>{ 42 } != test_handle{});
+	STATIC_REQUIRE(unique_handle<short>{ 42 } != test_handle{ 1337 });
+	STATIC_REQUIRE(unique_handle<short>{ 42 } == test_handle{ 42 });
 
 	STATIC_REQUIRE(nullhandle == test_handle{});
 	STATIC_REQUIRE(nullhandle != test_handle{ 42 });
