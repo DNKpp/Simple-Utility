@@ -188,10 +188,10 @@ requires std::constructible_from&lt;T, TArgs...&gt;</td></tr>
 <tr class="memitem:a65b37f88f593d0099c1e4d6d61129771"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/da9/classsl_1_1unique__handle.html#a65b37f88f593d0099c1e4d6d61129771">operator==</a> (const <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&lt; T2, TOtherDeleteAction &gt; &amp;other) const</td></tr>
 <tr class="memdesc:a65b37f88f593d0099c1e4d6d61129771"><td class="mdescLeft">&#160;</td><td class="mdescRight">Equality-comparison operator overload between two <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handles</a>. operator != is implicitly defined.  <a href="../../da/da9/classsl_1_1unique__handle.html#a65b37f88f593d0099c1e4d6d61129771">More...</a><br /></td></tr>
 <tr class="separator:a65b37f88f593d0099c1e4d6d61129771"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a720c29758587dc766d0e1aec00480beb"><td class="memTemplParams" colspan="2">template&lt;std::three_way_comparable_with&lt; T &gt; T2, class TOtherDeleteAction &gt; </td></tr>
-<tr class="memitem:a720c29758587dc766d0e1aec00480beb"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::compare_three_way_result_t&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/da9/classsl_1_1unique__handle.html#a720c29758587dc766d0e1aec00480beb">operator&lt;=&gt;</a> (const <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&lt; T2, TOtherDeleteAction &gt; &amp;other) const</td></tr>
-<tr class="memdesc:a720c29758587dc766d0e1aec00480beb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Three-way-comparison operator overload between two <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handles</a>.  <a href="../../da/da9/classsl_1_1unique__handle.html#a720c29758587dc766d0e1aec00480beb">More...</a><br /></td></tr>
-<tr class="separator:a720c29758587dc766d0e1aec00480beb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa377ee256dc57014501259d5e0a80726"><td class="memTemplParams" colspan="2">template&lt;std::three_way_comparable_with&lt; T &gt; T2, class TOtherDeleteAction &gt; </td></tr>
+<tr class="memitem:aa377ee256dc57014501259d5e0a80726"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::compare_three_way_result_t&lt; T, T2 &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/da9/classsl_1_1unique__handle.html#aa377ee256dc57014501259d5e0a80726">operator&lt;=&gt;</a> (const <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&lt; T2, TOtherDeleteAction &gt; &amp;other) const</td></tr>
+<tr class="memdesc:aa377ee256dc57014501259d5e0a80726"><td class="mdescLeft">&#160;</td><td class="mdescRight">Three-way-comparison operator overload between two <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handles</a>.  <a href="../../da/da9/classsl_1_1unique__handle.html#aa377ee256dc57014501259d5e0a80726">More...</a><br /></td></tr>
+<tr class="separator:aa377ee256dc57014501259d5e0a80726"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1e47ad97a4e31d7a1d4a12897beee4a7"><td class="memTemplParams" colspan="2">template&lt;class T2 &gt; <br />
 requires concepts::not_same_as&lt;std::remove_cvref_t&lt;T2&gt;, <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&gt; &amp;&amp; std::three_way_comparable_with&lt;T, T2&gt;</td></tr>
 <tr class="memitem:a1e47ad97a4e31d7a1d4a12897beee4a7"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::compare_three_way_result_t&lt; T, T2 &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/da9/classsl_1_1unique__handle.html#a1e47ad97a4e31d7a1d4a12897beee4a7">operator&lt;=&gt;</a> (const T2 &amp;other) const</td></tr>
@@ -897,8 +897,8 @@ requires concepts::not_same_as&lt;std::remove_cvref_t&lt;T2&gt;, <a class="el" h
 
 </div>
 </div>
-<a id="a720c29758587dc766d0e1aec00480beb" name="a720c29758587dc766d0e1aec00480beb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a720c29758587dc766d0e1aec00480beb">&#9670;&nbsp;</a></span>operator&lt;=&gt;() <span class="overload">[2/3]</span></h2>
+<a id="aa377ee256dc57014501259d5e0a80726" name="aa377ee256dc57014501259d5e0a80726"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa377ee256dc57014501259d5e0a80726">&#9670;&nbsp;</a></span>operator&lt;=&gt;() <span class="overload">[2/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -911,7 +911,7 @@ template&lt;std::three_way_comparable_with&lt; T &gt; T2, class TOtherDeleteActi
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr std::compare_three_way_result_t&lt; T &gt; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::operator&lt;=&gt; </td>
+          <td class="memname">constexpr std::compare_three_way_result_t&lt; T, T2 &gt; <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a>&lt; T, TDeleteAction &gt;::operator&lt;=&gt; </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="../../da/da9/classsl_1_1unique__handle.html">unique_handle</a>&lt; T2, TOtherDeleteAction &gt; &amp;&#160;</td>
           <td class="paramname"><em>other</em></td><td>)</td>

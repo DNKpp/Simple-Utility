@@ -18,7 +18,7 @@ var classsl_1_1unique__handle =
     [ "operator*", "da/da9/classsl_1_1unique__handle.html#af1aadaa25246f79abab9ff4e93497f70", null ],
     [ "operator->", "da/da9/classsl_1_1unique__handle.html#a3fd0e32fc9f8ddc93653820502086f1f", null ],
     [ "operator<=>", "da/da9/classsl_1_1unique__handle.html#a1e47ad97a4e31d7a1d4a12897beee4a7", null ],
-    [ "operator<=>", "da/da9/classsl_1_1unique__handle.html#a720c29758587dc766d0e1aec00480beb", null ],
+    [ "operator<=>", "da/da9/classsl_1_1unique__handle.html#aa377ee256dc57014501259d5e0a80726", null ],
     [ "operator<=>", "da/da9/classsl_1_1unique__handle.html#a2430f32a657d572e3c3d5762d9b6158d", null ],
     [ "operator=", "da/da9/classsl_1_1unique__handle.html#a2918d58b3e7823d0310ce4299a67e9da", null ],
     [ "operator=", "da/da9/classsl_1_1unique__handle.html#a42bbe8c695dfbb76ffe27c15fc438897", null ],
