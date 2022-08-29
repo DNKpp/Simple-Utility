@@ -444,7 +444,7 @@ namespace sl
 		 */
 		template <std::three_way_comparable_with<T> T2, class TOtherDeleteAction>
 		[[nodiscard]]
-		constexpr std::compare_three_way_result_t<T> operator <=>(const unique_handle<T2, TOtherDeleteAction>& other) const
+		constexpr std::compare_three_way_result_t<T, T2> operator <=>(const unique_handle<T2, TOtherDeleteAction>& other) const
 		{
 			return m_Value <=> other.m_Value;
 		}
@@ -545,7 +545,7 @@ namespace sl
 	struct nullables::traits<unique_handle<T, TDeleteAction>>
 	{
 		using value_type = typename unique_handle<T, TDeleteAction>::value_type;
-		inline static constexpr nullhandle_t null{ nullhandle };
+		static constexpr nullhandle_t null{ nullhandle };
 	};
 
 	/** @} */
