@@ -545,7 +545,7 @@ namespace sl
 	struct nullables::traits<unique_handle<T, TDeleteAction>>
 	{
 		using value_type = typename unique_handle<T, TDeleteAction>::value_type;
-		inline static constexpr nullhandle_t null{ nullhandle };
+		static constexpr nullhandle_t null{ nullhandle };
 	};
 
 	/** @} */
