@@ -504,3 +504,12 @@ TEST_CASE("unique_handle should be equality-comparable with specific types.", "[
 	STATIC_REQUIRE(nullhandle == test_handle{});
 	STATIC_REQUIRE(nullhandle != test_handle{ 42 });
 }
+
+TEST_CASE("unique_handle can hold non-comparable value types.", "[unique_handle]")
+{
+	// just a compile time check for the comparison operators
+	struct non_comparable {};
+	constexpr unique_handle<non_comparable> handle{non_comparable{}};
+
+	STATIC_REQUIRE(handle.is_valid());
+}
