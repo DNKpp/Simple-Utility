@@ -67,7 +67,7 @@ namespace sl::functional::operators
 	struct tag_traits<equal>
 	{
 		using operation_t = detail::equal_caller_fn;
-		inline static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::nested };
+		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::nested };
 	};
 
 	/**
@@ -85,7 +85,7 @@ namespace sl::functional::operators
 	struct tag_traits<not_equal>
 	{
 		using operation_t = detail::not_equal_caller_fn;
-		inline static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::nested };
+		static constexpr composition_strategy_t composition_strategy{ composition_strategy_t::nested };
 	};
 
 	/**

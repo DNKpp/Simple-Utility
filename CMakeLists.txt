@@ -8,8 +8,7 @@ project(
 
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 include("get_cpm")
-
-OPTION(${PROJECT_NAME}_BUILD_TESTS "Determines wether tests will be build or not." OFF)
+CPMUsePackageLock(package-lock.cmake)
 
 add_library(${PROJECT_NAME} INTERFACE)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
@@ -25,10 +24,12 @@ target_compile_features(
 	cxx_std_20
 )
 
+OPTION(${PROJECT_NAME}_BUILD_TESTS "Determines wether tests will be build or not." OFF)
 if (${PROJECT_NAME}_BUILD_TESTS)
-	
 	add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tests")
-
 endif()
 
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/docs")
+option(${PROJECT_NAME}_CONFIGURE_DOXYGEN "Enables configure_file on the Doxyfile.in" OFF)
+if (${PROJECT_NAME}_CONFIGURE_DOXYGEN)
+	add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/docs")
+endif()

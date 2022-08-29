@@ -221,6 +221,8 @@ TEMPLATE_TEST_CASE_SIG(
 	SL_UNIQUE_HANDLE_FULL_CONSTEXPR const bool result = []
 	{
 		int counter{};
+		// ReSharper disable once CppInitializedValueIsAlwaysRewritten
+		// ReSharper disable once CppEntityAssignedButNoRead
 		test_handle temp{ TInit{}, delete_action_mock{ .invoke_counter = &counter } };
 		temp = TAssign{};
 		return counter == 1;
@@ -235,7 +237,7 @@ TEST_CASE("unique_handle should be move constructible and invalidate the source.
 	{
 		test_handle source{ 42 };
 		const test_handle target{ std::move(source) };
-		return !source.is_valid() && target.is_valid();
+		return !source.is_valid() && target.is_valid();  // NOLINT(bugprone-use-after-move)
 	}();
 
 	REQUIRE(result);
@@ -262,7 +264,7 @@ TEST_CASE("unique_handle should be move assignable and invalidate the source.", 
 		// ReSharper disable once CppInitializedValueIsAlwaysRewritten
 		test_handle target{ nullhandle };
 		target = std::move(source);
-		return !source.is_valid() && target.is_valid();
+		return !source.is_valid() && target.is_valid();  // NOLINT(bugprone-use-after-move)
 	}();
 
 	REQUIRE(result);
@@ -287,8 +289,9 @@ TEST_CASE("moving unique_handle with itself should change nothing.", "[unique_ha
 	SL_UNIQUE_HANDLE_FULL_CONSTEXPR const bool result = []
 	{
 		test_handle handle{ 1337 };
-		handle = std::move(handle);
-		return handle.is_valid() && *handle == 1337;
+		handle = std::move(handle);  // NOLINT(clang-diagnostic-self-move)
+		return handle.is_valid()  // NOLINT(bugprone-use-after-move)
+			&& *handle == 1337;  // NOLINT(bugprone-use-after-move)
 	}();
 
 	REQUIRE(result);
@@ -455,6 +458,14 @@ TEST_CASE("unique_handle should be three-way-comparable with unqiue_handle of sa
 	STATIC_REQUIRE((test_handle{42 } <=> test_handle{1337}) == std::strong_ordering::less);
 }
 
+TEST_CASE("unique_handle should be three-way-comparable with unqiue_handle containing different but comparable type.", "[unique_handle]")
+{
+	STATIC_REQUIRE((unique_handle<short>{0} <=> unique_handle{0}) == std::strong_ordering::equal);
+	STATIC_REQUIRE((unique_handle<short>{0} <=> unique_handle{42}) == std::strong_ordering::less);
+	STATIC_REQUIRE((unique_handle<short>{42} <=> unique_handle{0}) == std::strong_ordering::greater);
+	STATIC_REQUIRE((unique_handle<short>{42} <=> unique_handle{1337}) == std::strong_ordering::less);
+}
+
 TEST_CASE("unique_handle should be three-way-comparable with nullhandle.", "[unique_handle]")
 {
 	STATIC_REQUIRE((nullhandle <=> test_handle{ 42 }) == std::strong_ordering::less);
@@ -485,6 +496,10 @@ TEST_CASE("unique_handle should be equality-comparable with specific types.", "[
 	STATIC_REQUIRE(test_handle{ 1337 } != test_handle{});
 	STATIC_REQUIRE(test_handle{ 1337 } != test_handle{ 42 });
 	STATIC_REQUIRE(test_handle{ 1337 } == test_handle{ 1337 });
+
+	STATIC_REQUIRE(unique_handle<short>{ 42 } != test_handle{});
+	STATIC_REQUIRE(unique_handle<short>{ 42 } != test_handle{ 1337 });
+	STATIC_REQUIRE(unique_handle<short>{ 42 } == test_handle{ 42 });
 
 	STATIC_REQUIRE(nullhandle == test_handle{});
 	STATIC_REQUIRE(nullhandle != test_handle{ 42 });

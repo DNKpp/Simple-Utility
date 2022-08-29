@@ -153,16 +153,32 @@ namespace sl
 	}
 
 	/**
+	 * \brief Checks whether the given template type is usable as value type for ``unique_handle`` types.
+	 */
+	template <class T>
+	concept value = std::movable<T> && concepts::not_same_as<T, nullhandle_t>;
+
+	/**
+	 * \brief Checks whether the given template type is usable as delete action type for ``unique_handle`` types.
+	 */
+	template <class T, class TValue>
+	concept delete_action_for = value<TValue>
+							&& std::invocable<T, TValue&>
+							&& std::copyable<T>;
+
+	/**
 	 * \brief This type models some kind of ``std::optional`` behaviour but resets itself on move operations.
 	 * \details For more details and information about related components go to \ref GROUP_UNIQUE_HANDLE "unique_handle group page".
 	 * \tparam T The type of the stored value
 	 * \tparam TDeleteAction Type of the used delete action
 	 */
-	template <std::movable T, std::invocable<T&> TDeleteAction = default_delete_action>
-		requires concepts::not_same_as<T, nullhandle_t>
-				&& std::copyable<TDeleteAction>
+	template <value T, delete_action_for<T> TDeleteAction = default_delete_action>
 	class unique_handle
 	{
+	private:
+		template <value T2, delete_action_for<T2> TOtherDeleteAction>
+		friend class unique_handle;
+
 	public:
 		/**
 		 * \brief Type of the stored value
@@ -405,24 +421,30 @@ namespace sl
 
 		/**
 		 * \brief Equality-comparison operator overload between two \ref unique_handle "unique_handles". operator != is implicitly defined.
-		 * \param other The object to compare with
+		 * \tparam T2 Other value type.
+		 * \tparam TOtherDeleteAction Other delete action type.
+		 * \param other The ``unique_handle`` to compare with
 		 * \return Both sides compare equal if both handles contain uninitialized values or both value are initialized and compare equal.
 		 * Otherwise ``false`` is returned.
 		 */
+		template <std::equality_comparable_with<T> T2, class TOtherDeleteAction>
 		[[nodiscard]]
-		constexpr bool operator ==(const unique_handle& other) const
+		constexpr bool operator ==(const unique_handle<T2, TOtherDeleteAction>& other) const
 		{
 			return m_Value == other.m_Value;
 		}
 
 		/**
 		 * \brief Three-way-comparison operator overload between two \ref unique_handle "unique_handles".
+		 * \tparam T2 Other value type.
+		 * \tparam TOtherDeleteAction Other delete action type.
 		 * \param other The object to compare with
 		 * \return If both handles have initialized values, both values will be compared. Otherwise they will be compared in accordance
 		 * to the result of ``is_valid()``.
 		 */
+		template <std::three_way_comparable_with<T> T2, class TOtherDeleteAction>
 		[[nodiscard]]
-		constexpr std::compare_three_way_result_t<T> operator <=>(const unique_handle& other) const
+		constexpr std::compare_three_way_result_t<T> operator <=>(const unique_handle<T2, TOtherDeleteAction>& other) const
 		{
 			return m_Value <=> other.m_Value;
 		}
@@ -457,6 +479,16 @@ namespace sl
 		constexpr bool operator ==(const T2& other) const
 		{
 			return m_Value == other;
+		}
+
+		/**
+		 * \brief Equality-comparison operator overload for comparison of \ref unique_handle and \ref nullhandle_t.
+		 * \return Returns true if handle's value is uninitialized.
+		 */
+		[[nodiscard]]
+		constexpr bool operator ==(nullhandle_t) const noexcept
+		{
+			return !is_valid();
 		}
 
 		/**

@@ -45,8 +45,6 @@ namespace sl::functional
 	{
 		using closure_t = closure_base_fn<TFunc>;
 	public:
-		//using closure_t::closure_t;
-
 		/**
 		 * \brief Explicitly created forwarding constructor.
 		 * \tparam TArgs Argument types.
