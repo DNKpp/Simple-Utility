@@ -62,6 +62,41 @@ namespace sl::math
 	}
 
 	/**
+	 * \brief Result type for the frexp operation.
+	 * \tparam T Used floating point type
+	 */
+	template <std::floating_point T>
+	struct frexp_result
+	{
+		T fraction;
+		int exp;
+	};
+
+	/**
+	 * \brief Helper alias, deducing the result type of a ``std::frexp`` call.
+	 */
+	template <class T>
+	using frexp_result_value_type = decltype(std::frexp(std::declval<T>(), nullptr));
+
+	/**
+	 * \brief Decomposes given floating point value arg into a normalized fraction and an integral power of two.
+	 * \tparam T  Used floating point type
+	 * \param value The value to decompose.
+	 * \return Returns the result as ``frexp_result`` type.
+	 *
+	 * \detail This function is a more convenient version of the ``std::frexp`` function and simply forwards the call to that.
+	 */
+	template <class T>
+		requires requires { std::frexp(std::declval<T>(), nullptr); }
+	[[nodiscard]]
+	SL_CONSTEXPR_MATH remquo_result<remquo_result_value_type<T>> frexp(T value)
+	{
+		int exp{};
+		const auto fraction{ std::frexp(value, &exp) };
+		return { fraction, exp };
+	}
+
+	/**
 	 * \brief Result type for the modf operation.
 	 * \tparam T Used floating point type
 	 */
