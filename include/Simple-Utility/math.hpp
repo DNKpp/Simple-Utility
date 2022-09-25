@@ -49,7 +49,7 @@ namespace sl::math
 	 * \attention y must not be equal to 0.
 	 * \return Returns the result as ``remquo_result`` type.
 	 *
-	 * \detail This function is a more convenient version of the ``std::remquo`` function and simply forwards the call to that.
+	 * \details This function is a more convenient version of the ``std::remquo`` function and simply forwards the call to that.
 	 */
 	template <class T>
 		requires requires { std::remquo(std::declval<T>(), std::declval<T>(), nullptr); }
@@ -84,7 +84,7 @@ namespace sl::math
 	 * \param value The value to decompose.
 	 * \return Returns the result as ``frexp_result`` type.
 	 *
-	 * \detail This function is a more convenient version of the ``std::frexp`` function and simply forwards the call to that.
+	 * \details This function is a more convenient version of the ``std::frexp`` function and simply forwards the call to that.
 	 */
 	template <class T>
 		requires requires { std::frexp(std::declval<T>(), nullptr); }
@@ -113,7 +113,7 @@ namespace sl::math
 	 * \param value The value to decompose.
 	 * \return Returns the result as ``modf_result`` type.
 	 *
-	 * \detail This function is a more convenient version of the ``std::modf`` function and simply forwards the call to that.
+	 * \details This function is a more convenient version of the ``std::modf`` function and simply forwards the call to that.
 	 */
 	template <std::floating_point T>
 	[[nodiscard]]
