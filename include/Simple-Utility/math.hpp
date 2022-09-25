@@ -89,7 +89,7 @@ namespace sl::math
 	template <class T>
 		requires requires { std::frexp(std::declval<T>(), nullptr); }
 	[[nodiscard]]
-	SL_CONSTEXPR_MATH remquo_result<remquo_result_value_type<T>> frexp(T value)
+	SL_CONSTEXPR_MATH frexp_result<frexp_result_value_type<T>> frexp(T value)
 	{
 		int exp{};
 		const auto fraction{ std::frexp(value, &exp) };
