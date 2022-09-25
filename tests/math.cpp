@@ -12,6 +12,89 @@
 using namespace sl;
 
 TEMPLATE_TEST_CASE(
+	"remquo forwards the result from std::remquo",
+	"[math]",
+	float,
+	double,
+	long double,
+	std::int8_t,
+	std::int16_t,
+	std::int32_t,
+	std::int64_t
+)
+{
+	using T = TestType;
+
+	const T x = GENERATE(T{0}, -T{0}, T{42}, std::numeric_limits<T>::infinity(), -std::numeric_limits<T>::infinity());
+	const T y = GENERATE(T{42}, std::numeric_limits<T>::infinity(), -std::numeric_limits<T>::infinity());
+	const auto [expected_remainder, expected_quo] = [&]
+	{
+		int quo{};
+		auto rem = std::remquo(x, y, &quo);
+		return std::tuple{ rem, quo };
+	}();
+
+	const auto [remainder, quo] = math::remquo(x, y);
+
+	REQUIRE((std::isnan(remainder) && std::isnan(expected_remainder) || remainder == expected_remainder));
+	REQUIRE(quo == expected_quo);
+}
+
+TEMPLATE_TEST_CASE(
+	"frexp forwards the result from std::frexp",
+	"[math]",
+	float,
+	double,
+	long double,
+	std::int8_t,
+	std::int16_t,
+	std::int32_t,
+	std::int64_t
+)
+{
+	using T = TestType;
+
+	SECTION("value is +- 0")
+	{
+		const T value = GENERATE(T{0}, -T{0});
+
+		const auto [fraction, exp] = math::frexp(value);
+
+		REQUIRE(fraction == value); // NOLINT(clang-diagnostic-implicit-int-float-conversion)
+		REQUIRE(exp == 0);
+	}
+
+	if constexpr (std::floating_point<T>)
+	{
+		SECTION("value is +- infinity")
+		{
+			const T value = GENERATE(std::numeric_limits<T>::infinity(), -std::numeric_limits<T>::infinity());
+
+			const auto [fraction, exp] = math::frexp(value);
+
+			REQUIRE(fraction == value); // NOLINT(clang-diagnostic-float-equal)
+			// exp is undefined
+		}
+
+		SECTION("value is NaN")
+		{
+			const auto [fraction, exp] = math::frexp(std::numeric_limits<T>::quiet_NaN());
+
+			REQUIRE(std::isnan(fraction));
+			// exp is undefined
+		}
+	}
+
+	SECTION("value is valid")
+	{
+		const auto [fraction, exp] = math::frexp(T{ 123 });
+
+		REQUIRE(fraction == Catch::Approx{0.9609375});
+		REQUIRE(exp == 7);
+	}
+}
+
+TEMPLATE_TEST_CASE(
 	"modf forwards the result from std::modf",
 	"[math]",
 	float,
@@ -34,39 +117,4 @@ TEMPLATE_TEST_CASE(
 
 	REQUIRE(integral == expected_integral); // NOLINT(clang-diagnostic-float-equal)
 	REQUIRE(fraction == Catch::Approx{expected_fraction});
-}
-
-TEMPLATE_TEST_CASE(
-	"remquo forwards the result from std::remquo",
-	"[math]",
-	float,
-	double,
-	long double,
-	std::int8_t,
-	std::int16_t,
-	std::int32_t,
-	std::int64_t
-)
-{
-	using T = TestType;
-
-	const TestType x = GENERATE(
-		T{0},
-		-T{0},
-		T{42},
-		std::numeric_limits<TestType>::infinity(),
-		-std::numeric_limits<TestType>::infinity()
-	);
-	const TestType y = GENERATE(T{42}, std::numeric_limits<TestType>::infinity(), -std::numeric_limits<TestType>::infinity());
-	const auto [expected_remainder, expected_quo] = [&]
-	{
-		int quo{};
-		auto rem = std::remquo(x, y, &quo);
-		return std::tuple{ rem, quo };
-	}();
-
-	const auto [remainder, quo] = math::remquo(x, y);
-
-	REQUIRE((std::isnan(remainder) && std::isnan(expected_remainder) || remainder == expected_remainder));
-	REQUIRE(quo == expected_quo);
 }
