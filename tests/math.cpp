@@ -24,7 +24,7 @@ TEMPLATE_TEST_CASE(
 	// examples taken from https://en.cppreference.com/w/cpp/numeric/math/modf
 	const auto [value, expected_integral, expected_fraction] = GENERATE(
 		(table<T, T, T>)({
-			{T{123.45}, T{123}, T{.45}},  // NOLINT(clang-diagnostic-implicit-float-conversion)
+			{T{123.45}, T{123}, T{.45}}, // NOLINT(clang-diagnostic-implicit-float-conversion)
 			{-T{0}, -T{0}, -T{0}},
 			{-std::numeric_limits<T>::infinity(), -std::numeric_limits<T>::infinity(), -T{0}},
 			})
@@ -32,6 +32,41 @@ TEMPLATE_TEST_CASE(
 
 	const auto [integral, fraction] = math::modf(value);
 
-	REQUIRE(integral == expected_integral);  // NOLINT(clang-diagnostic-float-equal)
+	REQUIRE(integral == expected_integral); // NOLINT(clang-diagnostic-float-equal)
 	REQUIRE(fraction == Catch::Approx{expected_fraction});
+}
+
+TEMPLATE_TEST_CASE(
+	"remquo forwards the result from std::remquo",
+	"[math]",
+	float,
+	double,
+	long double,
+	std::int8_t,
+	std::int16_t,
+	std::int32_t,
+	std::int64_t
+)
+{
+	using T = TestType;
+
+	const TestType x = GENERATE(
+		T{0},
+		-T{0},
+		T{42},
+		std::numeric_limits<TestType>::infinity(),
+		-std::numeric_limits<TestType>::infinity()
+	);
+	const TestType y = GENERATE(T{42}, std::numeric_limits<TestType>::infinity(), -std::numeric_limits<TestType>::infinity());
+	const auto [expected_remainder, expected_quo] = [&]
+	{
+		int quo{};
+		auto rem = std::remquo(x, y, &quo);
+		return std::tuple{ rem, quo };
+	}();
+
+	const auto [remainder, quo] = math::remquo(x, y);
+
+	REQUIRE((std::isnan(remainder) && std::isnan(expected_remainder) || remainder == expected_remainder));
+	REQUIRE(quo == expected_quo);
 }
