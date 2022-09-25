@@ -8,6 +8,7 @@ include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
 add_executable(
 	${PROJECT_NAME}-Tests
 	"bind_back.cpp"
+	"math.cpp"
 	"unique_handle.cpp"
 	"tuple_utility.cpp"
 	"concepts/access_operators.cpp"
