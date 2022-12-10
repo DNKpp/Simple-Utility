@@ -10,6 +10,7 @@
 
 #include "Simple-Utility/unified_base.hpp"
 #include "Simple-Utility/concepts/stl_extensions.hpp"
+#include "Simple-Utility/concepts/operators.hpp"
 #include "Simple-Utility/functional/base.hpp"
 #include "Simple-Utility/functional/operators/bind.hpp"
 #include "Simple-Utility/functional/operators/pipe.hpp"
@@ -45,6 +46,7 @@ namespace sl::functional
 		>
 	{
 		using closure_t = closure_base_fn<TFunc>;
+
 	public:
 		/**
 		 * \brief Explicitly created forwarding constructor.
@@ -63,7 +65,7 @@ namespace sl::functional
 		(
 			TArgs&&... args
 		)
-		noexcept(std::is_nothrow_constructible_v<closure_t, TArgs...>)
+			noexcept(std::is_nothrow_constructible_v<closure_t, TArgs...>)
 			: closure_t{ std::forward<TArgs>(args)... }
 		{}
 	};
@@ -86,7 +88,7 @@ namespace sl::functional
 			(
 				TFrom&& v
 			) const
-			noexcept(concepts::nothrow_explicitly_convertible_to<TFrom, TTarget>)
+				noexcept(concepts::nothrow_explicitly_convertible_to<TFrom, TTarget>)
 			{
 				return static_cast<TTarget>(std::forward<TFrom>(v));
 			}
@@ -98,7 +100,88 @@ namespace sl::functional
 	 * \tparam TTarget The target type.
 	 */
 	template <class TTarget>
-	inline static constexpr transform_fn as{ detail::as_fn<TTarget>{} };
+	inline constexpr transform_fn as{ detail::as_fn<TTarget>{} };
+
+	/** @} */
+
+	/**
+	 * \defgroup GROUP_FUNCTIONAL_ARITHMETIC arithmetic
+	 * \brief Contains functional objects, implementing several arithmetically operations.
+	 * \ingroup GROUP_FUNCTIONAL
+	 * @{
+	 */
+
+	/**
+	 * \brief Functional object which forwards the params to binary operator + and returns the result.
+	 */
+	inline constexpr transform_fn plus{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) -> decltype(auto)
+		{
+			static_assert(concepts::plus_with<TLhs, TRhs>, "Arguments are not usable as operands of binary operator +.");
+
+			return std::forward<TLhs>(lhs) + std::forward<TRhs>(rhs);
+		}
+	};
+
+	/**
+	 * \brief Functional object which forwards the params to binary operator - and returns the result.
+	 */
+	inline constexpr transform_fn minus{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) -> decltype(auto)
+		{
+			static_assert(concepts::minus_with<TLhs, TRhs>, "Arguments are not usable as operands of binary operator -.");
+
+			return std::forward<TLhs>(lhs) - std::forward<TRhs>(rhs);
+		}
+	};
+
+	/**
+	 * \brief Functional object which forwards the params to binary operator * and returns the result.
+	 */
+	inline constexpr transform_fn multiplies{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) -> decltype(auto)
+		{
+			static_assert(concepts::multiplies_with<TLhs, TRhs>, "Arguments are not usable as operands of binary operator *.");
+
+			return std::forward<TLhs>(lhs) * std::forward<TRhs>(rhs);
+		}
+	};
+
+	/**
+	 * \brief Functional object which forwards the params to binary operator / and returns the result.
+	 */
+	inline constexpr transform_fn divides{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) -> decltype(auto)
+		{
+			static_assert(concepts::divides_with<TLhs, TRhs>, "Arguments are not usable as operands of binary operator /.");
+
+			return std::forward<TLhs>(lhs) / std::forward<TRhs>(rhs);
+		}
+	};
+
+	/**
+	 * \brief Functional object which forwards the params to binary operator % and returns the result.
+	 */
+	inline constexpr transform_fn modulus{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) -> decltype(auto)
+		{
+			static_assert(concepts::modulus_with<TLhs, TRhs>, "Arguments are not usable as operands of binary operator %.");
+
+			return std::forward<TLhs>(lhs) % std::forward<TRhs>(rhs);
+		}
+	};
+
+	/**
+	 * \brief Functional object which forwards the param to unary operator - and returns the result.
+	 */
+	inline constexpr transform_fn negate{
+		[]<class T>(T&& value) -> decltype(auto)
+		{
+			static_assert(concepts::negate<T>, "Argument is not usable as operand of unary operator -.");
+
+			return -std::forward<T>(value);
+		}
+	};
 
 	/** @} */
 }
