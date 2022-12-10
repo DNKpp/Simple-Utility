@@ -207,13 +207,30 @@ TEST_CASE("back curried transform_fn can be piped", "[functional][transform]")
 	REQUIRE(transform(7, 3) == 100);
 }
 
+template <class T>
+struct explicitly_constructible
+{
+	T t{};
+
+	explicit explicitly_constructible(T t)
+		: t{t}
+	{}
+
+	[[nodiscard]]
+	bool operator ==(T other) const
+	{
+		return t == other;
+	}
+};
+
 TEMPLATE_TEST_CASE_SIG(
 	"as casts the given parameter when invoked.",
 	"[functional][transform]",
 	((class TTarget, auto VSource, auto VExpected), TTarget, VSource, VExpected),
 	(int, 42ul, 42),
 	(char, 42, '*'),
-	(std::optional<int>, 3, 3)
+	(std::optional<int>, 3, 3),
+	(explicitly_constructible<int>, 1337, 1337)
 )
 {
 	STATIC_REQUIRE(std::same_as<TTarget, decltype(as<TTarget>(VSource))>);

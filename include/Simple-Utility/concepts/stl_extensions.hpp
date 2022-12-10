@@ -81,6 +81,32 @@ namespace sl::concepts
 		{ t2 != t1 } noexcept -> std::convertible_to<bool>;
 	};
 
+	/**
+	 * \brief Checks whether a type is explicit convertible to another. 
+	 * \details This is a less restrictive version of the ``std::convertible_to`` concept.
+	 * \see https://en.cppreference.com/w/cpp/concepts/convertible_to
+	 * \tparam TFrom The source type.
+	 * \tparam TTo The target type.
+	 */
+	template <class TFrom, class TTo>
+	concept explicitly_convertible_to = requires
+	{
+		static_cast<TTo>(std::declval<TFrom>());
+	};
+
+	/**
+	 * \brief Checks whether a type is explicit convertible to another and does not throw. 
+	 * \details This is a less restrictive version of the ``std::convertible_to`` concept, but with additional noexcept check.
+	 * \see https://en.cppreference.com/w/cpp/concepts/convertible_to
+	 * \tparam TFrom The source type.
+	 * \tparam TTo The target type.
+	 */
+	template <class TFrom, class TTo>
+	concept nothrow_explicitly_convertible_to = requires
+	{
+		{ static_cast<TTo>(std::declval<TFrom>()) } noexcept;
+	};
+
 	/** @} */
 }
 
