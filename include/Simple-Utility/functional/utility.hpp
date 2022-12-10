@@ -12,6 +12,7 @@
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/functional/transform.hpp"
 
+#include <memory>
 #include <utility>
 
 namespace sl::functional::util
@@ -46,6 +47,19 @@ namespace sl::functional::util
 			static_assert(concepts::dereferencable<T>, "Argument is not usable as operand of unary operator *.");
 
 			return *std::forward<T>(arg);
+		}
+	};
+
+	/**
+	 * \brief Functional object which returns the address of the given argument.
+	 * \see https://en.cppreference.com/w/cpp/memory/addressof
+	 */
+	inline constexpr transform_fn addressof{
+		[](auto& arg) constexpr noexcept
+		{
+			static_assert(requires { std::addressof(arg); }, "Argument is not usable for std::addressof.");
+
+			return std::addressof(arg);
 		}
 	};
 
