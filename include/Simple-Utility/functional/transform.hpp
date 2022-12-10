@@ -9,9 +9,10 @@
 #pragma once
 
 #include "Simple-Utility/unified_base.hpp"
+#include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/functional/base.hpp"
-#include "Simple-Utility/functional/operators/pipe.hpp"
 #include "Simple-Utility/functional/operators/bind.hpp"
+#include "Simple-Utility/functional/operators/pipe.hpp"
 
 namespace sl::functional
 {
@@ -79,16 +80,16 @@ namespace sl::functional
 		template <class TTarget>
 		struct as_fn
 		{
-			template <std::convertible_to<TTarget> TFrom>
+			template <concepts::explicitly_convertible_to<TTarget> TFrom>
 			[[nodiscard]]
 			constexpr TTarget operator ()
 			(
 				TFrom&& v
 			) const
-			noexcept(std::is_nothrow_convertible_v<TFrom, TTarget>)
+			noexcept(concepts::nothrow_explicitly_convertible_to<TFrom, TTarget>)
 			{
 				return static_cast<TTarget>(std::forward<TFrom>(v));
-			};
+			}
 		};
 	}
 
@@ -97,7 +98,7 @@ namespace sl::functional
 	 * \tparam TTarget The target type.
 	 */
 	template <class TTarget>
-	inline constexpr transform_fn as{ detail::as_fn<TTarget>{} };
+	inline static constexpr transform_fn as{ detail::as_fn<TTarget>{} };
 
 	/** @} */
 }
