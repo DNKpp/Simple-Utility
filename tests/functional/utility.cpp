@@ -41,11 +41,19 @@ TEMPLATE_TEST_CASE_SIG(
 	REQUIRE(util::as<TTarget>(VSource) == VExpected);
 }
 
-TEST_CASE("util::derefence uses the dereferencing operator on the argument and returns the result.", "[functional][transform][utility]")
+TEST_CASE("util::dereference uses the dereferencing operator on the argument and returns the result.", "[functional][transform][utility]")
 {
 	const std::optional<int> opt{42};
 
 	const int value{ util::dereference(opt) };
 
 	REQUIRE(value == 42);
+}
+
+TEST_CASE("util::addressof returns the address of the given argument.", "[functional][transform][utility]")
+{
+	int value{1337};
+
+	REQUIRE(util::addressof(value) == &value);
+	REQUIRE(util::addressof(std::as_const(value)) == &value);
 }
