@@ -7,6 +7,8 @@
 
 #include "../helper.hpp"
 
+#include <optional>
+
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 
 using namespace sl::concepts;
