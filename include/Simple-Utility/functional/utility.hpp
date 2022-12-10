@@ -8,8 +8,9 @@
 
 #pragma once
 
-#include "Simple-Utility/functional/transform.hpp"
+#include "Simple-Utility/concepts/operators.hpp"
 #include "Simple-Utility/concepts/stl_extensions.hpp"
+#include "Simple-Utility/functional/transform.hpp"
 
 #include <utility>
 
@@ -33,6 +34,18 @@ namespace sl::functional::util
 			static_assert(concepts::explicitly_convertible_to<TFrom, TTo>, "Argument is not convertible to target type.");
 
 			return static_cast<TTo>(std::forward<TFrom>(arg));
+		}
+	};
+
+	/**
+	 * \brief Functional object which dereferences the given argument and returns the result.
+	 */
+	inline constexpr transform_fn dereference{
+		[]<class T>(T&& arg) constexpr noexcept(noexcept(*std::forward<T>(arg))) -> decltype(auto)
+		{
+			static_assert(concepts::dereferencable<T>, "Argument is not usable as operand of unary operator *.");
+
+			return *std::forward<T>(arg);
 		}
 	};
 
