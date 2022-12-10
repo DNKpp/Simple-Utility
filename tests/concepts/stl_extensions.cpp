@@ -109,3 +109,48 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(nothrow_weakly_equality_comparable_with<T1, T2> == VExpected);
 	STATIC_REQUIRE(nothrow_weakly_equality_comparable_with<T2, T1> == VExpected);
 }
+
+struct unary_constructible
+{
+	explicit unary_constructible([[maybe_unused]] auto&& x) noexcept  // NOLINT(bugprone-forwarding-reference-overload)
+	{}
+};
+
+struct throwing_unary_constructible
+{
+	explicit throwing_unary_constructible([[maybe_unused]] auto&& x)  // NOLINT(bugprone-forwarding-reference-overload)
+	{}
+};
+
+TEMPLATE_TEST_CASE_SIG(
+	"explicitly_convertible_to checks whether a type is static_cast convertible to another type.",
+	"[concepts][stl_ext]",
+	((class TFrom, class TTo, bool VExpected), TFrom, TTo, VExpected),
+	(int, int, true),
+	(const int&, int, true),
+	(int, float, true),
+	(const int&, const float&, true),
+	(int, std::optional<int>, true),
+	(int, unary_constructible, true),
+	(int, throwing_unary_constructible, true),
+	(int, std::optional<std::string>, false),
+	(const std::optional<int>&, int, false)
+)
+{
+	STATIC_REQUIRE(explicitly_convertible_to<TFrom, TTo> == VExpected);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"nothrow_explicitly_convertible_to checks whether a type is static_cast convertible to another type and does not throw.",
+	"[concepts][stl_ext]",
+	((class TFrom, class TTo, bool VExpected), TFrom, TTo, VExpected),
+	(int, int, true),
+	(const int&, int, true),
+	(int, float, true),
+	(const int&, const float&, true),
+	(int, unary_constructible, true),
+	(int, throwing_unary_constructible, false)
+)
+{
+	STATIC_REQUIRE(nothrow_explicitly_convertible_to<TFrom, TTo> == VExpected);
+}
