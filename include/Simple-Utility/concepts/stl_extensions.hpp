@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef SL_UTILITY_CONCEPTS_STL_EXTENSIONSL_HPP
-#define SL_UTILITY_CONCEPTS_STL_EXTENSIONSL_HPP
+#ifndef SL_UTILITY_CONCEPTS_STL_EXTENSIONS_HPP
+#define SL_UTILITY_CONCEPTS_STL_EXTENSIONS_HPP
 
 #pragma once
 
