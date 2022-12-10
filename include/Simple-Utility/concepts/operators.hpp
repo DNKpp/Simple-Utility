@@ -777,6 +777,587 @@ namespace sl::concepts
 	};
 
 	/** @} */
+
+
+
+
+
+
+
+
+
+
+
+	/**
+	* \defgroup GROUP_ARITHMETIC_OPERATOR_CONCEPTS arithmetic operators
+	*
+	* \brief Contains concepts which determines whether a type is usable in operator +, +=, -, -=, *, *=, /, /=, %, %= and unary - expressions.
+	* \ingroup GROUP_CONCEPTS
+	* @{
+	*/
+
+	/**
+	 * \brief Determines whether a type can be used in operator - expression.
+	 * \tparam T The type to check
+	 */
+	template <class T>
+	concept negate = requires(T t)
+	{
+		{ -t };
+	};
+
+	/**
+	 * \brief Determines whether a type can be used in operator - expression and if the return type is convertible
+	 * to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
+	template <class T, class TResult = std::remove_cvref_t<T>>
+	concept negate_r = requires(T t)
+	{
+		{ -t } -> std::convertible_to<TResult>;
+	};
+
+	/**
+	 * \brief Determines whether two types can be used in operator + expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
+	template <class TLhs, class TRhs>
+	concept plus_with = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs + rhs };
+	};
+
+	/**
+	 * \brief Determines whether two types can be used in operator + expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>>
+	concept plus_with_r = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs + rhs } -> std::convertible_to<TResult>;
+	};
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator + expressions.
+	 * \tparam T The type to check
+	 */
+	template <class T>
+	concept plus = plus_with<T, T>;
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator + expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
+	template <class T, class TResult = std::remove_cvref_t<T>>
+	concept plus_r = plus_with_r<T, T, TResult>;
+
+	/**
+	 * \brief Determines whether two types can be used in operator += expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
+	template <class TLhs, class TRhs>
+	concept plus_assign_with = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs += rhs };
+	};
+
+	/**
+	 * \brief Determines whether two types can be used in operator += expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>&>
+	concept plus_assign_with_r = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs += rhs } -> std::convertible_to<TResult>;
+	};
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator += expressions.
+	 * \tparam T The type to check
+	 */
+	template <class T>
+	concept plus_assign = plus_assign_with<T, T>;
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator += expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
+	template <class T, class TResult = std::remove_cvref_t<T>&>
+	concept plus_assign_r = plus_assign_with_r<T, T, TResult>;
+
+	/**
+	 * \brief Determines whether two types can be used in operator - expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
+	template <class TLhs, class TRhs>
+	concept minus_with = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs - rhs };
+	};
+
+	/**
+	 * \brief Determines whether two types can be used in operator - expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>>
+	concept minus_with_r = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs - rhs } -> std::convertible_to<TResult>;
+	};
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator - expressions.
+	 * \tparam T The type to check
+	 */
+	template <class T>
+	concept minus = minus_with<T, T>;
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator - expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
+	template <class T, class TResult = std::remove_cvref_t<T>>
+	concept minus_r = minus_with_r<T, T, TResult>;
+
+	/**
+	 * \brief Determines whether two types can be used in operator -= expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
+	template <class TLhs, class TRhs>
+	concept minus_assign_with = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs -= rhs };
+	};
+
+	/**
+	 * \brief Determines whether two types can be used in operator -= expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>&>
+	concept minus_assign_with_r = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs -= rhs } -> std::convertible_to<TResult>;
+	};
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator -= expressions.
+	 * \tparam T The type to check
+	 */
+	template <class T>
+	concept minus_assign = minus_assign_with<T, T>;
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator -= expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
+	template <class T, class TResult = std::remove_cvref_t<T>&>
+	concept minus_assign_r = minus_assign_with_r<T, T, TResult>;
+
+	/**
+	 * \brief Determines whether two types can be used in operator * expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
+	template <class TLhs, class TRhs>
+	concept multiplies_with = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs * rhs };
+	};
+
+	/**
+	 * \brief Determines whether two types can be used in operator * expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>>
+	concept multiplies_with_r = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs * rhs } -> std::convertible_to<TResult>;
+	};
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator * expressions.
+	 * \tparam T The type to check
+	 */
+	template <class T>
+	concept multiplies = multiplies_with<T, T>;
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator * expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
+	template <class T, class TResult = std::remove_cvref_t<T>>
+	concept multiplies_r = multiplies_with_r<T, T, TResult>;
+
+	/**
+	 * \brief Determines whether two types can be used in operator *= expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
+	template <class TLhs, class TRhs>
+	concept multiplies_assign_with = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs *= rhs };
+	};
+
+	/**
+	 * \brief Determines whether two types can be used in operator *= expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>&>
+	concept multiplies_assign_with_r = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs *= rhs } -> std::convertible_to<TResult>;
+	};
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator *= expressions.
+	 * \tparam T The type to check
+	 */
+	template <class T>
+	concept multiplies_assign = multiplies_assign_with<T, T>;
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator *= expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
+	template <class T, class TResult = std::remove_cvref_t<T>&>
+	concept multiplies_assign_r = multiplies_assign_with_r<T, T, TResult>;
+
+	/**
+	 * \brief Determines whether two types can be used in operator / expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
+	template <class TLhs, class TRhs>
+	concept divides_with = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs / rhs };
+	};
+
+	/**
+	 * \brief Determines whether two types can be used in operator / expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>>
+	concept divides_with_r = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs / rhs } -> std::convertible_to<TResult>;
+	};
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator / expressions.
+	 * \tparam T The type to check
+	 */
+	template <class T>
+	concept divides = divides_with<T, T>;
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator / expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
+	template <class T, class TResult = std::remove_cvref_t<T>>
+	concept divides_r = divides_with_r<T, T, TResult>;
+
+	/**
+	 * \brief Determines whether two types can be used in operator /= expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
+	template <class TLhs, class TRhs>
+	concept divides_assign_with = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs /= rhs };
+	};
+
+	/**
+	 * \brief Determines whether two types can be used in operator /= expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>&>
+	concept divides_assign_with_r = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs /= rhs } -> std::convertible_to<TResult>;
+	};
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator /= expressions.
+	 * \tparam T The type to check
+	 */
+	template <class T>
+	concept divides_assign = divides_assign_with<T, T>;
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator /= expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
+	template <class T, class TResult = std::remove_cvref_t<T>&>
+	concept divides_assign_r = divides_assign_with_r<T, T, TResult>;
+
+	/**
+	 * \brief Determines whether two types can be used in operator % expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
+	template <class TLhs, class TRhs>
+	concept modulus_with = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs % rhs };
+	};
+
+	/**
+	 * \brief Determines whether two types can be used in operator % expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>>
+	concept modulus_with_r = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs % rhs } -> std::convertible_to<TResult>;
+	};
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator % expressions.
+	 * \tparam T The type to check
+	 */
+	template <class T>
+	concept modulus = modulus_with<T, T>;
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator % expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
+	template <class T, class TResult = std::remove_cvref_t<T>>
+	concept modulus_r = modulus_with_r<T, T, TResult>;
+
+	/**
+	 * \brief Determines whether two types can be used in operator %= expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
+	template <class TLhs, class TRhs>
+	concept modulus_assign_with = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs %= rhs };
+	};
+
+	/**
+	 * \brief Determines whether two types can be used in operator %= expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>&>
+	concept modulus_assign_with_r = requires(TLhs lhs, TRhs rhs)
+	{
+		{ lhs %= rhs } -> std::convertible_to<TResult>;
+	};
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator %= expressions.
+	 * \tparam T The type to check
+	 */
+	template <class T>
+	concept modulus_assign = modulus_assign_with<T, T>;
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator %= expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
+	template <class T, class TResult = std::remove_cvref_t<T>&>
+	concept modulus_assign_r = modulus_assign_with_r<T, T, TResult>;
+
+	/**
+	 * \brief Determines whether two types can be used in operator +, -, * and / expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
+	template <class TLhs, class TRhs>
+	concept arithmetically_combinable_with = plus_with<TLhs, TRhs>
+										&& minus_with<TLhs, TRhs>
+										&& multiplies_with<TLhs, TRhs>
+										&& divides_with<TLhs, TRhs>;
+
+	/**
+	 * \brief Determines whether two types can be used in operator +, -, * and / expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>>
+	concept arithmetically_combinable_with_r = plus_with_r<TLhs, TRhs, TResult>
+										&& minus_with_r<TLhs, TRhs, TResult>
+										&& multiplies_with_r<TLhs, TRhs, TResult>
+										&& divides_with_r<TLhs, TRhs, TResult>;
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator +, -, * and / expressions.
+	 * \tparam T The type to check
+	 */
+	template <class T>
+	concept arithmetically_combinable = plus<T>
+									&& minus<T>
+									&& multiplies<T>
+									&& divides<T>;
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator +, -, * and / expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
+	template <class T, class TResult = std::remove_cvref_t<T>>
+	concept arithmetically_combinable_r = plus_r<T, TResult>
+									&& minus_r<T, TResult>
+									&& multiplies_r<T, TResult>
+									&& divides_r<T, TResult>;
+
+	/**
+	 * \brief Determines whether two types can be used in operator +=, -=, *= and /= expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
+	template <class TLhs, class TRhs>
+	concept arithmetically_assignable_with = plus_assign_with<TLhs, TRhs>
+										&& minus_assign_with<TLhs, TRhs>
+										&& multiplies_assign_with<TLhs, TRhs>
+										&& divides_assign_with<TLhs, TRhs>;
+
+	/**
+	 * \brief Determines whether two types can be used in operator +=, -=, *= and /= expressions and if the return type is convertible
+	 * to the expected one.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TResult The expected return type
+	 */
+	template <class TLhs, class TRhs, class TResult = std::remove_cvref_t<TLhs>&>
+	concept arithmetically_assignable_with_r = plus_assign_with_r<TLhs, TRhs, TResult>
+										&& minus_assign_with_r<TLhs, TRhs, TResult>
+										&& multiplies_assign_with_r<TLhs, TRhs, TResult>
+										&& divides_assign_with_r<TLhs, TRhs, TResult>;
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator +=, -=, *= and /= expressions.
+	 * \tparam T The type to check
+	 */
+	template <class T>
+	concept arithmetically_assignable = plus_assign<T>
+									&& minus_assign<T>
+									&& multiplies_assign<T>
+									&& divides_assign<T>;
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator +=, -=, *= and /= expressions and if the
+	 * return type is convertible to the expected one.
+	 * \tparam T The type to check
+	 * \tparam TResult The expected return type
+	 */
+	template <class T, class TResult = std::remove_cvref_t<T>&>
+	concept arithmetically_assignable_r = plus_assign_r<T, TResult>
+									&& minus_assign_r<T, TResult>
+									&& multiplies_assign_r<T, TResult>
+									&& divides_assign_r<T, TResult>;
+
+	/**
+	 * \brief Determines whether two types can be used in operator +, -, *, /, +=, -=, *=, /= and unary - expressions.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 */
+	template <class TLhs, class TRhs>
+	concept fully_arithmetical_with = negate<TLhs>
+								&& arithmetically_combinable_with<TLhs, TRhs>
+								&& arithmetically_assignable_with<TLhs, TRhs>;
+
+	/**
+	 * \brief Determines whether two types can be used in operator +, -, *, /, +=, -=, *=, /= and unary - expressions and if the return types
+	 * are convertible to the expected ones.
+	 * \tparam TLhs The left-hand-side type
+	 * \tparam TRhs the right-hand-side-type
+	 * \tparam TCombineResult The expected return type of combining operations
+	 * \tparam TAssignResult The expected return type of assigning operations
+	 */
+	template <class TLhs,
+			class TRhs,
+			class TCombineResult = std::remove_cvref_t<TLhs>,
+			class TAssignResult = std::remove_cvref_t<TLhs>&>
+	concept fully_arithmetical_with_r = negate_r<TLhs, TCombineResult>
+									&& arithmetically_combinable_with_r<TLhs, TRhs, TCombineResult>
+									&& arithmetically_assignable_with_r<TLhs, TRhs, TAssignResult>;
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator +, -, *, /, +=, -=, *=, /= and unary - expressions.
+	 * \tparam T The type to check
+	 */
+	template <class T>
+	concept fully_arithmetical = negate<T>
+							&& arithmetically_combinable<T>
+							&& arithmetically_assignable<T>;
+
+	/**
+	 * \brief Determines whether a type can be used on both sides of operator +, -, *, /, +=, -=, *=, /= and unary - expressions and if the
+	 * return types are convertible to the expected ones.
+	 * \tparam T The type to check
+	 * \tparam TCombineResult The expected return type of combining operations
+	 * \tparam TAssignResult The expected return type of assigning operations
+	 */
+	template <class T, class TCombineResult = std::remove_cvref_t<T>, class TAssignResult = std::remove_cvref_t<T>&>
+	concept fully_arithmetical_r = negate_r<T, TCombineResult>
+							&& arithmetically_combinable_r<T, TCombineResult>
+							&& arithmetically_assignable_r<T, TAssignResult>;
+
+	/** @} */
 }
 
 #endif
