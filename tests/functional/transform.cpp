@@ -4,6 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include <catch2/catch_template_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 
 #include "../helper.hpp"
 
@@ -18,7 +19,7 @@ namespace
 	constexpr auto add42 = [](auto x) { return x + 42; };
 	constexpr auto times3 = [](auto x) { return x * 3; };
 
-	constexpr auto variadicAdd = [](std::integral auto ... args) { return (args + ... + 0); };
+	constexpr auto variadicAdd = [](std::integral auto... args) { return (args + ... + 0); };
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -213,7 +214,7 @@ struct explicitly_constructible
 	T t{};
 
 	explicit explicitly_constructible(T t)
-		: t{t}
+		: t{ t }
 	{}
 
 	[[nodiscard]]
@@ -235,4 +236,88 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(std::same_as<TTarget, decltype(as<TTarget>(VSource))>);
 	REQUIRE(as<TTarget>(VSource) == VExpected);
+}
+
+TEST_CASE("plus forwards the params to operator + and returns the result.", "[functional][transform][arithmetic]")
+{
+	const auto [lhs, rhs, expectedResult] = GENERATE(
+		(table<int, int, int>)({
+			{0, 0, 0},
+			{0, 1, 1},
+			{1, 0, 1},
+			{1, 1, 2}
+			})
+	);
+
+	REQUIRE(plus(lhs, rhs) == expectedResult);
+}
+
+TEST_CASE("minus forwards the params to operator - and returns the result.", "[functional][transform][arithmetic]")
+{
+	const auto [lhs, rhs, expectedResult] = GENERATE(
+		(table<int, int, int>)({
+			{0, 0, 0},
+			{0, 1, -1},
+			{1, 0, 1},
+			{1, 1, 0}
+			})
+	);
+
+	REQUIRE(minus(lhs, rhs) == expectedResult);
+}
+
+TEST_CASE("multiplies forwards the params to operator * and returns the result.", "[functional][transform][arithmetic]")
+{
+	const auto [lhs, rhs, expectedResult] = GENERATE(
+		(table<int, int, int>)({
+			{1, 1, 1},
+			{0, 1, 0},
+			{1, 0, 0},
+			{2, 1, 2},
+			{1, 2, 2}
+			})
+	);
+
+	REQUIRE(multiplies(lhs, rhs) == expectedResult);
+}
+
+TEST_CASE("divides forwards the params to operator / and returns the result.", "[functional][transform][arithmetic]")
+{
+	const auto [lhs, rhs, expectedResult] = GENERATE(
+		(table<int, int, int>)({
+			{1, 1, 1},
+			{0, 1, 0},
+			{2, 1, 2},
+			{1, 2, 0}
+			})
+	);
+
+	REQUIRE(divides(lhs, rhs) == expectedResult);
+}
+
+TEST_CASE("modulus forwards the params to operator % and returns the result.", "[functional][transform][arithmetic]")
+{
+	const auto [lhs, rhs, expectedResult] = GENERATE(
+		(table<int, int, int>)({
+			{1, 1, 0},
+			{0, 1, 0},
+			{2, 1, 0},
+			{1, 2, 1}
+			})
+	);
+
+	REQUIRE(modulus(lhs, rhs) == expectedResult);
+}
+
+TEST_CASE("negate forwards the params to unary operator - and returns the result.", "[functional][transform][arithmetic]")
+{
+	const auto [value, expectedResult] = GENERATE(
+		(table<int, int>)({
+			{1, -1},
+			{0, 0},
+			{-1, 1}
+			})
+	);
+
+	REQUIRE(negate(value) == expectedResult);
 }
