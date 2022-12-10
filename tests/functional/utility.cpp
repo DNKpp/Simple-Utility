@@ -5,6 +5,8 @@
 
 #include <catch2/catch_template_test_macros.hpp>
 
+#include <optional>
+
 #include "Simple-Utility/functional/utility.hpp"
 
 using namespace sl::functional;
@@ -37,4 +39,13 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(std::same_as<TTarget, decltype(util::as<TTarget>(VSource))>);
 	REQUIRE(util::as<TTarget>(VSource) == VExpected);
+}
+
+TEST_CASE("util::derefence uses the dereferencing operator on the argument and returns the result.", "[functional][transform][utility]")
+{
+	const std::optional<int> opt{42};
+
+	const int value{ util::dereference(opt) };
+
+	REQUIRE(value == 42);
 }
