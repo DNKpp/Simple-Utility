@@ -9,7 +9,6 @@
 #pragma once
 
 #include "Simple-Utility/unified_base.hpp"
-#include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/concepts/operators.hpp"
 #include "Simple-Utility/functional/base.hpp"
 #include "Simple-Utility/functional/operators/bind.hpp"
@@ -76,31 +75,6 @@ namespace sl::functional
 	 */
 	template <class TFunc>
 	transform_fn(TFunc) -> transform_fn<TFunc>;
-
-	namespace detail
-	{
-		template <class TTarget>
-		struct as_fn
-		{
-			template <concepts::explicitly_convertible_to<TTarget> TFrom>
-			[[nodiscard]]
-			constexpr TTarget operator ()
-			(
-				TFrom&& v
-			) const
-				noexcept(concepts::nothrow_explicitly_convertible_to<TFrom, TTarget>)
-			{
-				return static_cast<TTarget>(std::forward<TFrom>(v));
-			}
-		};
-	}
-
-	/**
-	 * \brief Functional object which static_cast the given argument to the target type on invocation.
-	 * \tparam TTarget The target type.
-	 */
-	template <class TTarget>
-	inline constexpr transform_fn as{ detail::as_fn<TTarget>{} };
 
 	/** @} */
 

@@ -16,6 +16,7 @@
 
 #include "Simple-Utility/functional/predicate.hpp"
 #include "Simple-Utility/functional/transform.hpp"
+#include "Simple-Utility/functional/utility.hpp"
 
 #include <stdexcept>
 
@@ -57,9 +58,9 @@ TEMPLATE_LIST_TEST_CASE(
 			})
 	);
 
-	const sl::functional::transform_fn transform = std::identity{}
+	const sf::transform_fn transform = std::identity{}
 													| value_or_fn('x')
-													| sl::functional::as<int>;
+													| sf::util::as<int>;
 
 	REQUIRE(transform(TestType::cast(sourceOptional)) == expected);
 }
@@ -98,7 +99,7 @@ TEMPLATE_LIST_TEST_CASE(
 	);
 
 	bool invoked{false};
-	const sl::functional::transform_fn transform = std::identity{}
+	const sf::transform_fn transform = std::identity{}
 													| fwd_value_fn([&invoked](const char) { invoked = true; });
 
 	transform(TestType::cast(sourceOptional));
@@ -118,7 +119,7 @@ TEMPLATE_LIST_TEST_CASE(
 			{ nullptr, std::nullopt }
 			})
 	);
-	auto algorithm = and_then(sl::functional::as<std::optional<char>>);
+	auto algorithm = and_then(sf::util::as<std::optional<char>>);
 
 	const std::optional<char> s = TestType::cast_lhs(sourceOptional) | TestType::cast_rhs(algorithm);
 
@@ -137,8 +138,8 @@ TEMPLATE_LIST_TEST_CASE(
 			{ nullptr, false }
 			})
 	);
-	const sl::functional::transform_fn transform = std::identity{}
-													| and_then_fn(sl::functional::as<std::optional<char>>)
+	const sf::transform_fn transform = std::identity{}
+													| and_then_fn(sf::util::as<std::optional<char>>)
 													| &std::optional<char>::has_value;
 
 	REQUIRE(transform(TestType::cast(sourceOptional)) == expected);
@@ -192,10 +193,10 @@ TEMPLATE_LIST_TEST_CASE(
 			})
 	);
 
-	const sl::functional::predicate_fn predicate = std::identity{}
+	const sf::predicate_fn predicate = std::identity{}
 													| or_else_fn([] { throw std::exception{}; })
 													| [](auto t) { return t; }
-													| sl::functional::equal >> nullptr;
+													| sf::equal >> nullptr;
 
 	if (expectThrow)
 	{
@@ -343,7 +344,7 @@ TEST_CASE(
 								| and_then(
 									square
 									| to_string
-									| fn::as<std::optional<std::string>>
+									| fn::util::as<std::optional<std::string>>
 								)
 								| value_or("not set");
 
@@ -366,7 +367,7 @@ TEST_CASE(
 								| and_then_fn(
 									square
 									| to_string
-									| fn::as<std::optional<std::string>>
+									| fn::util::as<std::optional<std::string>>
 								)
 								| value_or_fn("not set");
 

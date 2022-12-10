@@ -17,6 +17,7 @@
 #include "Simple-Utility/nullables/std_optional.hpp"
 
 #include "Simple-Utility/functional/tuple.hpp"
+#include "Simple-Utility/functional/utility.hpp"
 
 #include <algorithm>
 #include <map>
@@ -156,7 +157,7 @@ TEST_CASE("fsdadapter can be constructed from borrowed ranges and reassigned lat
 	const std::vector v{1, 2, 3, 4};
 
 	const int value = (adapter{v} = std::ranges::find(v, 2))
-					| and_then(sl::functional::as<std::optional<int>>)
+					| and_then(sl::functional::util::as<std::optional<int>>)
 					| value_or(1337);
 
 	REQUIRE(value == 2);
@@ -198,7 +199,7 @@ TEST_CASE("adapter can simplfy code dealing with iterators.", "[nullables][adapt
 	const auto get_from_storage_adapted = [&](const int key)
 	{
 		return na::adapter{global_storage.end(), global_storage.find(key)}
-				| na::and_then(fn::tuple::get_at<1> | fn::as<std::optional<std::string_view>>);
+				| na::and_then(fn::tuple::get_at<1> | fn::util::as<std::optional<std::string_view>>);
 	};
 	//! [adapter comparison]
 
