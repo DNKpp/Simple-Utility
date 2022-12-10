@@ -139,8 +139,8 @@ var NAVTREEINDEX0 =
 "d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html":[1,4,5],
 "d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html#a3b3bf3fda299ac26a72840a826a2d3be":[1,2,3,6,0],
 "d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html#a3b3bf3fda299ac26a72840a826a2d3be":[1,4,5,0],
-"d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html#ab8ab47e0f8932edc5a191325a3ed15a6":[1,2,3,6,1],
 "d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html#ab8ab47e0f8932edc5a191325a3ed15a6":[1,4,5,1],
+"d4/d2f/structsl_1_1nullables_1_1traits_3_01unique__handle_3_01_t_00_01_t_delete_action_01_4_01_4.html#ab8ab47e0f8932edc5a191325a3ed15a6":[1,2,3,6,1],
 "d4/d40/conceptsl_1_1concepts_1_1not__same__as.html":[1,0,3,0],
 "d4/d55/conceptsl_1_1concepts_1_1fully__logical__with__r.html":[1,0,1,35],
 "d4/d7c/disjunction_8hpp.html":[5,0,0,0,1,0,2],
@@ -208,6 +208,7 @@ var NAVTREEINDEX0 =
 "d6/dca/adapter_8hpp.html":[5,0,0,0,2,0],
 "d6/dca/adapter_8hpp.html#a1724b628bbc54d330e4ca538b05a70a2":[5,0,0,0,2,0,1],
 "d6/dca/adapter_8hpp_source.html":[5,0,0,0,2,0],
+"d6/deb/conceptsl_1_1concepts_1_1nothrow__explicitly__convertible__to.html":[1,0,3,6],
 "d6/deb/transform_8hpp.html":[5,0,0,0,1,3],
 "d6/deb/transform_8hpp_source.html":[5,0,0,0,1,3],
 "d6/ded/conceptsl_1_1concepts_1_1exclusive__disjunctive__with.html":[1,0,1,18],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "d9/d20/std__optional_8hpp.html":[5,0,0,0,2,5],
 "d9/d20/std__optional_8hpp_source.html":[5,0,0,0,2,5],
 "d9/d26/structsl_1_1functional_1_1operators_1_1not__equal.html":[1,1,0,10],
-"d9/d2c/structsl_1_1functional_1_1operators_1_1tag__traits_3_01negate_01_4.html":[1,1,0,15],
-"d9/d2c/structsl_1_1functional_1_1operators_1_1tag__traits_3_01negate_01_4.html#a07cc30f87701beb682c44e6f2282d302":[1,1,0,15,1]
+"d9/d2c/structsl_1_1functional_1_1operators_1_1tag__traits_3_01negate_01_4.html":[1,1,0,15]
 };

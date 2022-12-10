@@ -79,6 +79,8 @@ var namespacesl_1_1concepts =
     [ "assignable_to", "dd/d00/conceptsl_1_1concepts_1_1assignable__to.html", null ],
     [ "weakly_equality_comparable_with", "d3/da6/conceptsl_1_1concepts_1_1weakly__equality__comparable__with.html", null ],
     [ "nothrow_weakly_equality_comparable_with", "d2/d84/conceptsl_1_1concepts_1_1nothrow__weakly__equality__comparable__with.html", null ],
+    [ "explicitly_convertible_to", "db/d27/conceptsl_1_1concepts_1_1explicitly__convertible__to.html", null ],
+    [ "nothrow_explicitly_convertible_to", "d6/deb/conceptsl_1_1concepts_1_1nothrow__explicitly__convertible__to.html", null ],
     [ "unique_types", "d8/d76/conceptsl_1_1concepts_1_1unique__types.html", null ],
     [ "apply_invocable", "d2/d91/conceptsl_1_1concepts_1_1apply__invocable.html", null ],
     [ "nothrow_apply_invocable", "d1/df2/conceptsl_1_1concepts_1_1nothrow__apply__invocable.html", null ],
