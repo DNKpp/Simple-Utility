@@ -11,11 +11,6 @@ add_executable(
 	"math.cpp"
 	"unique_handle.cpp"
 	"tuple_utility.cpp"
-	"concepts/access_operators.cpp"
-	"concepts/shift_operators.cpp"
-	"concepts/logical_arithmetic_operators.cpp"
-	"concepts/utility.cpp"
-	"concepts/stl_extensions.cpp"
 	"functional/base.cpp"
 	"functional/transform.cpp"
 	"functional/predicate.cpp"
@@ -23,6 +18,7 @@ add_executable(
 )
 
 add_subdirectory("nullables")
+add_subdirectory("concepts")
 
 target_link_libraries(
 	${PROJECT_NAME}-Tests
