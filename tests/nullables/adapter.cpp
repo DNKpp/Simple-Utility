@@ -120,14 +120,7 @@ TEST_CASE("adapter can be re-assigned later on.", "[nullables][adapter]")
 	REQUIRE(a != adapter_null);
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"adapter can be used with value_or algorithms.",
-	"[nullables][adapter][algorithm]",
-	((bool VDummy, template <class> class TMod), VDummy, TMod),
-	(true, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t)
-)
+TEST_CASE("adapter can be used with value_or algorithms.", "[nullables][adapter][algorithm]")
 {
 	const std::vector v{ 1, 2, 3, 4 };
 
@@ -139,7 +132,8 @@ TEMPLATE_TEST_CASE_SIG(
 	);
 	adapter a{ std::end(v), std::ranges::find(v, searchedValue) };
 
-	const int value = apply_mod<TMod>(a) | value_or(1337);
+	const auto& refMod = GENERATE(make_all_ref_mods_generator());
+	const int value = cast(a, refMod) | value_or(1337);
 
 	REQUIRE(value == expectedValue);
 }

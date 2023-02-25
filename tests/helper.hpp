@@ -9,23 +9,92 @@
 
 #pragma once
 
+#include <array>
 #include <concepts>
 #include <type_traits>
+#include <variant>
 
-template <template <class> class TMod, class T>
-constexpr decltype(auto) apply_mod(T&& v)
+#include <catch2/generators/catch_generators.hpp>
+#include <catch2/generators/catch_generators_adapters.hpp>
+
+template <class T>
+using as_lvalue_ref_t = std::remove_cvref_t<T>&;
+
+template <class T>
+using as_const_lvalue_ref_t = const std::remove_cvref_t<T>&;
+
+template <class T>
+using as_rvalue_ref_t = std::remove_cvref_t<T>&&;
+
+template <class T>
+using as_const_rvalue_ref_t = const std::remove_cvref_t<T>&&;
+
+template <template <class> class TMod>
+struct type_mod
 {
-	return static_cast<TMod<std::remove_cvref_t<T>>>(v);
+	template <class T>
+	using type = TMod<T>;
+
+	template <class T>
+	static constexpr type<T> cast(T& arg) noexcept
+	{
+		return static_cast<type<T>>(arg);
+	}
+};
+
+template <template <class> class... TMods>
+class RefModGenerator
+	: public Catch::Generators::IGenerator<std::variant<type_mod<TMods>...>>
+{
+public:
+	using Value = std::variant<type_mod<TMods>...>;
+	static constexpr std::size_t values{ sizeof...(TMods) };
+
+private:
+	std::size_t m_Index{};
+	static constexpr std::array<Value, values> m_Values{ (type_mod<TMods>{}, ...) };
+
+	bool next() override
+	{
+		return ++m_Index < values;
+	}
+
+	const Value& get() const override
+	{
+		return m_Values[m_Index];
+	}
+};
+
+template <template <class> class... TMods>
+inline auto make_ref_mods_generator()
+{
+	using Generator = RefModGenerator<TMods...>;
+	return Catch::Generators::GeneratorWrapper<typename Generator::Value>{
+		Catch::Detail::make_unique<Generator>()
+	};
 }
 
-template <class T>
-using as_lvalue_ref_t = std::add_lvalue_reference_t<std::remove_cvref_t<T>>;
+inline auto make_lvalue_ref_mods_generator()
+{
+	return make_ref_mods_generator<as_lvalue_ref_t, as_const_lvalue_ref_t>();
+}
 
-template <class T>
-using as_const_lvalue_ref_t = std::add_lvalue_reference_t<std::add_const_t<std::remove_cvref_t<T>>>;
+inline auto make_rvalue_ref_mods_generator()
+{
+	return make_ref_mods_generator<as_rvalue_ref_t, as_const_rvalue_ref_t>();
+}
 
-template <class T>
-using as_rvalue_ref_t = std::add_rvalue_reference_t<std::remove_cvref_t<T>>;
+inline auto make_all_ref_mods_generator()
+{
+	return make_ref_mods_generator<as_lvalue_ref_t, as_const_lvalue_ref_t, as_rvalue_ref_t, as_const_rvalue_ref_t>();
+}
+
+
+template <class T, class... TArgs>
+constexpr decltype(auto) cast(T&& arg, const std::variant<TArgs...>& mod)
+{
+	return std::visit([&](const auto& m) { return m.cast(std::forward<T>(arg)); }, mod);
+}
 
 struct empty_t
 {

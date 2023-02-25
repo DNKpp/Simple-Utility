@@ -22,85 +22,46 @@ namespace
 	constexpr auto variadicAdd = [](std::integral auto... args) { return (args + ... + 0); };
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"transform_fn is invocable.",
-	"[functional][transform]",
-	((bool VDummy, template <class> class TMod), VDummy, TMod),
-	(true, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t)
-)
+TEST_CASE("transform_fn is invocable.", "[functional][transform]")
 {
 	transform_fn transform{ times3 };
 
-	REQUIRE(apply_mod<TMod>(transform)(42) == 126);
+	const auto& refMod = GENERATE(make_all_ref_mods_generator());
+	REQUIRE(std::invoke(cast(transform, refMod), 42) == 126);
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"transform_fn is pipe composable with operator | as left-hand-side",
-	"[functional][transform]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
-)
+TEST_CASE("transform_fn is pipe composable with operator | as left-hand-side", "[functional][transform]")
 {
 	auto transform_raw = times3;
 	transform_fn transform{ add42 };
 
-	const transform_fn composedTransform = apply_mod<TLhsMod>(transform) | apply_mod<TRhsMod>(transform_raw);
+	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
+	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
+	const transform_fn composedTransform = cast(transform, lhsRefMod) | cast(transform_raw, rhsRefMod);
 
 	REQUIRE(composedTransform(1337) == 4137);
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"transform_fn is pipe composable with operator | as right-hand-side",
-	"[functional][transform]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
-)
+TEST_CASE("transform_fn is pipe composable with operator | as right-hand-side", "[functional][transform]")
 {
 	auto transform_raw = times3;
 	transform_fn transform{ add42 };
 
-	const transform_fn composedTransform = apply_mod<TLhsMod>(transform_raw) | apply_mod<TRhsMod>(transform);
+	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
+	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
+	const transform_fn composedTransform = cast(transform_raw, lhsRefMod) | cast(transform, rhsRefMod);
 
 	REQUIRE(composedTransform(1337) == 4053);
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"transform_fn is pipe composable as both sides of operator |.",
-	"[functional][transform]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
-)
+TEST_CASE("transform_fn is pipe composable as both sides of operator |.", "[functional][transform]")
 {
 	transform_fn transformLhs{ times3 };
 	transform_fn transformRhs{ add42 };
 
-	const transform_fn composedTransform = apply_mod<TLhsMod>(transformLhs) | apply_mod<TRhsMod>(transformRhs);
+	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
+	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
+	const transform_fn composedTransform = cast(transformLhs, lhsRefMod) | cast(transformRhs, rhsRefMod);
 
 	REQUIRE(composedTransform(1337) == 4053);
 }
@@ -135,20 +96,16 @@ TEST_CASE("more complex composition_fn is evaluated in deterministic manner.", "
 TEMPLATE_TEST_CASE_SIG(
 	"transform_fn can be front curried with operator << from in arbitrary length",
 	"[functional][transform]",
-	((template <class> class TMod, int VExpected, int... VValues), TMod, VExpected, VValues...),
-	(as_lvalue_ref_t, 42, 42),
-	(as_lvalue_ref_t, 1379, 42, 1337),
-	(as_lvalue_ref_t, 1377, 42, 1337, -2),
-	(as_const_lvalue_ref_t, 42, 42),
-	(as_const_lvalue_ref_t, 1379, 42, 1337),
-	(as_const_lvalue_ref_t, 1377, 42, 1337, -2),
-	(as_rvalue_ref_t, 42, 42),
-	(as_rvalue_ref_t, 1379, 42, 1337),
-	(as_rvalue_ref_t, 1377, 42, 1337, -2)
+	((int VExpected, int... VValues), VExpected, VValues...),
+	(42, 42),
+	(1379, 42, 1337),
+	(1377, 42, 1337, -2)
 )
 {
 	transform_fn transform{ variadicAdd };
-	const transform_fn curriedTransform = (apply_mod<TMod>(transform) << ... << VValues);
+
+	const auto& refMod = GENERATE(make_all_ref_mods_generator());
+	const transform_fn curriedTransform = (cast(transform, refMod) << ... << VValues);
 
 	REQUIRE(curriedTransform() == VExpected);
 }
@@ -173,20 +130,16 @@ TEST_CASE("front curried transform_fn can be piped", "[functional][transform]")
 TEMPLATE_TEST_CASE_SIG(
 	"transform_fn can be back curried with operator >> in arbitrary length",
 	"[functional][transform]",
-	((template <class> class TMod, int VExpected, int... VValues), TMod, VExpected, VValues...),
-	(as_lvalue_ref_t, 42, 42),
-	(as_lvalue_ref_t, 1379, 42, 1337),
-	(as_lvalue_ref_t, 1377, 42, 1337, -2),
-	(as_const_lvalue_ref_t, 42, 42),
-	(as_const_lvalue_ref_t, 1379, 42, 1337),
-	(as_const_lvalue_ref_t, 1377, 42, 1337, -2),
-	(as_rvalue_ref_t, 42, 42),
-	(as_rvalue_ref_t, 1379, 42, 1337),
-	(as_rvalue_ref_t, 1377, 42, 1337, -2)
+	((int VExpected, int... VValues), VExpected, VValues...),
+	(42, 42),
+	(1379, 42, 1337),
+	(1377, 42, 1337, -2)
 )
 {
 	transform_fn transform{ variadicAdd };
-	const transform_fn curriedTransform = (apply_mod<TMod>(transform) >> ... >> VValues);
+
+	const auto& refMod = GENERATE(make_all_ref_mods_generator());
+	const transform_fn curriedTransform = (cast(transform, refMod) >> ... >> VValues);
 
 	REQUIRE(curriedTransform() == VExpected);
 }

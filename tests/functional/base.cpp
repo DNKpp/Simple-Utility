@@ -86,20 +86,18 @@ TEST_CASE("composition_fn unwraps functionals on construction.", "[functional][b
 TEMPLATE_TEST_CASE_SIG(
 	"composition_fn is invocable in arbitrary state.",
 	"[functional][base]",
-	((template <class> class TTypeMod, auto... VArgs), TTypeMod, VArgs...),
-	(as_lvalue_ref_t, 0),
-	(as_lvalue_ref_t, 1, nullptr),
-	(as_const_lvalue_ref_t, 0),
-	(as_const_lvalue_ref_t, 1, nullptr),
-	(as_rvalue_ref_t, 0),
-	(as_rvalue_ref_t, 1, nullptr)
+	((auto... VArgs), VArgs...),
+	(0),
+	(1, nullptr)
 )
 {
 	composition_fn trueComposition{ operation_mock_fn{}, falseFunc, envelopedFalseFunc };
 	composition_fn falseComposition{ operation_mock_fn{}, envelopedFalseFunc, trueFunc };
 
-	REQUIRE(apply_mod<TTypeMod>(trueComposition)(VArgs...));
-	REQUIRE(!apply_mod<TTypeMod>(falseComposition)(VArgs...));
+	const auto& mod = GENERATE(make_all_ref_mods_generator());
+
+	REQUIRE(std::invoke(cast(trueComposition, mod), VArgs...));
+	REQUIRE(!std::invoke(cast(falseComposition, mod), VArgs...));
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -147,36 +145,36 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, as_lvalue_ref_t, int, const int&),
 	(true, as_const_lvalue_ref_t, int, const int&),
 	(true, as_rvalue_ref_t, int, int),
+	(true, as_const_rvalue_ref_t, int, int),
+
 	(true, as_lvalue_ref_t, int*, int* const&),
 	(true, as_const_lvalue_ref_t, int*, int* const&),
 	(true, as_rvalue_ref_t, int*, int*),
+	(true, as_const_rvalue_ref_t, int*, int*),
+
 	(true, as_lvalue_ref_t, char[5], char* const&),
 	(true, as_const_lvalue_ref_t, char[5], char* const&),
-	(true, as_rvalue_ref_t, char[5], char*)
+	(true, as_rvalue_ref_t, char[5], char*),
+	(true, as_const_rvalue_ref_t, char[5], char*)
 )
 {
 	TValue v{};
 	value_fn value{ v };
 
-	TExpected retrieved = apply_mod<TMod>(value)();
+	TExpected retrieved = type_mod<TMod>::cast(value)();
 
 	REQUIRE(retrieved == v);
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"value_fn treats std::reference_wrapper types special.",
-	"[functional][base]",
-	((bool VDummy, template <class> class TMod), VDummy, TMod),
-	(true, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t)
-)
+TEST_CASE("value_fn treats std::reference_wrapper types special.", "[functional][base]")
 {
+	const auto& refMod = GENERATE(make_all_ref_mods_generator());
+
 	//! [value_fn wrapped]
 	int x{ 42 };
 	value_fn value{ std::ref(x) };
 
-	int& x_ref = apply_mod<TMod>(value)();
+	int& x_ref = std::invoke(cast(value, refMod));
 	x_ref = 1337;
 
 	REQUIRE(x == 1337);

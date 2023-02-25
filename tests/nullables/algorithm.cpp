@@ -23,125 +23,78 @@ using namespace sl::nullables;
 
 inline constexpr auto do_nothing = [](auto&&...) {};
 
-TEMPLATE_TEST_CASE_SIG(
-	"value_or returns the value of the nullable, when it's not equal to its null.",
-	"[nullables][algorithm]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
-)
+TEST_CASE("value_or returns the value of the nullable, when it's not equal to its null.", "[nullables][algorithm]")
 {
 	auto [sourceOptional, expected] = GENERATE(
 		(table<const char*, char>)({
 			{ "c", 'c' },
 			{ nullptr, 'x' }
-			})
+		})
 	);
-
 	algorithm_fn algorithm = value_or('x');
-	const char s = apply_mod<TLhsMod>(sourceOptional) | apply_mod<TRhsMod>(algorithm);
+
+	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
+	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
+	const char s = cast(sourceOptional, lhsRefMod) | cast(algorithm, rhsRefMod);
 
 	REQUIRE(s == expected);
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"value_or_fn can be piped with other functionals",
-	"[nullables][algorithm][functional]",
-	((bool VDummy, template <class> class TMod), VDummy, TMod),
-	(true, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t)
-)
+TEST_CASE("value_or_fn can be piped with other functionals", "[nullables][algorithm][functional]")
 {
 	auto [sourceOptional, expected] = GENERATE(
 		(table<const char*, int>)({
 			{ "c", 'c' },
 			{ nullptr, 'x' }
-			})
+		})
 	);
 
 	const sl::functional::transform_fn transform = std::identity{}
 													| value_or_fn('x')
 													| sl::functional::as<int>;
 
-	REQUIRE(transform(apply_mod<TMod>(sourceOptional)) == expected);
+	const auto& refMod = GENERATE(make_all_ref_mods_generator());
+	REQUIRE(transform(cast(sourceOptional, refMod)) == expected);
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"fwd_value forwards the value of the nullable to the functional, when it's not equal to its null.",
-	"[nullables][algorithm]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
-)
+TEST_CASE("fwd_value forwards the value of the nullable to the functional, when it's not equal to its null.","[nullables][algorithm]")
 {
 	auto [sourceOptional, expectedInvoked] = GENERATE(
 		(table<const char*, bool>)({
 			{ "c", true },
 			{ nullptr, false }
-			})
+		})
 	);
-
 	bool invoked{ false };
 	auto algorithm = fwd_value([&invoked](const char) { invoked = true; });
-	apply_mod<TLhsMod>(sourceOptional) | apply_mod<TRhsMod>(algorithm);
+
+	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
+	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
+	cast(sourceOptional, lhsRefMod) | cast(algorithm, rhsRefMod);
 
 	REQUIRE(invoked == expectedInvoked);
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"fwd_value_fn can be piped with other functionals",
-	"[nullables][algorithm][functional]",
-	((bool VDummy, template <class> class TMod), VDummy, TMod),
-	(true, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t)
-)
+TEST_CASE("fwd_value_fn can be piped with other functionals", "[nullables][algorithm][functional]")
 {
 	auto [sourceOptional, expectedInvoked] = GENERATE(
 		(table<const char*, bool>)({
 			{ "c", true },
 			{ nullptr, false }
-			})
+		})
 	);
 
 	bool invoked{ false };
 	const sl::functional::transform_fn transform = std::identity{}
 													| fwd_value_fn([&invoked](const char) { invoked = true; });
 
-	transform(apply_mod<TMod>(sourceOptional));
+	const auto& refMod = GENERATE(make_all_ref_mods_generator());
+	transform(cast(sourceOptional, refMod));
 
 	REQUIRE(invoked == expectedInvoked);
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"and_then returns a new optional or its corresponding null object.",
-	"[nullables][algorithm]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
-)
+TEST_CASE("and_then returns a new optional or its corresponding null object.", "[nullables][algorithm]")
 {
 	auto [sourceOptional, expected] = GENERATE(
 		(table<const char*, std::optional<char>>)({
@@ -149,72 +102,49 @@ TEMPLATE_TEST_CASE_SIG(
 			{ nullptr, std::nullopt }
 			})
 	);
-
 	auto algorithm = and_then(sl::functional::as<std::optional<char>>);
-	const std::optional<char> s = apply_mod<TLhsMod>(sourceOptional) | apply_mod<TRhsMod>(algorithm);
+
+	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
+	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
+	const std::optional<char> s = cast(sourceOptional, lhsRefMod) | cast(algorithm, rhsRefMod);
 
 	REQUIRE(s == expected);
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"and_then can be piped with other functionals",
-	"[nullables][algorithm][functional]",
-	((bool VDummy, template <class> class TMod), VDummy, TMod),
-	(true, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t)
-)
+TEST_CASE("and_then can be piped with other functionals", "[nullables][algorithm][functional]")
 {
 	auto [sourceOptional, expected] = GENERATE(
 		(table<const char*, bool>)({
 			{ "c", true },
 			{ nullptr, false }
-			})
+		})
 	);
-
 	const sl::functional::transform_fn transform = std::identity{}
 													| and_then_fn(sl::functional::as<std::optional<char>>)
 													| &std::optional<char>::has_value;
 
-	REQUIRE(transform(apply_mod<TMod>(sourceOptional)) == expected);
+	const auto& refMod = GENERATE(make_all_ref_mods_generator());
+	REQUIRE(transform(cast(sourceOptional, refMod)) == expected);
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEST_CASE(
 	"or_else returns the given optional if it doesn't compare equally to its null object or returns the null object (provided func returns void).",
-	"[nullables][algorithm]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
+	"[nullables][algorithm]"
 )
 {
 	const char* sourceOptional = GENERATE("c", nullptr);
-
 	auto algorithm = or_else(do_nothing);
-	const char* s = apply_mod<TLhsMod>(sourceOptional) | apply_mod<TRhsMod>(algorithm);
+
+	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
+	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
+	const char* s = cast(sourceOptional, lhsRefMod) | cast(algorithm, rhsRefMod);
 
 	REQUIRE(s == sourceOptional);
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEST_CASE(
 	"or_else returns an optional with the same type, if the given optional compares equally to its null object and func has a return type other than void.",
-	"[nullables][algorithm]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
+	"[nullables][algorithm]"
 )
 {
 	auto orig = "c";
@@ -223,29 +153,24 @@ TEMPLATE_TEST_CASE_SIG(
 		(table<const char*, const char*>)({
 			{ orig, orig },
 			{ nullptr, alt }
-			})
+		})
 	);
-
 	auto algorithm = or_else([alt] { return alt; });
-	const char* s = apply_mod<TLhsMod>(sourceOptional) | apply_mod<TRhsMod>(algorithm);
+
+	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
+	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
+	const char* s = cast(sourceOptional, lhsRefMod) | cast(algorithm, rhsRefMod);
 
 	REQUIRE(s == expected);
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"or_else can be piped with other functionals",
-	"[nullables][algorithm][functional]",
-	((bool VDummy, template <class> class TMod), VDummy, TMod),
-	(true, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t)
-)
+TEST_CASE("or_else can be piped with other functionals", "[nullables][algorithm][functional]")
 {
 	auto [sourceOptional, expectThrow] = GENERATE(
 		(table<const char*, bool>)({
 			{ "c", false },
 			{ nullptr, true }
-			})
+		})
 	);
 
 	const sl::functional::predicate_fn predicate = std::identity{}
@@ -253,10 +178,11 @@ TEMPLATE_TEST_CASE_SIG(
 													| [](auto t) { return t; }
 													| sl::functional::equal >> nullptr;
 
+	const auto& refMod = GENERATE(make_all_ref_mods_generator());
 	if (expectThrow)
-		REQUIRE_THROWS(predicate(apply_mod<TMod>(sourceOptional)));
+		REQUIRE_THROWS(predicate(cast(sourceOptional, refMod)));
 	else
-		REQUIRE_NOTHROW(predicate(apply_mod<TMod>(sourceOptional)));
+		REQUIRE_NOTHROW(predicate(cast(sourceOptional, refMod)));
 }
 
 /*
