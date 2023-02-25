@@ -93,21 +93,14 @@ jobs:
       fail-fast: false
       matrix:
         build_mode: [Debug, Release]
-        toolset: [v142, v143, clang-cl]
-        include:
-          - toolset: v142
-            toolset_option: -T"v142"
-          - toolset: v143
-            toolset_option: -T"v143"
-          - toolset: clang-cl
-            toolset_option: -T"ClangCl"
+        toolset: [v142, v143, ClangCl]
 
     steps:
     - uses: actions/checkout@v3
     - name: Compile tests
       run: |
-        cmake -G "Ninja" -DCMAKE_BUILD_TYPE="${{ matrix.build_mode }}" ${{ matrix.toolset_option }} -B ${{ env.BUILD_DIR }} -S .
-        cmake --build ${{ env.BUILD_DIR }} -j4
+        cmake -G "Visual Studio 17 2022" -T${{ matrix.toolset_option }} -B${{ env.BUILD_DIR }} -Ax64 -S .
+        cmake --build ${{ env.BUILD_DIR }} --config ${{ matrix.build_mode }} -j4
     - name: Run tests
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
