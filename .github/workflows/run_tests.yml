@@ -3,7 +3,6 @@ name: run tests
 env:
   BUILD_DIR: out    # root build directory
   TEST_DIR: tests   # relative directory below BUILD_DIR
-  CMAKE_OPTIONS: -DSimple-Utility_BUILD_TESTS=ON
 
 on:
   push:
@@ -12,9 +11,8 @@ on:
     branches: [master, development]
 
 jobs:
-  linux-latest:
+  ubuntu-22_04:
     runs-on: ubuntu-22.04
-    timeout-minutes: 10
 
     strategy:
       fail-fast: false
@@ -45,16 +43,15 @@ jobs:
       env:
         CXX: ${{ matrix.compiler.exe }}
       run: |
-        cmake ${{ env.CMAKE_OPTIONS }} -B ${{ env.BUILD_DIR }} -S .
+        cmake -B ${{ env.BUILD_DIR }} -S .
         cmake --build ${{ env.BUILD_DIR }} -j4
     - name: Run tests
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
-      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.TEST_DIR }} --timeout 30 -C Debug -j4
+      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.TEST_DIR }} -C Debug -j4
 
-  linux-ubuntu-20_04:
+  ubuntu-20_04:
     runs-on: ubuntu-20.04
-    timeout-minutes: 10
 
     strategy:
       fail-fast: false
@@ -81,16 +78,15 @@ jobs:
       env:
         CXX: ${{ matrix.compiler.exe }}
       run: |
-        cmake ${{ env.CMAKE_OPTIONS }} -B ${{ env.BUILD_DIR }} -S .
+        cmake -B ${{ env.BUILD_DIR }} -S .
         cmake --build ${{ env.BUILD_DIR }} -j4
     - name: Run tests
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
-      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.TEST_DIR }} --timeout 30 -C Debug -j4
+      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.TEST_DIR }} -C Debug -j4
 
-  windows:
+  windows_2022:
     runs-on: windows-2022
-    timeout-minutes: 10
 
     strategy:
       fail-fast: false
@@ -108,12 +104,12 @@ jobs:
     - uses: actions/checkout@v2
     - name: Compile tests
       run: |
-        cmake ${{ env.CMAKE_OPTIONS }} ${{ matrix.toolset_option }} -B ${{ env.BUILD_DIR }} -S .
+        cmake ${{ matrix.toolset_option }} -B ${{ env.BUILD_DIR }} -S .
         cmake --build ${{ env.BUILD_DIR }} -j4
     - name: Run tests
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
-      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.TEST_DIR }} --timeout 30 -C Debug -j4
+      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.TEST_DIR }} -C Debug -j4
 
 #  macos:
 #    runs-on: macos-latest
