@@ -65,8 +65,8 @@ This library can easily be integrated into your project via CMake target_link_li
 ```cmake
 target_link_libraries(
 	<your_target_name>
-	PRIVATE
-	Simple-Utility::Simple-Utility
+	PUBLIC
+	Simple::Utility
 )
 ```
 

@@ -1,12 +1,8 @@
-cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
-
-include(CTest)
-
 CPMAddPackage("gh:catchorg/Catch2@3.3.1")
 include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
 
 add_executable(
-	${PROJECT_NAME}-Tests
+	Simple-Utility-Tests
 	"bind_back.cpp"
 	"math.cpp"
 	"unique_handle.cpp"
@@ -18,10 +14,10 @@ add_subdirectory("concepts")
 add_subdirectory("functional")
 
 target_link_libraries(
-	${PROJECT_NAME}-Tests
+	Simple-Utility-Tests
 	PRIVATE
-	${PROJECT_NAME}
+	Simple::Utility
 	Catch2::Catch2WithMain
 )
 
-catch_discover_tests(${PROJECT_NAME}-Tests)
+catch_discover_tests(Simple-Utility-Tests)
