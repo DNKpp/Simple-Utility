@@ -34,7 +34,7 @@ jobs:
             exe: clang++-11
             
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install compiler
       run: |
         sudo apt-get update
@@ -69,7 +69,7 @@ jobs:
             exe: clang++-10
             
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install compiler
       run: |
         sudo apt-get update
@@ -101,7 +101,7 @@ jobs:
             toolset_option: -T"ClangCl"
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Compile tests
       run: |
         cmake ${{ matrix.toolset_option }} -B ${{ env.BUILD_DIR }} -S .
@@ -119,7 +119,7 @@ jobs:
 #      fail-fast: false
 #
 #    steps:
-#    - uses: actions/checkout@v2
+#    - uses: actions/checkout@v3
 #    - name: Compile tests
 #      run: |
 #        cmake ${{ env.CMAKE_OPTIONS }} -B ${{ env.BUILD_DIR }} -S .
