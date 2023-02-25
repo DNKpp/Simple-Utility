@@ -104,22 +104,23 @@ jobs:
     - name: Run tests
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
-      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.TEST_DIR }} -C ${{ matrix.build_mode }} -j4
+      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.TEST_DIR }} -C${{ matrix.build_mode }} -j4
 
-#  macos:
-#    runs-on: macos-latest
-#    timeout-minutes: 10
-#    
-#    strategy:
-#      fail-fast: false
-#
-#    steps:
-#    - uses: actions/checkout@v3
-#    - name: Compile tests
-#      run: |
-#        cmake ${{ env.CMAKE_OPTIONS }} -B ${{ env.BUILD_DIR }} -S .
-#        cmake --build ${{ env.BUILD_DIR }} -j4
-#    - name: Run tests
-#      env:
-#        CTEST_OUTPUT_ON_FAILURE: 1
-#      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.TEST_DIR }} --timeout 30 -C Debug -j4
+  macos:
+    runs-on: macos-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        build_mode: [Debug, Release]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Compile tests
+      run: |
+        cmake -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }} -B ${{ env.BUILD_DIR }} -S .
+        cmake --build ${{ env.BUILD_DIR }} -j4
+    - name: Run tests
+      env:
+        CTEST_OUTPUT_ON_FAILURE: 1
+      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.TEST_DIR }} -C${{ matrix.build_mode }} -j4
