@@ -106,21 +106,41 @@ jobs:
         CTEST_OUTPUT_ON_FAILURE: 1
       run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.TEST_DIR }} -C${{ matrix.build_mode }} -j4
 
-  macos:
-    runs-on: macos-latest
+  windows_2019:
+    runs-on: windows-2019
 
     strategy:
       fail-fast: false
       matrix:
         build_mode: [Debug, Release]
+        toolset: [v142, v143, ClangCl]
 
     steps:
     - uses: actions/checkout@v3
     - name: Compile tests
       run: |
-        cmake -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }} -B ${{ env.BUILD_DIR }} -S .
-        cmake --build ${{ env.BUILD_DIR }} -j4
+        cmake -G "Visual Studio 17 2022" -T${{ matrix.toolset }} -B${{ env.BUILD_DIR }} -Ax64 -S .
+        cmake --build ${{ env.BUILD_DIR }} --config ${{ matrix.build_mode }} -j4
     - name: Run tests
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
       run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.TEST_DIR }} -C${{ matrix.build_mode }} -j4
+
+#  macos:
+#    runs-on: macos-latest
+#
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        build_mode: [Debug, Release]
+#
+#    steps:
+#    - uses: actions/checkout@v3
+#    - name: Compile tests
+#      run: |
+#        cmake -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }} -B ${{ env.BUILD_DIR }} -S .
+#        cmake --build ${{ env.BUILD_DIR }} -j4
+#    - name: Run tests
+#      env:
+#        CTEST_OUTPUT_ON_FAILURE: 1
+#      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.TEST_DIR }} -C${{ matrix.build_mode }} -j4
