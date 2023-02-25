@@ -11,14 +11,11 @@ add_executable(
 	"math.cpp"
 	"unique_handle.cpp"
 	"tuple_utility.cpp"
-	"functional/base.cpp"
-	"functional/transform.cpp"
-	"functional/predicate.cpp"
-	"functional/tuple.cpp"
 )
 
 add_subdirectory("nullables")
 add_subdirectory("concepts")
+add_subdirectory("functional")
 
 target_link_libraries(
 	${PROJECT_NAME}-Tests
