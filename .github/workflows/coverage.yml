@@ -4,7 +4,6 @@ env:
     GXX_VERSION: 11
     TESTS_DIR: out/tests
     COVERAGE_FILE: coverage.info
-    TEST_BUILD_FLAG: Simple-Utility_BUILD_TESTS
 
 on: [push, pull_request]
 
@@ -28,7 +27,7 @@ jobs:
           CC: gcc
           CXX: g++
         run: |
-          cmake -D${{ env.TEST_BUILD_FLAG }}=ON -B ${{ env.TESTS_DIR }}/.. -S .
+          cmake -B ${{ env.TESTS_DIR }}/.. -S .
           cmake --build ${{ env.TESTS_DIR }}/.. -j4
 
       - name: Run tests
