@@ -93,7 +93,7 @@ jobs:
       fail-fast: false
       matrix:
         build_mode: [Debug, Release]
-        generator: [Visual Studio 16 2019, Visual Studio 17 2022]
+        generator: [Visual Studio 17 2022]
         toolset: [v142, v143, ClangCl]
 
     steps:
@@ -115,7 +115,7 @@ jobs:
       matrix:
         build_mode: [Debug, Release]
         generator: [Visual Studio 16 2019]
-        toolset: [v142, v143, ClangCl]
+        toolset: [v142, ClangCl]
 
     steps:
     - uses: actions/checkout@v3
