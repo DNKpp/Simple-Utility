@@ -94,6 +94,6 @@ from the latest release into your project folder and include it into your ``CMak
 include(CPM.cmake) # or include(get_cpm.cmake)
 
 
-CPMAddPackage("gh:DNKpp/Simple-Utility#v2.0.0") # or any other tag name
+CPMAddPackage("gh:DNKpp/Simple-Utility@2.0.0") # or any other tag name
 # do not forget linking via target_link_libraries as shown above
 ```
