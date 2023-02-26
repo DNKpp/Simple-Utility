@@ -31,10 +31,10 @@ namespace sl::functional::detail
 	};
 
 	template <class TTo, class... TArgs>
-	inline constexpr bool force_explicit_constructor_v{ false };
+	inline constexpr bool force_explicit_constructor_v{false};
 
 	template <class TTo, class T>
-	inline constexpr bool force_explicit_constructor_v<TTo, T>{ !std::is_convertible_v<T, TTo> };
+	inline constexpr bool force_explicit_constructor_v<TTo, T>{!std::is_convertible_v<T, TTo>};
 }
 
 namespace sl::functional::operators
@@ -61,7 +61,7 @@ namespace sl::functional::operators
 	using tag_operation_t = typename tag_traits<T>::operation_t;
 
 	template <tag T>
-	inline constexpr composition_strategy_t tag_composition_strategy_v{ tag_traits<T>::composition_strategy };
+	inline constexpr composition_strategy_t tag_composition_strategy_v{tag_traits<T>::composition_strategy};
 }
 
 namespace sl::functional
@@ -151,7 +151,7 @@ namespace sl::functional
 		closure_base_fn(
 			TArgs&&... args
 		) noexcept(std::is_nothrow_constructible_v<function_type, TArgs...>)
-			: m_Func{ std::forward<TArgs>(args)... }
+			: m_Func{std::forward<TArgs>(args)...}
 		{
 		}
 
@@ -307,8 +307,8 @@ namespace sl::functional
 			noexcept(std::is_nothrow_constructible_v<operation_t, TOperationArg>
 					&& (std::is_nothrow_constructible_v<TFunctions, detail::unwrap_functional_r_t<TFunctionArgs>> && ...)
 			)
-			: m_Operation{ std::forward<TOperationArg>(operationArg) },
-			m_Functions{ detail::unwrap_functional(std::forward<TFunctionArgs>(functionArgs))... }
+			: m_Operation{std::forward<TOperationArg>(operationArg)},
+			m_Functions{detail::unwrap_functional(std::forward<TFunctionArgs>(functionArgs))...}
 
 		{
 		}
@@ -430,7 +430,7 @@ namespace sl::functional
 		/**
 		 * \brief Defaulted destructor.
 		 */
-		constexpr ~value_fn() = default; 
+		constexpr ~value_fn() = default;
 
 		/**
 		 * \brief Forwarding constructor.
@@ -439,11 +439,10 @@ namespace sl::functional
 		 */
 		template <class TU = T>
 			requires std::constructible_from<T, TU>
-				&& (!std::same_as<value_fn, std::remove_cvref_t<TU>>)
+					&& (!std::same_as<value_fn, std::remove_cvref_t<TU>>)
 		[[nodiscard]]
 		constexpr
-		explicit(!std::convertible_to<TU, T>)
-		value_fn(  // NOLINT(bugprone-forwarding-reference-overload)
+		explicit(!std::convertible_to<TU, T>) value_fn(
 			TU&& value
 		) noexcept(std::is_nothrow_constructible_v<T, TU>)
 			: m_Value{std::forward<TU>(value)}
@@ -481,7 +480,7 @@ namespace sl::functional
 		}
 
 		/**
-		 * \copydoc operator()()
+		 * \copydoc operator()() const &
 		 */
 		[[nodiscard]]
 		constexpr const value_type& operator ()() & noexcept
@@ -541,7 +540,7 @@ namespace sl::functional::detail
 		return std::apply(
 			[]<class... TFunctions>(TFunctions&&... functions)
 			{
-				return composition_fn{ operators::tag_operation_t<TOperationTag>{}, std::forward<TFunctions>(functions)... };
+				return composition_fn{operators::tag_operation_t<TOperationTag>{}, std::forward<TFunctions>(functions)...};
 			},
 			std::move(functionsTuple)
 		);
@@ -556,7 +555,7 @@ namespace sl::functional::detail
 		TFunc2&& func2
 	) noexcept(is_nothrow_composable_v<TOperationTag, TFunc1, TFunc2>)
 	{
-		return composition_fn{ operators::tag_operation_t<TOperationTag>{}, std::forward<TFunc1>(func1), std::forward<TFunc2>(func2) };
+		return composition_fn{operators::tag_operation_t<TOperationTag>{}, std::forward<TFunc1>(func1), std::forward<TFunc2>(func2)};
 	}
 
 	template <operators::tag TOperationTag,
