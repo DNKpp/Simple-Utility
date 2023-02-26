@@ -116,3 +116,72 @@ TEST_CASE("tuple_zip zips multiple tuples into one.", "[tuple][algorithm]")
 	REQUIRE(result == expectedResult);
 	REQUIRE(std::empty(std::get<0>(second))); // just get sure, we are really moving from the sources
 }
+
+TEST_CASE("tuple_cartesian_product creates cartesian product of two tuples.", "[tuple][algorithm]")
+{
+	const std::tuple<std::string, short> first{"Hello, World!", 42};
+	const std::tuple<unsigned, int, std::string> second{1337, -42, "Test" };
+
+	using result_t = std::tuple<
+		std::tuple<std::string, unsigned>,
+		std::tuple<std::string, int>,
+		std::tuple<std::string, std::string>,
+		std::tuple<short, unsigned>,
+		std::tuple<short, int>,
+		std::tuple<short, std::string>
+	>;
+	const result_t expectedResult{
+		{"Hello, World!", 1337},
+		{"Hello, World!", -42},
+		{"Hello, World!", "Test"},
+		{42, 1337},
+		{42, -42},
+		{42, "Test"}
+	};
+
+	result_t result = tuple_cartesian_product(first, second);
+
+	REQUIRE(result == expectedResult);
+}
+
+TEST_CASE("tuple_cartesian_product creates cartesian product of three tuples.", "[tuple][algorithm]")
+{
+	const std::tuple<std::string, short> first{"Hello, World!", 42};
+	const std::tuple<unsigned, int, std::string> second{1337, -42, "Test" };
+	const std::tuple<int, std::string> third{-1337, "Test2" };
+
+	using result_t = std::tuple<
+		std::tuple<std::string, unsigned, int>,
+		std::tuple<std::string, unsigned, std::string>,
+		std::tuple<std::string, int, int>,
+		std::tuple<std::string, int, std::string>,
+		std::tuple<std::string, std::string, int>,
+		std::tuple<std::string, std::string, std::string>,
+
+		std::tuple<short, unsigned, int>,
+		std::tuple<short, unsigned, std::string>,
+		std::tuple<short, int, int>,
+		std::tuple<short, int, std::string>,
+		std::tuple<short, std::string, int>,
+		std::tuple<short, std::string, std::string>
+	>;
+	const result_t expectedResult{
+		{"Hello, World!", 1337, -1337},
+		{"Hello, World!", 1337, "Test2"},
+		{"Hello, World!", -42, -1337},
+		{"Hello, World!", -42, "Test2"},
+		{"Hello, World!", "Test", -1337},
+		{"Hello, World!", "Test", "Test2"},
+
+		{42, 1337, -1337},
+		{42, 1337, "Test2"},
+		{42, -42, -1337},
+		{42, -42, "Test2"},
+		{42, "Test", -1337},
+		{42, "Test", "Test2"}
+	};
+
+	result_t result = tuple_cartesian_product(first, second, third);
+
+	REQUIRE(result == expectedResult);
+}
