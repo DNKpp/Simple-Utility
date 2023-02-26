@@ -410,21 +410,23 @@ namespace sl::functional
 
 	/**
 	 * \brief Functional helper type, which takes a value and returns them on invocation.
-	 * \details This type has special treatment for ``std::reference_wrapper`` types. Instead of returning those at invocation,
-	 * they will be unwrapped and the containing reference will be returned instead.
-	 * \note In general the ``value_type`` will be equally to ``T``, but if ``T`` is an array type, it will become ``T*``.
-	 * ``reference_type`` will be usually equally to ``const value_type&``, but if ``value_type`` is a ``std::reference_wrapper<U>``, then
-	 * it will be ``U&``.
-	 * \tparam T The value type. 
+	 * \details The general design allows only immutable access to the stored value, but when working with rvalue references,
+	 * one may retrieve a mutable rvalue reference. If a function needs a mutable reference, users may explicitly wrap their values
+	 * in a ``std::reference_wrapper``, but then they must follow the lifetime rules of these.
+	 * \note In general the ``value_type`` will be equally to ``T``, but if ``T`` is an array type, it will decayed to (possibly const qualified) ``T*``.
+	 * \tparam T The decayed value type.
 	 */
 	template <class T>
-		requires std::same_as<T, std::remove_cvref_t<T>>
+		requires std::same_as<T, std::decay_t<T>>
 	class value_fn
 	{
 	public:
-		using value_type = std::conditional_t<std::is_array_v<T>, T*, T>;
-		using reference_type = const std::unwrap_reference_t<value_type>&;
+		using value_type = T;
 
+	private:
+		value_type m_Value{};
+
+	public:
 		/**
 		 * \brief Constructor, which forwards all of its args to the internal value.
 		 * \tparam TArgs The constructor argument type.
@@ -435,33 +437,51 @@ namespace sl::functional
 		/**\cond conditional-explicit*/
 		explicit(detail::force_explicit_constructor_v<value_type, TArgs...>)
 		/**\endcond*/
-		constexpr value_fn(TArgs&&... args) noexcept(std::is_nothrow_constructible_v<value_type, TArgs...>)
+		constexpr value_fn(
+			TArgs&&... args
+		) noexcept(std::is_nothrow_constructible_v<value_type, TArgs...>)
 			: m_Value{ std::forward<TArgs>(args)... }
 		{
 		}
 
 		/**
 		 * \brief The invocation operator.
-		 * \return Returns value as ``reference_type``.
+		 * \return Returns a const lvalue reference to value.
 		 */
 		[[nodiscard]]
-		constexpr reference_type operator ()() const & noexcept(std::is_nothrow_convertible_v<reference_type, value_type>)
+		constexpr const value_type& operator ()() const & noexcept
+		{
+			return m_Value;
+		}
+
+		/**
+		 * \copydoc operator()()
+		 */
+		[[nodiscard]]
+		constexpr const value_type& operator ()() & noexcept
 		{
 			return m_Value;
 		}
 
 		/**
 		 * \brief The invocation operator.
-		 * \return Returns a move constructed ``value_type``.
+		 * \return Returns a const rvalue reference to value.
 		 */
 		[[nodiscard]]
-		constexpr value_type operator ()() && noexcept(std::is_nothrow_move_constructible_v<value_type>)
+		constexpr const value_type&& operator ()() const && noexcept
 		{
 			return std::move(m_Value);
 		}
 
-	private:
-		value_type m_Value{};
+		/**
+		 * \brief The invocation operator.
+		 * \return Returns a rvalue reference to value.
+		 */
+		[[nodiscard]]
+		constexpr value_type&& operator ()() && noexcept
+		{
+			return std::move(m_Value);
+		}
 	};
 
 	/**

@@ -42,31 +42,38 @@ struct type_mod
 	}
 };
 
+using all_ref_mods_list = std::tuple<
+	type_mod<as_const_lvalue_ref_t>,
+	type_mod<as_lvalue_ref_t>,
+	type_mod<as_const_rvalue_ref_t>,
+	type_mod<as_rvalue_ref_t>
+>;
+
 template <template <class> class... TMods>
-class RefModGenerator
+class RefModGenerator final
 	: public Catch::Generators::IGenerator<std::variant<type_mod<TMods>...>>
 {
 public:
 	using Value = std::variant<type_mod<TMods>...>;
-	static constexpr std::size_t values{ sizeof...(TMods) };
+	static constexpr std::size_t value_count{ sizeof...(TMods) };
 
 private:
 	std::size_t m_Index{};
-	static constexpr std::array<Value, values> m_Values{ (type_mod<TMods>{}, ...) };
+	static constexpr std::array<Value, value_count> values{ (type_mod<TMods>{}, ...) };
 
 	bool next() override
 	{
-		return ++m_Index < values;
+		return ++m_Index < value_count;
 	}
 
 	const Value& get() const override
 	{
-		return m_Values[m_Index];
+		return values[m_Index];
 	}
 };
 
 template <template <class> class... TMods>
-inline auto make_ref_mods_generator()
+auto make_ref_mods_generator()
 {
 	using Generator = RefModGenerator<TMods...>;
 	return Catch::Generators::GeneratorWrapper<typename Generator::Value>{

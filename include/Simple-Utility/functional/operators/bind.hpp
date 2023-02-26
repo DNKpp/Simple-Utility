@@ -126,7 +126,7 @@ namespace sl::functional::operators
 		TFunc&& func,
 		TValue&& value
 	)
-	noexcept(is_nothrow_composable_v<bind_front, TFunc, value_fn<std::remove_cvref_t<TValue>>&&>)
+	noexcept(is_nothrow_composable_v<bind_front, TFunc, value_fn<std::decay_t<TValue>>&&>)
 	{
 		return functional::detail::make_composition_from_tag<bind_front>(
 			std::forward<TFunc>(func),
@@ -169,7 +169,7 @@ namespace sl::functional::operators
 		TFunc&& func,
 		TValue&& value
 	)
-	noexcept(is_nothrow_composable_v<bind_back, TFunc, value_fn<std::remove_cvref_t<TValue>>&&>)
+	noexcept(is_nothrow_composable_v<bind_back, TFunc, value_fn<std::decay_t<TValue>>&&>)
 	{
 		return functional::detail::make_composition_from_tag<bind_back>(
 			std::forward<TFunc>(func),
