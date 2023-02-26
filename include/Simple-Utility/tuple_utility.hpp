@@ -110,8 +110,7 @@ namespace sl
 	template <class TFunc, class TTuple>
 	using apply_invoke_result_t = typename apply_invoke_result<TFunc, TTuple>::type;
 
-	//template <class TFirst, class TSecond, class... TOthers>
-	//using tuple_zip_result_t =
+	/** @} */
 }
 
 namespace sl::detail
@@ -140,8 +139,6 @@ namespace sl::detail
 			return std::make_tuple(zipped_t{std::get<VIndex>(std::forward<TTuples>(tuples))...});
 		}
 	}
-
-	/** @} */
 }
 
 namespace sl
@@ -192,6 +189,95 @@ namespace sl
 			std::forward<TSecond>(second),
 			std::forward<TOthers>(others)...
 		);
+	}
+
+	/** @} */
+}
+
+namespace sl::detail
+{
+	constexpr auto tuple_cartesian_product(const auto& first, const auto& second)
+	{
+		// idea taken from: https://stackoverflow.com/questions/70404549/cartesian-product-of-stdtuple/70405807#70405807
+		return std::apply(
+			[&](auto&... firstElements)
+			{
+				return std::tuple_cat(
+					[&](auto& currentFirst)
+					{
+						return std::apply(
+							[&](const auto&... secondElements)
+							{
+								return std::tuple{std::tuple{currentFirst, secondElements}...};
+							},
+							second
+						);
+					}(firstElements)...
+				);
+			},
+			first
+		);
+	}
+
+	constexpr auto tuple_cartesian_product(const auto& first, const auto& second, const auto&... others)
+	{
+		auto trailers = tuple_cartesian_product(second, others...);
+		return std::apply(
+			[&](auto&... firstElements)
+			{
+				return std::tuple_cat(
+					[&](auto& currentFirst)
+					{
+						return std::apply(
+							[&](auto&... trailerElements)
+							{
+								return std::tuple{std::tuple_cat(std::tuple{currentFirst}, trailerElements)...};
+							},
+							trailers
+						);
+					}(firstElements)...
+				);
+			},
+			first
+		);
+	}
+}
+
+namespace sl
+{
+	/**
+	 * \addtogroup GROUP_TUPLE_UTILITY
+	 * @{
+	 */
+
+	/**
+	 * \brief Trait type determining the result of a ``tuple_cartesian_product`` call.
+	 */
+	template <class TFirst, class TSecond, class... TOthers>
+	struct tuple_cartesian_product_result
+	{
+		using type = decltype(detail::tuple_cartesian_product(
+			std::declval<TFirst>(),
+			std::declval<TSecond>(),
+			std::declval<TOthers>()...
+		));
+	};
+
+	/**
+	 * \brief Alias type determining the result of a ``tuple_cartesian_product`` call.
+	 */
+	template <class TFirst, class TSecond, class... TOthers>
+	using tuple_cartesian_product_result_t = typename tuple_cartesian_product_result<TFirst, TSecond, TOthers...>::type;
+
+	template <class TFirst, class TSecond, class... TOthers>
+	[[nodiscard]]
+	constexpr tuple_cartesian_product_result_t<TFirst, TSecond, TOthers...> tuple_cartesian_product(
+		const TFirst& first,
+		const TSecond& second,
+		const TOthers&... others
+	)
+	{
+		return detail::tuple_cartesian_product(first, second, others...);
 	}
 
 	/** @} */
