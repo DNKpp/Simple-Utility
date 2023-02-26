@@ -146,10 +146,10 @@ TEMPLATE_TEST_CASE(
 	using const_rvalue_result_t = std::invoke_result_t<as_const_rvalue_ref_t<value_fn<TestType>>>;
 	using rvalue_result_t = std::invoke_result_t<as_rvalue_ref_t<value_fn<TestType>>>;
 
-	STATIC_REQUIRE(std::is_same_v<const_lvalue_result_t, as_const_lvalue_ref_t<TestType>>);
-	STATIC_REQUIRE(std::is_same_v<lvalue_result_t, as_const_lvalue_ref_t<TestType>>);
-	STATIC_REQUIRE(std::is_same_v<const_rvalue_result_t, as_const_rvalue_ref_t<TestType>>);
-	STATIC_REQUIRE(std::is_same_v<rvalue_result_t, as_rvalue_ref_t<TestType>>);
+	STATIC_REQUIRE(std::same_as<const_lvalue_result_t, as_const_lvalue_ref_t<TestType>>);
+	STATIC_REQUIRE(std::same_as<lvalue_result_t, as_const_lvalue_ref_t<TestType>>);
+	STATIC_REQUIRE(std::same_as<const_rvalue_result_t, as_const_rvalue_ref_t<TestType>>);
+	STATIC_REQUIRE(std::same_as<rvalue_result_t, as_rvalue_ref_t<TestType>>);
 }
 
 TEMPLATE_LIST_TEST_CASE("value_fn supports trivial types.", "[functional][base]", all_ref_mods_list)
