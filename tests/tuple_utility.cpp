@@ -35,7 +35,9 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, std::tuple<float>)
 )
 {
-	constexpr auto func = []<class T>(T&&) noexcept(std::same_as<int, T>) {};
+	constexpr auto func = []<class T>(T&&) noexcept(std::same_as<int, T>)
+	{
+	};
 	using function_t = decltype(func);
 
 	STATIC_REQUIRE(concepts::nothrow_apply_invocable<function_t, TTuple> == VExpected);
