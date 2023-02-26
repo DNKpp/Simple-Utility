@@ -102,9 +102,6 @@ TEMPLATE_TEST_CASE_SIG(
 	REQUIRE(!std::invoke(cast(falseComposition, mod), VArgs...));
 }
 
-template <class T>
-using CTAD_value_fn = decltype(value_fn{std::declval<T>()});
-
 TEMPLATE_PRODUCT_TEST_CASE(
 	"value_fn::value_type holds decayed value.",
 	"[functional][base]",
@@ -127,7 +124,8 @@ TEMPLATE_PRODUCT_TEST_CASE(
 	)
 )
 {
-	using value_type = typename CTAD_value_fn<TestType>::value_type;
+	using CTAD_value_fn = decltype(value_fn{std::declval<TestType>()});
+	using value_type = typename CTAD_value_fn::value_type;
 
 	STATIC_REQUIRE(std::same_as<value_type, std::decay_t<TestType>>);
 }
@@ -143,15 +141,15 @@ TEMPLATE_TEST_CASE(
 	std::reference_wrapper<const int>
 )
 {
-	using const_lvalue_result_t = std::invoke_result_t<as_const_lvalue_ref_t<CTAD_value_fn<TestType>>>;
-	using lvalue_result_t = std::invoke_result_t<as_lvalue_ref_t<CTAD_value_fn<TestType>>>;
-	using const_rvalue_result_t = std::invoke_result_t<as_const_rvalue_ref_t<CTAD_value_fn<TestType>>>;
-	using rvalue_result_t = std::invoke_result_t<as_rvalue_ref_t<CTAD_value_fn<TestType>>>;
+	using const_lvalue_result_t = std::invoke_result_t<as_const_lvalue_ref_t<value_fn<TestType>>>;
+	using lvalue_result_t = std::invoke_result_t<as_lvalue_ref_t<value_fn<TestType>>>;
+	using const_rvalue_result_t = std::invoke_result_t<as_const_rvalue_ref_t<value_fn<TestType>>>;
+	using rvalue_result_t = std::invoke_result_t<as_rvalue_ref_t<value_fn<TestType>>>;
 
-	STATIC_REQUIRE(std::same_as<const_lvalue_result_t, as_const_lvalue_ref_t<TestType>>);
-	STATIC_REQUIRE(std::same_as<lvalue_result_t, as_const_lvalue_ref_t<TestType>>);
-	STATIC_REQUIRE(std::same_as<const_rvalue_result_t, as_const_rvalue_ref_t<TestType>>);
-	STATIC_REQUIRE(std::same_as<rvalue_result_t, as_rvalue_ref_t<TestType>>);
+	STATIC_REQUIRE(std::is_same_v<const_lvalue_result_t, as_const_lvalue_ref_t<TestType>>);
+	STATIC_REQUIRE(std::is_same_v<lvalue_result_t, as_const_lvalue_ref_t<TestType>>);
+	STATIC_REQUIRE(std::is_same_v<const_rvalue_result_t, as_const_rvalue_ref_t<TestType>>);
+	STATIC_REQUIRE(std::is_same_v<rvalue_result_t, as_rvalue_ref_t<TestType>>);
 }
 
 TEMPLATE_LIST_TEST_CASE("value_fn supports trivial types.", "[functional][base]", all_ref_mods_list)
