@@ -198,3 +198,23 @@ TEMPLATE_LIST_TEST_CASE("value_fn supports std::reference_wrapper types.", "[fun
 	REQUIRE(x == 1337);
 	//! [value_fn wrapped]
 }
+
+TEMPLATE_LIST_TEST_CASE("value_fn is copy- and move-constructible.", "[functional][base]", all_ref_mods_list)
+{
+	value_fn source{int{42}};
+	const value_fn target{TestType::cast(source)};
+
+	STATIC_REQUIRE(std::same_as<int, typename std::remove_cvref_t<decltype(target)>::value_type>);
+
+	REQUIRE(target() == 42);
+}
+
+TEMPLATE_LIST_TEST_CASE("value_fn is copy- and move-assignable.", "[functional][base]", all_ref_mods_list)
+{
+	value_fn source{int{42}};
+	value_fn<int> target{1337};
+
+	target = TestType::cast(source);
+
+	REQUIRE(target() == 42);
+}

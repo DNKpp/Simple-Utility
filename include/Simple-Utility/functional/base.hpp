@@ -428,21 +428,47 @@ namespace sl::functional
 
 	public:
 		/**
-		 * \brief Constructor, which forwards all of its args to the internal value.
-		 * \tparam TArgs The constructor argument type.
-		 * \param args The constructor arguments, which will be forwarded to the constructor of ``value_type``.
+		 * \brief Defaulted destructor.
 		 */
-		template <class... TArgs>
+		constexpr ~value_fn() = default; 
+
+		/**
+		 * \brief Forwarding constructor.
+		 * \tparam TU The constructor argument type.
+		 * \param value The argument, which is forwarded to the internal value constructor.
+		 */
+		template <class TU = T>
+			requires std::constructible_from<T, TU>
+				&& (!std::same_as<value_fn, std::remove_cvref_t<TU>>)
 		[[nodiscard]]
-		/**\cond conditional-explicit*/
-		explicit(detail::force_explicit_constructor_v<value_type, TArgs...>)
-		/**\endcond*/
-		constexpr value_fn(
-			TArgs&&... args
-		) noexcept(std::is_nothrow_constructible_v<value_type, TArgs...>)
-			: m_Value{ std::forward<TArgs>(args)... }
+		constexpr
+		explicit(!std::convertible_to<TU, T>)
+		value_fn(  // NOLINT(bugprone-forwarding-reference-overload)
+			TU&& value
+		) noexcept(std::is_nothrow_constructible_v<T, TU>)
+			: m_Value{std::forward<TU>(value)}
 		{
 		}
+
+		/**
+		 * \brief Defaulted copy-constructor.
+		 */
+		constexpr value_fn(const value_fn&) = default;
+
+		/**
+		 * \brief Defaulted copy-assignment operator.
+		 */
+		constexpr value_fn& operator =(const value_fn&) = default;
+
+		/**
+		 * \brief Defaulted move-constructor.
+		 */
+		constexpr value_fn(value_fn&&) = default;
+
+		/**
+		 * \brief Defaulted move-assignment operator.
+		 */
+		constexpr value_fn& operator =(value_fn&&) = default;
 
 		/**
 		 * \brief The invocation operator.
