@@ -117,10 +117,29 @@ TEST_CASE("tuple_zip zips multiple tuples into one.", "[tuple][algorithm]")
 	REQUIRE(std::empty(std::get<0>(second))); // just get sure, we are really moving from the sources
 }
 
+TEMPLATE_TEST_CASE_SIG(
+	"tuple_cartesian_product_result_t yields return type of tuple_cartesian_product algorithm.",
+	"[tuple][trait]",
+	((bool VDummy, class TResult, class... TTuples), VDummy, TResult, TTuples...),
+	(true, std::tuple<>, std::tuple<>, std::tuple<>),
+	(true, std::tuple<>, std::tuple<>, std::tuple<int>),
+	(true, std::tuple<std::tuple<float, int>>, std::tuple<float>, std::tuple<int>),
+	(true, std::tuple<std::tuple<float, int>, std::tuple<short, int>>, std::tuple<float, short>, std::tuple<int>),
+	(true, (std::tuple<std::tuple<float, int>, std::tuple<float, short>, std::tuple<double, int>, std::tuple<double, short>>),
+		std::tuple<float, double>, std::tuple<int, short>),
+	(true, (std::tuple<std::tuple<float, int, short>, std::tuple<float, int, unsigned>,
+			std::tuple<double, int, short>, std::tuple<double, int, unsigned>>),
+		std::tuple<float, double>, std::tuple<int>, std::tuple<short, unsigned>)
+)
+{
+	using result = tuple_cartesian_product_result_t<std::tuple<float>, std::tuple<int>>;
+	STATIC_REQUIRE(std::same_as<TResult, tuple_cartesian_product_result_t<TTuples...>>);
+}
+
 TEST_CASE("tuple_cartesian_product creates cartesian product of two tuples.", "[tuple][algorithm]")
 {
 	const std::tuple<std::string, short> first{"Hello, World!", 42};
-	const std::tuple<unsigned, int, std::string> second{1337, -42, "Test" };
+	const std::tuple<unsigned, int, std::string> second{1337, -42, "Test"};
 
 	using result_t = std::tuple<
 		std::tuple<std::string, unsigned>,
@@ -147,8 +166,8 @@ TEST_CASE("tuple_cartesian_product creates cartesian product of two tuples.", "[
 TEST_CASE("tuple_cartesian_product creates cartesian product of three tuples.", "[tuple][algorithm]")
 {
 	const std::tuple<std::string, short> first{"Hello, World!", 42};
-	const std::tuple<unsigned, int, std::string> second{1337, -42, "Test" };
-	const std::tuple<int, std::string> third{-1337, "Test2" };
+	const std::tuple<unsigned, int, std::string> second{1337, -42, "Test"};
+	const std::tuple<int, std::string> third{-1337, "Test2"};
 
 	using result_t = std::tuple<
 		std::tuple<std::string, unsigned, int>,
