@@ -196,25 +196,11 @@ namespace sl
 
 namespace sl::detail
 {
-	constexpr auto tuple_cartesian_product(const auto& first, const auto& second)
+	// idea taken from: https://stackoverflow.com/questions/70404549/cartesian-product-of-stdtuple/70405807#70405807
+	constexpr auto tuple_cartesian_product(const auto& first, const auto&... others)
 	{
-		// idea taken from: https://stackoverflow.com/questions/70404549/cartesian-product-of-stdtuple/70405807#70405807
 		return std::apply(
-			[&](auto&... firstElements)
-			{
-				return std::tuple_cat(
-					[&](auto& currentFirst)
-					{
-						return std::apply(
-							[&](const auto&... secondElements)
-							{
-								return std::tuple{std::tuple{currentFirst, secondElements}...};
-							},
-							second
-						);
-					}(firstElements)...
-				);
-			},
+			[](auto&... elements) { return std::make_tuple(std::make_tuple(elements)...); },
 			first
 		);
 	}
@@ -231,7 +217,7 @@ namespace sl::detail
 						return std::apply(
 							[&](auto&... trailerElements)
 							{
-								return std::tuple{std::tuple_cat(std::tuple{currentFirst}, trailerElements)...};
+								return std::make_tuple(std::tuple_cat(std::make_tuple(currentFirst), trailerElements)...);
 							},
 							trailers
 						);
