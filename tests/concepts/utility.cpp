@@ -5,9 +5,6 @@
 
 #include <catch2/catch_template_test_macros.hpp>
 
-#include <array>
-#include <vector>
-
 #include "Simple-Utility/concepts/utility.hpp"
 
 using namespace sl::concepts;
