@@ -18,22 +18,26 @@ namespace sl::detail
 	template <class...>
 	struct is_apply_invocable
 		: std::false_type
-	{};
+	{
+	};
 
 	template <class TFunc, class TTuple, std::size_t... VIndices>
 	struct is_apply_invocable<TFunc, TTuple, std::index_sequence<VIndices...>>
 		: std::bool_constant<std::invocable<TFunc, std::tuple_element_t<VIndices, TTuple>...>>
-	{};
+	{
+	};
 
 	template <class...>
 	struct is_nothrow_apply_invocable
 		: std::false_type
-	{};
+	{
+	};
 
 	template <class TFunc, class TTuple, std::size_t... VIndices>
 	struct is_nothrow_apply_invocable<TFunc, TTuple, std::index_sequence<VIndices...>>
 		: std::bool_constant<std::is_nothrow_invocable_v<TFunc, std::tuple_element_t<VIndices, TTuple>...>>
-	{};
+	{
+	};
 }
 
 namespace sl
@@ -49,14 +53,15 @@ namespace sl
 	template <class TFunc, class TTuple>
 	struct is_apply_invocable
 		: detail::is_apply_invocable<TFunc, TTuple, std::make_index_sequence<std::tuple_size_v<TTuple>>>
-	{};
+	{
+	};
 
 	/**
 	 * \brief Convenience constant, which determines whether the function is invocable with elements of the given tuple.
 	 * \relates is_apply_invocable
 	 */
 	template <class TFunc, class TTuple>
-	inline constexpr bool is_apply_invocable_v{ is_apply_invocable<TFunc, TTuple>::value };
+	inline constexpr bool is_apply_invocable_v{is_apply_invocable<TFunc, TTuple>::value};
 
 	/**
 	 * \brief Trait type determining whether the function is invocable with elements of the given tuple without throwing.
@@ -64,7 +69,8 @@ namespace sl
 	template <class TFunc, class TTuple>
 	struct is_nothrow_apply_invocable
 		: detail::is_nothrow_apply_invocable<TFunc, TTuple, std::make_index_sequence<std::tuple_size_v<TTuple>>>
-	{};
+	{
+	};
 
 	/**
 	 * \brief Convenience constant, which determines whether the function is invocable with elements of the given tuple
@@ -72,7 +78,7 @@ namespace sl
 	 * \relates is_nothrow_apply_invocable
 	 */
 	template <class TFunc, class TTuple>
-	inline constexpr bool is_nothrow_apply_invocable_v{ is_nothrow_apply_invocable<TFunc, TTuple>::value };
+	inline constexpr bool is_nothrow_apply_invocable_v{is_nothrow_apply_invocable<TFunc, TTuple>::value};
 
 	/**
 	 * \brief Trait type determining the result of a ``std::tuple_cat`` call.
@@ -103,6 +109,64 @@ namespace sl
 	 */
 	template <class TFunc, class TTuple>
 	using apply_invoke_result_t = typename apply_invoke_result<TFunc, TTuple>::type;
+
+	//template <class TFirst, class TSecond, class... TOthers>
+	//using tuple_zip_result_t =
+}
+
+namespace sl::detail
+{
+	template <std::size_t VIndex, class... TTuples>
+		requires ((std::tuple_size_v<std::remove_cvref_t<TTuples>> == 0) || ...)
+	constexpr auto zip_tuple_element(TTuples&&...)
+	{
+		return std::tuple{};
+	}
+
+	template <std::size_t VIndex, class... TTuples>
+	constexpr auto zip_tuple_element(TTuples&&... tuples)
+	{
+		using zipped_t = std::tuple<std::tuple_element_t<VIndex, std::remove_cvref_t<TTuples>>...>;
+
+		if constexpr (((VIndex + 1 < std::tuple_size_v<std::remove_cvref_t<TTuples>>) && ...))
+		{
+			return std::tuple_cat(
+				std::make_tuple(zipped_t{std::get<VIndex>(std::forward<TTuples>(tuples))...}),
+				zip_tuple_element<VIndex + 1>(std::forward<TTuples>(tuples)...)
+			);
+		}
+		else
+		{
+			return std::make_tuple(zipped_t{std::get<VIndex>(std::forward<TTuples>(tuples))...});
+		}
+	}
+}
+
+namespace sl
+{
+	template <class TFirst, class TSecond, class... TOthers>
+	struct tuple_zip_result
+	{
+		using type = decltype(detail::zip_tuple_element<0>(
+			std::declval<TFirst>(),
+			std::declval<TSecond>(),
+			std::declval<TOthers>()...
+		));
+	};
+
+	template <class TFirst, class TSecond, class... TOthers>
+	using tuple_zip_result_t = typename tuple_zip_result<TFirst, TSecond, TOthers...>::type;
+
+	template <class TFirst, class TSecond, class... TOthers>
+	[[nodiscard]]
+	constexpr tuple_zip_result_t<TFirst, TSecond, TOthers...> tuple_zip(TFirst&& first, TSecond&& second, TOthers&&... others)
+	{
+		return detail::zip_tuple_element<0>(
+			std::forward<TFirst>(first),
+			std::forward<TSecond>(second),
+			std::forward<TOthers>(others)...
+		);
+	}
 
 	/** @} */
 }
