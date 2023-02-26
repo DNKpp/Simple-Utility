@@ -4,6 +4,7 @@ include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
 add_executable(
 	Simple-Utility-Tests
 	"bind_back.cpp"
+	"helper.cpp"
 	"math.cpp"
 	"unique_handle.cpp"
 	"tuple_utility.cpp"
