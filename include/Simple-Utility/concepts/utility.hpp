@@ -42,6 +42,43 @@ namespace sl::concepts
 	template <class... T>
 	concept unique_types = are_types_unique_v<T...>;
 
+	/** @} */
+}
+
+namespace sl::concepts::detail
+{
+	template <class TTuple>
+	consteval bool has_tuple_element()
+	{
+		return []<std::size_t... VIndices>([[maybe_unused]] std::index_sequence<VIndices...>)
+		{
+			return (requires { typename std::tuple_element_t<VIndices, TTuple>; } && ...);
+		}(std::make_index_sequence<std::tuple_size_v<TTuple>>{});
+	}
+}
+
+namespace sl::concepts
+{
+	/**
+	* \addtogroup GROUP_UTILITY_CONCEPTS
+	* @{
+	*/
+
+	/**
+	 * \brief Determines whether a type can be used as a tuple-like.
+	 * \details Requires the type to have a specialization of ```std::tuple_size`` and for each index
+	 * in the interval ``[0, N)``, the ``std::tuple_element`` trait must yield a valid type.
+	 * \concept tuple_like
+	 * \ingroup GROUP_TUPLE_UTILITY
+	 */
+	template <class TTuple>
+	concept tuple_like = requires
+						{
+							typename std::tuple_size<TTuple>::type;
+							{ std::tuple_size_v<TTuple> } -> std::convertible_to<std::size_t>;
+						}
+						&& detail::has_tuple_element<TTuple>();
+
 	/**
 	 * \brief Determines whether the function is invocable with the elements of the given tuple.
 	 * \ingroup GROUP_TUPLE_UTILITY

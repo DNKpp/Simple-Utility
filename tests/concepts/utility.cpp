@@ -5,6 +5,9 @@
 
 #include <catch2/catch_template_test_macros.hpp>
 
+#include <array>
+#include <vector>
+
 #include "Simple-Utility/concepts/utility.hpp"
 
 using namespace sl::concepts;
@@ -52,4 +55,18 @@ TEMPLATE_TEST_CASE_SIG(
 	using function_t = decltype(func);
 
 	STATIC_REQUIRE(nothrow_apply_invocable<function_t, TTuple> == VExpected);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"tuple_like concept determines if a type can be used as tuple.",
+	"[tuple][trait]",
+	((bool VExpected, class TTuple), VExpected, TTuple),
+	(false, std::vector<int>),
+	(true, std::tuple<>),
+	(true, std::tuple<int>),
+	(true, std::pair<int, int>),
+	(true, std::array<int, 0>)
+)
+{
+	STATIC_REQUIRE(tuple_like<TTuple> == VExpected);
 }
