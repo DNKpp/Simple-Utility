@@ -68,9 +68,51 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, std::tuple<float>)
 )
 {
-	constexpr auto func = []<class T>(T&&) noexcept(std::same_as<int, T>) {};
+	constexpr auto func = []<class T>(T&&) noexcept(std::same_as<int, T>)
+	{
+	};
 	using function_t = decltype(func);
 
 	STATIC_REQUIRE(is_nothrow_apply_invocable<function_t, TTuple>::value == VExpected);
 	STATIC_REQUIRE(is_nothrow_apply_invocable_v<function_t, TTuple> == VExpected);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"tuple_zip_result_t yields return type of tuple_zip algorithm.",
+	"[tuple][trait]",
+	((bool VDummy, class TResult, class... TTuples), VDummy, TResult, TTuples...),
+	(true, std::tuple<>, std::tuple<>, std::tuple<int>),
+	(true, std::tuple<std::tuple<int, int>>, std::tuple<int>, std::tuple<int>),
+	(true, std::tuple<std::tuple<int, int>>, std::tuple<int, float>, std::tuple<int>),
+	(true, std::tuple<std::tuple<int, int>, std::tuple<float, int>>, std::tuple<int, float>, std::tuple<int, int>),
+	(true, std::tuple<std::tuple<int, float, std::string>>, std::tuple<int>, std::tuple<float>, std::tuple<std::string, short>)
+)
+{
+	STATIC_REQUIRE(std::same_as<TResult, tuple_zip_result_t<TTuples...>>);
+}
+
+TEST_CASE("tuple_zip_result_t yields return type when combined with types other than std::tuple.", "[tuple][trait]")
+{
+	using expected_result_t = std::tuple<std::tuple<int, std::string>, std::tuple<float, short>>;
+	using result_t = tuple_zip_result_t<std::pair<int, float>, std::tuple<std::string, short>>;
+
+	STATIC_REQUIRE(std::same_as<result_t, expected_result_t>);
+}
+
+TEST_CASE("tuple_zip zips multiple tuples into one.", "[tuple][algorithm]")
+{
+	std::tuple first{1337, 42};
+	std::tuple<std::string, int> second{"Hello, World!", -42};
+	std::tuple<short, int, std::string> third{8, -1337, "World, Hello!"};
+
+	using result_t = std::tuple<
+		std::tuple<int, std::string, short>,
+		std::tuple<int, int, int>
+	>;
+	const result_t expectedResult{{1337, "Hello, World!", 8}, {42, -42, -1337}};
+
+	result_t result = tuple_zip(std::move(first), std::move(second), std::move(third));
+
+	REQUIRE(result == expectedResult);
+	REQUIRE(std::empty(std::get<0>(second))); // just get sure, we are really moving from the sources
 }
