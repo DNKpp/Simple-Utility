@@ -140,10 +140,20 @@ namespace sl::detail
 			return std::make_tuple(zipped_t{std::get<VIndex>(std::forward<TTuples>(tuples))...});
 		}
 	}
+
+	/** @} */
 }
 
 namespace sl
 {
+	/**
+	 * \addtogroup GROUP_TUPLE_UTILITY
+	 * @{
+	 */
+
+	/**
+	 * \brief Trait type determining the result of a ``tuple_zip`` call.
+	 */
 	template <class TFirst, class TSecond, class... TOthers>
 	struct tuple_zip_result
 	{
@@ -154,9 +164,25 @@ namespace sl
 		));
 	};
 
+	/**
+	 * \brief Alias type determining the result of a ``tuple_zip`` call.
+	 */
 	template <class TFirst, class TSecond, class... TOthers>
 	using tuple_zip_result_t = typename tuple_zip_result<TFirst, TSecond, TOthers...>::type;
 
+	/**
+	 * \brief Zips elements of all provided source tuples and creates a tuple of tuples.
+	 * \details Combines all given tuples into one tuple with tuples as elements. Each element tuples have equal size, which is
+	 * the amount of provide source tuples. The minimal amount of elements of the given source tuples determine the amount of
+	 * resulting tuple elements. If any of the given tuples are empty, then the resulting tuple will contain no elements.
+	 * \tparam TFirst The first tuple type.
+	 * \tparam TSecond The second tuple type.
+	 * \tparam TOthers Other tuple types.
+	 * \param first The first tuple.
+	 * \param second The second tuple.
+	 * \param others Other tuples.
+	 * \return A new tuple which elements are tuples.
+	 */
 	template <class TFirst, class TSecond, class... TOthers>
 	[[nodiscard]]
 	constexpr tuple_zip_result_t<TFirst, TSecond, TOthers...> tuple_zip(TFirst&& first, TSecond&& second, TOthers&&... others)
