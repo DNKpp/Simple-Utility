@@ -13,6 +13,42 @@
 #include <type_traits>
 #include <utility>
 
+/**
+ * \defgroup GROUP_TUPLE_UTILITY tuple utility
+ * @{
+ */
+/** @} */
+
+namespace sl::concepts::detail
+{
+	template <class TTuple>
+	consteval bool has_tuple_element()
+	{
+		return []<std::size_t... VIndices>([[maybe_unused]] std::index_sequence<VIndices...>)
+		{
+			return (requires { typename std::tuple_element_t<VIndices, TTuple>; } && ...);
+		}(std::make_index_sequence<std::tuple_size_v<TTuple>>{});
+	}
+}
+
+namespace sl::concepts
+{
+	/**
+	 * \brief Determines whether a type can be used as a tuple-like.
+	 * \details Requires the type to have a specialization of ```std::tuple_size`` and for each index
+	 * in the interval ``[0, N)``, the ``std::tuple_element`` trait must yield a valid type.
+	 * \concept tuple_like
+	 * \ingroup GROUP_TUPLE_UTILITY GROUP_UTILITY_CONCEPTS
+	 */
+	template <class TTuple>
+	concept tuple_like = requires
+						{
+							typename std::tuple_size<TTuple>::type;
+							{ std::tuple_size_v<TTuple> } -> std::convertible_to<std::size_t>;
+						}
+						&& detail::has_tuple_element<TTuple>();
+}
+
 namespace sl::detail
 {
 	template <class...>
@@ -43,7 +79,7 @@ namespace sl::detail
 namespace sl
 {
 	/**
-	 * \defgroup GROUP_TUPLE_UTILITY tuple utility
+	 * \addtogroup GROUP_TUPLE_UTILITY
 	 * @{
 	 */
 
@@ -51,6 +87,7 @@ namespace sl
 	 * \brief Trait type determining whether the function is invocable with elements of the given tuple.
 	 */
 	template <class TFunc, class TTuple>
+		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
 	struct is_apply_invocable
 		: detail::is_apply_invocable<TFunc, TTuple, std::make_index_sequence<std::tuple_size_v<TTuple>>>
 	{
@@ -67,6 +104,7 @@ namespace sl
 	 * \brief Trait type determining whether the function is invocable with elements of the given tuple without throwing.
 	 */
 	template <class TFunc, class TTuple>
+		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
 	struct is_nothrow_apply_invocable
 		: detail::is_nothrow_apply_invocable<TFunc, TTuple, std::make_index_sequence<std::tuple_size_v<TTuple>>>
 	{
@@ -84,6 +122,7 @@ namespace sl
 	 * \brief Trait type determining the result of a ``std::tuple_cat`` call.
 	 */
 	template <class... TTuples>
+		requires (concepts::tuple_like<std::remove_cvref_t<TTuples>> && ...)
 	struct tuple_cat_result
 	{
 		using type = decltype(std::tuple_cat(std::declval<TTuples>()...));
@@ -99,6 +138,7 @@ namespace sl
 	 * \brief Trait type determining the result of a ``std::apply`` call.
 	 */
 	template <class TFunc, class TTuple>
+		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
 	struct apply_invoke_result
 	{
 		using type = decltype(std::apply(std::declval<TFunc>(), std::declval<TTuple>()));
@@ -109,6 +149,26 @@ namespace sl
 	 */
 	template <class TFunc, class TTuple>
 	using apply_invoke_result_t = typename apply_invoke_result<TFunc, TTuple>::type;
+
+	/** @} */
+}
+
+namespace sl::concepts
+{
+	/**
+	 * \brief Determines whether the function is invocable with the elements of the given tuple.
+	 * \ingroup GROUP_TUPLE_UTILITY GROUP_UTILITY_CONCEPTS
+	 */
+	template <class TFunc, class TTuple>
+	concept apply_invocable = is_apply_invocable_v<TFunc, std::remove_reference_t<TTuple>>;
+
+	/**
+	 * \brief Determines whether the function is invocable with the elements of the given tuple without throwing.
+	 * \ingroup GROUP_TUPLE_UTILITY GROUP_UTILITY_CONCEPTS
+	 */
+	template <class TFunc, class TTuple>
+	concept nothrow_apply_invocable = apply_invocable<TFunc, TTuple>
+									&& is_nothrow_apply_invocable_v<TFunc, std::remove_reference_t<TTuple>>;
 
 	/** @} */
 }
@@ -152,6 +212,9 @@ namespace sl
 	 * \brief Trait type determining the result of a ``tuple_zip`` call.
 	 */
 	template <class TFirst, class TSecond, class... TOthers>
+		requires concepts::tuple_like<std::remove_cvref_t<TFirst>>
+				&& concepts::tuple_like<std::remove_cvref_t<TSecond>>
+				&& (concepts::tuple_like<std::remove_cvref_t<TOthers>> && ...)
 	struct tuple_zip_result
 	{
 		using type = decltype(detail::zip_tuple_element<0>(
@@ -181,6 +244,9 @@ namespace sl
 	 * \return A new tuple which elements are tuples.
 	 */
 	template <class TFirst, class TSecond, class... TOthers>
+		requires concepts::tuple_like<std::remove_cvref_t<TFirst>>
+				&& concepts::tuple_like<std::remove_cvref_t<TSecond>>
+				&& (concepts::tuple_like<std::remove_cvref_t<TOthers>> && ...)
 	[[nodiscard]]
 	constexpr tuple_zip_result_t<TFirst, TSecond, TOthers...> tuple_zip(TFirst&& first, TSecond&& second, TOthers&&... others)
 	{
@@ -197,7 +263,7 @@ namespace sl
 namespace sl::detail
 {
 	// idea taken from: https://stackoverflow.com/questions/70404549/cartesian-product-of-stdtuple/70405807#70405807
-	constexpr auto tuple_cartesian_product(const auto& first)
+	constexpr auto tuple_cartesian_product(const concepts::tuple_like auto& first)
 	{
 		return std::apply(
 			[](auto&... elements) { return std::make_tuple(std::make_tuple(elements)...); },
@@ -205,7 +271,7 @@ namespace sl::detail
 		);
 	}
 
-	constexpr auto tuple_cartesian_product(const auto& first, const auto&... others)
+	constexpr auto tuple_cartesian_product(const concepts::tuple_like auto& first, const concepts::tuple_like auto&... others)
 	{
 		auto trailers = tuple_cartesian_product(others...);
 		return std::apply(
@@ -239,7 +305,7 @@ namespace sl
 	/**
 	 * \brief Trait type determining the result of a ``tuple_cartesian_product`` call.
 	 */
-	template <class TFirst, class TSecond, class... TOthers>
+	template <concepts::tuple_like TFirst, concepts::tuple_like TSecond, concepts::tuple_like... TOthers>
 	struct tuple_cartesian_product_result
 	{
 		using type = decltype(detail::tuple_cartesian_product(
@@ -252,10 +318,10 @@ namespace sl
 	/**
 	 * \brief Alias type determining the result of a ``tuple_cartesian_product`` call.
 	 */
-	template <class TFirst, class TSecond, class... TOthers>
+	template <concepts::tuple_like TFirst, concepts::tuple_like TSecond, concepts::tuple_like... TOthers>
 	using tuple_cartesian_product_result_t = typename tuple_cartesian_product_result<TFirst, TSecond, TOthers...>::type;
 
-	template <class TFirst, class TSecond, class... TOthers>
+	template <concepts::tuple_like TFirst, concepts::tuple_like TSecond, concepts::tuple_like... TOthers>
 	[[nodiscard]]
 	constexpr tuple_cartesian_product_result_t<TFirst, TSecond, TOthers...> tuple_cartesian_product(
 		const TFirst& first,
