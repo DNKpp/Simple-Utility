@@ -480,7 +480,8 @@ namespace sl::functional
 		}
 
 		/**
-		 * \copydoc operator()() const &
+		 * \brief The invocation operator.
+		 * \return Returns a const lvalue reference to value.
 		 */
 		[[nodiscard]]
 		constexpr const value_type& operator ()() & noexcept
