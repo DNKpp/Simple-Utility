@@ -246,7 +246,7 @@ namespace sl::detail
 		return [&]<std::size_t... VIndices>([[maybe_unused]] std::index_sequence<VIndices...>)
 		{
 			return std::make_tuple(
-				[&]<std::size_t VIndex>
+				[&]<std::size_t VIndex>()
 				{
 					return std::make_tuple(std::get<VIndex>(std::forward<TTuples>(tuples))...);
 				}.template operator()<VIndices>()...
