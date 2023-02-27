@@ -16,6 +16,7 @@ namespace sl::tuple::detail
 {
 	template <class TTuple>
 		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
+	[[nodiscard]]
 	constexpr auto envelop_elements(TTuple&& tuple)
 	{
 		return std::apply(
@@ -75,6 +76,7 @@ namespace sl::tuple
 	 */
 	template <class TTuple>
 		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
+	[[nodiscard]]
 	constexpr envelop_elements_result_t<TTuple> envelop_elements(
 		TTuple&& tuple
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<TTuple>, TTuple>)
@@ -88,6 +90,7 @@ namespace sl::tuple
 namespace sl::tuple::detail
 {
 	template <class... TTuples>
+	[[nodiscard]]
 	constexpr auto zip(TTuples&&... tuples)
 	{
 		return [&]<std::size_t... VIndices>([[maybe_unused]] std::index_sequence<VIndices...>)
@@ -175,11 +178,13 @@ namespace sl::tuple
 namespace sl::tuple::detail
 {
 	// idea taken from: https://stackoverflow.com/questions/70404549/cartesian-product-of-stdtuple/70405807#70405807
+	[[nodiscard]]
 	constexpr auto cartesian_product(const concepts::tuple_like auto& first)
 	{
 		return envelop_elements(first);
 	}
 
+	[[nodiscard]]
 	constexpr auto cartesian_product(const concepts::tuple_like auto& first, const concepts::tuple_like auto&... others)
 	{
 		auto trailers = cartesian_product(others...);
