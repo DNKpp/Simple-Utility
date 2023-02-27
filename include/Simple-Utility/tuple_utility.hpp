@@ -166,6 +166,57 @@ namespace sl
 	/** @} */
 }
 
+namespace sl::detail
+{
+	template <class TTuple>
+		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
+	constexpr auto tuple_envelop_elements(TTuple&& tuple)
+	{
+		return std::apply(
+			[]<class... TElement>(TElement&&... element)
+			{
+				return std::make_tuple(
+					std::make_tuple(std::forward<TElement>(element))...
+				);
+			},
+			std::forward<TTuple>(tuple)
+		);
+	}
+}
+
+namespace sl
+{
+	/**
+	 * \brief Trait type determining the result of a ``tuple_envelop_elements`` call.
+	 */
+	template <class TTuple>
+		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
+	struct tuple_envelop_elements_result
+	{
+		using type = decltype(detail::tuple_envelop_elements(std::declval<TTuple>()));
+	};
+
+	/**
+	 * \brief Alias type determining the result of a ``tuple_envelop_elements`` call.
+	 */
+	template <class TTuple>
+		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
+	using tuple_envelop_elements_result_t = typename tuple_envelop_elements_result<TTuple>::type;
+
+	/**
+	 * \brief Envelops all elements of the given tuple into their own ``std::tuple`` and creates a tuple of tuples.
+	 * \tparam TTuple The tuple type.
+	 * \param tuple The tuple.
+	 * \return A new tuple which elements are tuples.
+	 */
+	template <class TTuple>
+		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
+	constexpr tuple_envelop_elements_result_t<TTuple> tuple_envelop_elements(TTuple&& tuple)
+	{
+		return detail::tuple_envelop_elements(std::forward<TTuple>(tuple));
+	}
+}
+
 namespace sl::concepts
 {
 	/**
