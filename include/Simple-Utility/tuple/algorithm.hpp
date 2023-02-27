@@ -62,7 +62,9 @@ namespace sl::tuple
 	 */
 	template <class TTuple>
 		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
-	constexpr envelop_elements_result_t<TTuple> envelop_elements(TTuple&& tuple)
+	constexpr envelop_elements_result_t<TTuple> envelop_elements(
+		TTuple&& tuple
+	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<TTuple>, TTuple>)
 	{
 		return detail::envelop_elements(std::forward<TTuple>(tuple));
 	}
@@ -207,7 +209,9 @@ namespace sl::tuple
 		const TFirst& first,
 		const TSecond& second,
 		const TOthers&... others
-	)
+	) noexcept(std::is_nothrow_copy_constructible_v<TFirst>
+				&& std::is_nothrow_copy_constructible_v<TSecond>
+				&& (std::is_nothrow_copy_constructible_v<TOthers> && ...))
 	{
 		return detail::cartesian_product(first, second, others...);
 	}
