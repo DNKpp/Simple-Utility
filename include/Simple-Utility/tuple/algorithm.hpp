@@ -38,6 +38,12 @@ namespace sl::tuple
 	 */
 
 	/**
+	 * \defgroup GROUP_TUPLE_ALGORITHM tuple algorithm
+	 * @{
+	 */
+	/** @} */
+
+	/**
 	 * \brief Trait type determining the result of a ``tuple_envelop_elements`` call.
 	 */
 	template <class TTuple>
@@ -59,6 +65,13 @@ namespace sl::tuple
 	 * \tparam TTuple The tuple type.
 	 * \param tuple The tuple.
 	 * \return A new tuple which elements are tuples.
+	 *
+	 * \details Provided a tuple ``t0 = (e0, e1, ..., en)`` then the resulting tuple is built as follows:
+	 * \code{.unparsed}
+	 * (	(e0), (e1), ..., (en)	)
+	 * \endcode
+	 *
+	 * \ingroup GROUP_TUPLE_ALGORITHM
 	 */
 	template <class TTuple>
 		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
@@ -139,6 +152,8 @@ namespace sl::tuple
 	 * \endcode
 	 *
 	 * \note If any of the given tuples are empty, then the resulting tuple will contain no elements.
+	 *
+	 * \ingroup GROUP_TUPLE_ALGORITHM
 	 */
 	template <class TFirst, class TSecond, class... TOthers>
 		requires concepts::tuple_like<std::remove_cvref_t<TFirst>>
@@ -234,6 +249,8 @@ namespace sl::tuple
 	 *		...,
 	 *		(en, f0), (en, f1), ..., (en, fm)	)
 	 * \endcode
+	 *
+	 * \ingroup GROUP_TUPLE_ALGORITHM
 	 */
 	template <concepts::tuple_like TFirst, concepts::tuple_like TSecond, concepts::tuple_like... TOthers>
 	[[nodiscard]]
