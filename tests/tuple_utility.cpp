@@ -226,7 +226,6 @@ TEMPLATE_TEST_CASE_SIG(
 		std::tuple<float, double>, std::tuple<int>, std::tuple<short, unsigned>)
 )
 {
-	using result = tuple_cartesian_product_result_t<std::tuple<float>, std::tuple<int>>;
 	STATIC_REQUIRE(std::same_as<TResult, tuple_cartesian_product_result_t<TTuples...>>);
 }
 
