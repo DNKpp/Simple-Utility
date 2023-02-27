@@ -242,6 +242,8 @@ TEST_CASE("cartesian_product creates cartesian product of two tuples.", "[tuple]
 		std::tuple<short, int>,
 		std::tuple<short, std::string>
 	>;
+
+	// LCOV_EXCL_START
 	const result_t expectedResult{
 		{"Hello, World!", 1337},
 		{"Hello, World!", -42},
@@ -250,6 +252,7 @@ TEST_CASE("cartesian_product creates cartesian product of two tuples.", "[tuple]
 		{42, -42},
 		{42, "Test"}
 	};
+	// LCOV_EXCL_STOP
 
 	result_t result = cartesian_product(first, second);
 
@@ -277,6 +280,8 @@ TEST_CASE("cartesian_product creates cartesian product of three tuples.", "[tupl
 		std::tuple<short, std::string, int>,
 		std::tuple<short, std::string, std::string>
 	>;
+
+	// LCOV_EXCL_START
 	const result_t expectedResult{
 		{"Hello, World!", 1337, -1337},
 		{"Hello, World!", 1337, "Test2"},
@@ -292,6 +297,7 @@ TEST_CASE("cartesian_product creates cartesian product of three tuples.", "[tupl
 		{42, "Test", -1337},
 		{42, "Test", "Test2"}
 	};
+	// LCOV_EXCL_STOP
 
 	result_t result = cartesian_product(first, second, third);
 
