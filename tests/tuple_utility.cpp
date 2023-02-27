@@ -128,6 +128,50 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+	"tuple_envelop_elements_result_t yields return type of tuple_envelop_elements algorithm.",
+	"[tuple][trait]",
+	((bool VDummy, class TResult, class TTuple), VDummy, TResult, TTuple),
+	(true, std::tuple<>, std::tuple<>),
+	(true, std::tuple<std::tuple<int>>, std::tuple<int>),
+	(true, std::tuple<std::tuple<int>, std::tuple<float>>, std::tuple<int, float>),
+	(true, std::tuple<std::tuple<std::tuple<int>>, std::tuple<int>>, std::tuple<std::tuple<int>, int>)
+)
+{
+	STATIC_REQUIRE(std::same_as<TResult, tuple_envelop_elements_result_t<TTuple>>);
+}
+
+TEST_CASE("tuple_envelop_elements creates new tuple from source.", "[tuple][algorithm]")
+{
+	std::tuple<std::string, std::string> tuple{ "Hello, World!", "Test" };
+
+	using result_t = std::tuple<
+		std::tuple<std::string>,
+		std::tuple<std::string>
+	>;
+	const result_t expectedResult{ {"Hello, World!"}, {"Test"} };
+	result_t result{};
+
+	SECTION("copy from source")
+	{
+		result = tuple_envelop_elements(tuple);
+
+		REQUIRE(std::get<0>(tuple) == "Hello, World!");
+		REQUIRE(std::get<1>(tuple) == "Test");
+	}
+
+	SECTION("move from source")
+	{
+		result = tuple_envelop_elements(std::move(tuple));
+
+		REQUIRE(std::empty(std::get<0>(tuple)));
+		REQUIRE(std::empty(std::get<1>(tuple)));
+	}
+	
+
+	REQUIRE(result == expectedResult);
+}
+
+TEMPLATE_TEST_CASE_SIG(
 	"tuple_zip_result_t yields return type of tuple_zip algorithm.",
 	"[tuple][trait]",
 	((bool VDummy, class TResult, class... TTuples), VDummy, TResult, TTuples...),
