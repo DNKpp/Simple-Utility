@@ -7,6 +7,8 @@
 
 #include "Simple-Utility/tuple_utility.hpp"
 
+#include <array>
+
 using namespace sl;
 
 TEMPLATE_TEST_CASE_SIG(
