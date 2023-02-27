@@ -117,9 +117,6 @@ namespace sl::tuple
 
 	/**
 	 * \brief Zips elements of all provided source tuples and creates a tuple of tuples.
-	 * \details Combines all given tuples into one tuple with tuples as elements. Each element tuples have equal size, which is
-	 * the amount of provide source tuples. The minimal amount of elements of the given source tuples determine the amount of
-	 * resulting tuple elements. If any of the given tuples are empty, then the resulting tuple will contain no elements.
 	 * \tparam TFirst The first tuple type.
 	 * \tparam TSecond The second tuple type.
 	 * \tparam TOthers Other tuple types.
@@ -127,6 +124,21 @@ namespace sl::tuple
 	 * \param second The second tuple.
 	 * \param others Other tuples.
 	 * \return A new tuple which elements are tuples.
+	 *
+	 * \details Combines all given tuples into one tuple with tuples as elements. All resulting tuple element have equal dimensions,
+	 * which is the amount of provide source tuples (= ``N```).
+	 * The minimal dimension of all given source tuple determines the amount of the resulting tuple elements (= ``M``).
+	 * The resulting tuple will then contain ``M`` tuple elements, each consisting of exactly ``N`` elements.
+	 * Provided the tuples ``t0 = (e0, e1, ..., em)`` and ``t1 = (f0, f1, ... fr)`` where ``m <= r``, then the zip tuple is built
+	 * as follows:
+	 * \code{.unparsed}
+	 * (	(e0, f0),
+	 *		(e1, f1),
+	 *		...,
+	 *		(em, fm)	)
+	 * \endcode
+	 *
+	 * \note If any of the given tuples are empty, then the resulting tuple will contain no elements.
 	 */
 	template <class TFirst, class TSecond, class... TOthers>
 		requires concepts::tuple_like<std::remove_cvref_t<TFirst>>
@@ -203,6 +215,26 @@ namespace sl::tuple
 				&& (concepts::tuple_like<std::remove_cvref_t<TTuples>> && ...)
 	using cartesian_product_result_t = typename cartesian_product_result<TTuples...>::type;
 
+	/**
+	 * \brief Creates the cartesian product of the given tuples.
+	 * \tparam TFirst The first tuple type.
+	 * \tparam TSecond The second tuple type.
+	 * \tparam TOthers Other tuple types.
+	 * \param first The first tuple.
+	 * \param second The second tuple.
+	 * \param others Other tuples.
+	 * \return A new tuple which elements are tuples.
+	 *
+	 * \details A cartesian product is built by combining all element of one tuple with all elements of another tuple
+	 * (potentially recursive). Provided the tuples ``t0 = (e0, e1, ..., en)`` and ``t1 = (f0, f1, ... fm)`` the cartesian
+	 * the product is built as follows:
+	 * \code{.unparsed}
+	 * (	(e0, f0), (e0, f1), ..., (e0, fm),
+	 *		(e1, f0), (e1, f1), ..., (e1, fm),
+	 *		...,
+	 *		(en, f0), (en, f1), ..., (en, fm)	)
+	 * \endcode
+	 */
 	template <concepts::tuple_like TFirst, concepts::tuple_like TSecond, concepts::tuple_like... TOthers>
 	[[nodiscard]]
 	constexpr cartesian_product_result_t<TFirst, TSecond, TOthers...> cartesian_product(
