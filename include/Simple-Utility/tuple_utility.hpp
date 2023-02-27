@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <concepts>
 #include <tuple>
 #include <type_traits>
@@ -239,29 +240,18 @@ namespace sl::concepts
 
 namespace sl::detail
 {
-	template <std::size_t VIndex, class... TTuples>
-		requires ((std::tuple_size_v<std::remove_cvref_t<TTuples>> == 0) || ...)
-	constexpr auto zip_tuple_element(TTuples&&...)
+	template <class... TTuples>
+	constexpr auto tuple_zip(TTuples&&... tuples)
 	{
-		return std::tuple{};
-	}
-
-	template <std::size_t VIndex, class... TTuples>
-	constexpr auto zip_tuple_element(TTuples&&... tuples)
-	{
-		using zipped_t = std::tuple<std::tuple_element_t<VIndex, std::remove_cvref_t<TTuples>>...>;
-
-		if constexpr (((VIndex + 1 < std::tuple_size_v<std::remove_cvref_t<TTuples>>) && ...))
+		return [&]<std::size_t... VIndices>([[maybe_unused]] std::index_sequence<VIndices...>)
 		{
-			return std::tuple_cat(
-				std::make_tuple(zipped_t{std::get<VIndex>(std::forward<TTuples>(tuples))...}),
-				zip_tuple_element<VIndex + 1>(std::forward<TTuples>(tuples)...)
+			return std::make_tuple(
+				[&]<std::size_t VIndex>
+				{
+					return std::make_tuple(std::get<VIndex>(std::forward<TTuples>(tuples))...);
+				}.template operator()<VIndices>()...
 			);
-		}
-		else
-		{
-			return std::make_tuple(zipped_t{std::get<VIndex>(std::forward<TTuples>(tuples))...});
-		}
+		}(std::make_index_sequence<std::min({ std::tuple_size_v<TTuples>... })>{});
 	}
 }
 
@@ -280,7 +270,7 @@ namespace sl
 			&& (concepts::tuple_like<std::remove_cvref_t<TTuples>> && ...)
 	struct tuple_zip_result
 	{
-		using type = decltype(detail::zip_tuple_element<0>(std::declval<TTuples>()...));
+		using type = decltype(detail::tuple_zip(std::declval<TTuples>()...));
 	};
 
 	/**
@@ -311,7 +301,7 @@ namespace sl
 	[[nodiscard]]
 	constexpr tuple_zip_result_t<TFirst, TSecond, TOthers...> tuple_zip(TFirst&& first, TSecond&& second, TOthers&&... others)
 	{
-		return detail::zip_tuple_element<0>(
+		return detail::tuple_zip(
 			std::forward<TFirst>(first),
 			std::forward<TSecond>(second),
 			std::forward<TOthers>(others)...
@@ -326,10 +316,7 @@ namespace sl::detail
 	// idea taken from: https://stackoverflow.com/questions/70404549/cartesian-product-of-stdtuple/70405807#70405807
 	constexpr auto tuple_cartesian_product(const concepts::tuple_like auto& first)
 	{
-		return std::apply(
-			[](auto&... elements) { return std::make_tuple(std::make_tuple(elements)...); },
-			first
-		);
+		return tuple_envelop_elements(first);
 	}
 
 	constexpr auto tuple_cartesian_product(const concepts::tuple_like auto& first, const concepts::tuple_like auto&... others)
