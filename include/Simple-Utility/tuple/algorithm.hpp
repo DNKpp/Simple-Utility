@@ -34,15 +34,15 @@ namespace sl::tuple::detail
 namespace sl::tuple
 {
 	/**
-	 * \addtogroup GROUP_TUPLE
-	 * @{
+	 * \defgroup GROUP_TUPLE_ALGORITHM algorithm
+	 * \ingroup GROUP_TUPLE
 	 */
 
 	/**
-	 * \defgroup GROUP_TUPLE_ALGORITHM tuple algorithm
+	 * \defgroup GROUP_TUPLE_ALGORITHM_ENVELOP_ELEMENTS envelop elements
+	 * \ingroup GROUP_TUPLE_ALGORITHM
 	 * @{
 	 */
-	/** @} */
 
 	/**
 	 * \brief Trait type determining the result of a ``tuple_envelop_elements`` call.
@@ -71,8 +71,6 @@ namespace sl::tuple
 	 * \code{.unparsed}
 	 * (	(e0), (e1), ..., (en)	)
 	 * \endcode
-	 *
-	 * \ingroup GROUP_TUPLE_ALGORITHM
 	 */
 	template <class TTuple>
 		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
@@ -108,12 +106,13 @@ namespace sl::tuple::detail
 namespace sl::tuple
 {
 	/**
-	 * \addtogroup GROUP_TUPLE
+	 * \defgroup GROUP_TUPLE_ALGORITHM_ZIP zip
+	 * \ingroup GROUP_TUPLE_ALGORITHM
 	 * @{
 	 */
 
 	/**
-	 * \brief Trait type determining the result of a ``tuple_zip`` call.
+	 * \brief Trait type determining the result of a ``zip`` call.
 	 */
 	template <class... TTuples>
 		requires (2 <= sizeof...(TTuples))
@@ -124,7 +123,7 @@ namespace sl::tuple
 	};
 
 	/**
-	 * \brief Alias type determining the result of a ``tuple_zip`` call.
+	 * \brief Alias type determining the result of a ``zip`` call.
 	 */
 	template <class... TTuples>
 		requires (2 <= sizeof...(TTuples))
@@ -155,8 +154,6 @@ namespace sl::tuple
 	 * \endcode
 	 *
 	 * \note If any of the given tuples are empty, then the resulting tuple will contain no elements.
-	 *
-	 * \ingroup GROUP_TUPLE_ALGORITHM
 	 */
 	template <class TFirst, class TSecond, class... TOthers>
 		requires concepts::tuple_like<std::remove_cvref_t<TFirst>>
@@ -212,7 +209,8 @@ namespace sl::tuple::detail
 namespace sl::tuple
 {
 	/**
-	 * \addtogroup GROUP_TUPLE
+	 * \defgroup GROUP_TUPLE_ALGORITHM_CARTESIAN_PRODUCT cartesian product
+	 * \ingroup GROUP_TUPLE_ALGORITHM
 	 * @{
 	 */
 
@@ -254,8 +252,6 @@ namespace sl::tuple
 	 *		...,
 	 *		(en, f0), (en, f1), ..., (en, fm)	)
 	 * \endcode
-	 *
-	 * \ingroup GROUP_TUPLE_ALGORITHM
 	 */
 	template <concepts::tuple_like TFirst, concepts::tuple_like TSecond, concepts::tuple_like... TOthers>
 	[[nodiscard]]

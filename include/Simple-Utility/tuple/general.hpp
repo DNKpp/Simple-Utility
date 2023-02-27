@@ -17,9 +17,7 @@ namespace sl::tuple
 {
 	/**
 	 * \defgroup GROUP_TUPLE tuple
-	 * @{
 	 */
-	/** @} */
 }
 
 namespace sl::concepts::detail
@@ -55,6 +53,8 @@ namespace sl::concepts
 	 * The ``std::tuple_element`` trait and the ``get`` function must to be defined for each index in the interval ``[0, N)``, where ``N`` is the tuple size of the given type.
 	 * \concept tuple_like
 	 * \ingroup GROUP_TUPLE GROUP_UTILITY_CONCEPTS
+	 * \see https://en.cppreference.com/w/cpp/utility/tuple_element
+	 * \see https://en.cppreference.com/w/cpp/utility/tuple_size
 	 */
 	template <class TTuple>
 	concept tuple_like = requires
@@ -96,12 +96,19 @@ namespace sl::tuple::detail
 namespace sl::tuple
 {
 	/**
-	 * \addtogroup GROUP_TUPLE
+	 * \defgroup GROUP_TUPLE_STL_EXT stl extension
+	 * \ingroup GROUP_TUPLE
+	 */
+
+	/**
+	 * \defgroup GROUP_TUPLE_STL_EXT_APPLY apply
+	 * \ingroup GROUP_TUPLE_STL_EXT
 	 * @{
 	 */
 
 	/**
 	 * \brief Trait type determining whether the function is invocable with elements of the given tuple.
+	 * \see https://en.cppreference.com/w/cpp/utility/apply
 	 */
 	template <class TFunc, class TTuple>
 		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
@@ -112,13 +119,14 @@ namespace sl::tuple
 
 	/**
 	 * \brief Convenience constant, which determines whether the function is invocable with elements of the given tuple.
-	 * \relates is_apply_invocable
+	 * \see https://en.cppreference.com/w/cpp/utility/apply
 	 */
 	template <class TFunc, class TTuple>
 	inline constexpr bool is_apply_invocable_v{is_apply_invocable<TFunc, TTuple>::value};
 
 	/**
 	 * \brief Trait type determining whether the function is invocable with elements of the given tuple without throwing.
+	 * \see https://en.cppreference.com/w/cpp/utility/apply
 	 */
 	template <class TFunc, class TTuple>
 		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
@@ -130,7 +138,7 @@ namespace sl::tuple
 	/**
 	 * \brief Convenience constant, which determines whether the function is invocable with elements of the given tuple
 	 * without throwing.
-	 * \relates is_nothrow_apply_invocable
+	 * \see https://en.cppreference.com/w/cpp/utility/apply
 	 */
 	template <class TFunc, class TTuple>
 	inline constexpr bool is_nothrow_apply_invocable_v{is_nothrow_apply_invocable<TFunc, TTuple>::value};
@@ -146,13 +154,8 @@ namespace sl::tuple
 	};
 
 	/**
-	 * \brief Alias type determining the result of a ``std::tuple_cat`` call.
-	 */
-	template <class... TTuples>
-	using tuple_cat_result_t = typename tuple_cat_result<TTuples...>::type;
-
-	/**
 	 * \brief Trait type determining the result of a ``std::apply`` call.
+	 * \see https://en.cppreference.com/w/cpp/utility/apply
 	 */
 	template <class TFunc, class TTuple>
 		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
@@ -163,9 +166,25 @@ namespace sl::tuple
 
 	/**
 	 * \brief Alias type determining the result of a ``std::apply`` call.
+	 * \see https://en.cppreference.com/w/cpp/utility/apply
 	 */
 	template <class TFunc, class TTuple>
 	using apply_invoke_result_t = typename apply_invoke_result<TFunc, TTuple>::type;
+
+	/** @} */
+
+	/**
+	 * \defgroup GROUP_TUPLE_STL_EXT_TUPLE_CAT tuple cat
+	 * \ingroup GROUP_TUPLE_STL_EXT
+	 * @{
+	 */
+
+	/**
+	 * \brief Alias type determining the result of a ``std::tuple_cat`` call.
+	 * \see https://en.cppreference.com/w/cpp/utility/tuple/tuple_cat
+	 */
+	template <class... TTuples>
+	using tuple_cat_result_t = typename tuple_cat_result<TTuples...>::type;
 
 	/** @} */
 }
@@ -174,14 +193,16 @@ namespace sl::concepts
 {
 	/**
 	 * \brief Determines whether the function is invocable with the elements of the given tuple.
-	 * \ingroup GROUP_TUPLE GROUP_UTILITY_CONCEPTS
+	 * \see https://en.cppreference.com/w/cpp/utility/apply
+	 * \ingroup GROUP_TUPLE_STL_EXT_APPLY GROUP_UTILITY_CONCEPTS
 	 */
 	template <class TFunc, class TTuple>
 	concept apply_invocable = tuple::is_apply_invocable_v<TFunc, std::remove_reference_t<TTuple>>;
 
 	/**
 	 * \brief Determines whether the function is invocable with the elements of the given tuple without throwing.
-	 * \ingroup GROUP_TUPLE GROUP_UTILITY_CONCEPTS
+	 * \see https://en.cppreference.com/w/cpp/utility/apply
+	 * \ingroup GROUP_TUPLE_STL_EXT_APPLY GROUP_UTILITY_CONCEPTS
 	 */
 	template <class TFunc, class TTuple>
 	concept nothrow_apply_invocable = apply_invocable<TFunc, TTuple>
