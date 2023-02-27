@@ -5,11 +5,12 @@
 
 #include <catch2/catch_template_test_macros.hpp>
 
-#include "Simple-Utility/tuple_utility.hpp"
+#include "Simple-Utility/tuple.hpp"
 
 #include <array>
 
 using namespace sl;
+using namespace tuple;
 
 TEMPLATE_TEST_CASE_SIG(
 	"apply_invocable checks whether the function is invocable with tuple elements.",
@@ -128,7 +129,7 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"tuple_envelop_elements_result_t yields return type of tuple_envelop_elements algorithm.",
+	"envelop_elements_result_t yields return type of envelop_elements algorithm.",
 	"[tuple][trait]",
 	((bool VDummy, class TResult, class TTuple), VDummy, TResult, TTuple),
 	(true, std::tuple<>, std::tuple<>),
@@ -137,23 +138,23 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, std::tuple<std::tuple<std::tuple<int>>, std::tuple<int>>, std::tuple<std::tuple<int>, int>)
 )
 {
-	STATIC_REQUIRE(std::same_as<TResult, tuple_envelop_elements_result_t<TTuple>>);
+	STATIC_REQUIRE(std::same_as<TResult, envelop_elements_result_t<TTuple>>);
 }
 
-TEST_CASE("tuple_envelop_elements creates new tuple from source.", "[tuple][algorithm]")
+TEST_CASE("envelop_elements creates new tuple from source.", "[tuple][algorithm]")
 {
-	std::tuple<std::string, std::string> tuple{ "Hello, World!", "Test" };
+	std::tuple<std::string, std::string> tuple{"Hello, World!", "Test"};
 
 	using result_t = std::tuple<
 		std::tuple<std::string>,
 		std::tuple<std::string>
 	>;
-	const result_t expectedResult{ {"Hello, World!"}, {"Test"} };
+	const result_t expectedResult{{"Hello, World!"}, {"Test"}};
 	result_t result{};
 
 	SECTION("copy from source")
 	{
-		result = tuple_envelop_elements(tuple);
+		result = envelop_elements(tuple);
 
 		REQUIRE(std::get<0>(tuple) == "Hello, World!");
 		REQUIRE(std::get<1>(tuple) == "Test");
@@ -161,18 +162,17 @@ TEST_CASE("tuple_envelop_elements creates new tuple from source.", "[tuple][algo
 
 	SECTION("move from source")
 	{
-		result = tuple_envelop_elements(std::move(tuple));
+		result = envelop_elements(std::move(tuple));
 
 		REQUIRE(std::empty(std::get<0>(tuple)));
 		REQUIRE(std::empty(std::get<1>(tuple)));
 	}
-	
 
 	REQUIRE(result == expectedResult);
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"tuple_zip_result_t yields return type of tuple_zip algorithm.",
+	"zip_result_t yields return type of zip algorithm.",
 	"[tuple][trait]",
 	((bool VDummy, class TResult, class... TTuples), VDummy, TResult, TTuples...),
 	(true, std::tuple<>, std::tuple<>, std::tuple<int>),
@@ -182,18 +182,18 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, std::tuple<std::tuple<int, float, std::string>>, std::tuple<int>, std::tuple<float>, std::tuple<std::string, short>)
 )
 {
-	STATIC_REQUIRE(std::same_as<TResult, tuple_zip_result_t<TTuples...>>);
+	STATIC_REQUIRE(std::same_as<TResult, zip_result_t<TTuples...>>);
 }
 
-TEST_CASE("tuple_zip_result_t yields return type when combined with types other than std::tuple.", "[tuple][trait]")
+TEST_CASE("zip_result_t yields return type when combined with types other than std::tuple.", "[tuple][trait]")
 {
 	using expected_result_t = std::tuple<std::tuple<int, std::string>, std::tuple<float, short>>;
-	using result_t = tuple_zip_result_t<std::pair<int, float>, std::tuple<std::string, short>>;
+	using result_t = zip_result_t<std::pair<int, float>, std::tuple<std::string, short>>;
 
 	STATIC_REQUIRE(std::same_as<result_t, expected_result_t>);
 }
 
-TEST_CASE("tuple_zip zips multiple tuples into one.", "[tuple][algorithm]")
+TEST_CASE("zip zips multiple tuples into one.", "[tuple][algorithm]")
 {
 	std::tuple first{1337, 42};
 	std::tuple<std::string, int> second{"Hello, World!", -42};
@@ -205,14 +205,14 @@ TEST_CASE("tuple_zip zips multiple tuples into one.", "[tuple][algorithm]")
 	>;
 	const result_t expectedResult{{1337, "Hello, World!", 8}, {42, -42, -1337}};
 
-	result_t result = tuple_zip(std::move(first), std::move(second), std::move(third));
+	result_t result = zip(std::move(first), std::move(second), std::move(third));
 
 	REQUIRE(result == expectedResult);
 	REQUIRE(std::empty(std::get<0>(second))); // just get sure, we are really moving from the sources
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"tuple_cartesian_product_result_t yields return type of tuple_cartesian_product algorithm.",
+	"cartesian_product_result_t yields return type of cartesian_product algorithm.",
 	"[tuple][trait]",
 	((bool VDummy, class TResult, class... TTuples), VDummy, TResult, TTuples...),
 	(true, std::tuple<>, std::tuple<>, std::tuple<>),
@@ -226,10 +226,10 @@ TEMPLATE_TEST_CASE_SIG(
 		std::tuple<float, double>, std::tuple<int>, std::tuple<short, unsigned>)
 )
 {
-	STATIC_REQUIRE(std::same_as<TResult, tuple_cartesian_product_result_t<TTuples...>>);
+	STATIC_REQUIRE(std::same_as<TResult, cartesian_product_result_t<TTuples...>>);
 }
 
-TEST_CASE("tuple_cartesian_product creates cartesian product of two tuples.", "[tuple][algorithm]")
+TEST_CASE("cartesian_product creates cartesian product of two tuples.", "[tuple][algorithm]")
 {
 	const std::tuple<std::string, short> first{"Hello, World!", 42};
 	const std::tuple<unsigned, int, std::string> second{1337, -42, "Test"};
@@ -251,12 +251,12 @@ TEST_CASE("tuple_cartesian_product creates cartesian product of two tuples.", "[
 		{42, "Test"}
 	};
 
-	result_t result = tuple_cartesian_product(first, second);
+	result_t result = cartesian_product(first, second);
 
 	REQUIRE(result == expectedResult);
 }
 
-TEST_CASE("tuple_cartesian_product creates cartesian product of three tuples.", "[tuple][algorithm]")
+TEST_CASE("cartesian_product creates cartesian product of three tuples.", "[tuple][algorithm]")
 {
 	const std::tuple<std::string, short> first{"Hello, World!", 42};
 	const std::tuple<unsigned, int, std::string> second{1337, -42, "Test"};
@@ -293,7 +293,7 @@ TEST_CASE("tuple_cartesian_product creates cartesian product of three tuples.", 
 		{42, "Test", "Test2"}
 	};
 
-	result_t result = tuple_cartesian_product(first, second, third);
+	result_t result = cartesian_product(first, second, third);
 
 	REQUIRE(result == expectedResult);
 }
