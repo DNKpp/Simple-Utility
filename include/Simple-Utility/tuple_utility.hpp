@@ -224,24 +224,21 @@ namespace sl
 	/**
 	 * \brief Trait type determining the result of a ``tuple_zip`` call.
 	 */
-	template <class TFirst, class TSecond, class... TOthers>
-		requires concepts::tuple_like<std::remove_cvref_t<TFirst>>
-				&& concepts::tuple_like<std::remove_cvref_t<TSecond>>
-				&& (concepts::tuple_like<std::remove_cvref_t<TOthers>> && ...)
+	template <class... TTuples>
+		requires (2 <= sizeof...(TTuples))
+			&& (concepts::tuple_like<std::remove_cvref_t<TTuples>> && ...)
 	struct tuple_zip_result
 	{
-		using type = decltype(detail::zip_tuple_element<0>(
-			std::declval<TFirst>(),
-			std::declval<TSecond>(),
-			std::declval<TOthers>()...
-		));
+		using type = decltype(detail::zip_tuple_element<0>(std::declval<TTuples>()...));
 	};
 
 	/**
 	 * \brief Alias type determining the result of a ``tuple_zip`` call.
 	 */
-	template <class TFirst, class TSecond, class... TOthers>
-	using tuple_zip_result_t = typename tuple_zip_result<TFirst, TSecond, TOthers...>::type;
+	template <class... TTuples>
+		requires (2 <= sizeof...(TTuples))
+			&& (concepts::tuple_like<std::remove_cvref_t<TTuples>> && ...)
+	using tuple_zip_result_t = typename tuple_zip_result<TTuples...>::type;
 
 	/**
 	 * \brief Zips elements of all provided source tuples and creates a tuple of tuples.
@@ -318,21 +315,21 @@ namespace sl
 	/**
 	 * \brief Trait type determining the result of a ``tuple_cartesian_product`` call.
 	 */
-	template <concepts::tuple_like TFirst, concepts::tuple_like TSecond, concepts::tuple_like... TOthers>
+	template <class... TTuples>
+		requires (2 <= sizeof...(TTuples))
+			&& (concepts::tuple_like<std::remove_cvref_t<TTuples>> && ...)
 	struct tuple_cartesian_product_result
 	{
-		using type = decltype(detail::tuple_cartesian_product(
-			std::declval<TFirst>(),
-			std::declval<TSecond>(),
-			std::declval<TOthers>()...
-		));
+		using type = decltype(detail::tuple_cartesian_product(std::declval<TTuples>()...));
 	};
 
 	/**
 	 * \brief Alias type determining the result of a ``tuple_cartesian_product`` call.
 	 */
-	template <concepts::tuple_like TFirst, concepts::tuple_like TSecond, concepts::tuple_like... TOthers>
-	using tuple_cartesian_product_result_t = typename tuple_cartesian_product_result<TFirst, TSecond, TOthers...>::type;
+	template <class... TTuples>
+		requires (2 <= sizeof...(TTuples))
+			&& (concepts::tuple_like<std::remove_cvref_t<TTuples>> && ...)
+	using tuple_cartesian_product_result_t = typename tuple_cartesian_product_result<TTuples...>::type;
 
 	template <concepts::tuple_like TFirst, concepts::tuple_like TSecond, concepts::tuple_like... TOthers>
 	[[nodiscard]]
