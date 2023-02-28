@@ -41,10 +41,10 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, std::tuple<float>)
 )
 {
-	constexpr auto func = []<class T>(T&&) noexcept(std::same_as<int, T>)
-	{
-	};
-	using function_t = decltype(func);
+	using function_t = decltype([]<class T>(T&&) noexcept(std::same_as<int, T>)
+		{
+		}
+	);
 
 	STATIC_REQUIRE(concepts::nothrow_apply_invocable<function_t, TTuple> == VExpected);
 }
@@ -85,11 +85,11 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, const float&, const std::tuple<const float&, int>&)
 )
 {
-	constexpr auto get_front = []<class TFront, class... TIgnored>(TFront&& front, TIgnored&&...) -> TFront
-	{
-		return std::forward<TFront>(front);
-	};
-	using get_front_t = decltype(get_front);
+	using get_front_t = decltype([]<class TFront, class... TIgnored>(TFront&& front, TIgnored&&...) -> TFront
+		{
+			return std::forward<TFront>(front);
+		}
+	);
 
 	STATIC_REQUIRE(std::same_as<typename apply_invoke_result<get_front_t, TTuple>::type, TExpected>);
 	STATIC_REQUIRE(std::same_as<apply_invoke_result_t<get_front_t, TTuple>, TExpected>);
@@ -122,10 +122,10 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, std::tuple<float>)
 )
 {
-	constexpr auto func = []<class T>(T&&) noexcept(std::same_as<int, T>)
-	{
-	};
-	using function_t = decltype(func);
+	using function_t = decltype([]<class T>(T&&) noexcept(std::same_as<int, T>)
+		{
+		}
+	);
 
 	STATIC_REQUIRE(is_nothrow_apply_invocable<function_t, TTuple>::value == VExpected);
 	STATIC_REQUIRE(is_nothrow_apply_invocable_v<function_t, TTuple> == VExpected);
