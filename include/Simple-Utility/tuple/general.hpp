@@ -34,7 +34,7 @@ namespace sl::concepts::detail
 					{ get<VIndex>(t) } -> std::common_with<std::tuple_element_t<VIndex, TTuple>>;
 					{ get<VIndex>(std::as_const(t)) } -> std::common_with<std::tuple_element_t<VIndex, TTuple>>;
 					{ get<VIndex>(std::move(t)) } -> std::common_with<std::tuple_element_t<VIndex, TTuple>>;
-					{ get<VIndex>(static_cast<const TTuple&&>(t)) } -> std::common_with<std::tuple_element_t<VIndex, TTuple>>;
+					{ get<VIndex>(std::move(std::as_const(t))) } -> std::common_with<std::tuple_element_t<VIndex, TTuple>>;
 				};
 	}();
 
