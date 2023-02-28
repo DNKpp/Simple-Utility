@@ -4,10 +4,13 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include <catch2/catch_template_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_all.hpp>
 
 #include "Simple-Utility/tuple.hpp"
 
 #include <array>
+
+namespace matchers = Catch::Matchers;
 
 using namespace sl;
 using namespace tuple;
@@ -156,16 +159,16 @@ TEST_CASE("envelop_elements creates new tuple from source.", "[tuple][algorithm]
 	{
 		result = envelop_elements(tuple);
 
-		REQUIRE(std::get<0>(tuple) == "Hello, World!");
-		REQUIRE(std::get<1>(tuple) == "Test");
+		REQUIRE_THAT(std::get<0>(tuple), matchers::Equals("Hello, World!"));
+		REQUIRE_THAT(std::get<1>(tuple), matchers::Equals("Test"));
 	}
 
 	SECTION("move from source")
 	{
 		result = envelop_elements(std::move(tuple));
 
-		REQUIRE(std::empty(std::get<0>(tuple)));
-		REQUIRE(std::empty(std::get<1>(tuple)));
+		REQUIRE_THAT(std::get<0>(tuple), matchers::IsEmpty());
+		REQUIRE_THAT(std::get<1>(tuple), matchers::IsEmpty());
 	}
 
 	REQUIRE(result == expectedResult);
@@ -208,7 +211,7 @@ TEST_CASE("zip zips multiple tuples into one.", "[tuple][algorithm]")
 	result_t result = zip(std::move(first), std::move(second), std::move(third));
 
 	REQUIRE(result == expectedResult);
-	REQUIRE(std::empty(std::get<0>(second))); // just get sure, we are really moving from the sources
+	REQUIRE_THAT(std::get<0>(second), matchers::IsEmpty());
 }
 
 TEMPLATE_TEST_CASE_SIG(
