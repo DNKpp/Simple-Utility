@@ -11,8 +11,8 @@
 #include "Simple-Utility/functional/predicate.hpp"
 
 #include <algorithm>
-#include <vector>
 #include <optional>
+#include <vector>
 
 using namespace sl::functional;
 
@@ -26,66 +26,82 @@ inline constexpr auto variadicAllEqual = [](auto&& v, auto&&... vs)
 
 using empty_predicate_t = bool(*)();
 
-inline constexpr predicate_fn<empty_predicate_t> truePredicate{ trueFunc };
-inline constexpr predicate_fn<empty_predicate_t> falsePredicate{ falseFunc };
+inline constexpr predicate_fn<empty_predicate_t> truePredicate{trueFunc};
+inline constexpr predicate_fn<empty_predicate_t> falsePredicate{falseFunc};
 
-TEST_CASE("predicate_fn is constructed from predicate.", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is constructed from predicate.",
+	"[functional][predicate]",
+	all_ref_mods_list
+)
 {
-	auto func{ trueFunc };
+	auto func{trueFunc};
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
-	predicate_fn<empty_predicate_t> predicate{ cast(func, refMod) };
+	predicate_fn<empty_predicate_t> predicate{TestType::cast(func)};
 
 	REQUIRE(predicate());
 }
 
-TEST_CASE("predicate_fn is evaluated via operator ()", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is evaluated via operator ()",
+	"[functional][predicate]",
+	all_ref_mods_list
+)
 {
 	auto [sourcePredicate, expectedResult] = GENERATE(
 		(table<empty_predicate_t, bool>)({
 			{ trueFunc, true },
 			{ falseFunc, false }
-		})
+			})
 	);
-	predicate_fn predicate{ sourcePredicate };
+	predicate_fn predicate{sourcePredicate};
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
-	REQUIRE(std::invoke(cast(predicate, refMod)) == expectedResult);
+	REQUIRE(std::invoke(TestType::cast(predicate)) == expectedResult);
 }
 
-TEST_CASE("predicate_fn is composable with operator && as left-hand-side", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is composable with operator && as left-hand-side",
+	"[functional][predicate]",
+	all_ref_mods_list
+)
 {
 	const auto& [chainedFunction, expectedResult] = GENERATE(
 		(table<empty_predicate_t, bool>)({
 			{ trueFunc, true },
 			{ falseFunc, false }
-		})
+			})
 	);
-	predicate_fn predicate{ truePredicate };
+	predicate_fn predicate{truePredicate};
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn composedPredicate = cast(predicate, refMod) && chainedFunction;
+	const predicate_fn composedPredicate = TestType::cast(predicate) && chainedFunction;
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEST_CASE("predicate_fn is composable with operator && as right-hand-side", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is composable with operator && as right-hand-side",
+	"[functional][predicate]",
+	all_ref_mods_list
+)
 {
 	const auto& [chainedFunction, expectedResult] = GENERATE(
 		(table<empty_predicate_t, bool>)({
 			{ trueFunc, true },
 			{ falseFunc, false }
-		})
+			})
 	);
-	predicate_fn predicate{ truePredicate };
+	predicate_fn predicate{truePredicate};
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn composedPredicate = chainedFunction && cast(predicate, refMod);
+	const predicate_fn composedPredicate = chainedFunction && TestType::cast(predicate);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEST_CASE("predicate_fn is composable as param on both sides of operator &&.", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is composable as param on both sides of operator &&.",
+	"[functional][predicate]",
+	all_ref_mods_cart2_list
+)
 {
 	const auto& [lhsPredicate, rhsPredicate, expectedResult] = GENERATE(
 		(table<empty_predicate_t, empty_predicate_t, bool>)({
@@ -93,14 +109,12 @@ TEST_CASE("predicate_fn is composable as param on both sides of operator &&.", "
 			{ trueFunc, falseFunc, false },
 			{ falseFunc, trueFunc, false },
 			{ trueFunc, trueFunc, true }
-		})
+			})
 	);
-	predicate_fn lhs{ lhsPredicate };
-	predicate_fn rhs{ rhsPredicate };
+	predicate_fn lhs{lhsPredicate};
+	predicate_fn rhs{rhsPredicate};
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn composedPredicate = cast(lhs, lhsRefMod) && cast(rhs, rhsRefMod);
+	const predicate_fn composedPredicate = TestType::cast_lhs(lhs) && TestType::cast_rhs(rhs);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
@@ -115,39 +129,49 @@ TEST_CASE("operator && composed predicates get flattened", "[functional][predica
 	STATIC_REQUIRE(std::same_as<result_t, expected_t>);
 }
 
-TEST_CASE("predicate_fn is composable with operator || as left-hand-side", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is composable with operator || as left-hand-side",
+	"[functional][predicate]",
+	all_ref_mods_list
+)
 {
 	const auto& [chainedFunction, expectedResult] = GENERATE(
 		(table<empty_predicate_t, bool>)({
 			{ trueFunc, true },
 			{ falseFunc, false }
-		})
+			})
 	);
-	predicate_fn predicate{ falsePredicate };
+	predicate_fn predicate{falsePredicate};
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn composedPredicate = cast(predicate, refMod) || chainedFunction;
+	const predicate_fn composedPredicate = TestType::cast(predicate) || chainedFunction;
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEST_CASE("predicate_fn is composable with operator || as right-hand-side", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is composable with operator || as right-hand-side",
+	"[functional][predicate]",
+	all_ref_mods_list
+)
 {
 	const auto& [chainedFunction, expectedResult] = GENERATE(
 		(table<empty_predicate_t, bool>)({
 			{ trueFunc, true },
 			{ falseFunc, false }
-		})
+			})
 	);
-	predicate_fn predicate{ falsePredicate };
+	predicate_fn predicate{falsePredicate};
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn composedPredicate = chainedFunction || cast(predicate, refMod);
+	const predicate_fn composedPredicate = chainedFunction || TestType::cast(predicate);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEST_CASE("predicate_fn is composable as param on both sides of operator ||.", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is composable as param on both sides of operator ||.",
+	"[functional][predicate]",
+	all_ref_mods_cart2_list
+)
 {
 	const auto& [lhsPredicate, rhsPredicate, expectedResult] = GENERATE(
 		(table<empty_predicate_t, empty_predicate_t, bool>)({
@@ -155,14 +179,12 @@ TEST_CASE("predicate_fn is composable as param on both sides of operator ||.", "
 			{ trueFunc, falseFunc, true },
 			{ falseFunc, trueFunc, true },
 			{ trueFunc, trueFunc, true }
-		})
+			})
 	);
-	predicate_fn lhs{ lhsPredicate };
-	predicate_fn rhs{ rhsPredicate };
+	predicate_fn lhs{lhsPredicate};
+	predicate_fn rhs{rhsPredicate};
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn composedPredicate = cast(lhs, lhsRefMod) || cast(rhs, rhsRefMod);
+	const predicate_fn composedPredicate = TestType::cast_lhs(lhs) || TestType::cast_rhs(rhs);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
@@ -213,18 +235,21 @@ TEST_CASE("predicate_fn common operator hierarchy can be adjusted with ().", "[f
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEST_CASE("predicate_fn can be negated via operator !", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn can be negated via operator !",
+	"[functional][predicate]",
+	all_ref_mods_list
+)
 {
 	const auto& [basePredicate, expectedResult] = GENERATE(
 		(table<empty_predicate_t, bool>)({
 			{ trueFunc, false },
 			{ falseFunc, true }
-		})
+			})
 	);
-	predicate_fn predicate{ basePredicate };
+	predicate_fn predicate{basePredicate};
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn negatedPredicate = !cast(predicate, refMod);
+	const predicate_fn negatedPredicate = !TestType::cast(predicate);
 
 	REQUIRE(negatedPredicate() == expectedResult);
 }
@@ -247,7 +272,7 @@ TEST_CASE("predicate_fn is composable via operator |", "[functional][predicate]"
 			})
 	);
 
-	const predicate_fn composedPredicate = predicate_fn{ [](const int v) { return std::cmp_less(v, 10); } }
+	const predicate_fn composedPredicate = predicate_fn{[](const int v) { return std::cmp_less(v, 10); }}
 											&& [](const int v) { return std::cmp_less(0, v); };
 	const predicate_fn finalPredicate = [](const std::string& str) { return std::stoi(str); }
 										| composedPredicate;
@@ -276,18 +301,30 @@ TEMPLATE_TEST_CASE_SIG(
 	( true, 42, 42, 42)
 )
 {
-	predicate_fn predicate{ variadicAllEqual };
+	predicate_fn predicate{variadicAllEqual};
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn curriedPredicate = (cast(predicate, refMod) << ... << VValues);
+	const predicate_fn curriedPredicate = (predicate << ... << VValues);
 
 	REQUIRE(curriedPredicate() == VExpected);
 }
 
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn can be front curried from all reference types.",
+	"[functional][predicate]",
+	all_ref_mods_list
+)
+{
+	predicate_fn predicate{variadicAllEqual};
+
+	const predicate_fn curriedTransform = TestType::cast(predicate) << 42 << 42;
+
+	REQUIRE(curriedTransform());
+}
+
 TEST_CASE("front curried predicate_fn can be piped", "[functional][predicate]")
 {
-	predicate_fn predicate = predicate_fn{ variadicAllEqual } << 42 << -2
-							| predicate_fn{ std::equal_to{} } << false;
+	predicate_fn predicate = predicate_fn{variadicAllEqual} << 42 << -2
+							| predicate_fn{std::equal_to{}} << false;
 
 	REQUIRE(predicate());
 }
@@ -315,18 +352,30 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, 42, 42, 42)
 )
 {
-	predicate_fn predicate{ variadicAllEqual };
+	predicate_fn predicate{variadicAllEqual};
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn curriedPredicate = (cast(predicate, refMod) >> ... >> VValues);
+	const predicate_fn curriedPredicate = (predicate >> ... >> VValues);
 
 	REQUIRE(curriedPredicate() == VExpected);
 }
 
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn can be back curried from all reference types.",
+	"[functional][predicate]",
+	all_ref_mods_list
+)
+{
+	predicate_fn predicate{variadicAllEqual};
+
+	const predicate_fn curriedTransform = TestType::cast(predicate) >> 42 >> 42;
+
+	REQUIRE(curriedTransform());
+}
+
 TEST_CASE("back curried predicate_fn can be piped", "[functional][predicate]")
 {
-	predicate_fn predicate = predicate_fn{ variadicAllEqual } >> 42 >> -2
-							| predicate_fn{ std::equal_to{} } << false;
+	predicate_fn predicate = predicate_fn{variadicAllEqual} >> 42 >> -2
+							| predicate_fn{std::equal_to{}} << false;
 
 	REQUIRE(predicate());
 }
@@ -334,19 +383,23 @@ TEST_CASE("back curried predicate_fn can be piped", "[functional][predicate]")
 TEST_CASE("predicate_fn accepts functional objects wrapped into a std::reference_wrapper", "[functional][predicate][example]")
 {
 	//! [predicate wrapped]
-	const std::vector sourceInts{ 0, 1, 2, 3 };
-	auto skipFirst = [i{ 0 }](auto&&...) mutable { return static_cast<bool>(i++); };
+	const std::vector sourceInts{0, 1, 2, 3};
+	auto skipFirst = [i{0}](auto&&...) mutable { return static_cast<bool>(i++); };
 
 	const auto result = std::ranges::count_if(
 		sourceInts,
-		predicate_fn{ std::ref(skipFirst) }
+		predicate_fn{std::ref(skipFirst)}
 	);
 
 	REQUIRE(result == 3);
 	//! [predicate wrapped]
 }
 
-TEST_CASE("predicate_fn is equal compare composable with operator == as left-hand-side", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is equal compare composable with operator == as left-hand-side",
+	"[functional][predicate]",
+	all_ref_mods_cart2_list
+)
 {
 	auto [chainedFunction, expectedResult] = GENERATE(
 		(table<empty_predicate_t, bool>)({
@@ -354,33 +407,37 @@ TEST_CASE("predicate_fn is equal compare composable with operator == as left-han
 			{ falseFunc, true }
 			})
 	);
-	predicate_fn predicate{ falsePredicate };
+	predicate_fn predicate{falsePredicate};
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn composedPredicate = cast(predicate, lhsRefMod) == cast(chainedFunction, rhsRefMod);
+	const predicate_fn composedPredicate = TestType::cast_lhs(predicate) == TestType::cast_rhs(chainedFunction);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEST_CASE("predicate_fn is equal compare composable with operator == as right-hand-side", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is equal compare composable with operator == as right-hand-side",
+	"[functional][predicate]",
+	all_ref_mods_cart2_list
+)
 {
 	auto [chainedFunction, expectedResult] = GENERATE(
 		(table<empty_predicate_t, bool>)({
 			{ trueFunc, false },
 			{ falseFunc, true }
-		})
+			})
 	);
-	predicate_fn predicate{ falsePredicate };
+	predicate_fn predicate{falsePredicate};
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn composedPredicate = cast(chainedFunction, lhsRefMod) == cast(predicate, rhsRefMod);
+	const predicate_fn composedPredicate = TestType::cast_lhs(chainedFunction) == TestType::cast_rhs(predicate);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEST_CASE("predicate_fn is equal comapre composable as param on both sides of operator ==.","[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is equal comapre composable as param on both sides of operator ==.",
+	"[functional][predicate]",
+	all_ref_mods_cart2_list
+)
 {
 	const auto& [lhsPredicate, rhsPredicate, expectedResult] = GENERATE(
 		(table<empty_predicate_t, empty_predicate_t, bool>)({
@@ -388,14 +445,12 @@ TEST_CASE("predicate_fn is equal comapre composable as param on both sides of op
 			{ trueFunc, falseFunc, false },
 			{ falseFunc, trueFunc, false },
 			{ trueFunc, trueFunc, true }
-		})
+			})
 	);
-	predicate_fn lhs{ lhsPredicate };
-	predicate_fn rhs{ rhsPredicate };
+	predicate_fn lhs{lhsPredicate};
+	predicate_fn rhs{rhsPredicate};
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn composedPredicate = cast(lhs, lhsRefMod) == cast(rhs, rhsRefMod);
+	const predicate_fn composedPredicate = TestType::cast_lhs(lhs) == TestType::cast_rhs(rhs);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
@@ -409,41 +464,49 @@ TEST_CASE("predicate_fn is equal compare composable with operator in arbitrary d
 	REQUIRE(((falsePredicate == falsePredicate) == (falsePredicate == falsePredicate))());
 }
 
-TEST_CASE("predicate_fn is not_equal compare composable with operator != as left-hand-side", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is not_equal compare composable with operator != as left-hand-side",
+	"[functional][predicate]",
+	all_ref_mods_cart2_list
+)
 {
 	auto [chainedFunction, expectedResult] = GENERATE(
 		(table<empty_predicate_t, bool>)({
 			{ trueFunc, true },
 			{ falseFunc, false }
-		})
+			})
 	);
-	predicate_fn predicate{ falsePredicate };
+	predicate_fn predicate{falsePredicate};
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn composedPredicate = cast(predicate, lhsRefMod) != cast(chainedFunction, rhsRefMod);
+	const predicate_fn composedPredicate = TestType::cast_lhs(predicate) != TestType::cast_rhs(chainedFunction);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEST_CASE("predicate_fn is not_equal compare composable with operator != as right-hand-side", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is not_equal compare composable with operator != as right-hand-side",
+	"[functional][predicate]",
+	all_ref_mods_cart2_list
+)
 {
 	auto [chainedFunction, expectedResult] = GENERATE(
 		(table<empty_predicate_t, bool>)({
 			{ trueFunc, true },
 			{ falseFunc, false }
-		})
+			})
 	);
-	predicate_fn predicate{ falsePredicate };
+	predicate_fn predicate{falsePredicate};
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn composedPredicate = cast(chainedFunction, lhsRefMod) != cast(predicate, rhsRefMod);
+	const predicate_fn composedPredicate = TestType::cast_lhs(chainedFunction) != TestType::cast_rhs(predicate);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEST_CASE("predicate_fn is not_equal comapre composable as param on both sides of operator !=.", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is not_equal comapre composable as param on both sides of operator !=.",
+	"[functional][predicate]",
+	all_ref_mods_cart2_list
+)
 {
 	const auto& [lhsPredicate, rhsPredicate, expectedResult] = GENERATE(
 		(table<empty_predicate_t, empty_predicate_t, bool>)({
@@ -451,14 +514,12 @@ TEST_CASE("predicate_fn is not_equal comapre composable as param on both sides o
 			{ trueFunc, falseFunc, true },
 			{ falseFunc, trueFunc, true },
 			{ trueFunc, trueFunc, false }
-		})
+			})
 	);
-	predicate_fn lhs{ lhsPredicate };
-	predicate_fn rhs{ rhsPredicate };
+	predicate_fn lhs{lhsPredicate};
+	predicate_fn rhs{rhsPredicate};
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn composedPredicate = cast(lhs, lhsRefMod) != cast(rhs, rhsRefMod);
+	const predicate_fn composedPredicate = TestType::cast_lhs(lhs) != TestType::cast_rhs(rhs);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
@@ -472,43 +533,49 @@ TEST_CASE("predicate_fn is not_equal compare composable with operator in arbitra
 	REQUIRE(((falsePredicate != falsePredicate) != (falsePredicate != truePredicate))());
 }
 
-TEST_CASE("predicate_fn is equivalence compare composable with operator <=> as left-hand-side", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is equivalence compare composable with operator <=> as left-hand-side",
+	"[functional][predicate]",
+	all_ref_mods_cart2_list
+)
 {
 	auto [chainedFunction, expectedResult] = GENERATE(
 		(table<empty_predicate_t, bool>)({
 			{ trueFunc, false },
 			{ falseFunc, true }
-		})
+			})
 	);
+	predicate_fn predicate{falsePredicate};
 
-	predicate_fn predicate{ falsePredicate };
-
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn composedPredicate = cast(predicate, lhsRefMod) <=> cast(chainedFunction, rhsRefMod);
+	const predicate_fn composedPredicate = TestType::cast_lhs(predicate) <=> TestType::cast_rhs(chainedFunction);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEST_CASE("predicate_fn is equivalence compare composable with operator <=> as right-hand-side", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is equivalence compare composable with operator <=> as right-hand-side",
+	"[functional][predicate]",
+	all_ref_mods_cart2_list
+)
 {
 	auto [chainedFunction, expectedResult] = GENERATE(
 		(table<empty_predicate_t, bool>)({
 			{ trueFunc, false },
 			{ falseFunc, true }
-		})
+			})
 	);
+	predicate_fn predicate{falsePredicate};
 
-	predicate_fn predicate{ falsePredicate };
-
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn composedPredicate = cast(chainedFunction, lhsRefMod) <=> cast(predicate, rhsRefMod);
+	const predicate_fn composedPredicate = TestType::cast_lhs(chainedFunction) <=> TestType::cast_rhs(predicate);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEST_CASE("predicate_fn is equivalence comapre composable as param on both sides of operator <=>.", "[functional][predicate]")
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn is equivalence comapre composable as param on both sides of operator <=>.",
+	"[functional][predicate]",
+	all_ref_mods_cart2_list
+)
 {
 	auto [lhsPredicate, rhsPredicate, expectedResult] = GENERATE(
 		(table<empty_predicate_t, empty_predicate_t, bool>)({
@@ -516,14 +583,12 @@ TEST_CASE("predicate_fn is equivalence comapre composable as param on both sides
 			{ trueFunc, falseFunc, false },
 			{ falseFunc, trueFunc, false },
 			{ trueFunc, trueFunc, true }
-		})
+			})
 	);
-	predicate_fn lhs{ lhsPredicate };
-	predicate_fn rhs{ rhsPredicate };
+	predicate_fn lhs{lhsPredicate};
+	predicate_fn rhs{rhsPredicate};
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const predicate_fn composedPredicate = cast(lhs, lhsRefMod) <=> cast(rhs, rhsRefMod);
+	const predicate_fn composedPredicate = TestType::cast_lhs(lhs) <=> TestType::cast_rhs(rhs);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }

@@ -12,10 +12,6 @@
 #include <array>
 #include <concepts>
 #include <type_traits>
-#include <variant>
-
-#include <catch2/generators/catch_generators.hpp>
-#include <catch2/generators/catch_generators_adapters.hpp>
 
 template <class T>
 using as_lvalue_ref_t = std::remove_cvref_t<T>&;
@@ -49,59 +45,49 @@ using all_ref_mods_list = std::tuple<
 	type_mod<as_rvalue_ref_t>
 >;
 
-template <template <class> class... TMods>
-class RefModGenerator final
-	: public Catch::Generators::IGenerator<std::variant<type_mod<TMods>...>>
+template <template <class> class TLhsMod, template <class> class TRhsMod>
+struct binary_type_mod
 {
-public:
-	using Value = std::variant<type_mod<TMods>...>;
-	static constexpr std::size_t value_count{ sizeof...(TMods) };
+	template <class T>
+	using lhs_type = TLhsMod<T>;
 
-private:
-	std::size_t m_Index{};
-	static constexpr std::array<Value, value_count> values{ (type_mod<TMods>{}, ...) };
+	template <class T>
+	using rhs_type = TRhsMod<T>;
 
-	bool next() override
+	template <class T>
+	static constexpr lhs_type<T> cast_lhs(T& arg) noexcept
 	{
-		return ++m_Index < value_count;
+		return static_cast<lhs_type<T>>(arg);
 	}
 
-	const Value& get() const override
+	template <class T>
+	static constexpr rhs_type<T> cast_rhs(T& arg) noexcept
 	{
-		return values[m_Index];
+		return static_cast<rhs_type<T>>(arg);
 	}
 };
 
-template <template <class> class... TMods>
-auto make_ref_mods_generator()
-{
-	using Generator = RefModGenerator<TMods...>;
-	return Catch::Generators::GeneratorWrapper<typename Generator::Value>{
-		Catch::Detail::make_unique<Generator>()
-	};
-}
+using all_ref_mods_cart2_list = std::tuple<
+	binary_type_mod<as_const_lvalue_ref_t, as_const_lvalue_ref_t>,
+	binary_type_mod<as_const_lvalue_ref_t, as_lvalue_ref_t>,
+	binary_type_mod<as_const_lvalue_ref_t, as_const_rvalue_ref_t>,
+	binary_type_mod<as_const_lvalue_ref_t, as_rvalue_ref_t>,
 
-inline auto make_lvalue_ref_mods_generator()
-{
-	return make_ref_mods_generator<as_lvalue_ref_t, as_const_lvalue_ref_t>();
-}
+	binary_type_mod<as_lvalue_ref_t, as_const_lvalue_ref_t>,
+	binary_type_mod<as_lvalue_ref_t, as_lvalue_ref_t>,
+	binary_type_mod<as_lvalue_ref_t, as_const_rvalue_ref_t>,
+	binary_type_mod<as_lvalue_ref_t, as_rvalue_ref_t>,
 
-inline auto make_rvalue_ref_mods_generator()
-{
-	return make_ref_mods_generator<as_rvalue_ref_t, as_const_rvalue_ref_t>();
-}
+	binary_type_mod<as_const_rvalue_ref_t, as_const_lvalue_ref_t>,
+	binary_type_mod<as_const_rvalue_ref_t, as_lvalue_ref_t>,
+	binary_type_mod<as_const_rvalue_ref_t, as_const_rvalue_ref_t>,
+	binary_type_mod<as_const_rvalue_ref_t, as_rvalue_ref_t>,
 
-inline auto make_all_ref_mods_generator()
-{
-	return make_ref_mods_generator<as_lvalue_ref_t, as_const_lvalue_ref_t, as_rvalue_ref_t, as_const_rvalue_ref_t>();
-}
-
-
-template <class T, class... TArgs>
-constexpr decltype(auto) cast(T&& arg, const std::variant<TArgs...>& mod)
-{
-	return std::visit([&](const auto& m) { return m.cast(std::forward<T>(arg)); }, mod);
-}
+	binary_type_mod<as_rvalue_ref_t, as_const_lvalue_ref_t>,
+	binary_type_mod<as_rvalue_ref_t, as_lvalue_ref_t>,
+	binary_type_mod<as_rvalue_ref_t, as_const_rvalue_ref_t>,
+	binary_type_mod<as_rvalue_ref_t, as_rvalue_ref_t>
+>;
 
 struct empty_t
 {

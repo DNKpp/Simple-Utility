@@ -86,7 +86,7 @@ TEST_CASE("composition_fn unwraps functionals on construction.", "[functional][b
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"composition_fn is invocable in arbitrary state.",
+	"composition_fn is invocable with any possible param combination.",
 	"[functional][base]",
 	((auto... VArgs), VArgs...),
 	(0),
@@ -96,10 +96,19 @@ TEMPLATE_TEST_CASE_SIG(
 	composition_fn trueComposition{operation_mock_fn{}, falseFunc, envelopedFalseFunc};
 	composition_fn falseComposition{operation_mock_fn{}, envelopedFalseFunc, trueFunc};
 
-	const auto& mod = GENERATE(make_all_ref_mods_generator());
+	REQUIRE(trueComposition());
+	REQUIRE(!falseComposition());
+}
 
-	REQUIRE(std::invoke(cast(trueComposition, mod), VArgs...));
-	REQUIRE(!std::invoke(cast(falseComposition, mod), VArgs...));
+TEMPLATE_LIST_TEST_CASE(
+	"composition_fn is invocable from any reference type.",
+	"[functional][base]",
+	all_ref_mods_list
+)
+{
+	composition_fn trueComposition{operation_mock_fn{}, falseFunc, envelopedFalseFunc};
+
+	REQUIRE(std::invoke(TestType::cast(trueComposition), 42));
 }
 
 TEMPLATE_PRODUCT_TEST_CASE(

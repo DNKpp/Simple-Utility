@@ -8,11 +8,11 @@
 
 #include "../helper.hpp"
 
-#include "Simple-Utility/nullables/or_else.hpp"
 #include "Simple-Utility/nullables/and_then.hpp"
-#include "Simple-Utility/nullables/value_or.hpp"
 #include "Simple-Utility/nullables/fwd_value.hpp"
+#include "Simple-Utility/nullables/or_else.hpp"
 #include "Simple-Utility/nullables/std_optional.hpp"
+#include "Simple-Utility/nullables/value_or.hpp"
 
 #include "Simple-Utility/functional/predicate.hpp"
 #include "Simple-Utility/functional/transform.hpp"
@@ -21,80 +21,96 @@
 
 using namespace sl::nullables;
 
-inline constexpr auto do_nothing = [](auto&&...) {};
+inline constexpr auto do_nothing = [](auto&&...)
+{
+};
 
-TEST_CASE("value_or returns the value of the nullable, when it's not equal to its null.", "[nullables][algorithm]")
+TEMPLATE_LIST_TEST_CASE(
+	"value_or returns the value of the nullable, when it's not equal to its null.",
+	"[nullables][algorithm]",
+	all_ref_mods_cart2_list
+)
 {
 	auto [sourceOptional, expected] = GENERATE(
 		(table<const char*, char>)({
 			{ "c", 'c' },
 			{ nullptr, 'x' }
-		})
+			})
 	);
 	algorithm_fn algorithm = value_or('x');
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const char s = cast(sourceOptional, lhsRefMod) | cast(algorithm, rhsRefMod);
+	const char s = TestType::cast_lhs(sourceOptional) | TestType::cast_rhs(algorithm);
 
 	REQUIRE(s == expected);
 }
 
-TEST_CASE("value_or_fn can be piped with other functionals", "[nullables][algorithm][functional]")
+TEMPLATE_LIST_TEST_CASE(
+	"value_or_fn can be piped with other functionals",
+	"[nullables][algorithm][functional]",
+	all_ref_mods_list
+)
 {
 	auto [sourceOptional, expected] = GENERATE(
 		(table<const char*, int>)({
 			{ "c", 'c' },
 			{ nullptr, 'x' }
-		})
+			})
 	);
 
 	const sl::functional::transform_fn transform = std::identity{}
 													| value_or_fn('x')
 													| sl::functional::as<int>;
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
-	REQUIRE(transform(cast(sourceOptional, refMod)) == expected);
+	REQUIRE(transform(TestType::cast(sourceOptional)) == expected);
 }
 
-TEST_CASE("fwd_value forwards the value of the nullable to the functional, when it's not equal to its null.","[nullables][algorithm]")
+TEMPLATE_LIST_TEST_CASE(
+	"fwd_value forwards the value of the nullable to the functional, when it's not equal to its null.",
+	"[nullables][algorithm]",
+	all_ref_mods_cart2_list
+)
 {
 	auto [sourceOptional, expectedInvoked] = GENERATE(
 		(table<const char*, bool>)({
 			{ "c", true },
 			{ nullptr, false }
-		})
+			})
 	);
-	bool invoked{ false };
+	bool invoked{false};
 	auto algorithm = fwd_value([&invoked](const char) { invoked = true; });
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	cast(sourceOptional, lhsRefMod) | cast(algorithm, rhsRefMod);
+	TestType::cast_lhs(sourceOptional) | TestType::cast_rhs(algorithm);
 
 	REQUIRE(invoked == expectedInvoked);
 }
 
-TEST_CASE("fwd_value_fn can be piped with other functionals", "[nullables][algorithm][functional]")
+TEMPLATE_LIST_TEST_CASE(
+	"fwd_value_fn can be piped with other functionals",
+	"[nullables][algorithm][functional]",
+	all_ref_mods_list
+)
 {
 	auto [sourceOptional, expectedInvoked] = GENERATE(
 		(table<const char*, bool>)({
 			{ "c", true },
 			{ nullptr, false }
-		})
+			})
 	);
 
-	bool invoked{ false };
+	bool invoked{false};
 	const sl::functional::transform_fn transform = std::identity{}
 													| fwd_value_fn([&invoked](const char) { invoked = true; });
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
-	transform(cast(sourceOptional, refMod));
+	transform(TestType::cast(sourceOptional));
 
 	REQUIRE(invoked == expectedInvoked);
 }
 
-TEST_CASE("and_then returns a new optional or its corresponding null object.", "[nullables][algorithm]")
+TEMPLATE_LIST_TEST_CASE(
+	"and_then returns a new optional or its corresponding null object.",
+	"[nullables][algorithm]",
+	all_ref_mods_cart2_list
+)
 {
 	auto [sourceOptional, expected] = GENERATE(
 		(table<const char*, std::optional<char>>)({
@@ -104,47 +120,48 @@ TEST_CASE("and_then returns a new optional or its corresponding null object.", "
 	);
 	auto algorithm = and_then(sl::functional::as<std::optional<char>>);
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const std::optional<char> s = cast(sourceOptional, lhsRefMod) | cast(algorithm, rhsRefMod);
+	const std::optional<char> s = TestType::cast_lhs(sourceOptional) | TestType::cast_rhs(algorithm);
 
 	REQUIRE(s == expected);
 }
 
-TEST_CASE("and_then can be piped with other functionals", "[nullables][algorithm][functional]")
+TEMPLATE_LIST_TEST_CASE(
+	"and_then can be piped with other functionals",
+	"[nullables][algorithm][functional]",
+	all_ref_mods_list
+)
 {
 	auto [sourceOptional, expected] = GENERATE(
 		(table<const char*, bool>)({
 			{ "c", true },
 			{ nullptr, false }
-		})
+			})
 	);
 	const sl::functional::transform_fn transform = std::identity{}
 													| and_then_fn(sl::functional::as<std::optional<char>>)
 													| &std::optional<char>::has_value;
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
-	REQUIRE(transform(cast(sourceOptional, refMod)) == expected);
+	REQUIRE(transform(TestType::cast(sourceOptional)) == expected);
 }
 
-TEST_CASE(
+TEMPLATE_LIST_TEST_CASE(
 	"or_else returns the given optional if it doesn't compare equally to its null object or returns the null object (provided func returns void).",
-	"[nullables][algorithm]"
+	"[nullables][algorithm]",
+	all_ref_mods_cart2_list
 )
 {
 	const char* sourceOptional = GENERATE("c", nullptr);
 	auto algorithm = or_else(do_nothing);
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const char* s = cast(sourceOptional, lhsRefMod) | cast(algorithm, rhsRefMod);
+	const char* s = TestType::cast_lhs(sourceOptional) | TestType::cast_rhs(algorithm);
 
 	REQUIRE(s == sourceOptional);
 }
 
-TEST_CASE(
+TEMPLATE_LIST_TEST_CASE(
 	"or_else returns an optional with the same type, if the given optional compares equally to its null object and func has a return type other than void.",
-	"[nullables][algorithm]"
+	"[nullables][algorithm]",
+	all_ref_mods_cart2_list
 )
 {
 	auto orig = "c";
@@ -153,24 +170,26 @@ TEST_CASE(
 		(table<const char*, const char*>)({
 			{ orig, orig },
 			{ nullptr, alt }
-		})
+			})
 	);
 	auto algorithm = or_else([alt] { return alt; });
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const char* s = cast(sourceOptional, lhsRefMod) | cast(algorithm, rhsRefMod);
+	const char* s = TestType::cast_lhs(sourceOptional) | TestType::cast_rhs(algorithm);
 
 	REQUIRE(s == expected);
 }
 
-TEST_CASE("or_else can be piped with other functionals", "[nullables][algorithm][functional]")
+TEMPLATE_LIST_TEST_CASE(
+	"or_else can be piped with other functionals",
+	"[nullables][algorithm][functional]",
+	all_ref_mods_list
+)
 {
 	auto [sourceOptional, expectThrow] = GENERATE(
 		(table<const char*, bool>)({
 			{ "c", false },
 			{ nullptr, true }
-		})
+			})
 	);
 
 	const sl::functional::predicate_fn predicate = std::identity{}
@@ -178,11 +197,14 @@ TEST_CASE("or_else can be piped with other functionals", "[nullables][algorithm]
 													| [](auto t) { return t; }
 													| sl::functional::equal >> nullptr;
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
 	if (expectThrow)
-		REQUIRE_THROWS(predicate(cast(sourceOptional, refMod)));
+	{
+		REQUIRE_THROWS(predicate(TestType::cast(sourceOptional)));
+	}
 	else
-		REQUIRE_NOTHROW(predicate(cast(sourceOptional, refMod)));
+	{
+		REQUIRE_NOTHROW(predicate(TestType::cast(sourceOptional)));
+	}
 }
 
 /*
@@ -192,7 +214,7 @@ TEST_CASE("or_else can be piped with other functionals", "[nullables][algorithm]
 TEST_CASE("value_or example showing the outcome when used with a non-null nullable.", "[nullables][algorithm][example]")
 {
 	//! [value_or valid]
-	const std::optional result = std::optional{ 42 }
+	const std::optional result = std::optional{42}
 								| value_or(1337);
 
 	REQUIRE(result == 42);
@@ -214,7 +236,7 @@ TEST_CASE("fwd_value example showing the outcome when used with a non-null nulla
 	//! [fwd_value valid]
 	std::optional<int> target{};
 
-	std::optional{ 42 }
+	std::optional{42}
 		| fwd_value([&target](const int i) { target = i; });
 
 	REQUIRE(target == 42);
@@ -236,8 +258,8 @@ TEST_CASE("fwd_value example showing the outcome when used with a null nullable.
 TEST_CASE("and_then example showing the outcome when used with a non-null nullable.", "[nullables][algorithm][example]")
 {
 	//! [and_then valid]
-	const std::optional result = std::optional{ 42 }
-								| and_then([](const int i) { return std::optional{ std::to_string(i) }; });
+	const std::optional result = std::optional{42}
+								| and_then([](const int i) { return std::optional{std::to_string(i)}; });
 
 	REQUIRE(result == "42");
 	//! [and_then valid]
@@ -247,7 +269,7 @@ TEST_CASE("and_then example showing the outcome when used with a null nullable."
 {
 	//! [and_then invalid]
 	const std::optional result = std::optional<int>{}
-								| and_then([](const int i) { return std::optional{ std::to_string(i) }; });
+								| and_then([](const int i) { return std::optional{std::to_string(i)}; });
 
 	REQUIRE(result == std::nullopt);
 	//! [and_then invalid]
@@ -259,7 +281,7 @@ TEST_CASE(
 )
 {
 	//! [or_else valid non-void return]
-	const std::optional result = std::optional<int>{ 42 }
+	const std::optional result = std::optional<int>{42}
 								| or_else([] { return 1337; });
 
 	REQUIRE(result == 42);
@@ -295,10 +317,10 @@ TEST_CASE(
 TEST_CASE("example showing that nullable algorithms can be chained arbitrarily.", "[nullables][algorithm][example]")
 {
 	//! [algorithm chain]
-	const std::string result = std::optional{ 42 }
-								| or_else([] { throw std::runtime_error{ "invalid optional." }; })
-								| and_then([](const int i) { return std::optional{ i * i }; })
-								| and_then([](const int i) { return std::optional{ std::to_string(i) }; })
+	const std::string result = std::optional{42}
+								| or_else([] { throw std::runtime_error{"invalid optional."}; })
+								| and_then([](const int i) { return std::optional{i * i}; })
+								| and_then([](const int i) { return std::optional{std::to_string(i)}; })
 								| value_or("not set");
 
 	REQUIRE(result == "1764");
@@ -313,11 +335,11 @@ TEST_CASE(
 	//! [algorithm chain functional]
 	namespace fn = sl::functional;
 
-	const fn::transform_fn square{ [](const std::integral auto i) { return i * i; } };
-	const fn::transform_fn to_string{ [](const std::integral auto i) { return std::to_string(i); } };
+	const fn::transform_fn square{[](const std::integral auto i) { return i * i; }};
+	const fn::transform_fn to_string{[](const std::integral auto i) { return std::to_string(i); }};
 
-	const std::string result = std::optional{ 42 }
-								| or_else([] { throw std::runtime_error{ "invalid optional." }; })
+	const std::string result = std::optional{42}
+								| or_else([] { throw std::runtime_error{"invalid optional."}; })
 								| and_then(
 									square
 									| to_string
@@ -337,10 +359,10 @@ TEST_CASE(
 	//! [algorithm chain functional composition]
 	namespace fn = sl::functional;
 
-	const fn::transform_fn square{ [](const std::integral auto i) { return i * i; } };
-	const fn::transform_fn to_string{ [](const std::integral auto i) { return std::to_string(i); } };
+	const fn::transform_fn square{[](const std::integral auto i) { return i * i; }};
+	const fn::transform_fn to_string{[](const std::integral auto i) { return std::to_string(i); }};
 	// note the _fn suffix on all algorithms
-	const auto algorithmChain = or_else_fn([] { throw std::runtime_error{ "invalid optional." }; })
+	const auto algorithmChain = or_else_fn([] { throw std::runtime_error{"invalid optional."}; })
 								| and_then_fn(
 									square
 									| to_string
@@ -348,7 +370,7 @@ TEST_CASE(
 								)
 								| value_or_fn("not set");
 
-	const std::string result = algorithmChain(std::optional{ 42 });
+	const std::string result = algorithmChain(std::optional{42});
 
 	REQUIRE(result == "1764");
 	//! [algorithm chain functional composition]

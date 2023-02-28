@@ -9,18 +9,18 @@
 #include "../helper.hpp"
 
 #include "Simple-Utility/nullables/adapter.hpp"
-#include "Simple-Utility/nullables/value_or.hpp"
 #include "Simple-Utility/nullables/and_then.hpp"
-#include "Simple-Utility/nullables/or_else.hpp"
 #include "Simple-Utility/nullables/fwd_value.hpp"
+#include "Simple-Utility/nullables/or_else.hpp"
+#include "Simple-Utility/nullables/value_or.hpp"
 
 #include "Simple-Utility/nullables/std_optional.hpp"
 
 #include "Simple-Utility/functional/tuple.hpp"
 
 #include <algorithm>
-#include <vector>
 #include <map>
+#include <vector>
 
 namespace your_ns
 {
@@ -41,7 +41,7 @@ namespace your_ns
 	[[nodiscard]]
 	constexpr sl::nullables::adapter<your_type, your_type> to_nullables_adapter(const your_type& object)
 	{
-		return { your_type{ 0 }, object };
+		return {your_type{0}, object};
 	}
 }
 
@@ -67,8 +67,8 @@ TEST_CASE("adapter satisfies the requirements of input_nullables.", "[nullables]
 TEST_CASE("adapter is constructible with null object.", "[nullables][adapter]")
 {
 	using itr_t = std::vector<int>::const_iterator;
-	const std::vector v{ 1, 2, 3, 4 };
-	adapter<itr_t, itr_t> a{ std::end(v) };
+	const std::vector v{1, 2, 3, 4};
+	adapter<itr_t, itr_t> a{std::end(v)};
 
 	REQUIRE(a == adapter_null);
 }
@@ -76,7 +76,7 @@ TEST_CASE("adapter is constructible with null object.", "[nullables][adapter]")
 TEST_CASE("adapter is constructible with adapter_null_t when null object can be default constructed.", "[nullables][adapter]")
 {
 	using itr_t = std::vector<int>::const_iterator;
-	adapter<itr_t, itr_t> a{ adapter_null };
+	adapter<itr_t, itr_t> a{adapter_null};
 
 	REQUIRE(a == adapter_null);
 }
@@ -84,16 +84,16 @@ TEST_CASE("adapter is constructible with adapter_null_t when null object can be 
 TEST_CASE("adapter is constructible with null object with explizit in_place_null tag.", "[nullables][adapter]")
 {
 	using itr_t = std::vector<int>::const_iterator;
-	const std::vector v{ 1, 2, 3, 4 };
-	adapter<itr_t, itr_t> a{ in_place_null, std::end(v) };
+	const std::vector v{1, 2, 3, 4};
+	adapter<itr_t, itr_t> a{in_place_null, std::end(v)};
 
 	REQUIRE(a == adapter_null);
 }
 
 TEST_CASE("adapter is constructible from pair of iterators.", "[nullables][adapter]")
 {
-	const std::vector v{ 1, 2, 3, 4 };
-	adapter a{ std::end(v), std::begin(v) };
+	const std::vector v{1, 2, 3, 4};
+	adapter a{std::end(v), std::begin(v)};
 
 	REQUIRE(a != adapter_null);
 }
@@ -101,8 +101,8 @@ TEST_CASE("adapter is constructible from pair of iterators.", "[nullables][adapt
 TEST_CASE("adapter can be null-assigned.", "[nullables][adapter]")
 {
 	using itr_t = std::vector<int>::const_iterator;
-	const std::vector v{ 1, 2, 3, 4 };
-	adapter<itr_t, itr_t> a{ std::end(v) };
+	const std::vector v{1, 2, 3, 4};
+	adapter<itr_t, itr_t> a{std::end(v)};
 
 	a = adapter_null;
 
@@ -112,17 +112,21 @@ TEST_CASE("adapter can be null-assigned.", "[nullables][adapter]")
 TEST_CASE("adapter can be re-assigned later on.", "[nullables][adapter]")
 {
 	using itr_t = std::vector<int>::const_iterator;
-	const std::vector v{ 1, 2, 3, 4 };
-	adapter<itr_t, itr_t> a{ std::end(v) };
+	const std::vector v{1, 2, 3, 4};
+	adapter<itr_t, itr_t> a{std::end(v)};
 
 	a = std::begin(v);
 
 	REQUIRE(a != adapter_null);
 }
 
-TEST_CASE("adapter can be used with value_or algorithms.", "[nullables][adapter][algorithm]")
+TEMPLATE_LIST_TEST_CASE(
+	"adapter can be used with value_or algorithms.",
+	"[nullables][adapter][algorithm]",
+	all_ref_mods_list
+)
 {
-	const std::vector v{ 1, 2, 3, 4 };
+	const std::vector v{1, 2, 3, 4};
 
 	const auto [searchedValue, expectedValue] = GENERATE(
 		(table<int, int>)({
@@ -130,19 +134,18 @@ TEST_CASE("adapter can be used with value_or algorithms.", "[nullables][adapter]
 			{ -1, 1337 }
 			})
 	);
-	adapter a{ std::end(v), std::ranges::find(v, searchedValue) };
+	adapter a{std::end(v), std::ranges::find(v, searchedValue)};
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
-	const int value = cast(a, refMod) | value_or(1337);
+	const int value = TestType::cast(a) | value_or(1337);
 
 	REQUIRE(value == expectedValue);
 }
 
 TEST_CASE("adapter can be constructed from borrowed ranges and reassigned later on.", "[nullables][adapter]")
 {
-	const std::vector v{ 1, 2, 3, 4 };
+	const std::vector v{1, 2, 3, 4};
 
-	const int value = (adapter{ v } = std::ranges::find(v, 2))
+	const int value = (adapter{v} = std::ranges::find(v, 2))
 					| value_or(1337);
 
 	REQUIRE(value == 2);
@@ -150,9 +153,9 @@ TEST_CASE("adapter can be constructed from borrowed ranges and reassigned later 
 
 TEST_CASE("fsdadapter can be constructed from borrowed ranges and reassigned later on.", "[nullables][adapter]")
 {
-	const std::vector v{ 1, 2, 3, 4 };
+	const std::vector v{1, 2, 3, 4};
 
-	const int value = (adapter{ v } = std::ranges::find(v, 2))
+	const int value = (adapter{v} = std::ranges::find(v, 2))
 					| and_then(sl::functional::as<std::optional<int>>)
 					| value_or(1337);
 
@@ -161,9 +164,9 @@ TEST_CASE("fsdadapter can be constructed from borrowed ranges and reassigned lat
 
 TEST_CASE("adapter can be used with custom types.", "[nullables][adapter][customization]")
 {
-	const your_ns::your_type object{ 42 };
+	const your_ns::your_type object{42};
 
-	const int value = adapter{ object } | value_or(1337);
+	const int value = adapter{object} | value_or(1337);
 
 	REQUIRE(value == 42);
 }
@@ -179,8 +182,8 @@ TEST_CASE("adapter can simplfy code dealing with iterators.", "[nullables][adapt
 	namespace na = sl::nullables;
 
 	const std::map<int, const char*> global_storage{
-		{ 42, "Hello, World!" },
-		{ 1337, "Insert Coin" }
+		{42, "Hello, World!"},
+		{1337, "Insert Coin"}
 	};
 
 	const auto get_from_storage_stl = [&](const int key) -> std::optional<std::string_view>
@@ -194,7 +197,7 @@ TEST_CASE("adapter can simplfy code dealing with iterators.", "[nullables][adapt
 
 	const auto get_from_storage_adapted = [&](const int key)
 	{
-		return na::adapter{ global_storage.end(), global_storage.find(key) }
+		return na::adapter{global_storage.end(), global_storage.find(key)}
 				| na::and_then(fn::tuple::get_at<1> | fn::as<std::optional<std::string_view>>);
 	};
 	//! [adapter comparison]

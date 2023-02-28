@@ -22,54 +22,63 @@ namespace
 	constexpr auto variadicAdd = [](std::integral auto... args) { return (args + ... + 0); };
 }
 
-TEST_CASE("transform_fn is invocable.", "[functional][transform]")
+TEMPLATE_LIST_TEST_CASE(
+	"transform_fn is invocable.",
+	"[functional][transform]",
+	all_ref_mods_list
+)
 {
-	transform_fn transform{ times3 };
+	transform_fn transform{times3};
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
-	REQUIRE(std::invoke(cast(transform, refMod), 42) == 126);
+	REQUIRE(std::invoke(TestType::cast(transform), 42) == 126);
 }
 
-TEST_CASE("transform_fn is pipe composable with operator | as left-hand-side", "[functional][transform]")
+TEMPLATE_LIST_TEST_CASE(
+	"transform_fn is pipe composable with operator | as left-hand-side",
+	"[functional][transform]",
+	all_ref_mods_cart2_list
+)
 {
 	auto transform_raw = times3;
-	transform_fn transform{ add42 };
+	transform_fn transform{add42};
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const transform_fn composedTransform = cast(transform, lhsRefMod) | cast(transform_raw, rhsRefMod);
+	const transform_fn composedTransform = TestType::cast_lhs(transform) | TestType::cast_rhs(transform_raw);
 
 	REQUIRE(composedTransform(1337) == 4137);
 }
 
-TEST_CASE("transform_fn is pipe composable with operator | as right-hand-side", "[functional][transform]")
+TEMPLATE_LIST_TEST_CASE(
+	"transform_fn is pipe composable with operator | as right-hand-side",
+	"[functional][transform]",
+	all_ref_mods_cart2_list
+)
 {
 	auto transform_raw = times3;
-	transform_fn transform{ add42 };
+	transform_fn transform{add42};
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const transform_fn composedTransform = cast(transform_raw, lhsRefMod) | cast(transform, rhsRefMod);
+	const transform_fn composedTransform = TestType::cast_lhs(transform_raw) | TestType::cast_rhs(transform);
 
 	REQUIRE(composedTransform(1337) == 4053);
 }
 
-TEST_CASE("transform_fn is pipe composable as both sides of operator |.", "[functional][transform]")
+TEMPLATE_LIST_TEST_CASE(
+	"transform_fn is pipe composable as both sides of operator |.",
+	"[functional][transform]",
+	all_ref_mods_cart2_list
+)
 {
-	transform_fn transformLhs{ times3 };
-	transform_fn transformRhs{ add42 };
+	transform_fn transformLhs{times3};
+	transform_fn transformRhs{add42};
 
-	const auto& lhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const auto& rhsRefMod = GENERATE(make_all_ref_mods_generator());
-	const transform_fn composedTransform = cast(transformLhs, lhsRefMod) | cast(transformRhs, rhsRefMod);
+	const transform_fn composedTransform = TestType::cast_lhs(transformLhs) | TestType::cast_rhs(transformRhs);
 
 	REQUIRE(composedTransform(1337) == 4053);
 }
 
 TEST_CASE("transform_fn can be chained in arbitrary length.", "[functional][transform]")
 {
-	const transform_fn composedTransform = transform_fn{ add42 }
-											| transform_fn{ add42 }
+	const transform_fn composedTransform = transform_fn{add42}
+											| transform_fn{add42}
 											| add42;
 
 	REQUIRE(composedTransform(1) == 127);
@@ -78,7 +87,7 @@ TEST_CASE("transform_fn can be chained in arbitrary length.", "[functional][tran
 TEST_CASE("transform_fn can be used to project to different types.", "[functional][transform][example]")
 {
 	//! [functional piped]
-	transform_fn comp = transform_fn{ add42 }
+	transform_fn comp = transform_fn{add42}
 						| [](const int x) { return std::to_string(x); };
 
 	REQUIRE(comp(1) == "43");
@@ -87,8 +96,8 @@ TEST_CASE("transform_fn can be used to project to different types.", "[functiona
 
 TEST_CASE("more complex composition_fn is evaluated in deterministic manner.", "[functional][transform]")
 {
-	transform_fn comp = (transform_fn{ add42 } | times3)
-						| (transform_fn{ [](const int x) { return x - 5; } } | times3);
+	transform_fn comp = (transform_fn{add42} | times3)
+						| (transform_fn{[](const int x) { return x - 5; }} | times3);
 
 	REQUIRE(comp(3) == 390);
 }
@@ -102,12 +111,24 @@ TEMPLATE_TEST_CASE_SIG(
 	(1377, 42, 1337, -2)
 )
 {
-	transform_fn transform{ variadicAdd };
+	transform_fn transform{variadicAdd};
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
-	const transform_fn curriedTransform = (cast(transform, refMod) << ... << VValues);
+	const transform_fn curriedTransform = (transform << ... << VValues);
 
 	REQUIRE(curriedTransform() == VExpected);
+}
+
+TEMPLATE_LIST_TEST_CASE(
+	"transform_fn can be front curried from all reference types.",
+	"[functional][transform]",
+	all_ref_mods_list
+)
+{
+	transform_fn transform{variadicAdd};
+
+	const transform_fn curriedTransform = TestType::cast(transform) << 42 << 3;
+
+	REQUIRE(curriedTransform() == 45);
 }
 
 TEST_CASE("front curried arguments to transform_fn will be applied in correct order.", "[functional][transform]")
@@ -121,8 +142,8 @@ TEST_CASE("front curried arguments to transform_fn will be applied in correct or
 
 TEST_CASE("front curried transform_fn can be piped", "[functional][transform]")
 {
-	transform_fn transform = transform_fn{ variadicAdd } << 42 << -2
-							| transform_fn{ std::multiplies{} } << 2;
+	transform_fn transform = transform_fn{variadicAdd} << 42 << -2
+							| transform_fn{std::multiplies{}} << 2;
 
 	REQUIRE(transform(7, 3) == 100);
 }
@@ -136,12 +157,24 @@ TEMPLATE_TEST_CASE_SIG(
 	(1377, 42, 1337, -2)
 )
 {
-	transform_fn transform{ variadicAdd };
+	constexpr transform_fn transform{variadicAdd};
 
-	const auto& refMod = GENERATE(make_all_ref_mods_generator());
-	const transform_fn curriedTransform = (cast(transform, refMod) >> ... >> VValues);
+	const transform_fn curriedTransform = (transform >> ... >> VValues);
 
 	REQUIRE(curriedTransform() == VExpected);
+}
+
+TEMPLATE_LIST_TEST_CASE(
+	"transform_fn can be back curried from all reference types.",
+	"[functional][transform]",
+	all_ref_mods_list
+)
+{
+	transform_fn transform{variadicAdd};
+
+	const transform_fn curriedTransform = TestType::cast(transform) >> 42 >> 3;
+
+	REQUIRE(curriedTransform() == 45);
 }
 
 TEST_CASE("back curried arguments to transform_fn will be applied in correct order.", "[functional][transform]")
@@ -155,8 +188,8 @@ TEST_CASE("back curried arguments to transform_fn will be applied in correct ord
 
 TEST_CASE("back curried transform_fn can be piped", "[functional][transform]")
 {
-	transform_fn transform = transform_fn{ variadicAdd } >> 42 >> -2
-							| transform_fn{ std::multiplies{} } >> 2;
+	transform_fn transform = transform_fn{variadicAdd} >> 42 >> -2
+							| transform_fn{std::multiplies{}} >> 2;
 
 	REQUIRE(transform(7, 3) == 100);
 }
@@ -167,8 +200,9 @@ struct explicitly_constructible
 	T t{};
 
 	explicit explicitly_constructible(T t)
-		: t{ t }
-	{}
+		: t{t}
+	{
+	}
 
 	[[nodiscard]]
 	bool operator ==(T other) const
