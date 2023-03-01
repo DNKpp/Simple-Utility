@@ -10,6 +10,7 @@
 
 #include "Simple-Utility/functional/overloaded.hpp"
 
+#include <functional>
 #include <variant>
 
 using namespace sl::functional;
