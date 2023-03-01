@@ -27,6 +27,13 @@ namespace sl::functional
 		using TFunctions::operator()...;
 	};
 
+	/**
+	 * \brief Deduction guide of overloaded type.
+	 * \tparam TFunctions The function types.
+	 */
+	template <class... TFunctions>
+	overloaded(TFunctions...) -> overloaded<TFunctions...>;
+
 	/** @} */
 }
 
