@@ -30,7 +30,7 @@ TEMPLATE_LIST_TEST_CASE(
 	REQUIRE(result == value);
 }
 
-TEST_CASE("overloaed", "[functional][overloaded]")
+TEST_CASE("overloaded invokes correct overload.", "[functional][overloaded]")
 {
 	const auto& value = GENERATE(as<std::variant<int, std::string>>{}, 42, "Hello, World!");
 
