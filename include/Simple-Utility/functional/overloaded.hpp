@@ -18,7 +18,7 @@ namespace sl::functional
 	 * from which the best match will be selected during invocation.
 	 * \tparam TFunctions The function types.
 	 *
-	 * \note All signatures must clearly be distinguishable from each other.
+	 * \note All parameter sets must be distinguishable from each other.
 	 */
 	template <class... TFunctions>
 	struct overloaded
