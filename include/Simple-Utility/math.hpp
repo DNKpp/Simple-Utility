@@ -54,11 +54,11 @@ namespace sl::math
 	 * \details This function is a more convenient version of the ``std::remquo`` function and simply forwards the call to that.
 	 */
 	constexpr auto remquo = [](const auto x, const auto y) SL_CONSTEXPR_MATH
-		requires requires { std::remquo(x, x, nullptr); }
+			requires requires { std::remquo(x, x, nullptr); }
 	{
 		int quo{};
-		const auto remainder{ std::remquo(x, y, &quo) };
-		return remquo_result{ remainder, quo };
+		const auto remainder{std::remquo(x, y, &quo)};
+		return remquo_result{remainder, quo};
 	};
 
 	/**
@@ -90,11 +90,11 @@ namespace sl::math
 	 * \details This function is a more convenient version of the ``std::frexp`` function and simply forwards the call to that.
 	 */
 	constexpr auto frexp = [](const auto value) SL_CONSTEXPR_MATH
-		requires requires { std::frexp(value, nullptr); }
+			requires requires { std::frexp(value, nullptr); }
 	{
 		int exp{};
-		const auto fraction{ std::frexp(value, &exp) };
-		return frexp_result{ fraction, exp };
+		const auto fraction{std::frexp(value, &exp)};
+		return frexp_result{fraction, exp};
 	};
 
 	/**
@@ -119,8 +119,8 @@ namespace sl::math
 	constexpr auto modf = []<std::floating_point T>(const T value) SL_CONSTEXPR_MATH
 	{
 		T integral{};
-		T fraction{ std::modf(value, &integral) };
-		return modf_result<T>{ integral, fraction };
+		T fraction{std::modf(value, &integral)};
+		return modf_result<T>{integral, fraction};
 	};
 
 	/** \} */
