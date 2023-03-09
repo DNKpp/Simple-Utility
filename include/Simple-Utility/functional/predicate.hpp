@@ -198,7 +198,7 @@ namespace sl::functional
 	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_equal`` is used instead.
 	 */
 	inline static constexpr predicate_fn equal{
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) noexcept(noexcept(std::declval<TLhs>() == std::declval<TRhs>()))
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) noexcept(noexcept(std::declval<TLhs>() == std::declval<TRhs>()))  // NOLINT(clang-diagnostic-float-equal)
 		{
 			if constexpr (std::integral<std::remove_cvref_t<TLhs>> && std::integral<std::remove_cvref_t<TRhs>>)
 			{
@@ -206,7 +206,7 @@ namespace sl::functional
 			}
 			else
 			{
-				static_assert(requires { { lhs != rhs } -> std::convertible_to<bool>; },
+				static_assert(requires { { lhs == rhs } -> std::convertible_to<bool>; },
 					"Operands are not usable in operator == expressions.");
 
 				return std::forward<TLhs>(lhs) == std::forward<TRhs>(rhs);
@@ -219,7 +219,7 @@ namespace sl::functional
 	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_not_equal`` is used instead.
 	 */
 	inline static constexpr predicate_fn not_equal{
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) noexcept(noexcept(std::declval<TLhs>() != std::declval<TRhs>()))
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) noexcept(noexcept(std::declval<TLhs>() != std::declval<TRhs>()))  // NOLINT(clang-diagnostic-float-equal)
 		{
 			if constexpr (std::integral<std::remove_cvref_t<TLhs>> && std::integral<std::remove_cvref_t<TRhs>>)
 			{
