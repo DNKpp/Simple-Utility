@@ -9,13 +9,13 @@
 #pragma once
 
 #include "Simple-Utility/functional/base.hpp"
-#include "Simple-Utility/functional/operators/pipe.hpp"
 #include "Simple-Utility/functional/operators/bind.hpp"
 #include "Simple-Utility/functional/operators/conjunction.hpp"
 #include "Simple-Utility/functional/operators/disjunction.hpp"
-#include "Simple-Utility/functional/operators/negation.hpp"
 #include "Simple-Utility/functional/operators/equal.hpp"
 #include "Simple-Utility/functional/operators/equivalent.hpp"
+#include "Simple-Utility/functional/operators/negation.hpp"
+#include "Simple-Utility/functional/operators/pipe.hpp"
 
 namespace sl::functional
 {
@@ -79,6 +79,7 @@ namespace sl::functional
 		>
 	{
 		using closure_t = closure_base_fn<TFunc>;
+
 	public:
 		/**
 		 * \brief Explicitly created forwarding constructor.
@@ -93,13 +94,12 @@ namespace sl::functional
 		/**\cond conditional-explicit*/
 		explicit(detail::force_explicit_constructor_v<closure_t, TArgs...>)
 		/**\endcond*/
-		predicate_fn
-		(
+		predicate_fn(
 			TArgs&&... args
-		)
-		noexcept(std::is_nothrow_constructible_v<closure_t, TArgs...>)
-			: closure_t{ std::forward<TArgs>(args)... }
-		{}
+		) noexcept(std::is_nothrow_constructible_v<closure_t, TArgs...>)
+			: closure_t{std::forward<TArgs>(args)...}
+		{
+		}
 	};
 
 	/**
@@ -113,15 +113,20 @@ namespace sl::functional
 	 * \brief Functional object, which compares its two operands less.
 	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_less`` is used instead.
 	 */
-	inline constexpr predicate_fn less{
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
+	inline static constexpr predicate_fn less{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) noexcept(noexcept(std::declval<TLhs>() < std::declval<TRhs>()))
 		{
-			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
+			if constexpr (std::integral<std::remove_cvref_t<TLhs>> && std::integral<std::remove_cvref_t<TRhs>>)
 			{
 				return std::cmp_less(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
 			}
 			else
+			{
+				static_assert(requires { { lhs < rhs } -> std::convertible_to<bool>; },
+					"Operands are not usable in operator < expressions.");
+
 				return std::forward<TLhs>(lhs) < std::forward<TRhs>(rhs);
+			}
 		}
 	};
 
@@ -129,15 +134,20 @@ namespace sl::functional
 	 * \brief Functional object, which compares its two operands less-equal.
 	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_less_equal`` is used instead.
 	 */
-	inline constexpr predicate_fn less_equal{
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
+	inline static constexpr predicate_fn less_equal{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) noexcept(noexcept(std::declval<TLhs>() <= std::declval<TRhs>()))
 		{
-			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
+			if constexpr (std::integral<std::remove_cvref_t<TLhs>> && std::integral<std::remove_cvref_t<TRhs>>)
 			{
 				return std::cmp_less_equal(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
 			}
 			else
+			{
+				static_assert(requires { { lhs <= rhs } -> std::convertible_to<bool>; },
+					"Operands are not usable in operator <= expressions.");
+
 				return std::forward<TLhs>(lhs) <= std::forward<TRhs>(rhs);
+			}
 		}
 	};
 
@@ -145,15 +155,20 @@ namespace sl::functional
 	 * \brief Functional object, which compares its two operands greater.
 	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_greater`` is used instead.
 	 */
-	inline constexpr predicate_fn greater{
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
+	inline static constexpr predicate_fn greater{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) noexcept(noexcept(std::declval<TLhs>() > std::declval<TRhs>()))
 		{
-			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
+			if constexpr (std::integral<std::remove_cvref_t<TLhs>> && std::integral<std::remove_cvref_t<TRhs>>)
 			{
 				return std::cmp_greater(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
 			}
 			else
+			{
+				static_assert(requires { { lhs > rhs } -> std::convertible_to<bool>; },
+					"Operands are not usable in operator > expressions.");
+
 				return std::forward<TLhs>(lhs) > std::forward<TRhs>(rhs);
+			}
 		}
 	};
 
@@ -161,15 +176,20 @@ namespace sl::functional
 	 * \brief Functional object, which compares its two operands greater-equal.
 	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_greater_equal`` is used instead.
 	 */
-	inline constexpr predicate_fn greater_equal{
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
+	inline static constexpr predicate_fn greater_equal{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) noexcept(noexcept(std::declval<TLhs>() >= std::declval<TRhs>()))
 		{
-			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
+			if constexpr (std::integral<std::remove_cvref_t<TLhs>> && std::integral<std::remove_cvref_t<TRhs>>)
 			{
 				return std::cmp_greater_equal(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
 			}
 			else
+			{
+				static_assert(requires { { lhs >= rhs } -> std::convertible_to<bool>; },
+					"Operands are not usable in operator >= expressions.");
+
 				return std::forward<TLhs>(lhs) >= std::forward<TRhs>(rhs);
+			}
 		}
 	};
 
@@ -177,15 +197,20 @@ namespace sl::functional
 	 * \brief Functional object, which compares its two operands equal.
 	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_equal`` is used instead.
 	 */
-	inline constexpr predicate_fn equal{
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
+	inline static constexpr predicate_fn equal{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) noexcept(noexcept(std::declval<TLhs>() == std::declval<TRhs>()))
 		{
-			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
+			if constexpr (std::integral<std::remove_cvref_t<TLhs>> && std::integral<std::remove_cvref_t<TRhs>>)
 			{
 				return std::cmp_equal(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
 			}
 			else
+			{
+				static_assert(requires { { lhs != rhs } -> std::convertible_to<bool>; },
+					"Operands are not usable in operator == expressions.");
+
 				return std::forward<TLhs>(lhs) == std::forward<TRhs>(rhs);
+			}
 		}
 	};
 
@@ -193,15 +218,20 @@ namespace sl::functional
 	 * \brief Functional object, which compares its two operands not-equal.
 	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_not_equal`` is used instead.
 	 */
-	inline constexpr predicate_fn not_equal{
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
+	inline static constexpr predicate_fn not_equal{
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) noexcept(noexcept(std::declval<TLhs>() != std::declval<TRhs>()))
 		{
-			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
+			if constexpr (std::integral<std::remove_cvref_t<TLhs>> && std::integral<std::remove_cvref_t<TRhs>>)
 			{
 				return std::cmp_not_equal(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
 			}
 			else
+			{
+				static_assert(requires { { lhs != rhs } -> std::convertible_to<bool>; },
+					"Operands are not usable in operator != expressions.");
+
 				return std::forward<TLhs>(lhs) != std::forward<TRhs>(rhs);
+			}
 		}
 	};
 
