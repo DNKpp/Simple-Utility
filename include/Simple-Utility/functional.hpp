@@ -19,6 +19,7 @@
 #include "Simple-Utility/functional/transform.hpp"
 #include "Simple-Utility/functional/overloaded.hpp"
 
+#include "Simple-Utility/functional/arithmetic.hpp"
 #include "Simple-Utility/functional/compare.hpp"
 #include "Simple-Utility/functional/tuple.hpp"
 
