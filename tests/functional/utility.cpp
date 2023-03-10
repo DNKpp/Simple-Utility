@@ -1,4 +1,4 @@
-//          Copyright Dominic Koepke 2019 - 2022.
+//          Copyright Dominic Koepke 2019 - 2023.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -17,8 +17,9 @@ struct explicitly_constructible
 	T t{};
 
 	explicit explicitly_constructible(T t)
-		: t{ t }
-	{}
+		: t{t}
+	{
+	}
 
 	[[nodiscard]]
 	bool operator ==(T other) const
@@ -46,7 +47,7 @@ TEST_CASE(
 	"[functional][transform][utility]"
 )
 {
-	std::optional<int> opt{ 42 };
+	std::optional<int> opt{42};
 
 	REQUIRE(util::dereference(opt) == 42);
 	REQUIRE(util::dereference(std::as_const(opt)) == 42);
@@ -55,7 +56,7 @@ TEST_CASE(
 
 TEST_CASE("util::addressof returns the address of the given argument.", "[functional][transform][utility]")
 {
-	int value{ 1337 };
+	int value{1337};
 
 	REQUIRE(util::addressof(value) == &value);
 	REQUIRE(util::addressof(std::as_const(value)) == &value);
