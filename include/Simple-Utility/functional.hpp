@@ -8,15 +8,18 @@
 
 #pragma once
 
-#include "Simple-Utility/functional/base.hpp"
-#include "Simple-Utility/functional/predicate.hpp"
-#include "Simple-Utility/functional/transform.hpp"
-#include "Simple-Utility/functional/tuple.hpp"
-
 #include "Simple-Utility/functional/operators/bind.hpp"
 #include "Simple-Utility/functional/operators/conjunction.hpp"
 #include "Simple-Utility/functional/operators/disjunction.hpp"
 #include "Simple-Utility/functional/operators/negation.hpp"
 #include "Simple-Utility/functional/operators/pipe.hpp"
+
+#include "Simple-Utility/functional/base.hpp"
+#include "Simple-Utility/functional/predicate.hpp"
+#include "Simple-Utility/functional/transform.hpp"
+#include "Simple-Utility/functional/overloaded.hpp"
+
+#include "Simple-Utility/functional/compare.hpp"
+#include "Simple-Utility/functional/tuple.hpp"
 
 #endif
