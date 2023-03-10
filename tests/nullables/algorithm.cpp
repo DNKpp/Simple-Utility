@@ -58,9 +58,9 @@ TEMPLATE_LIST_TEST_CASE(
 			})
 	);
 
-	const sf::transform_fn transform = std::identity{}
+	const sl::functional::transform_fn transform = std::identity{}
 													| value_or_fn('x')
-													| sf::util::as<int>;
+													| sl::functional::util::as<int>;
 
 	REQUIRE(transform(TestType::cast(sourceOptional)) == expected);
 }
@@ -99,7 +99,7 @@ TEMPLATE_LIST_TEST_CASE(
 	);
 
 	bool invoked{false};
-	const sf::transform_fn transform = std::identity{}
+	const sl::functional::transform_fn transform = std::identity{}
 													| fwd_value_fn([&invoked](const char) { invoked = true; });
 
 	transform(TestType::cast(sourceOptional));
@@ -119,7 +119,7 @@ TEMPLATE_LIST_TEST_CASE(
 			{ nullptr, std::nullopt }
 			})
 	);
-	auto algorithm = and_then(sf::util::as<std::optional<char>>);
+	auto algorithm = and_then(sl::functional::util::as<std::optional<char>>);
 
 	const std::optional<char> s = TestType::cast_lhs(sourceOptional) | TestType::cast_rhs(algorithm);
 
@@ -138,8 +138,8 @@ TEMPLATE_LIST_TEST_CASE(
 			{ nullptr, false }
 			})
 	);
-	const sf::transform_fn transform = std::identity{}
-													| and_then_fn(sf::util::as<std::optional<char>>)
+	const sl::functional::transform_fn transform = std::identity{}
+													| and_then_fn(sl::functional::util::as<std::optional<char>>)
 													| &std::optional<char>::has_value;
 
 	REQUIRE(transform(TestType::cast(sourceOptional)) == expected);
@@ -193,10 +193,10 @@ TEMPLATE_LIST_TEST_CASE(
 			})
 	);
 
-	const sf::predicate_fn predicate = std::identity{}
+	const sl::functional::predicate_fn predicate = std::identity{}
 													| or_else_fn([] { throw std::exception{}; })
 													| [](auto t) { return t; }
-													| sf::equal >> nullptr;
+													| sl::functional::equal >> nullptr;
 
 	if (expectThrow)
 	{
