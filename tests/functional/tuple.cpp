@@ -6,7 +6,7 @@
 #include <catch2/catch_template_test_macros.hpp>
 
 #include "Simple-Utility/functional/tuple.hpp"
-#include "Simple-Utility/functional/predicate.hpp"
+#include "Simple-Utility/functional/compare.hpp"
 
 using namespace sl::functional;
 
@@ -90,7 +90,7 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	const std::tuple tuple{ VValue... };
 
-	auto func = tuple::apply(tuple::tie | equal << tuple);
+	auto func = tuple::apply(tuple::tie | compare::equal << tuple);
 
 	REQUIRE(func(tuple));
 	REQUIRE(std::as_const(func)(tuple));

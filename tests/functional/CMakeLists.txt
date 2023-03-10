@@ -6,5 +6,6 @@ target_sources(
 	"transform.cpp"
 	"tuple.cpp"
 	"overloaded.cpp"
+	"compare.cpp"
 	"utility.cpp"
 )
