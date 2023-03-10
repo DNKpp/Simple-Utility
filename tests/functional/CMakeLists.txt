@@ -7,5 +7,6 @@ target_sources(
 	"tuple.cpp"
 	"overloaded.cpp"
 	"compare.cpp"
+	"arithmetic.cpp"
 	"utility.cpp"
 )
