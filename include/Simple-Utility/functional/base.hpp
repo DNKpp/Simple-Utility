@@ -210,7 +210,7 @@ namespace sl::functional
 		}
 
 	private:
-		[[no_unique_address]]
+		[[no_unique_address]] [[msvc::no_unique_address]]
 		function_type m_Func{};
 	};
 
@@ -363,7 +363,7 @@ namespace sl::functional
 		}
 
 	private:
-		[[no_unique_address]]
+		[[no_unique_address]] [[msvc::no_unique_address]]
 		operation_t m_Operation{};
 		function_storage_t m_Functions{};
 	};
