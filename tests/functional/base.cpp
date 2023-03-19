@@ -43,10 +43,12 @@ TEST_CASE("closure_base_fn satisfies derived_from_unified_base concept with clos
 	STATIC_REQUIRE(sl::derived_from_unified_base<result_t, detail::closure_base_tag>);
 }
 
+#if __has_cpp_attribute(no_unique_address) || __has_cpp_attribute(msvc::no_unique_address)
 TEST_CASE("closure_base_fn is an empty type if contained function is an empty type.", "[functional][base]")
 {
 	STATIC_REQUIRE(std::is_empty_v<decltype(closure_base_fn{trueFunc})>);
 }
+#endif
 
 TEMPLATE_TEST_CASE_SIG(
 	"unwrap_functional_result determines the first nested non-closure type.",
