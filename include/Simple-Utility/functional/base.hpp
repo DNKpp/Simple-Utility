@@ -214,6 +214,13 @@ namespace sl::functional
 		function_type m_Func{};
 	};
 
+	/**
+	 * \brief Deduction guide.
+	 * \tparam TFunc Type of the given value.
+	 */
+	template <class TFunc>
+	closure_base_fn(TFunc) -> closure_base_fn<TFunc>;
+
 	template <class T>
 	using closure_function_t = typename std::remove_cvref_t<T>::function_type;
 
