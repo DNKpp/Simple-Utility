@@ -1,5 +1,5 @@
 target_sources(
-	${PROJECT_NAME}-Tests
+	Simple-Utility-Tests
 	PRIVATE
 	"base.cpp"
 	"adapter.cpp"

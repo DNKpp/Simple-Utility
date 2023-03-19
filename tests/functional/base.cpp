@@ -1,11 +1,14 @@
-//          Copyright Dominic Koepke 2019 - 2022.
+//          Copyright Dominic Koepke 2019 - 2023.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include <catch2/catch_template_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 #include "../helper.hpp"
+
+#include <string>
 
 #include "Simple-Utility/functional/base.hpp"
 
@@ -18,8 +21,7 @@ namespace
 		template <class TCallArgsTuple, class... TFunctions>
 			requires (1 < sizeof...(TFunctions))
 		[[nodiscard]]
-		constexpr bool operator ()
-		(
+		constexpr bool operator ()(
 			TCallArgsTuple&& callArgsTuple,
 			TFunctions&&... functions
 		) const
@@ -31,8 +33,8 @@ namespace
 	inline constexpr auto trueFunc = [](auto&&...) { return true; };
 	inline constexpr auto falseFunc = [](auto&&...) { return false; };
 
-	inline constexpr closure_base_fn<std::remove_cvref_t<decltype(trueFunc)>> envelopedTrueFunc{ trueFunc };
-	inline constexpr closure_base_fn<std::remove_cvref_t<decltype(falseFunc)>> envelopedFalseFunc{ falseFunc };
+	inline constexpr closure_base_fn<std::remove_cvref_t<decltype(trueFunc)>> envelopedTrueFunc{trueFunc};
+	inline constexpr closure_base_fn<std::remove_cvref_t<decltype(falseFunc)>> envelopedFalseFunc{falseFunc};
 }
 
 TEST_CASE("closure_base_fn satisfies derived_from_unified_base concept with closure_base_tag>.", "[functional][base]")
@@ -40,6 +42,13 @@ TEST_CASE("closure_base_fn satisfies derived_from_unified_base concept with clos
 	using result_t = decltype(envelopedTrueFunc);
 	STATIC_REQUIRE(sl::derived_from_unified_base<result_t, detail::closure_base_tag>);
 }
+
+#if __has_cpp_attribute(no_unique_address) || __has_cpp_attribute(msvc::no_unique_address)
+TEST_CASE("closure_base_fn is an empty type if contained function is an empty type.", "[functional][base]")
+{
+	STATIC_REQUIRE(std::is_empty_v<decltype(closure_base_fn{trueFunc})>);
+}
+#endif
 
 TEMPLATE_TEST_CASE_SIG(
 	"unwrap_functional_result determines the first nested non-closure type.",
@@ -61,7 +70,7 @@ TEMPLATE_TEST_CASE_SIG(
 
 TEST_CASE("composition_fn satisfies derived_from_unified_base concept with composition_base_tag>.", "[functional][base]")
 {
-	using result_t = decltype(composition_fn{ operation_mock_fn{}, envelopedTrueFunc, trueFunc });
+	using result_t = decltype(composition_fn{operation_mock_fn{}, envelopedTrueFunc, trueFunc});
 	STATIC_REQUIRE(sl::derived_from_unified_base<result_t, detail::composition_base_tag>);
 }
 
@@ -84,101 +93,144 @@ TEST_CASE("composition_fn unwraps functionals on construction.", "[functional][b
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"composition_fn is invocable in arbitrary state.",
+	"composition_fn is invocable with any possible param combination.",
 	"[functional][base]",
-	((template <class> class TTypeMod, auto... VArgs), TTypeMod, VArgs...),
-	(as_lvalue_ref_t, 0),
-	(as_lvalue_ref_t, 1, nullptr),
-	(as_const_lvalue_ref_t, 0),
-	(as_const_lvalue_ref_t, 1, nullptr),
-	(as_rvalue_ref_t, 0),
-	(as_rvalue_ref_t, 1, nullptr)
+	((auto... VArgs), VArgs...),
+	(0),
+	(1, nullptr)
 )
 {
-	composition_fn trueComposition{ operation_mock_fn{}, falseFunc, envelopedFalseFunc };
-	composition_fn falseComposition{ operation_mock_fn{}, envelopedFalseFunc, trueFunc };
+	composition_fn trueComposition{operation_mock_fn{}, falseFunc, envelopedFalseFunc};
+	composition_fn falseComposition{operation_mock_fn{}, envelopedFalseFunc, trueFunc};
 
-	REQUIRE(apply_mod<TTypeMod>(trueComposition)(VArgs...));
-	REQUIRE(!apply_mod<TTypeMod>(falseComposition)(VArgs...));
+	REQUIRE(trueComposition());
+	REQUIRE(!falseComposition());
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
+	"composition_fn is invocable from any reference type.",
+	"[functional][base]",
+	all_ref_mods_list
+)
+{
+	composition_fn trueComposition{operation_mock_fn{}, falseFunc, envelopedFalseFunc};
+
+	REQUIRE(std::invoke(TestType::cast(trueComposition), 42));
+}
+
+TEMPLATE_PRODUCT_TEST_CASE(
 	"value_fn::value_type holds decayed value.",
 	"[functional][base]",
-	((bool VDummy, class TSource, class TExpected), VDummy, TSource, TExpected),
-	(true, int, int),
-	(true, int&, int),
-	(true, int*, int*),
-	(true, char[5], char*),
-	(true, const char[5], const char*),
-	(true, const char*, const char*),
-	(true, std::reference_wrapper<int>&, std::reference_wrapper<int>)
+	(
+		as_const_lvalue_ref_t,
+		as_lvalue_ref_t,
+		as_const_rvalue_ref_t,
+		as_rvalue_ref_t
+	),
+	(
+		int,
+		int*,
+		const int*,
+		char[5],
+		const char[5],
+		char[5][2],
+		const char[5][2],
+		std::string,
+		std::reference_wrapper<int>
+	)
 )
 {
-	using result_t = typename decltype(value_fn{ std::declval<TSource>() })::value_type;
+	using CTAD_value_fn = decltype(value_fn{std::declval<TestType>()});
+	using value_type = typename CTAD_value_fn::value_type;
 
-	STATIC_REQUIRE(std::same_as<result_t, TExpected>);
+	STATIC_REQUIRE(std::same_as<value_type, std::decay_t<TestType>>);
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"value_fn::reference_type holds reference type.",
+TEMPLATE_TEST_CASE(
+	"Invoking value_fn yields expected types.",
 	"[functional][base]",
-	((bool VDummy, class TSource, class TExpected), VDummy, TSource, TExpected),
-	(true, int, const int&),
-	(true, int&, const int&),
-	(true, int*, int* const&),
-	(true, int* const, int* const&),
-	(true, const int* const, const int* const&),
-	(true, char[5], char* const&),
-	(true, const char[5], const char* const&),
-	(true, std::reference_wrapper<int>&, int&),
-	(true, std::reference_wrapper<const int>&, const int&)
+	int,
+	int*,
+	const int*,
+	std::string,
+	std::reference_wrapper<int>,
+	std::reference_wrapper<const int>
 )
 {
-	using result_t = typename decltype(value_fn{ std::declval<TSource>() })::reference_type;
+	using const_lvalue_result_t = std::invoke_result_t<as_const_lvalue_ref_t<value_fn<TestType>>>;
+	using lvalue_result_t = std::invoke_result_t<as_lvalue_ref_t<value_fn<TestType>>>;
+	using const_rvalue_result_t = std::invoke_result_t<as_const_rvalue_ref_t<value_fn<TestType>>>;
+	using rvalue_result_t = std::invoke_result_t<as_rvalue_ref_t<value_fn<TestType>>>;
 
-	STATIC_REQUIRE(std::same_as<result_t, TExpected>);
+	STATIC_REQUIRE(std::same_as<const_lvalue_result_t, as_const_lvalue_ref_t<TestType>>);
+	STATIC_REQUIRE(std::same_as<lvalue_result_t, as_const_lvalue_ref_t<TestType>>);
+	STATIC_REQUIRE(std::same_as<const_rvalue_result_t, as_const_rvalue_ref_t<TestType>>);
+	STATIC_REQUIRE(std::same_as<rvalue_result_t, as_rvalue_ref_t<TestType>>);
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"value_fn supports arbitrary types.",
-	"[functional][base]",
-	((bool VDummy, template <class> class TMod, class TValue, class TExpected), VDummy, TMod, TValue, TExpected),
-	(true, as_lvalue_ref_t, int, const int&),
-	(true, as_const_lvalue_ref_t, int, const int&),
-	(true, as_rvalue_ref_t, int, int),
-	(true, as_lvalue_ref_t, int*, int* const&),
-	(true, as_const_lvalue_ref_t, int*, int* const&),
-	(true, as_rvalue_ref_t, int*, int*),
-	(true, as_lvalue_ref_t, char[5], char* const&),
-	(true, as_const_lvalue_ref_t, char[5], char* const&),
-	(true, as_rvalue_ref_t, char[5], char*)
-)
+TEMPLATE_LIST_TEST_CASE("value_fn supports trivial types.", "[functional][base]", all_ref_mods_list)
 {
-	TValue v{};
-	value_fn value{ v };
+	//! [value_fn trivial]
+	value_fn value{int{42}};
 
-	TExpected retrieved = apply_mod<TMod>(value)();
+	const int x = std::invoke(TestType::cast(value));
 
-	REQUIRE(retrieved == v);
+	REQUIRE(x == 42);
+	//! [value_fn trivial]
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"value_fn treats std::reference_wrapper types special.",
-	"[functional][base]",
-	((bool VDummy, template <class> class TMod), VDummy, TMod),
-	(true, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t)
-)
+TEMPLATE_LIST_TEST_CASE("value_fn supports array types.", "[functional][base]", all_ref_mods_list)
+{
+	//! [value_fn array]
+	int arr[3]{42, 1337, -1};
+	value_fn value{arr};
+
+	const int* dataBegin = std::invoke(TestType::cast(value));
+
+	REQUIRE(dataBegin == arr);
+	//! [value_fn array]
+}
+
+TEMPLATE_LIST_TEST_CASE("value_fn supports complex types.", "[functional][base]", all_ref_mods_list)
+{
+	//! [value_fn complex]
+	value_fn value{std::string{"Hello, World!"}};
+
+	const std::string str = std::invoke(TestType::cast(value));
+
+	REQUIRE_THAT(str, Catch::Matchers::Equals("Hello, World!"));
+	//! [value_fn complex]
+}
+
+TEMPLATE_LIST_TEST_CASE("value_fn supports std::reference_wrapper types.", "[functional][base]", all_ref_mods_list)
 {
 	//! [value_fn wrapped]
-	int x{ 42 };
-	value_fn value{ std::ref(x) };
+	int x{42};
+	value_fn value{std::ref(x)};
 
-	int& x_ref = apply_mod<TMod>(value)();
+	int& x_ref = std::invoke(TestType::cast(value));
 	x_ref = 1337;
 
 	REQUIRE(x == 1337);
 	//! [value_fn wrapped]
+}
+
+TEMPLATE_LIST_TEST_CASE("value_fn is copy- and move-constructible.", "[functional][base]", all_ref_mods_list)
+{
+	value_fn source{int{42}};
+	const value_fn target{TestType::cast(source)};
+
+	STATIC_REQUIRE(std::same_as<int, typename std::remove_cvref_t<decltype(target)>::value_type>);
+
+	REQUIRE(target() == 42);
+}
+
+TEMPLATE_LIST_TEST_CASE("value_fn is copy- and move-assignable.", "[functional][base]", all_ref_mods_list)
+{
+	value_fn source{int{42}};
+	value_fn<int> target{1337};
+
+	target = TestType::cast(source);
+
+	REQUIRE(target() == 42);
 }

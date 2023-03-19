@@ -1,0 +1,12 @@
+target_sources(
+	Simple-Utility-Tests
+	PRIVATE
+	"base.cpp"
+	"predicate.cpp"
+	"transform.cpp"
+	"tuple.cpp"
+	"overloaded.cpp"
+	"compare.cpp"
+	"arithmetic.cpp"
+	"utility.cpp"
+)

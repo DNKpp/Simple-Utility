@@ -4,7 +4,6 @@ env:
     GXX_VERSION: 11
     TESTS_DIR: out/tests
     COVERAGE_FILE: coverage.info
-    TEST_BUILD_FLAG: Simple-Utility_BUILD_TESTS
 
 on: [push, pull_request]
 
@@ -14,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install compiler
         run: |
             sudo apt-get update
@@ -28,7 +27,7 @@ jobs:
           CC: gcc
           CXX: g++
         run: |
-          cmake -D${{ env.TEST_BUILD_FLAG }}=ON -B ${{ env.TESTS_DIR }}/.. -S .
+          cmake -B ${{ env.TESTS_DIR }}/.. -S .
           cmake --build ${{ env.TESTS_DIR }}/.. -j4
 
       - name: Run tests
@@ -49,7 +48,7 @@ jobs:
           coverage-reports: ${{ env.COVERAGE_FILE }}
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         with:
           name: $GITHUB_REPOSITORY
           token: ${{ secrets.CODECOV_TOKEN }}

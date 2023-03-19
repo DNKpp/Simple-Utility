@@ -1,4 +1,4 @@
-//          Copyright Dominic Koepke 2019 - 2022.
+//          Copyright Dominic Koepke 2019 - 2023.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -11,8 +11,8 @@
 #include "Simple-Utility/functional/predicate.hpp"
 
 #include <algorithm>
-#include <vector>
 #include <optional>
+#include <vector>
 
 using namespace sl::functional;
 
@@ -26,122 +26,95 @@ inline constexpr auto variadicAllEqual = [](auto&& v, auto&&... vs)
 
 using empty_predicate_t = bool(*)();
 
-inline constexpr predicate_fn<empty_predicate_t> truePredicate{ trueFunc };
-inline constexpr predicate_fn<empty_predicate_t> falsePredicate{ falseFunc };
+inline constexpr predicate_fn<empty_predicate_t> truePredicate{trueFunc};
+inline constexpr predicate_fn<empty_predicate_t> falsePredicate{falseFunc};
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is constructed from predicate.",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TMod), VDummy, TMod),
-	(true, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t)
+	all_ref_mods_list
 )
 {
-	auto func{ trueFunc };
+	auto func{trueFunc};
 
-	predicate_fn<empty_predicate_t> predicate{ apply_mod<TMod>(func) };
+	predicate_fn<empty_predicate_t> predicate{TestType::cast(func)};
 
 	REQUIRE(predicate());
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is evaluated via operator ()",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TMod), VDummy, TMod),
-	(true, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t)
+	all_ref_mods_list
 )
 {
 	auto [sourcePredicate, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, bool>)({
 			{ trueFunc, true },
 			{ falseFunc, false }
 			})
 	);
+	predicate_fn predicate{sourcePredicate};
 
-	predicate_fn predicate{ sourcePredicate };
-
-	REQUIRE(apply_mod<TMod>(predicate)() == expectedResult);
+	REQUIRE(std::invoke(TestType::cast(predicate)) == expectedResult);
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is composable with operator && as left-hand-side",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TMod), VDummy, TMod),
-	(true, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t)
+	all_ref_mods_list
 )
 {
 	const auto& [chainedFunction, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, bool>)({
 			{ trueFunc, true },
 			{ falseFunc, false }
 			})
 	);
+	predicate_fn predicate{truePredicate};
 
-	predicate_fn predicate{ truePredicate };
-	const predicate_fn composedPredicate = apply_mod<TMod>(predicate) && chainedFunction;
+	const predicate_fn composedPredicate = TestType::cast(predicate) && chainedFunction;
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is composable with operator && as right-hand-side",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TMod), VDummy, TMod),
-	(true, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t)
+	all_ref_mods_list
 )
 {
 	const auto& [chainedFunction, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, bool>)({
 			{ trueFunc, true },
 			{ falseFunc, false }
 			})
 	);
+	predicate_fn predicate{truePredicate};
 
-	predicate_fn predicate{ truePredicate };
-	const predicate_fn composedPredicate = chainedFunction && apply_mod<TMod>(predicate);
+	const predicate_fn composedPredicate = chainedFunction && TestType::cast(predicate);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is composable as param on both sides of operator &&.",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
+	all_ref_mods_cart2_list
 )
 {
 	const auto& [lhsPredicate, rhsPredicate, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, empty_predicate_t, bool>)({
 			{ falseFunc, falseFunc, false },
 			{ trueFunc, falseFunc, false },
 			{ falseFunc, trueFunc, false },
 			{ trueFunc, trueFunc, true }
 			})
 	);
-	predicate_fn lhs{ lhsPredicate };
-	predicate_fn rhs{ rhsPredicate };
+	predicate_fn lhs{lhsPredicate};
+	predicate_fn rhs{rhsPredicate};
 
-	const predicate_fn composedPredicate = apply_mod<TLhsMod>(lhs) && apply_mod<TRhsMod>(rhs);
+	const predicate_fn composedPredicate = TestType::cast_lhs(lhs) && TestType::cast_rhs(rhs);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
@@ -156,81 +129,62 @@ TEST_CASE("operator && composed predicates get flattened", "[functional][predica
 	STATIC_REQUIRE(std::same_as<result_t, expected_t>);
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is composable with operator || as left-hand-side",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TMod), VDummy, TMod),
-	(true, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t)
+	all_ref_mods_list
 )
 {
 	const auto& [chainedFunction, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, bool>)({
 			{ trueFunc, true },
 			{ falseFunc, false }
 			})
 	);
+	predicate_fn predicate{falsePredicate};
 
-	predicate_fn predicate{ falsePredicate };
-	const predicate_fn composedPredicate = apply_mod<TMod>(predicate) || chainedFunction;
+	const predicate_fn composedPredicate = TestType::cast(predicate) || chainedFunction;
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is composable with operator || as right-hand-side",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TMod), VDummy, TMod),
-	(true, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t)
+	all_ref_mods_list
 )
 {
 	const auto& [chainedFunction, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, bool>)({
 			{ trueFunc, true },
 			{ falseFunc, false }
 			})
 	);
+	predicate_fn predicate{falsePredicate};
 
-	predicate_fn predicate{ falsePredicate };
-	const predicate_fn composedPredicate = chainedFunction || apply_mod<TMod>(predicate);
+	const predicate_fn composedPredicate = chainedFunction || TestType::cast(predicate);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is composable as param on both sides of operator ||.",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
+	all_ref_mods_cart2_list
 )
 {
 	const auto& [lhsPredicate, rhsPredicate, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, empty_predicate_t, bool>)({
 			{ falseFunc, falseFunc, false },
 			{ trueFunc, falseFunc, true },
 			{ falseFunc, trueFunc, true },
 			{ trueFunc, trueFunc, true }
 			})
 	);
-	predicate_fn lhs{ lhsPredicate };
-	predicate_fn rhs{ rhsPredicate };
+	predicate_fn lhs{lhsPredicate};
+	predicate_fn rhs{rhsPredicate};
 
-	const predicate_fn composedPredicate = apply_mod<TLhsMod>(lhs) || apply_mod<TRhsMod>(rhs);
+	const predicate_fn composedPredicate = TestType::cast_lhs(lhs) || TestType::cast_rhs(rhs);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
@@ -281,25 +235,21 @@ TEST_CASE("predicate_fn common operator hierarchy can be adjusted with ().", "[f
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn can be negated via operator !",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TMod), VDummy, TMod),
-	(true, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t)
+	all_ref_mods_list
 )
 {
 	const auto& [basePredicate, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, bool>)({
 			{ trueFunc, false },
 			{ falseFunc, true }
 			})
 	);
+	predicate_fn predicate{basePredicate};
 
-	predicate_fn predicate{ basePredicate };
-	const predicate_fn negatedPredicate = !apply_mod<TMod>(predicate);
+	const predicate_fn negatedPredicate = !TestType::cast(predicate);
 
 	REQUIRE(negatedPredicate() == expectedResult);
 }
@@ -322,7 +272,7 @@ TEST_CASE("predicate_fn is composable via operator |", "[functional][predicate]"
 			})
 	);
 
-	const predicate_fn composedPredicate = predicate_fn{ [](const int v) { return std::cmp_less(v, 10); } }
+	const predicate_fn composedPredicate = predicate_fn{[](const int v) { return std::cmp_less(v, 10); }}
 											&& [](const int v) { return std::cmp_less(0, v); };
 	const predicate_fn finalPredicate = [](const std::string& str) { return std::stoi(str); }
 										| composedPredicate;
@@ -345,28 +295,36 @@ TEST_CASE("front curried arguments to predicate_fn will be applied in correct or
 TEMPLATE_TEST_CASE_SIG(
 	"predicate_fn can be front curried with operator << in arbitrary length",
 	"[functional][predicate]",
-	((template <class> class TMod, bool VExpected, int... VValues), TMod, VExpected, VValues...),
-	(as_lvalue_ref_t, true, 42),
-	(as_lvalue_ref_t, false, 42, 1337),
-	(as_lvalue_ref_t, true, 42, 42, 42),
-	(as_const_lvalue_ref_t, true, 42),
-	(as_const_lvalue_ref_t, false, 42, 1337),
-	(as_const_lvalue_ref_t, true, 42, 42, 42),
-	(as_rvalue_ref_t, true, 42),
-	(as_rvalue_ref_t, false, 42, 1337),
-	(as_rvalue_ref_t, true, 42, 42, 42)
+	((bool VExpected, int... VValues), VExpected, VValues...),
+	(true, 42),
+	(false, 42, 1337),
+	( true, 42, 42, 42)
 )
 {
-	predicate_fn predicate{ variadicAllEqual };
-	const predicate_fn curriedPredicate = (apply_mod<TMod>(predicate) << ... << VValues);
+	predicate_fn predicate{variadicAllEqual};
+
+	const predicate_fn curriedPredicate = (predicate << ... << VValues);
 
 	REQUIRE(curriedPredicate() == VExpected);
 }
 
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn can be front curried from all reference types.",
+	"[functional][predicate]",
+	all_ref_mods_list
+)
+{
+	predicate_fn predicate{variadicAllEqual};
+
+	const predicate_fn curriedTransform = TestType::cast(predicate) << 42 << 42;
+
+	REQUIRE(curriedTransform());
+}
+
 TEST_CASE("front curried predicate_fn can be piped", "[functional][predicate]")
 {
-	predicate_fn predicate = predicate_fn{ variadicAllEqual } << 42 << -2
-							| predicate_fn{ std::equal_to{} } << false;
+	predicate_fn predicate = predicate_fn{variadicAllEqual} << 42 << -2
+							| predicate_fn{std::equal_to{}} << false;
 
 	REQUIRE(predicate());
 }
@@ -388,28 +346,36 @@ TEST_CASE("back curried arguments to predicate_fn will be applied in correct ord
 TEMPLATE_TEST_CASE_SIG(
 	"predicate_fn can be back curried with operator >> from the right-hand-side in arbitrary length",
 	"[functional][predicate]",
-	((template <class> class TMod, bool VExpected, int... VValues), TMod, VExpected, VValues...),
-	(as_lvalue_ref_t, true, 42),
-	(as_lvalue_ref_t, false, 42, 1337),
-	(as_lvalue_ref_t, true, 42, 42, 42),
-	(as_const_lvalue_ref_t, true, 42),
-	(as_const_lvalue_ref_t, false, 42, 1337),
-	(as_const_lvalue_ref_t, true, 42, 42, 42),
-	(as_rvalue_ref_t, true, 42),
-	(as_rvalue_ref_t, false, 42, 1337),
-	(as_rvalue_ref_t, true, 42, 42, 42)
+	((bool VExpected, int... VValues), VExpected, VValues...),
+	(true, 42),
+	(false, 42, 1337),
+	(true, 42, 42, 42)
 )
 {
-	predicate_fn predicate{ variadicAllEqual };
-	const predicate_fn curriedPredicate = (apply_mod<TMod>(predicate) >> ... >> VValues);
+	predicate_fn predicate{variadicAllEqual};
+
+	const predicate_fn curriedPredicate = (predicate >> ... >> VValues);
 
 	REQUIRE(curriedPredicate() == VExpected);
 }
 
+TEMPLATE_LIST_TEST_CASE(
+	"predicate_fn can be back curried from all reference types.",
+	"[functional][predicate]",
+	all_ref_mods_list
+)
+{
+	predicate_fn predicate{variadicAllEqual};
+
+	const predicate_fn curriedTransform = TestType::cast(predicate) >> 42 >> 42;
+
+	REQUIRE(curriedTransform());
+}
+
 TEST_CASE("back curried predicate_fn can be piped", "[functional][predicate]")
 {
-	predicate_fn predicate = predicate_fn{ variadicAllEqual } >> 42 >> -2
-							| predicate_fn{ std::equal_to{} } << false;
+	predicate_fn predicate = predicate_fn{variadicAllEqual} >> 42 >> -2
+							| predicate_fn{std::equal_to{}} << false;
 
 	REQUIRE(predicate());
 }
@@ -417,105 +383,74 @@ TEST_CASE("back curried predicate_fn can be piped", "[functional][predicate]")
 TEST_CASE("predicate_fn accepts functional objects wrapped into a std::reference_wrapper", "[functional][predicate][example]")
 {
 	//! [predicate wrapped]
-	const std::vector sourceInts{ 0, 1, 2, 3 };
-	auto skipFirst = [i{ 0 }](auto&&...) mutable { return static_cast<bool>(i++); };
+	const std::vector sourceInts{0, 1, 2, 3};
+	auto skipFirst = [i{0}](auto&&...) mutable { return static_cast<bool>(i++); };
 
 	const auto result = std::ranges::count_if(
 		sourceInts,
-		predicate_fn{ std::ref(skipFirst) }
+		predicate_fn{std::ref(skipFirst)}
 	);
 
 	REQUIRE(result == 3);
 	//! [predicate wrapped]
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is equal compare composable with operator == as left-hand-side",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
+	all_ref_mods_cart2_list
 )
 {
 	auto [chainedFunction, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, bool>)({
 			{ trueFunc, false },
 			{ falseFunc, true }
 			})
 	);
+	predicate_fn predicate{falsePredicate};
 
-	predicate_fn predicate{ falsePredicate };
-	const predicate_fn composedPredicate = apply_mod<TLhsMod>(predicate) == apply_mod<TRhsMod>(chainedFunction);
+	const predicate_fn composedPredicate = TestType::cast_lhs(predicate) == TestType::cast_rhs(chainedFunction);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is equal compare composable with operator == as right-hand-side",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
+	all_ref_mods_cart2_list
 )
 {
 	auto [chainedFunction, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, bool>)({
 			{ trueFunc, false },
 			{ falseFunc, true }
 			})
 	);
+	predicate_fn predicate{falsePredicate};
 
-	predicate_fn predicate{ falsePredicate };
-	const predicate_fn composedPredicate = apply_mod<TLhsMod>(chainedFunction) == apply_mod<TRhsMod>(predicate);
+	const predicate_fn composedPredicate = TestType::cast_lhs(chainedFunction) == TestType::cast_rhs(predicate);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is equal comapre composable as param on both sides of operator ==.",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
+	all_ref_mods_cart2_list
 )
 {
 	const auto& [lhsPredicate, rhsPredicate, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, empty_predicate_t, bool>)({
 			{ falseFunc, falseFunc, true },
 			{ trueFunc, falseFunc, false },
 			{ falseFunc, trueFunc, false },
 			{ trueFunc, trueFunc, true }
 			})
 	);
-	predicate_fn lhs{ lhsPredicate };
-	predicate_fn rhs{ rhsPredicate };
+	predicate_fn lhs{lhsPredicate};
+	predicate_fn rhs{rhsPredicate};
 
-	const predicate_fn composedPredicate = apply_mod<TLhsMod>(lhs) == apply_mod<TRhsMod>(rhs);
+	const predicate_fn composedPredicate = TestType::cast_lhs(lhs) == TestType::cast_rhs(rhs);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
@@ -529,93 +464,62 @@ TEST_CASE("predicate_fn is equal compare composable with operator in arbitrary d
 	REQUIRE(((falsePredicate == falsePredicate) == (falsePredicate == falsePredicate))());
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is not_equal compare composable with operator != as left-hand-side",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
+	all_ref_mods_cart2_list
 )
 {
 	auto [chainedFunction, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, bool>)({
 			{ trueFunc, true },
 			{ falseFunc, false }
 			})
 	);
+	predicate_fn predicate{falsePredicate};
 
-	predicate_fn predicate{ falsePredicate };
-	const predicate_fn composedPredicate = apply_mod<TLhsMod>(predicate) != apply_mod<TRhsMod>(chainedFunction);
+	const predicate_fn composedPredicate = TestType::cast_lhs(predicate) != TestType::cast_rhs(chainedFunction);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is not_equal compare composable with operator != as right-hand-side",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
+	all_ref_mods_cart2_list
 )
 {
 	auto [chainedFunction, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, bool>)({
 			{ trueFunc, true },
 			{ falseFunc, false }
 			})
 	);
+	predicate_fn predicate{falsePredicate};
 
-	predicate_fn predicate{ falsePredicate };
-	const predicate_fn composedPredicate = apply_mod<TLhsMod>(chainedFunction) != apply_mod<TRhsMod>(predicate);
+	const predicate_fn composedPredicate = TestType::cast_lhs(chainedFunction) != TestType::cast_rhs(predicate);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is not_equal comapre composable as param on both sides of operator !=.",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
+	all_ref_mods_cart2_list
 )
 {
 	const auto& [lhsPredicate, rhsPredicate, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, empty_predicate_t, bool>)({
 			{ falseFunc, falseFunc, false },
 			{ trueFunc, falseFunc, true },
 			{ falseFunc, trueFunc, true },
 			{ trueFunc, trueFunc, false }
 			})
 	);
-	predicate_fn lhs{ lhsPredicate };
-	predicate_fn rhs{ rhsPredicate };
+	predicate_fn lhs{lhsPredicate};
+	predicate_fn rhs{rhsPredicate};
 
-	const predicate_fn composedPredicate = apply_mod<TLhsMod>(lhs) != apply_mod<TRhsMod>(rhs);
+	const predicate_fn composedPredicate = TestType::cast_lhs(lhs) != TestType::cast_rhs(rhs);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
@@ -629,93 +533,62 @@ TEST_CASE("predicate_fn is not_equal compare composable with operator in arbitra
 	REQUIRE(((falsePredicate != falsePredicate) != (falsePredicate != truePredicate))());
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is equivalence compare composable with operator <=> as left-hand-side",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
+	all_ref_mods_cart2_list
 )
 {
 	auto [chainedFunction, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, bool>)({
 			{ trueFunc, false },
 			{ falseFunc, true }
 			})
 	);
+	predicate_fn predicate{falsePredicate};
 
-	predicate_fn predicate{ falsePredicate };
-	const predicate_fn composedPredicate = apply_mod<TLhsMod>(predicate) <=> apply_mod<TRhsMod>(chainedFunction);
+	const predicate_fn composedPredicate = TestType::cast_lhs(predicate) <=> TestType::cast_rhs(chainedFunction);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is equivalence compare composable with operator <=> as right-hand-side",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
+	all_ref_mods_cart2_list
 )
 {
 	auto [chainedFunction, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, bool>)({
 			{ trueFunc, false },
 			{ falseFunc, true }
 			})
 	);
+	predicate_fn predicate{falsePredicate};
 
-	predicate_fn predicate{ falsePredicate };
-	const predicate_fn composedPredicate = apply_mod<TLhsMod>(chainedFunction) <=> apply_mod<TRhsMod>(predicate);
+	const predicate_fn composedPredicate = TestType::cast_lhs(chainedFunction) <=> TestType::cast_rhs(predicate);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
 
-TEMPLATE_TEST_CASE_SIG(
+TEMPLATE_LIST_TEST_CASE(
 	"predicate_fn is equivalence comapre composable as param on both sides of operator <=>.",
 	"[functional][predicate]",
-	((bool VDummy, template <class> class TLhsMod, template <class> class TRhsMod), VDummy, TLhsMod, TRhsMod),
-	(true, as_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_const_lvalue_ref_t, as_rvalue_ref_t),
-	(true, as_rvalue_ref_t, as_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_const_lvalue_ref_t),
-	(true, as_rvalue_ref_t, as_rvalue_ref_t)
+	all_ref_mods_cart2_list
 )
 {
 	auto [lhsPredicate, rhsPredicate, expectedResult] = GENERATE(
-		table<empty_predicate_t,
-		empty_predicate_t,
-		bool>({
+		(table<empty_predicate_t, empty_predicate_t, bool>)({
 			{ falseFunc, falseFunc, true },
 			{ trueFunc, falseFunc, false },
 			{ falseFunc, trueFunc, false },
 			{ trueFunc, trueFunc, true }
 			})
 	);
-	predicate_fn lhs{ lhsPredicate };
-	predicate_fn rhs{ rhsPredicate };
+	predicate_fn lhs{lhsPredicate};
+	predicate_fn rhs{rhsPredicate};
 
-	const predicate_fn composedPredicate = apply_mod<TLhsMod>(lhs) <=> apply_mod<TRhsMod>(rhs);
+	const predicate_fn composedPredicate = TestType::cast_lhs(lhs) <=> TestType::cast_rhs(rhs);
 
 	REQUIRE(composedPredicate() == expectedResult);
 }
@@ -727,102 +600,4 @@ TEST_CASE("predicate_fn is equivalence compare composable with operator in arbit
 	REQUIRE((falsePredicate <=> (falsePredicate <=> falsePredicate))());
 	REQUIRE((truePredicate <=> truePredicate <=> truePredicate)());
 	REQUIRE(((falsePredicate <=> falsePredicate) <=> (falsePredicate <=> falsePredicate))());
-}
-
-TEMPLATE_TEST_CASE("less compares its two parameters", "[functional][predicate]", int, float)
-{
-	const auto& [value1, value2, expectedResult] = GENERATE(
-		table<int,
-		int,
-		bool>({
-			{ 42, 43, true },
-			{ 42, 42, false }
-			})
-	);
-
-	const bool result = less(static_cast<TestType>(value1), static_cast<TestType>(value2));
-
-	REQUIRE(result == expectedResult);
-}
-
-TEMPLATE_TEST_CASE("greater compares its two parameters", "[functional][predicate]", int, float)
-{
-	const auto& [value1, value2, expectedResult] = GENERATE(
-		table<int,
-		int,
-		bool>({
-			{ 43, 42, true },
-			{ 42, 42, false }
-			})
-	);
-
-	const bool result = greater(static_cast<TestType>(value1), static_cast<TestType>(value2));
-
-	REQUIRE(result == expectedResult);
-}
-
-TEMPLATE_TEST_CASE("less_equal compares its two parameters", "[functional][predicate]", int, float)
-{
-	const auto& [value1, value2, expectedResult] = GENERATE(
-		table<int,
-		int,
-		bool>({
-			{ 41, 42, true },
-			{ 42, 42, true },
-			{ 43, 42, false }
-			})
-	);
-
-	const bool result = less_equal(static_cast<TestType>(value1), static_cast<TestType>(value2));
-
-	REQUIRE(result == expectedResult);
-}
-
-TEMPLATE_TEST_CASE("greater_equal compares its two parameters", "[functional][predicate]", int, float)
-{
-	const auto& [value1, value2, expectedResult] = GENERATE(
-		table<int,
-		int,
-		bool>({
-			{ 43, 42, true },
-			{ 42, 42, true },
-			{ 41, 42, false }
-			})
-	);
-
-	const bool result = greater_equal(static_cast<TestType>(value1), static_cast<TestType>(value2));
-
-	REQUIRE(result == expectedResult);
-}
-
-TEMPLATE_TEST_CASE("equal compares its two parameters", "[functional][predicate]", int, float)
-{
-	const auto& [value1, value2, expectedResult] = GENERATE(
-		table<int,
-		int,
-		bool>({
-			{ 42, 42, true },
-			{ 43, 42, false }
-			})
-	);
-
-	const bool result = equal(static_cast<TestType>(value1), static_cast<TestType>(value2));
-
-	REQUIRE(result == expectedResult);
-}
-
-TEMPLATE_TEST_CASE("not_equal compares its two parameters", "[functional][predicate]", int, float)
-{
-	const auto& [value1, value2, expectedResult] = GENERATE(
-		table<int,
-		int,
-		bool>({
-			{ 43, 42, true },
-			{ 42, 42, false }
-			})
-	);
-
-	const bool result = not_equal(static_cast<TestType>(value1), static_cast<TestType>(value2));
-
-	REQUIRE(result == expectedResult);
 }

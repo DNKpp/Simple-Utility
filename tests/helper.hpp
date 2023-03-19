@@ -1,4 +1,4 @@
-//          Copyright Dominic Koepke 2019 - 2022.
+//          Copyright Dominic Koepke 2019 - 2023.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -9,23 +9,85 @@
 
 #pragma once
 
+#include <array>
 #include <concepts>
 #include <type_traits>
 
-template <template <class> class TMod, class T>
-constexpr decltype(auto) apply_mod(T&& v)
+template <class T>
+using as_lvalue_ref_t = std::remove_cvref_t<T>&;
+
+template <class T>
+using as_const_lvalue_ref_t = const std::remove_cvref_t<T>&;
+
+template <class T>
+using as_rvalue_ref_t = std::remove_cvref_t<T>&&;
+
+template <class T>
+using as_const_rvalue_ref_t = const std::remove_cvref_t<T>&&;
+
+template <template <class> class TMod>
+struct type_mod
 {
-	return static_cast<TMod<std::remove_cvref_t<T>>>(v);
-}
+	template <class T>
+	using type = TMod<T>;
 
-template <class T>
-using as_lvalue_ref_t = std::add_lvalue_reference_t<std::remove_cvref_t<T>>;
+	template <class T>
+	static constexpr type<T> cast(T& arg) noexcept
+	{
+		return static_cast<type<T>>(arg);
+	}
+};
 
-template <class T>
-using as_const_lvalue_ref_t = std::add_lvalue_reference_t<std::add_const_t<std::remove_cvref_t<T>>>;
+using all_ref_mods_list = std::tuple<
+	type_mod<as_const_lvalue_ref_t>,
+	type_mod<as_lvalue_ref_t>,
+	type_mod<as_const_rvalue_ref_t>,
+	type_mod<as_rvalue_ref_t>
+>;
 
-template <class T>
-using as_rvalue_ref_t = std::add_rvalue_reference_t<std::remove_cvref_t<T>>;
+template <template <class> class TLhsMod, template <class> class TRhsMod>
+struct binary_type_mod
+{
+	template <class T>
+	using lhs_type = TLhsMod<T>;
+
+	template <class T>
+	using rhs_type = TRhsMod<T>;
+
+	template <class T>
+	static constexpr lhs_type<T> cast_lhs(T& arg) noexcept
+	{
+		return static_cast<lhs_type<T>>(arg);
+	}
+
+	template <class T>
+	static constexpr rhs_type<T> cast_rhs(T& arg) noexcept
+	{
+		return static_cast<rhs_type<T>>(arg);
+	}
+};
+
+using all_ref_mods_cart2_list = std::tuple<
+	binary_type_mod<as_const_lvalue_ref_t, as_const_lvalue_ref_t>,
+	binary_type_mod<as_const_lvalue_ref_t, as_lvalue_ref_t>,
+	binary_type_mod<as_const_lvalue_ref_t, as_const_rvalue_ref_t>,
+	binary_type_mod<as_const_lvalue_ref_t, as_rvalue_ref_t>,
+
+	binary_type_mod<as_lvalue_ref_t, as_const_lvalue_ref_t>,
+	binary_type_mod<as_lvalue_ref_t, as_lvalue_ref_t>,
+	binary_type_mod<as_lvalue_ref_t, as_const_rvalue_ref_t>,
+	binary_type_mod<as_lvalue_ref_t, as_rvalue_ref_t>,
+
+	binary_type_mod<as_const_rvalue_ref_t, as_const_lvalue_ref_t>,
+	binary_type_mod<as_const_rvalue_ref_t, as_lvalue_ref_t>,
+	binary_type_mod<as_const_rvalue_ref_t, as_const_rvalue_ref_t>,
+	binary_type_mod<as_const_rvalue_ref_t, as_rvalue_ref_t>,
+
+	binary_type_mod<as_rvalue_ref_t, as_const_lvalue_ref_t>,
+	binary_type_mod<as_rvalue_ref_t, as_lvalue_ref_t>,
+	binary_type_mod<as_rvalue_ref_t, as_const_rvalue_ref_t>,
+	binary_type_mod<as_rvalue_ref_t, as_rvalue_ref_t>
+>;
 
 struct empty_t
 {

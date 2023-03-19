@@ -1,4 +1,4 @@
-//          Copyright Dominic Koepke 2019 - 2022.
+//          Copyright Dominic Koepke 2019 - 2023.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -9,13 +9,13 @@
 #pragma once
 
 #include "Simple-Utility/functional/base.hpp"
-#include "Simple-Utility/functional/operators/pipe.hpp"
 #include "Simple-Utility/functional/operators/bind.hpp"
 #include "Simple-Utility/functional/operators/conjunction.hpp"
 #include "Simple-Utility/functional/operators/disjunction.hpp"
-#include "Simple-Utility/functional/operators/negation.hpp"
 #include "Simple-Utility/functional/operators/equal.hpp"
 #include "Simple-Utility/functional/operators/equivalent.hpp"
+#include "Simple-Utility/functional/operators/negation.hpp"
+#include "Simple-Utility/functional/operators/pipe.hpp"
 
 namespace sl::functional
 {
@@ -79,6 +79,7 @@ namespace sl::functional
 		>
 	{
 		using closure_t = closure_base_fn<TFunc>;
+
 	public:
 		/**
 		 * \brief Explicitly created forwarding constructor.
@@ -93,13 +94,12 @@ namespace sl::functional
 		/**\cond conditional-explicit*/
 		explicit(detail::force_explicit_constructor_v<closure_t, TArgs...>)
 		/**\endcond*/
-		predicate_fn
-		(
+		predicate_fn(
 			TArgs&&... args
-		)
-		noexcept(std::is_nothrow_constructible_v<closure_t, TArgs...>)
-			: closure_t{ std::forward<TArgs>(args)... }
-		{}
+		) noexcept(std::is_nothrow_constructible_v<closure_t, TArgs...>)
+			: closure_t{std::forward<TArgs>(args)...}
+		{
+		}
 	};
 
 	/**
@@ -108,102 +108,6 @@ namespace sl::functional
 	 */
 	template <class TFunc>
 	predicate_fn(TFunc) -> predicate_fn<TFunc>;
-
-	/**
-	 * \brief Functional object, which compares its two operands less.
-	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_less`` is used instead.
-	 */
-	inline constexpr predicate_fn less{
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
-		{
-			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
-			{
-				return std::cmp_less(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
-			}
-			else
-				return std::forward<TLhs>(lhs) < std::forward<TRhs>(rhs);
-		}
-	};
-
-	/**
-	 * \brief Functional object, which compares its two operands less-equal.
-	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_less_equal`` is used instead.
-	 */
-	inline constexpr predicate_fn less_equal{
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
-		{
-			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
-			{
-				return std::cmp_less_equal(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
-			}
-			else
-				return std::forward<TLhs>(lhs) <= std::forward<TRhs>(rhs);
-		}
-	};
-
-	/**
-	 * \brief Functional object, which compares its two operands greater.
-	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_greater`` is used instead.
-	 */
-	inline constexpr predicate_fn greater{
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
-		{
-			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
-			{
-				return std::cmp_greater(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
-			}
-			else
-				return std::forward<TLhs>(lhs) > std::forward<TRhs>(rhs);
-		}
-	};
-
-	/**
-	 * \brief Functional object, which compares its two operands greater-equal.
-	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_greater_equal`` is used instead.
-	 */
-	inline constexpr predicate_fn greater_equal{
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
-		{
-			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
-			{
-				return std::cmp_greater_equal(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
-			}
-			else
-				return std::forward<TLhs>(lhs) >= std::forward<TRhs>(rhs);
-		}
-	};
-
-	/**
-	 * \brief Functional object, which compares its two operands equal.
-	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_equal`` is used instead.
-	 */
-	inline constexpr predicate_fn equal{
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
-		{
-			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
-			{
-				return std::cmp_equal(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
-			}
-			else
-				return std::forward<TLhs>(lhs) == std::forward<TRhs>(rhs);
-		}
-	};
-
-	/**
-	 * \brief Functional object, which compares its two operands not-equal.
-	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_not_equal`` is used instead.
-	 */
-	inline constexpr predicate_fn not_equal{
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs)
-		{
-			if constexpr (std::integral<TLhs> && std::integral<TRhs>)
-			{
-				return std::cmp_not_equal(std::forward<TLhs>(lhs), std::forward<TRhs>(rhs));
-			}
-			else
-				return std::forward<TLhs>(lhs) != std::forward<TRhs>(rhs);
-		}
-	};
 
 	/** @} */
 }

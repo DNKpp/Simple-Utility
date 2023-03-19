@@ -1,0 +1,10 @@
+target_sources(
+	Simple-Utility-Tests
+	PRIVATE
+	"access_operators.cpp"
+	"arithmetic_operators.cpp"
+	"logical_arithmetic_operators.cpp"
+	"shift_operators.cpp"
+	"stl_extensions.cpp"
+	"utility.cpp"
+)

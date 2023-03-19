@@ -1,33 +1,24 @@
-cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
-
-include(CTest)
-
-CPMGetPackage(Catch2)
+CPMAddPackage("gh:catchorg/Catch2@3.3.2")
 include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
 
 add_executable(
-	${PROJECT_NAME}-Tests
+	Simple-Utility-Tests
 	"bind_back.cpp"
+	"helper.cpp"
+	"math.cpp"
 	"unique_handle.cpp"
-	"tuple_utility.cpp"
-	"concepts/access_operators.cpp"
-	"concepts/shift_operators.cpp"
-	"concepts/logical_arithmetic_operators.cpp"
-	"concepts/utility.cpp"
-	"concepts/stl_extensions.cpp"
-	"functional/base.cpp"
-	"functional/transform.cpp"
-	"functional/predicate.cpp"
-	"functional/tuple.cpp"
+	"tuple.cpp"
 )
 
 add_subdirectory("nullables")
+add_subdirectory("concepts")
+add_subdirectory("functional")
 
 target_link_libraries(
-	${PROJECT_NAME}-Tests
+	Simple-Utility-Tests
 	PRIVATE
-	${PROJECT_NAME}
+	Simple::Utility
 	Catch2::Catch2WithMain
 )
 
-catch_discover_tests(${PROJECT_NAME}-Tests)
+catch_discover_tests(Simple-Utility-Tests)

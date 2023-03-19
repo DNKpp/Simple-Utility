@@ -13,7 +13,7 @@ Mail: [DNKpp2011@gmail.com](mailto:dnkpp2011@gmail.com)
 [BSL-1.0](LICENSE_1_0.txt) (free, open source)
 
 ```text
-          Copyright Dominic Koepke 2019 - 2022.
+          Copyright Dominic Koepke 2019 - 2023.
  Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
           https://www.boost.org/LICENSE_1_0.txt)
@@ -65,8 +65,8 @@ This library can easily be integrated into your project via CMake target_link_li
 ```cmake
 target_link_libraries(
 	<your_target_name>
-	PRIVATE
-	Simple-Utility::Simple-Utility
+	PUBLIC
+	Simple::Utility
 )
 ```
 
@@ -94,6 +94,6 @@ from the latest release into your project folder and include it into your ``CMak
 include(CPM.cmake) # or include(get_cpm.cmake)
 
 
-CPMAddPackage("gh:DNKpp/Simple-Utility#v2.0.0") # or any other tag name
+CPMAddPackage("gh:DNKpp/Simple-Utility@2.0.0") # or any other tag name
 # do not forget linking via target_link_libraries as shown above
 ```
