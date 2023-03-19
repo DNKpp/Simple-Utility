@@ -43,6 +43,11 @@ TEST_CASE("closure_base_fn satisfies derived_from_unified_base concept with clos
 	STATIC_REQUIRE(sl::derived_from_unified_base<result_t, detail::closure_base_tag>);
 }
 
+TEST_CASE("closure_base_fn is an empty type if contained function is an empty type.", "[functional][base]")
+{
+	STATIC_REQUIRE(std::is_empty_v<decltype(closure_base_fn{trueFunc})>);
+}
+
 TEMPLATE_TEST_CASE_SIG(
 	"unwrap_functional_result determines the first nested non-closure type.",
 	"[functional][base][trait]",
