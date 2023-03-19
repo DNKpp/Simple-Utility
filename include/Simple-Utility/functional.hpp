@@ -22,5 +22,6 @@
 #include "Simple-Utility/functional/arithmetic.hpp"
 #include "Simple-Utility/functional/compare.hpp"
 #include "Simple-Utility/functional/tuple.hpp"
+#include "Simple-Utility/functional/utility.hpp"
 
 #endif
