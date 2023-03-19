@@ -31,10 +31,10 @@ namespace sl::concepts::detail
 		return requires { typename std::tuple_element<VIndex, TTuple>::type; }
 				&& requires(TTuple t)
 				{
-					{ get<VIndex>(t) } -> std::common_with<std::tuple_element_t<VIndex, TTuple>>;
-					{ get<VIndex>(std::as_const(t)) } -> std::common_with<std::tuple_element_t<VIndex, TTuple>>;
-					{ get<VIndex>(std::move(t)) } -> std::common_with<std::tuple_element_t<VIndex, TTuple>>;
-					{ get<VIndex>(std::move(std::as_const(t))) } -> std::common_with<std::tuple_element_t<VIndex, TTuple>>;
+					{ get<VIndex>(t) } -> std::common_reference_with<std::tuple_element_t<VIndex, TTuple>>;
+					{ get<VIndex>(std::as_const(t)) } -> std::common_reference_with<std::tuple_element_t<VIndex, TTuple>>;
+					{ get<VIndex>(std::move(t)) } -> std::common_reference_with<std::tuple_element_t<VIndex, TTuple>>;
+					{ get<VIndex>(std::move(std::as_const(t))) } -> std::common_reference_with<std::tuple_element_t<VIndex, TTuple>>;
 				};
 	}();
 
