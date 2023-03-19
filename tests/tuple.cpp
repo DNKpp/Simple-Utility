@@ -56,6 +56,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, std::vector<int>),
 	(true, std::tuple<>),
 	(true, std::tuple<int>),
+	(true, std::tuple<std::tuple<int&>>), // got this case from real experience
 	(true, std::pair<int, int>),
 	(true, std::array<int, 0>)
 )
