@@ -13,6 +13,7 @@
 #include <functional>
 #include <optional>
 
+#include "Simple-Utility/Config.hpp"
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/nullables/base.hpp"
 
@@ -504,7 +505,7 @@ namespace sl
 	private:
 		std::optional<T> m_Value{};
 
-		[[no_unique_address]]
+		SL_UTILITY_NO_UNIQUE_ADDRESS
 		TDeleteAction m_DeleteAction{};
 
 		constexpr void invoke_delete_action_if_necessary() noexcept

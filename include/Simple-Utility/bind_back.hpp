@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "Simple-Utility/Config.hpp"
+
 #include <concepts>
 #include <functional>
 #include <tuple>
@@ -71,7 +73,7 @@ namespace sl::detail
 		}
 
 	private:
-		[[no_unique_address]]
+		SL_UTILITY_NO_UNIQUE_ADDRESS
 		TFunc m_Func;
 		std::tuple<TBoundArgs...> m_BoundArgs;
 	};

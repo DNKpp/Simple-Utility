@@ -8,8 +8,9 @@
 
 #pragma once
 
-#include "Simple-Utility/nullables/base.hpp"
+#include "Simple-Utility/Config.hpp"
 #include "Simple-Utility/concepts/stl_extensions.hpp"
+#include "Simple-Utility/nullables/base.hpp"
 
 #include <cassert>
 #include <ranges>
@@ -20,7 +21,7 @@ namespace sl::nullables
 	{
 		template <class TAdapted>
 			requires concepts::dereferencable<TAdapted>
-					&& requires{ { *std::declval<TAdapted>() } -> concepts::not_same_as<void>; }
+					&& requires { { *std::declval<TAdapted>() } -> concepts::not_same_as<void>; }
 		[[nodiscard]]
 		constexpr decltype(auto) unwrap_adapted(TAdapted&& adapted)
 		{
@@ -32,11 +33,10 @@ namespace sl::nullables
 			template <class TAdapted>
 				requires requires { unwrap_adapted(std::declval<TAdapted>()); }
 			[[nodiscard]]
-			constexpr decltype(auto) operator()
-			(
+			constexpr decltype(auto) operator()(
 				TAdapted&& adapted
 			) const
-			noexcept(noexcept(unwrap_adapted(std::forward<TAdapted>(adapted))))
+				noexcept(noexcept(unwrap_adapted(std::forward<TAdapted>(adapted))))
 			{
 				return unwrap_adapted(std::forward<TAdapted>(adapted));
 			}
@@ -59,7 +59,8 @@ namespace sl::nullables
 	 * \relates sl::nullables::adapter
 	 */
 	struct adapter_null_t
-	{};
+	{
+	};
 
 	/**
 	 * \brief Dedicated null object for \ref sl::nullables::adapter "adapters".
@@ -73,7 +74,8 @@ namespace sl::nullables
 	 * \relates sl::nullables::adapter
 	 */
 	struct in_place_null_t
-	{};
+	{
+	};
 
 	/**
 	 * \brief Tag object for \ref sl::nullables::adapter "adapters", which can be used to disambiguate the construction
@@ -112,13 +114,13 @@ namespace sl::nullables::detail
 	[[nodiscard]]
 	constexpr adapter<std::ranges::sentinel_t<TRange>, std::ranges::iterator_t<TRange>> to_nullables_adapter(TRange&& range)
 	{
-		return { std::ranges::end(range), std::ranges::begin(range) };
+		return {std::ranges::end(range), std::ranges::begin(range)};
 	}
 
 	struct to_nullables_adapter_fn
 	{
 		template <class TArg>
-			requires requires { adapter{ to_nullables_adapter(std::declval<TArg>()) }; }
+			requires requires { adapter{to_nullables_adapter(std::declval<TArg>())}; }
 		[[nodiscard]]
 		constexpr auto operator()(TArg&& arg) const noexcept(noexcept(to_nullables_adapter(std::forward<TArg>(arg))))
 		{
@@ -143,7 +145,7 @@ namespace sl::nullables
 		template <class T>
 		concept convertible_to_adapter = requires
 		{
-			adapter{ nullables::to_nullables_adapter(std::declval<T>()) };
+			adapter{nullables::to_nullables_adapter(std::declval<T>())};
 		};
 	}
 
@@ -177,8 +179,7 @@ namespace sl::nullables
 		 * \param other The other adapter.
 		 */
 		[[nodiscard]]
-		constexpr adapter
-		(
+		constexpr adapter(
 			const adapter& other
 		) noexcept(std::is_nothrow_copy_constructible_v<TNull>
 					&& std::is_nothrow_copy_constructible_v<TAdapted>)
@@ -188,8 +189,7 @@ namespace sl::nullables
 		 * \brief Default copy assignment operator.
 		 * \param other The other adapter.
 		 */
-		constexpr adapter& operator =
-		(
+		constexpr adapter& operator =(
 			const adapter& other
 		) noexcept(std::is_nothrow_copy_assignable_v<TNull>
 					&& std::is_nothrow_copy_assignable_v<TAdapted>)
@@ -200,8 +200,7 @@ namespace sl::nullables
 		 * \param other The other adapter.
 		 */
 		[[nodiscard]]
-		constexpr adapter
-		(
+		constexpr adapter(
 			adapter&& other
 		) noexcept(std::is_nothrow_move_constructible_v<TNull>
 					&& std::is_nothrow_move_constructible_v<TAdapted>)
@@ -211,8 +210,7 @@ namespace sl::nullables
 		 * \brief Default move assignment operator.
 		 * \param other The other adapter.
 		 */
-		constexpr adapter& operator =
-		(
+		constexpr adapter& operator =(
 			adapter&& other
 		) noexcept(std::is_nothrow_move_assignable_v<TNull>
 					&& std::is_nothrow_move_assignable_v<TAdapted>)
@@ -228,15 +226,14 @@ namespace sl::nullables
 			requires std::constructible_from<adapted_type, const null_type&>
 		[[nodiscard]]
 		explicit
-		constexpr adapter
-		(
+		constexpr adapter(
 			[[maybe_unused]] in_place_null_t,
 			TNullArg&& nullArg
 		)
-		noexcept(std::is_nothrow_constructible_v<null_type, TNullArg>
-				&& std::is_nothrow_constructible_v<adapted_type, const null_type&>)
-			: m_Null{ std::forward<TNullArg>(nullArg) },
-			m_Adapted{ m_Null }
+			noexcept(std::is_nothrow_constructible_v<null_type, TNullArg>
+					&& std::is_nothrow_constructible_v<adapted_type, const null_type&>)
+			: m_Null{std::forward<TNullArg>(nullArg)},
+			m_Adapted{m_Null}
 		{
 			assert(*this == adapter_null && "Default constructed adapted_type must comapare equally to the provided null object.");
 		}
@@ -247,16 +244,16 @@ namespace sl::nullables
 		 */
 		[[nodiscard]]
 		explicit
-		constexpr adapter
-		(
+		constexpr adapter(
 			[[maybe_unused]] adapter_null_t
 		)
-		noexcept(std::is_nothrow_default_constructible_v<null_type>
-				&& std::is_nothrow_constructible_v<adapted_type, null_type&>)
+			noexcept(std::is_nothrow_default_constructible_v<null_type>
+					&& std::is_nothrow_constructible_v<adapted_type, null_type&>)
 			requires std::default_initializable<null_type>
 					&& std::constructible_from<adapted_type, null_type&>
-			: adapter{ in_place_null, null_type{} }
-		{}
+			: adapter{in_place_null, null_type{}}
+		{
+		}
 
 		/**
 		 * \copydoc adapter(in_place_null_t, TNullArg&&)
@@ -268,13 +265,13 @@ namespace sl::nullables
 					&& std::constructible_from<adapted_type, const null_type&>
 		[[nodiscard]]
 		explicit
-		constexpr adapter
-		(
+		constexpr adapter(
 			TNullArg&& nullArg
 		)
-		noexcept(std::is_nothrow_constructible_v<adapter, std::in_place_t, TNullArg>)
-			: adapter{ in_place_null, nullArg }
-		{}
+			noexcept(std::is_nothrow_constructible_v<adapter, std::in_place_t, TNullArg>)
+			: adapter{in_place_null, nullArg}
+		{
+		}
 
 		/**
 		 * \brief Constructs the null object and the adapted with the given arguments.
@@ -289,16 +286,16 @@ namespace sl::nullables
 					&& concepts::not_same_as<adapter_null_t, std::remove_cvref_t<TAdaptedArg>>
 					&& concepts::not_same_as<in_place_null_t, std::remove_cvref_t<TAdaptedArg>>
 		[[nodiscard]]
-		constexpr adapter
-		(
+		constexpr adapter(
 			TNullArg&& nullArg,
 			TAdaptedArg&& adaptedArg
 		)
-		noexcept(std::is_nothrow_constructible_v<null_type, TNullArg>
-				&& std::is_nothrow_constructible_v<adapted_type, TAdaptedArg>)
-			: m_Null{ std::forward<TNullArg>(nullArg) },
-			m_Adapted{ std::forward<TAdaptedArg>(adaptedArg) }
-		{}
+			noexcept(std::is_nothrow_constructible_v<null_type, TNullArg>
+					&& std::is_nothrow_constructible_v<adapted_type, TAdaptedArg>)
+			: m_Null{std::forward<TNullArg>(nullArg)},
+			m_Adapted{std::forward<TAdaptedArg>(adaptedArg)}
+		{
+		}
 
 		/**
 		 * \brief Constructs the adapter with the result of a ``to_nullables_adapter`` invocation.
@@ -311,25 +308,24 @@ namespace sl::nullables
 					&& concepts::not_same_as<in_place_null_t, std::remove_cvref_t<TArg>>
 		[[nodiscard]]
 		explicit
-		constexpr adapter
-		(
+		constexpr adapter(
 			TArg&& arg
 		)
-		noexcept(noexcept(to_nullables_adapter(std::forward<TArg>(arg)))
-				&& std::is_nothrow_constructible_v<adapter>)
-			: adapter{ to_nullables_adapter(std::forward<TArg>(arg)) }
-		{ }
+			noexcept(noexcept(to_nullables_adapter(std::forward<TArg>(arg)))
+					&& std::is_nothrow_constructible_v<adapter>)
+			: adapter{to_nullables_adapter(std::forward<TArg>(arg))}
+		{
+		}
 
 		/**
 		 * \brief Assigns null to the adapted object.
 		 * \attention The behaviour is undefined if adapted does not compare equal to the null object after the assignment.
 		 * \return Reference to this.
 		 */
-		constexpr adapter& operator =
-		(
+		constexpr adapter& operator =(
 			[[maybe_unused]] adapter_null_t
 		)
-		noexcept(std::is_nothrow_assignable_v<adapted_type&, null_type&>)
+			noexcept(std::is_nothrow_assignable_v<adapted_type&, null_type&>)
 			requires std::assignable_from<adapted_type&, null_type&>
 		{
 			m_Adapted = m_Null;
@@ -344,11 +340,10 @@ namespace sl::nullables
 		 */
 		template <concepts::assignable_to<adapted_type&> TAdaptedArg>
 			requires concepts::not_same_as<adapter_null_t, std::remove_cvref_t<TAdaptedArg>>
-		constexpr adapter& operator =
-		(
+		constexpr adapter& operator =(
 			TAdaptedArg&& adaptedArg
 		)
-		noexcept(std::is_nothrow_assignable_v<adapted_type&, TAdaptedArg>)
+			noexcept(std::is_nothrow_assignable_v<adapted_type&, TAdaptedArg>)
 		{
 			m_Adapted = std::forward<TAdaptedArg>(adaptedArg);
 
@@ -396,17 +391,16 @@ namespace sl::nullables
 		 * \return Returns true if the adapted object compares equal to the null object.
 		 */
 		[[nodiscard]]
-		constexpr bool operator ==
-		(
+		constexpr bool operator ==(
 			adapter_null_t
 		) const
-		noexcept(concepts::nothrow_weakly_equality_comparable_with<TAdapted, TNull>)
+			noexcept(concepts::nothrow_weakly_equality_comparable_with<TAdapted, TNull>)
 		{
 			return m_Adapted == m_Null;
 		}
 
 	private:
-		[[no_unique_address]]
+		SL_UTILITY_NO_UNIQUE_ADDRESS
 		null_type m_Null{};
 		adapted_type m_Adapted{};
 	};
@@ -427,8 +421,7 @@ namespace sl::nullables
 	 */
 	template <class T>
 		requires requires { to_nullables_adapter(std::declval<T>()); }
-	adapter
-	(
+	adapter(
 		T&& t
 	) -> adapter<
 		typename std::remove_cvref_t<decltype(to_nullables_adapter(std::declval<T>()))>::null_type,
@@ -446,7 +439,7 @@ namespace sl::nullables
 	struct traits<adapter<TNull, TAdapted>>
 	{
 		using value_type = adapted_value_t<TAdapted>;
-		constexpr static adapter_null_t null{ adapter_null };
+		constexpr static adapter_null_t null{adapter_null};
 	};
 
 	/** @} */
