@@ -12,6 +12,7 @@
 #include <functional>
 #include <type_traits>
 
+#include "Simple-Utility/Config.hpp"
 #include "Simple-Utility/unified_base.hpp"
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/concepts/utility.hpp"
@@ -210,7 +211,7 @@ namespace sl::functional
 		}
 
 	private:
-		[[no_unique_address]] [[msvc::no_unique_address]]
+		SL_UTILITY_NO_UNIQUE_ADDRESS
 		function_type m_Func{};
 	};
 
@@ -363,7 +364,7 @@ namespace sl::functional
 		}
 
 	private:
-		[[no_unique_address]] [[msvc::no_unique_address]]
+		SL_UTILITY_NO_UNIQUE_ADDRESS
 		operation_t m_Operation{};
 		function_storage_t m_Functions{};
 	};
