@@ -18,4 +18,14 @@
 	#define SL_UTILITY_NO_UNIQUE_ADDRESS
 #endif
 
+namespace sl
+{
+	struct
+	{
+		constexpr int major = 2;
+		constexpr int minor = 1;
+		constexpr int patch = 1;
+	} static constexpr version;
+}
+
 #endif

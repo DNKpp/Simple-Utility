@@ -1,13 +1,16 @@
-cmake_minimum_required(VERSION 3.14 FATAL_ERROR)
-
-project(
-	Simple-Utility
-	VERSION 2.0.1
-	LANGUAGES CXX
-)
+cmake_minimum_required(VERSION 3.25)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(get_cpm)
+include(GetVersion)
+
+get_version("include/Simple-Utility/Config.hpp")
+
+project(
+	Simple-Utility
+	VERSION ${VERSION_STRING}
+	LANGUAGES CXX
+)
 
 add_library(Simple-Utility INTERFACE)
 add_library(Simple::Utility ALIAS Simple-Utility)
