@@ -19,7 +19,7 @@ jobs:
     - name: Update CMake
       run: |
         apk update
-        apk install cmake -y
+        apk add cmake
 
     - name: Generate Docs
       run: |
