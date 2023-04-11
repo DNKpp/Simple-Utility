@@ -23,7 +23,7 @@ jobs:
     - name: Generate Docs
       run: |
         cmake -B ${{ env.BUILD_DIR }} -S . ${{ env.CMAKE_ADDITIONAL_CONFIG_ARGS }}
-        cmake --build --target GenerateDocs
+        cmake --build ${{ env.BUILD_DIR }} --target GenerateDocs
 
     - name: Publish Docs
       uses: peaceiris/actions-gh-pages@v3
