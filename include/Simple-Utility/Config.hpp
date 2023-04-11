@@ -8,6 +8,9 @@
 
 #pragma once
 
+#define SL_UTILITY_STR(arg) #arg
+#define SL_UTILITY_XSTR(arg) ENTT_STR(arg)
+
 #if __has_cpp_attribute(no_unique_address)
 	#define SL_UTILITY_NO_UNIQUE_ADDRESS [[no_unique_address]]
 	#define SL_UTILITY_NO_UNIQUE_ADDRESS_ENABLED
@@ -18,14 +21,13 @@
 	#define SL_UTILITY_NO_UNIQUE_ADDRESS
 #endif
 
-namespace sl
-{
-	struct
-	{
-		constexpr int major = 2;
-		constexpr int minor = 1;
-		constexpr int patch = 2;
-	} static constexpr version;
-}
+#define SL_UTILITY_VERSION_MAJOR 2  // NOLINT(modernize-macro-to-enum)
+#define SL_UTILITY_VERSION_MINOR 1  // NOLINT(modernize-macro-to-enum)
+#define SL_UTILITY_VERSION_PATCH 2  // NOLINT(modernize-macro-to-enum)
+
+#define SL_UTILITY_VERSION \
+    SL_UTILITY_XSTR(SL_UTILITY_VERSION_MAJOR) \
+    "." SL_UTILITY_XSTR(SL_UTILITY_VERSION_MINOR) \
+    "." SL_UTILITY_XSTR(SL_UTILITY_VERSION_PATCH)
 
 #endif
