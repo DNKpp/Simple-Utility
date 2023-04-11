@@ -11,16 +11,15 @@ on: [push]
 jobs:
   docs:
     runs-on: ubuntu-latest
-    container: pommalabs/doxygen:latest
+    container: greenbone/doxygen:latest
 
     steps:
     - uses: actions/checkout@v3
   
-    - name: Install & Update Tools
-      run: |
-        apk update
-        apk add cmake
-        apk add ninja-build--repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
+#    - name: Install & Update Tools
+#      run: |
+#        apk update
+#        apk add cmake
 
     - name: Generate Docs
       run: |
