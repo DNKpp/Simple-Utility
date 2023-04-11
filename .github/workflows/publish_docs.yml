@@ -20,7 +20,7 @@ jobs:
       run: |
         apk update
         apk add cmake
-        apk add clang++
+        apk add g++
         apk add make
         apk add git
 
