@@ -22,6 +22,7 @@ jobs:
         apk add cmake
         apk add g++
         apk add make
+        apk add git
 
     - name: Generate Docs
       run: |
