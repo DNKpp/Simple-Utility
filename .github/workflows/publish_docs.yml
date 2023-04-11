@@ -15,6 +15,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+  
+    - name: Update CMake
+      run: |
+        sudo apt-get update
+        sudo apt-get upgrade cmake -y
 
     - name: Generate Docs
       run: |
