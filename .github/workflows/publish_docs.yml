@@ -18,8 +18,8 @@ jobs:
   
     - name: Update CMake
       run: |
-        apt-get update
-        apt-get install cmake -y
+        apk update
+        apk install cmake -y
 
     - name: Generate Docs
       run: |
