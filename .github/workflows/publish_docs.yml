@@ -11,7 +11,7 @@ on: [push]
 jobs:
   docs:
     runs-on: ubuntu-latest
-    container: greenbone/doxygen:latest
+    container: pommalabs/doxygen:latest
 
     steps:
     - uses: actions/checkout@v3
