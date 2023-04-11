@@ -95,7 +95,14 @@
 			"installRoot": "${projectDir}\\out\\install\\${name}",
 			"buildCommandArgs": "GenerateDocs",
 			"ctestCommandArgs": "",
-			"inheritEnvironments": [ "msvc_x64_x64" ]
+			"inheritEnvironments": [ "msvc_x64_x64" ],
+			"variables": [
+				{
+					"name": "SIMPLE_UTILITY_GEN_DOCS_ENABLED",
+					"value": "True",
+					"type": "BOOL"
+				}
+			]
 		}
 	]
 }
