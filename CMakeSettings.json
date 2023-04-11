@@ -87,6 +87,15 @@
 			"rsyncCommandArgs": "-t --delete --delete-excluded",
 			"remoteCopyBuildOutput": false,
 			"remoteCopySourcesMethod": "rsync"
+		},
+		{
+			"name": "GenerateDocs",
+			"generator": "Ninja",
+			"buildRoot": "${projectDir}\\out\\build\\${name}",
+			"installRoot": "${projectDir}\\out\\install\\${name}",
+			"buildCommandArgs": "GenerateDocs",
+			"ctestCommandArgs": "",
+			"inheritEnvironments": [ "msvc_x64_x64" ]
 		}
 	]
 }
