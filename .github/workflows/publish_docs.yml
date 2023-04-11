@@ -11,15 +11,16 @@ on: [push]
 jobs:
   docs:
     runs-on: ubuntu-latest
-    container: greenbone/doxygen:latest
+    container: pommalabs/doxygen:latest
 
     steps:
     - uses: actions/checkout@v3
   
     - name: Install & Update Tools
       run: |
-        apt-get update
-        apt-get install cmake
+        apk update
+        apk add cmake
+        apk add g++
 
     - name: Generate Docs
       run: |
