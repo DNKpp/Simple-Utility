@@ -1,0 +1,7 @@
+<map id="nullables" name="nullables">
+<area shape="rect" id="node1" href="$d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html" title="Contains nullable algorithm related symbols." alt="" coords="168,5,260,31"/>
+<area shape="rect" id="node2" href="$df/dc9/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_d_a_p_t_e_r.html" title=" " alt="" coords="178,55,250,80"/>
+<area shape="rect" id="node3" href="$d5/d8f/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___c_u_s_t_o_m_i_z_a_t_i_o_n___p_o_i_n_t_s.html" title="Contains several customization points, which users may hook for their custom types." alt="" coords="135,104,293,129"/>
+<area shape="rect" id="node4" href="$dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html" title="These traits are used by the algorithms and my be specialized by users for their custom types." alt="" coords="186,153,242,179"/>
+<area shape="rect" id="node5" title="This library offers some simple algorithms for convenient working with nullable types." alt="" coords="5,80,87,105"/>
+</map>

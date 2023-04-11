@@ -1,0 +1,6 @@
+<map id="traits" name="traits">
+<area shape="rect" id="node1" href="$df/dc9/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_d_a_p_t_e_r.html" title=" " alt="" coords="476,14,548,39"/>
+<area shape="rect" id="node2" href="$d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html" title="A helper type, which acts as a nullable resource handle with self&#45;cleanup support." alt="" coords="453,89,571,114"/>
+<area shape="rect" id="node3" title="These traits are used by the algorithms and my be specialized by users for their custom types." alt="" coords="136,51,192,77"/>
+<area shape="rect" id="node4" href="$d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html" title="This library offers some simple algorithms for convenient working with nullable types." alt="" coords="5,51,87,77"/>
+</map>

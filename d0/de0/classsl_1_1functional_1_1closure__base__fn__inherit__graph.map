@@ -1,0 +1,8 @@
+<map id="sl::functional::closure_base_fn&lt; TFunc &gt;" name="sl::functional::closure_base_fn&lt; TFunc &gt;">
+<area shape="rect" id="node1" title="Helper type which simply stores functional objects or function pointers." alt="" coords="609,71,771,112"/>
+<area shape="rect" id="node4" href="$df/d86/classsl_1_1functional_1_1predicate__fn.html" title="Adapter type for predicates, which accepts a functional type and enables pipe, conjunctive and disjun..." alt="" coords="822,5,997,47"/>
+<area shape="rect" id="node5" href="$da/dbe/classsl_1_1functional_1_1transform__fn.html" title="Adapter type which accepts a functional type and enables pipe chaining and currying." alt="" coords="820,71,999,112"/>
+<area shape="rect" id="node6" href="$d6/d3b/classsl_1_1nullables_1_1algorithm__fn.html" title="The core algorithm helper, which executes the held algorithm when used as the right&#45;hand&#45;side of oper..." alt="" coords="824,136,995,177"/>
+<area shape="rect" id="node2" href="$d6/d62/structsl_1_1unified__base.html" title=" " alt="" coords="385,71,560,112"/>
+<area shape="rect" id="node3" href="$d6/d62/structsl_1_1unified__base.html" title="Helper type, which can be used to create a unified base class for templated derived classes and thus ..." alt="" coords="5,78,188,105"/>
+</map>

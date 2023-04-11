@@ -1,0 +1,6 @@
+<map id="sl::nullables::adapter&lt; TNull, TAdapted &gt;" name="sl::nullables::adapter&lt; TNull, TAdapted &gt;">
+<area shape="rect" id="node1" title="A adapter class, mimic the behaviour of nullable types." alt="" coords="381,71,540,112"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,5,192,47"/>
+<area shape="rect" id="node3" href="$dd/d09/structsl_1_1nullables_1_1in__place__null__t.html" title="Tag type for adapters, which can be used to disambiguate the construction with just a null&#45;object." alt="" coords="17,71,180,112"/>
+<area shape="rect" id="node4" href="$d2/d03/structsl_1_1nullables_1_1adapter__null__t.html" title="Dedicated null type for adapters." alt="" coords="19,136,178,177"/>
+</map>

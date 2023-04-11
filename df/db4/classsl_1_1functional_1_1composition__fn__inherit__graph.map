@@ -1,0 +1,5 @@
+<map id="sl::functional::composition_fn&lt; TOperation, TFunctions &gt;" name="sl::functional::composition_fn&lt; TOperation, TFunctions &gt;">
+<area shape="rect" id="node1" title="Functional type, which composes multiple functional objects via the given operation." alt="" coords="5,200,228,241"/>
+<area shape="rect" id="node2" href="$d6/d62/structsl_1_1unified__base.html" title=" " alt="" coords="21,109,212,151"/>
+<area shape="rect" id="node3" href="$d6/d62/structsl_1_1unified__base.html" title="Helper type, which can be used to create a unified base class for templated derived classes and thus ..." alt="" coords="25,5,208,32"/>
+</map>
