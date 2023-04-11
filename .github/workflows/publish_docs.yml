@@ -11,10 +11,15 @@ on: [push]
 jobs:
   docs:
     runs-on: ubuntu-latest
-    container: pommalabs/doxygen:latest #greenbone/doxygen:latest
+    container: greenbone/doxygen:latest
 
     steps:
     - uses: actions/checkout@v3
+  
+    - name: Update CMake
+      run: |
+        apt-get update
+        apt-get upgrade cmake -y
 
     - name: Generate Docs
       run: |
