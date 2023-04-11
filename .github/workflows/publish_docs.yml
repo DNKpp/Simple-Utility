@@ -18,8 +18,8 @@ jobs:
   
     - name: Install & Update Tools
       run: |
-        sudo apt-get update
-        sudo apt-get install cmake
+        apt-get update
+        apt-get install cmake
 
     - name: Generate Docs
       run: |
