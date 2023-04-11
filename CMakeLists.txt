@@ -33,6 +33,6 @@ if (SIMPLE_UTILITY_BUILD_TESTS OR CMAKE_SOURCE_DIR STREQUAL Simple-Utility_SOURC
 endif()
 
 option(SIMPLE_UTILITY_GEN_DOCS_ENABLED "Enables the GenerateDocs target." OFF)
-if (SIMPLE_UTILITY_CONFIGURE_DOXYGEN)
+if (SIMPLE_UTILITY_GEN_DOCS_ENABLED)
 	add_subdirectory("docs")
 endif()
