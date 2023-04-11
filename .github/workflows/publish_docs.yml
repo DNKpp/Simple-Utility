@@ -4,29 +4,25 @@ env:
     BUILD_DIR: ./build
     CMAKE_ADDITIONAL_CONFIG_ARGS: -DSIMPLE_UTILITY_GEN_DOCS_ENABLED=ON
 
-on:
-  release:
-    types: [released]
+on: [push]
+#  release:
+#    types: [released]
 
 jobs:
   docs:
     runs-on: ubuntu-latest
+    container: greenbone/doxygen:latest
 
     steps:
     - uses: actions/checkout@v3
-  
-    - name: Install Tools
-      run: |
-        sudo apt-get update
-        sudo apt-get install doxygen graphviz
 
     - name: Generate Docs
       run: |
-        cmake -B ${{ env.BUILD_DIR }} -S . ${{ env.CMAKE_ADDITIONAL_CONFIG_ARGS }}
+        cmake -B ${{ env.BUILD_DIR }} -S . ${{ env.CMAKE_ADDITIONAL_CONFIG_ARGS }} --log-level=VERBOSE
         cmake --build ${{ env.BUILD_DIR }} --target GenerateDocs
 
-    - name: Publish Docs
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ${{ env.BUILD_DIR }}/docs/html
+#    - name: Publish Docs
+#      uses: peaceiris/actions-gh-pages@v3
+#      with:
+#        github_token: ${{ secrets.GITHUB_TOKEN }}
+#        publish_dir: ${{ env.BUILD_DIR }}/docs/html
