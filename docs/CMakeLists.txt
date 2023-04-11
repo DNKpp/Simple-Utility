@@ -6,7 +6,7 @@ if (NOT DOXYGEN_FOUND)
 endif()
 
 get_target_property(DOXY_DOT_PATH Doxygen::dot LOCATION)
-message(NOTICE "Using dot at: ${DOXY_DOT_PATH}")
+message(VERBOSE "Using dot at: ${DOXY_DOT_PATH}")
 
 CPMAddPackage("gh:jothepro/doxygen-awesome-css@2.2.0")
 
