@@ -1,10 +1,8 @@
 name: publish docs
 
 env:
-    WORKING_DIR: ./docs
-    DOXYFILE: Doxyfile
-    BUILD_DIR: ./docs/build
-    CONFIGURE_DOXY_FLAG: Simple-Utility_CONFIGURE_DOXYGEN
+    BUILD_DIR: ./build
+    CMAKE_ADDITIONAL_CONFIG_ARGS: -DSIMPLE_UTILITY_GEN_DOCS_ENABLED=ON
 
 on:
   release:
@@ -15,19 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-
-    - name: Configure Doxygen
+    - uses: actions/checkout@v3
+  
+    - name: Install Tools
       run: |
-        cmake -D${{ env.CONFIGURE_DOXY_FLAG }}=ON
+        sudo apt-get update
+        sudo apt-get install doxygen graphviz
 
-    - name: Run Doxygen
-      uses: mattnotmitt/doxygen-action@v1
-      with:
-        working-directory: ${{ env.WORKING_DIR }}
-        doxyfile-path: ${{ env.DOXYFILE }}
+    - name: Generate Docs
+      run: |
+        cmake -B ${{ env.BUILD_DIR }} -S . ${{ env.CMAKE_ADDITIONAL_CONFIG_ARGS }}
+        cmake --build --target GenerateDocs
 
-    - name: Deploy
+    - name: Publish Docs
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
