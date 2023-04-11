@@ -4,9 +4,9 @@ env:
     BUILD_DIR: ./build
     CMAKE_ADDITIONAL_CONFIG_ARGS: -DSIMPLE_UTILITY_GEN_DOCS_ENABLED=ON
 
-on: [push]
-#  release:
-#    types: [released]
+on:
+  release:
+    types: [released]
 
 jobs:
   docs:
@@ -29,8 +29,8 @@ jobs:
         cmake  --log-level=VERBOSE -B ${{ env.BUILD_DIR }} -S . ${{ env.CMAKE_ADDITIONAL_CONFIG_ARGS }}
         cmake --build ${{ env.BUILD_DIR }} --target GenerateDocs
 
-#    - name: Publish Docs
-#      uses: peaceiris/actions-gh-pages@v3
-#      with:
-#        github_token: ${{ secrets.GITHUB_TOKEN }}
-#        publish_dir: ${{ env.BUILD_DIR }}/docs/html
+    - name: Publish Docs
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ${{ env.BUILD_DIR }}/docs/html
