@@ -20,7 +20,7 @@ jobs:
       run: |
         apk update
         apk add cmake
-        apk add ninja-build
+        apk add ninja-build--repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
 
     - name: Generate Docs
       run: |
