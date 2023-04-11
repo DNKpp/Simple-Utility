@@ -18,7 +18,7 @@ jobs:
 
     - name: Generate Docs
       run: |
-        cmake -B ${{ env.BUILD_DIR }} -S . ${{ env.CMAKE_ADDITIONAL_CONFIG_ARGS }} --log-level=VERBOSE
+        cmake  --log-level=VERBOSE -B ${{ env.BUILD_DIR }} -S . ${{ env.CMAKE_ADDITIONAL_CONFIG_ARGS }}
         cmake --build ${{ env.BUILD_DIR }} --target GenerateDocs
 
 #    - name: Publish Docs
