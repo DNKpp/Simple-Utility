@@ -19,7 +19,7 @@ jobs:
     - name: Update CMake
       run: |
         apt-get update
-        apt-get upgrade cmake -y
+        apt-get install cmake -y
 
     - name: Generate Docs
       run: |
