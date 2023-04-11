@@ -16,10 +16,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
   
-    - name: Update CMake
+    - name: Install & Update Tools
       run: |
         apk update
         apk add cmake
+        apk add ninja-build
 
     - name: Generate Docs
       run: |
