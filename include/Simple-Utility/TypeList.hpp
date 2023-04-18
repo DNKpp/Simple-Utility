@@ -13,6 +13,8 @@
 #include <type_traits>
 #include <utility>
 
+#include "Simple-Utility/concepts/stl_extensions.hpp"
+
 namespace sl::type_list
 {
 	template <class... Types>
@@ -97,6 +99,18 @@ namespace sl::type_list
 
 	template <class Query, concepts::type_list_like List>
 	inline constexpr std::size_t index_of_v = index_of<Query, List>::value;
+
+	template <class Query, concepts::type_list_like List>
+	struct contained_by;
+
+	template <class Query, template <class...> class Container, class... Elements>
+	struct contained_by<Query, Container<Elements...>>
+		: public std::disjunction<std::is_same<Query, Elements>...>
+	{
+	};
+
+	template <class Query, concepts::type_list_like List>
+	inline constexpr bool contained_by_v = contained_by<Query, List>::value;
 
 	template <template <class> class UnaryOperation, concepts::type_list_like List>
 	struct transform;
