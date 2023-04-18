@@ -56,6 +56,23 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+	"type_list::contained_by determines whether the queried type is contained inside the type-list.",
+	"[type_list]",
+	((bool expected, class Query, class T), expected, Query, T),
+	(false, int, tl::TypeList<>),
+	(false, int&&, tl::TypeList<int, int&>),
+	(true, int, tl::TypeList<int>),
+	(true, int, tl::TypeList<int, int&>),
+	(true, int&, tl::TypeList<int, int&, int&, float>),
+	(true, float, tl::TypeList<int, int&, int&, float>),
+	(true, int&, std::tuple<int, int&, int&, float>)
+)
+{
+	STATIC_REQUIRE(expected == tl::contained_by<Query, T>::value);
+	STATIC_REQUIRE(expected == tl::contained_by_v<Query, T>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
 	"concepts::type_list_like checks for valid types.",
 	"[type_list][concept]",
 	((bool expected, class T), expected, T),
