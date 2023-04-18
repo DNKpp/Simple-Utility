@@ -69,3 +69,52 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(std::same_as<Expected, typename tl::populate_from<TargetContainer, Input>::type>);
 	STATIC_REQUIRE(std::same_as<Expected, tl::populated_from_t<TargetContainer, Input>>);
 }
+
+TEMPLATE_PRODUCT_TEST_CASE(
+	"type_list::tail_t trims the first element from the container.",
+	"[type_list]",
+	trait_test,
+	(
+		(tl::TypeList<>, tl::TypeList<>),
+		(tl::TypeList<int>, tl::TypeList<>),
+		(tl::TypeList<float, int>, tl::TypeList<int>),
+		(tl::TypeList<float, tl::TypeList<int>>, tl::TypeList<tl::TypeList<int>>),
+		(std::tuple<float, int>, std::tuple<int>)
+	)
+)
+{
+	STATIC_REQUIRE(std::same_as<expected_t<TestType>, typename tl::tail<input_t<TestType>>::type>);
+	STATIC_REQUIRE(std::same_as<expected_t<TestType>, tl::tail_t<input_t<TestType>>>);
+}
+
+TEMPLATE_PRODUCT_TEST_CASE(
+	"type_list::front_t yields the type of the first element.",
+	"[type_list]",
+	trait_test,
+	(
+		(tl::TypeList<int>, int),
+		(tl::TypeList<float, int>, float),
+		(tl::TypeList<tl::TypeList<float>, int>, tl::TypeList<float>),
+		(std::tuple<float, int>, float)
+	)
+)
+{
+	STATIC_REQUIRE(std::same_as<expected_t<TestType>, typename tl::front<input_t<TestType>>::type>);
+	STATIC_REQUIRE(std::same_as<expected_t<TestType>, tl::front_t<input_t<TestType>>>);
+}
+
+TEMPLATE_PRODUCT_TEST_CASE(
+	"type_list::back_t yields the type of the last element.",
+	"[type_list]",
+	trait_test,
+	(
+		(tl::TypeList<int>, int),
+		(tl::TypeList<float, int>, int),
+		(tl::TypeList<float, tl::TypeList<int>>, tl::TypeList<int>),
+		(std::tuple<float, int>, int)
+	)
+)
+{
+	STATIC_REQUIRE(std::same_as<expected_t<TestType>, typename tl::back<input_t<TestType>>::type>);
+	STATIC_REQUIRE(std::same_as<expected_t<TestType>, tl::back_t<input_t<TestType>>>);
+}
