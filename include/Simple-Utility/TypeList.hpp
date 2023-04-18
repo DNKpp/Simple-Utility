@@ -75,4 +75,19 @@ namespace sl::concepts
 							&& type_list::detail::check_indices<T>;
 }
 
+namespace sl::type_list
+{
+	template <template <class...> class TargetContainer, concepts::type_list_like List>
+	struct populate_from;
+
+	template <template <class...> class TargetContainer, class... Elements, template <class...> class SourceContainer>
+	struct populate_from<TargetContainer, SourceContainer<Elements...>>
+	{
+		using type = TargetContainer<Elements...>;
+	};
+
+	template <template <class...> class TargetContainer, concepts::type_list_like List>
+	using populated_from_t = typename populate_from<TargetContainer, List>::type;
+}
+
 #endif

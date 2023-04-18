@@ -54,3 +54,18 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(sl::concepts::type_list_like<T> == expected);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_list::populated_from_t fills the target container with content from source.",
+	"[type_list]",
+	((bool dummy, class Input, template <class...> class TargetContainer, class Expected), dummy, Input, TargetContainer, Expected),
+	(true, std::tuple<>, tl::TypeList, tl::TypeList<>),
+	(true, std::tuple<int>, tl::TypeList, tl::TypeList<int>),
+	(true, std::tuple<float, int>, tl::TypeList, tl::TypeList<float, int>),
+	(true, std::tuple<float, tl::TypeList<int>>, tl::TypeList, tl::TypeList<float, tl::TypeList<int>>),
+	(true, tl::TypeList<float, tl::TypeList<int>>, std::tuple, std::tuple<float, tl::TypeList<int>>)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::populate_from<TargetContainer, Input>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::populated_from_t<TargetContainer, Input>>);
+}
