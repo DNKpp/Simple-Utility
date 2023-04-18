@@ -13,8 +13,6 @@
 #include <type_traits>
 #include <utility>
 
-#include "Simple-Utility/concepts/stl_extensions.hpp"
-
 namespace sl::type_list
 {
 	template <class... Types>
