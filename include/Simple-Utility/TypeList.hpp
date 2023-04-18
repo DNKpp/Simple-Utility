@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <concepts>
 #include <tuple>
 #include <type_traits>
@@ -224,6 +225,61 @@ namespace sl::type_list
 
 	template <concepts::type_list_like... Lists>
 	using concat_t = typename concat<Lists...>::type;
+
+	template <template <class...> class TargetContainer, std::size_t index, concepts::type_list_like... Lists>
+		requires (sizeof...(Lists) == 0)
+				|| (index < std::min({std::tuple_size_v<Lists>...}))
+	struct zip_elements_as
+	{
+		using type = TargetContainer<std::tuple_element_t<index, Lists>...>;
+	};
+
+	template <template <class...> class TargetContainer, std::size_t index, concepts::type_list_like... Lists>
+	using zip_elements_as_t = typename zip_elements_as<TargetContainer, index, Lists...>::type;
+
+	template <std::size_t index, concepts::type_list_like... Lists>
+	using zip_elements = zip_elements_as<common_container<Lists...>::template type, index, Lists...>;
+
+	template <std::size_t index, concepts::type_list_like... Lists>
+	using zip_elements_t = typename zip_elements<index, Lists...>::type;
+}
+
+namespace sl::type_list::detail
+{
+	template <class, template <class...> class TargetContainer, concepts::type_list_like... Lists>
+	struct zip_as;
+
+	template <std::size_t... indices, template <class...> class TargetContainer, concepts::type_list_like... Lists>
+	struct zip_as<std::index_sequence<indices...>, TargetContainer, Lists...>
+	{
+		using type = TargetContainer<zip_elements_as_t<TargetContainer, indices, Lists...>...>;
+	};
+
+	template <template <class...> class TargetContainer, concepts::type_list_like... Lists>
+	using zip_as_t = typename zip_as<
+		// handles zero Lists case correctly
+		std::make_index_sequence<std::min({std::max<std::size_t>({0u, std::tuple_size_v<Lists>...}), std::tuple_size_v<Lists>...})>,
+		TargetContainer,
+		Lists...
+	>::type;
+}
+
+namespace sl::type_list
+{
+	template <template <class...> class TargetContainer, concepts::type_list_like... Lists>
+	struct zip_as
+	{
+		using type = detail::zip_as_t<TargetContainer, Lists...>;
+	};
+
+	template <template <class...> class TargetContainer, concepts::type_list_like... Lists>
+	using zip_as_t = typename zip_as<TargetContainer, Lists...>::type;
+
+	template <concepts::type_list_like... Lists>
+	using zip = zip_as<common_container<Lists...>::template type, Lists...>;
+
+	template <concepts::type_list_like... Lists>
+	using zip_t = typename zip<Lists...>::type;
 }
 
 #endif
