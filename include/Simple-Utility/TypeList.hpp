@@ -88,6 +88,54 @@ namespace sl::type_list
 
 	template <template <class...> class TargetContainer, concepts::type_list_like List>
 	using populated_from_t = typename populate_from<TargetContainer, List>::type;
+
+	template <class Container>
+	struct tail;
+
+	template <template <class...> class Container>
+	struct tail<Container<>>
+	{
+		using type = Container<>;
+	};
+
+	template <template <class...> class Container, class First, class... Others>
+	struct tail<Container<First, Others...>>
+	{
+		using type = Container<Others...>;
+	};
+
+	template <concepts::type_list_like List>
+	using tail_t = typename tail<List>::type;
+
+	template <class Container>
+	struct front;
+
+	template <template <class...> class Container, class First, class... Others>
+	struct front<Container<First, Others...>>
+	{
+		using type = First;
+	};
+
+	template <concepts::type_list_like List>
+	using front_t = typename front<List>::type;
+
+	template <class Container>
+	struct back;
+
+	template <template <class...> class Container, class First, class... Others>
+	struct back<Container<First, Others...>>
+		: public back<Container<Others...>>
+	{
+	};
+
+	template <template <class...> class Container, class Element>
+	struct back<Container<Element>>
+	{
+		using type = Element;
+	};
+
+	template <concepts::type_list_like List>
+	using back_t = typename back<List>::type;
 }
 
 #endif
