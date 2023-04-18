@@ -149,6 +149,29 @@ namespace sl::type_list
 
 	template <concepts::type_list_like List>
 	using back_t = typename back<List>::type;
+
+	template <concepts::type_list_like... Lists>
+	struct concat;
+
+	template <concepts::type_list_like List>
+	struct concat<List>
+	{
+		using type = List;
+	};
+
+	template <
+		template <class...> class LhsContainer,
+		class... LhsElements,
+		template <class...> class RhsContainer,
+		class... RhsElements,
+		concepts::type_list_like... Others>
+	struct concat<LhsContainer<LhsElements...>, RhsContainer<RhsElements...>, Others...>
+		: public concat<LhsContainer<LhsElements..., RhsElements...>, Others...>
+	{
+	};
+
+	template <concepts::type_list_like... Lists>
+	using concat_t = typename concat<Lists...>::type;
 }
 
 #endif
