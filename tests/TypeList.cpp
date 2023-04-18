@@ -58,7 +58,7 @@ TEMPLATE_TEST_CASE_SIG(
 template <class T>
 struct test_transformation
 {
-	using type = tl::TypeList<T>; 
+	using type = tl::TypeList<T>;
 };
 
 TEMPLATE_PRODUCT_TEST_CASE(
@@ -140,4 +140,19 @@ TEMPLATE_PRODUCT_TEST_CASE(
 {
 	STATIC_REQUIRE(std::same_as<expected_t<TestType>, typename tl::back<input_t<TestType>>::type>);
 	STATIC_REQUIRE(std::same_as<expected_t<TestType>, tl::back_t<input_t<TestType>>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_list::concat_t appends all additional list into the first.",
+	"[type_list]",
+	((bool dummy, class Expected, class... Lists), dummy, Expected, Lists...),
+	(true, tl::TypeList<>, tl::TypeList<>),
+	(true, tl::TypeList<int>, tl::TypeList<int>),
+	(true, tl::TypeList<int, int&>, tl::TypeList<int>, tl::TypeList<int&>),
+	(true, tl::TypeList<int, int&&, int&>, tl::TypeList<int, int&&>, tl::TypeList<int&>),
+	(true, tl::TypeList<int, int&&, int&, const int&>, tl::TypeList<int, int&&>, tl::TypeList<int&>, tl::TypeList<const int&>)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::concat<Lists...>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::concat_t<Lists...>>);
 }
