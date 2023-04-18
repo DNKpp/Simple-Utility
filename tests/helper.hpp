@@ -13,6 +13,27 @@
 #include <concepts>
 #include <type_traits>
 
+template <class Input, class Expected>
+struct trait_test
+{
+};
+
+template <class T>
+struct trait_test_trait;
+
+template <class Input, class Expected>
+struct trait_test_trait<trait_test<Input, Expected>>
+{
+    using input_type = Input;
+    using expected_type = Expected;
+};
+
+template <class T>
+using input_t = typename trait_test_trait<T>::input_type;
+
+template <class T>
+using expected_t = typename trait_test_trait<T>::expected_type;
+
 template <class T>
 using as_lvalue_ref_t = std::remove_cvref_t<T>&;
 
