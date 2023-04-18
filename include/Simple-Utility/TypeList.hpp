@@ -183,6 +183,26 @@ namespace sl::type_list
 	using back_t = typename back<List>::type;
 
 	template <concepts::type_list_like... Lists>
+	struct common_container;
+
+	template <template <class...> class Container, class... Elements>
+	struct common_container<Container<Elements...>>
+	{
+		template <class... Ts>
+		using type = Container<Ts...>;
+	};
+
+	template <
+		template <class...> class Container,
+		class... LhsElements,
+		class... RhsElements,
+		concepts::type_list_like... Others>
+	struct common_container<Container<LhsElements...>, Container<RhsElements...>, Others...>
+		: public common_container<Container<LhsElements...>, Others...>
+	{
+	};
+
+	template <concepts::type_list_like... Lists>
 	struct concat;
 
 	template <concepts::type_list_like List>

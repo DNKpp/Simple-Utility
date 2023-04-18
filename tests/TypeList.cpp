@@ -174,6 +174,29 @@ TEMPLATE_PRODUCT_TEST_CASE(
 	STATIC_REQUIRE(std::same_as<expected_t<TestType>, tl::back_t<input_t<TestType>>>);
 }
 
+/*
+ * This test case was very tricky, as the initial approach, just comparing the two templates via the usual specialization technique,
+ * was flawed and lead me to a language defect. It is perfectly answered here:
+ * https://stackoverflow.com/questions/76048362/whats-the-correct-outcome-of-that-template-template-type-specialization
+ *
+ * Even if the current approach is merely hack, it should do fine (hopefully).
+ */
+template <class T, class... Others>
+using AliasTypeList = tl::TypeList<T, Others...>;
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_list::common_container_t yields a templated alias.",
+	"[type_list]",
+	((bool dummy, template <class...> class Expected, class... Lists), dummy, Expected, Lists...),
+	(true, std::tuple, std::tuple<int>),
+	(true, tl::TypeList, tl::TypeList<>),
+	(true, tl::TypeList, tl::TypeList<int>, tl::TypeList<>),
+	(true, tl::TypeList, tl::TypeList<int>, AliasTypeList<float, int&>)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected<>, typename tl::common_container<Lists...>::template type<>>);
+}
+
 TEMPLATE_TEST_CASE_SIG(
 	"type_list::concat_t appends all additional list into the first.",
 	"[type_list]",
