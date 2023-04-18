@@ -50,4 +50,29 @@ struct std::tuple_element<index, sl::type_list::TypeList<Types...>> // NOLINT(ce
 {
 };
 
+namespace sl::type_list::detail
+{
+	template <class List, std::size_t index>
+	// ReSharper disable once CppUseTypeTraitAlias
+	constexpr bool validIndex = requires { typename std::tuple_element<index, List>::type; };
+
+	template <class List>
+	constexpr bool check_indices = []<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...>)
+	{
+		return (validIndex<List, indices> && ...);
+	}(std::make_index_sequence<std::tuple_size_v<List>>{});
+}
+
+namespace sl::concepts
+{
+	template <class T>
+	concept type_list_like = requires
+							{
+								typename std::tuple_size<T>::type;
+								{ std::tuple_size_v<T> } -> std::convertible_to<std::size_t>;
+							}
+							&& std::cmp_less_equal(0, std::tuple_size_v<T>)
+							&& type_list::detail::check_indices<T>;
+}
+
 #endif

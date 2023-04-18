@@ -39,3 +39,18 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(std::same_as<Expected, typename std::tuple_element<index, tl::TypeList<Ts...>>::type>);
 	STATIC_REQUIRE(std::same_as<Expected, std::tuple_element_t<index, tl::TypeList<Ts...>>>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"concepts::type_list_like checks for valid types.",
+	"[type_list][concept]",
+	((bool expected, class T), expected, T),
+	(false, std::vector<int>),
+	(true, tl::TypeList<int>),
+	(true, std::tuple<>),
+	(true, std::tuple<int>),
+	(true, std::pair<int, int>),
+	(true, std::array<int, 0>)
+)
+{
+	STATIC_REQUIRE(sl::concepts::type_list_like<T> == expected);
+}
