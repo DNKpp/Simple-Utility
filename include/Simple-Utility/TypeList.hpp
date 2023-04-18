@@ -78,17 +78,29 @@ namespace sl::concepts
 
 namespace sl::type_list
 {
+	template <template <class> class UnaryOperation, concepts::type_list_like List>
+	struct transform;
+
+	template <template <class> class UnaryOperation, template <class...> class Container, class... Elements>
+	struct transform<UnaryOperation, Container<Elements...>>
+	{
+		using type = Container<typename UnaryOperation<Elements>::type...>;
+	};
+
+	template <template <class> class UnaryOperation, concepts::type_list_like List>
+	using transform_t = typename transform<UnaryOperation, List>::type;
+
 	template <template <class...> class TargetContainer, concepts::type_list_like List>
-	struct populate_from;
+	struct populated_from;
 
 	template <template <class...> class TargetContainer, class... Elements, template <class...> class SourceContainer>
-	struct populate_from<TargetContainer, SourceContainer<Elements...>>
+	struct populated_from<TargetContainer, SourceContainer<Elements...>>
 	{
 		using type = TargetContainer<Elements...>;
 	};
 
 	template <template <class...> class TargetContainer, concepts::type_list_like List>
-	using populated_from_t = typename populate_from<TargetContainer, List>::type;
+	using populated_from_t = typename populated_from<TargetContainer, List>::type;
 
 	template <class Container>
 	struct tail;
