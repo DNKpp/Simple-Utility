@@ -203,6 +203,7 @@ TEMPLATE_TEST_CASE_SIG(
 	((bool dummy, class Expected, class... Lists), dummy, Expected, Lists...),
 	(true, tl::TypeList<>, tl::TypeList<>),
 	(true, tl::TypeList<int>, tl::TypeList<int>),
+	(true, tl::TypeList<int>, tl::TypeList<int>, tl::TypeList<>),
 	(true, tl::TypeList<int, int&>, tl::TypeList<int>, tl::TypeList<int&>),
 	(true, tl::TypeList<int, int&&, int&>, tl::TypeList<int, int&&>, tl::TypeList<int&>),
 	(true, tl::TypeList<int, int&&, int&, const int&>, tl::TypeList<int, int&&>, tl::TypeList<int&>, tl::TypeList<const int&>)
@@ -210,4 +211,67 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(std::same_as<Expected, typename tl::concat<Lists...>::type>);
 	STATIC_REQUIRE(std::same_as<Expected, tl::concat_t<Lists...>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_list::zip_elements_as creates a TargetContainer with elements at a specific index of the provides lists.",
+	"[type_list]",
+	((class Expected, template <class...> class TargetContainer, std::size_t index, class... Lists),
+		Expected, TargetContainer, index, Lists...),
+	(tl::TypeList<>, tl::TypeList, 0),
+	(tl::TypeList<int>, tl::TypeList, 0, tl::TypeList<int>),
+	(tl::TypeList<int, int>, tl::TypeList, 0, tl::TypeList<int>, tl::TypeList<int>),
+	(tl::TypeList<int, int&>, tl::TypeList, 0, tl::TypeList<int>, tl::TypeList<int&>),
+	(tl::TypeList<int&&, const int&>, tl::TypeList, 1, tl::TypeList<int, int&&>, tl::TypeList<int&, const int&>),
+	(tl::TypeList<int&&, const int&>, tl::TypeList, 1, std::tuple<int, int&&>, std::tuple<int&, const int&>),
+	(std::tuple<int&&, const int&>, std::tuple, 1, std::tuple<int, int&&>, std::tuple<int&, const int&>)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::zip_elements_as<TargetContainer, index, Lists...>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::zip_elements_as_t<TargetContainer, index, Lists...>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_list::zip_elements creates a common_container type with elements at a specific index of the provides lists.",
+	"[type_list]",
+	((class Expected, std::size_t index, class... Lists), Expected, index, Lists...),
+	//(tl::TypeList<>, 0), common_container isn't possible with zero lists
+	(tl::TypeList<int>, 0, tl::TypeList<int>),
+	(tl::TypeList<int, int>, 0, tl::TypeList<int>, tl::TypeList<int>),
+	(tl::TypeList<int, int&>, 0, tl::TypeList<int>, tl::TypeList<int&>),
+	(tl::TypeList<int&&, const int&>, 1, tl::TypeList<int, int&&>, tl::TypeList<int&, const int&>),
+	(std::tuple<int&&, const int&>, 1, std::tuple<int, int&&>, std::tuple<int&, const int&>)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::zip_elements<index, Lists...>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::zip_elements_t<index, Lists...>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_list::zip_as creates a TargetContainer of TargetContainers with elements of the provides lists.",
+	"[type_list]",
+	((bool dummy, class Expected, template <class...> class TargetContainer, class... Lists), dummy, Expected, TargetContainer, Lists
+		...),
+	(true, tl::TypeList<>, tl::TypeList),
+	(true, tl::TypeList<>, tl::TypeList, tl::TypeList<>),
+	(true, tl::TypeList<tl::TypeList<int>>, tl::TypeList, tl::TypeList<int>),
+	(true, tl::TypeList<tl::TypeList<int>, tl::TypeList<int&>>, tl::TypeList, tl::TypeList<int, int&>)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::zip_as<TargetContainer, Lists...>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::zip_as_t<TargetContainer, Lists...>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_list::zip creates a common_container of common_container with elements of the provides lists.",
+	"[type_list]",
+	((bool dummy, class Expected, class... Lists), dummy, Expected, Lists...),
+	// (true, tl::TypeList<>),
+	(true, tl::TypeList<>, tl::TypeList<>),
+	(true, tl::TypeList<tl::TypeList<int>>, tl::TypeList<int>),
+	(true, tl::TypeList<tl::TypeList<int>, tl::TypeList<int&>>, tl::TypeList<int, int&>)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::zip<Lists...>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::zip_t<Lists...>>);
 }
