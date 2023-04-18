@@ -78,6 +78,26 @@ namespace sl::concepts
 
 namespace sl::type_list
 {
+	template <class Query, concepts::type_list_like List>
+	struct index_of;
+
+	template <class Query, template <class...> class Container, class... Others>
+	struct index_of<Query, Container<Query, Others...>>
+		: public std::integral_constant<std::size_t, 0>
+	{
+	};
+
+	template <class Query, template <class...> class Container, class First, class... Others>
+	struct index_of<Query, Container<First, Others...>>
+		: public std::integral_constant<
+			std::size_t,
+			1u + index_of<Query, Container<Others...>>::value>
+	{
+	};
+
+	template <class Query, concepts::type_list_like List>
+	inline constexpr std::size_t index_of_v = index_of<Query, List>::value;
+
 	template <template <class> class UnaryOperation, concepts::type_list_like List>
 	struct transform;
 

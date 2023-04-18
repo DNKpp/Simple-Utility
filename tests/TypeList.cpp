@@ -41,6 +41,21 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+	"type_list::index_of yields index of the queried type.",
+	"[type_list]",
+	((std::size_t expected, class Query, class T), expected, Query, T),
+	(0, int, tl::TypeList<int>),
+	(0, int, tl::TypeList<int, int&>),
+	(1, int&, tl::TypeList<int, int&, int&, float>),
+	(3, float, tl::TypeList<int, int&, int&, float>),
+	(1, int&, std::tuple<int, int&, int&, float>)
+)
+{
+	STATIC_REQUIRE(expected == tl::index_of<Query, T>::value);
+	STATIC_REQUIRE(expected == tl::index_of_v<Query, T>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
 	"concepts::type_list_like checks for valid types.",
 	"[type_list][concept]",
 	((bool expected, class T), expected, T),
