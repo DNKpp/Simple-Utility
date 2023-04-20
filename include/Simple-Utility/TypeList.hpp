@@ -83,7 +83,7 @@ namespace sl::type_list::detail
 	constexpr bool validIndex = requires { typename std::tuple_element<index, List>::type; };
 
 	template <class List>
-	constexpr bool check_indices = []<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...>)
+	constexpr bool checkIndices = []<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...>)
 	{
 		return (validIndex<List, indices> && ...);
 	}(std::make_index_sequence<std::tuple_size_v<List>>{});
@@ -107,7 +107,7 @@ namespace sl::concepts
 								{ std::tuple_size_v<T> } -> std::convertible_to<std::size_t>;
 							}
 							&& std::cmp_less_equal(0, std::tuple_size_v<T>)
-							&& type_list::detail::check_indices<T>;
+							&& type_list::detail::checkIndices<T>;
 }
 
 namespace sl::type_list
@@ -304,18 +304,35 @@ namespace sl::type_list
 	/**
 	 * \defgroup GROUP_TYPE_LIST_POPULATED_FROM populated_from
 	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Applies the source type-list-elements as template arguments of the TargetContainer.
 	 * \{
 	 */
 
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam TargetContainer The target container template.
+	 * \tparam List The provided type-list.
+	 */
 	template <template <class...> class TargetContainer, concepts::type_list_like List>
 	struct populated_from;
 
+	/**
+	 * \brief Specialization applying each element of the source container as template argument of the target container.
+	 * \tparam TargetContainer The target container template
+	 * \tparam Elements The provided elements.
+	 * \tparam SourceContainer The source container template.
+	 */
 	template <template <class...> class TargetContainer, class... Elements, template <class...> class SourceContainer>
 	struct populated_from<TargetContainer, SourceContainer<Elements...>>
 	{
 		using type = TargetContainer<Elements...>;
 	};
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::populated_from "populated_from" trait.
+	 * \tparam TargetContainer The target container template.
+	 * \tparam List The provided type-list.
+	 */
 	template <template <class...> class TargetContainer, concepts::type_list_like List>
 	using populated_from_t = typename populated_from<TargetContainer, List>::type;
 
@@ -326,24 +343,44 @@ namespace sl::type_list
 	/**
 	 * \defgroup GROUP_TYPE_LIST_TAIL tail
 	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Skips the first element of the given type-list and defines a ``type`` member-alias containing the rest of the elements.
+	 * \note If the provided type-list contains no elements, the result is an empty type-list, too.
 	 * \{
 	 */
 
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam List The provided type-list.
+	 */
 	template <concepts::type_list_like List>
 	struct tail;
 
+	/**
+	 * \brief Specialization for empty source type-lists.
+	 * \tparam Container The target container template.
+	 */
 	template <template <class...> class Container>
 	struct tail<Container<>>
 	{
 		using type = Container<>;
 	};
 
+	/**
+	 * \brief Specialization for non-empty source type-lists.
+	 * \tparam Container The target container template.
+	 * \tparam First The element to be omitted.
+	 * \tparam Others The rest of the elements.
+	 */
 	template <template <class...> class Container, class First, class... Others>
 	struct tail<Container<First, Others...>>
 	{
 		using type = Container<Others...>;
 	};
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::tail "tail" trait.
+	 * \tparam List The provided type-list.
+	 */
 	template <concepts::type_list_like List>
 	using tail_t = typename tail<List>::type;
 
@@ -354,18 +391,33 @@ namespace sl::type_list
 	/**
 	 * \defgroup GROUP_TYPE_LIST_FRONT front
 	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Defines the ``type`` member-alias containing the first element of the given type-list.
 	 * \{
 	 */
 
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam List The provided type-list.
+	 */
 	template <concepts::type_list_like List>
 	struct front;
 
+	/**
+	 * \brief Specialization retrieving the first element of the source type-list.
+	 * \tparam Container The target container template.
+	 * \tparam First The element.
+	 * \tparam Others The elements to be omitted.
+	 */
 	template <template <class...> class Container, class First, class... Others>
 	struct front<Container<First, Others...>>
 	{
 		using type = First;
 	};
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::front "front" trait.
+	 * \tparam List The provided type-list.
+	 */
 	template <concepts::type_list_like List>
 	using front_t = typename front<List>::type;
 
@@ -376,24 +428,44 @@ namespace sl::type_list
 	/**
 	 * \defgroup GROUP_TYPE_LIST_BACK back
 	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Defines the ``type`` member-alias containing the last element of the given type-list.
 	 * \{
 	 */
 
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam List The provided type-list.
+	 */
 	template <concepts::type_list_like List>
 	struct back;
 
+	/**
+	 * \brief Specialization investigating the current element of the source type-list.
+	 * \tparam Container The target container template.
+	 * \tparam First The current element to be omitted.
+	 * \tparam Others The elements to be further investigated.
+	 */
 	template <template <class...> class Container, class First, class... Others>
 	struct back<Container<First, Others...>>
 		: public back<Container<Others...>>
 	{
 	};
 
+	/**
+	 * \brief Specialization retrieving the last element of the source type-list. 
+	 * \tparam Container The target container template.
+	 * \tparam Element The last element of the source list.
+	 */
 	template <template <class...> class Container, class Element>
 	struct back<Container<Element>>
 	{
 		using type = Element;
 	};
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::back "back" trait.
+	 * \tparam List The provided type-list.
+	 */
 	template <concepts::type_list_like List>
 	using back_t = typename back<List>::type;
 
