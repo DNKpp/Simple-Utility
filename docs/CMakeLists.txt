@@ -1,3 +1,7 @@
+#[[ Adds a custom_target GenerateDocs.
+	The working directory is set to the project origin, as this is an effective way to use the relative paths for the documentation.
+#]]
+
 message(TRACE "Begin generating docs")
 
 find_package(Doxygen REQUIRED COMPONENTS dot)
