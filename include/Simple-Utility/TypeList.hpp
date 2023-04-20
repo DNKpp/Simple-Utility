@@ -476,7 +476,13 @@ namespace sl::type_list
 	/**
 	 * \defgroup GROUP_TYPE_LIST_CONCAT concat
 	 * \ingroup GROUP_TYPE_LIST
-	 * \brief Appends at the end of the first type-list all elements of the other type-lists. 
+	 * \brief Appends at the end of the first type-list all elements of the other type-lists.
+	 * \note The resulting type-list container will always be the one of the first type-list.
+	 * \details Let ``t0, t1, ..., tn`` be type-lists with ``ei_0, ei_1, ..., ei_ni`` the elements of the ``ti`` (the i-th type-list).
+	 * The resulting type-list will then be built like the following pattern:
+	 * \code{.unparsed}
+	 * <e0_0, e0_1, ..., e0_n0, e1_0, e1_1, ..., e1_n1, en_0, en_1, ..., en_nn>
+	 * \endcode
 	 * \{
 	 */
 
