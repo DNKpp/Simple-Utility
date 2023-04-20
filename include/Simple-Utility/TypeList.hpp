@@ -167,18 +167,41 @@ namespace sl::type_list
 	/**
 	 * \defgroup GROUP_TYPE_LIST_INDEX_OF index_of
 	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Queries the given type-list for a specific type.
+	 * \detail If the query type is contained in the given type-list, the ``value`` member contains the index
+	 * at which the query type appears inside the type-list. If it's not contained, no such member is defined.
+	 * \note The query type may appear multiple times, but the algorithm finds only returns the index of the
+	 * first one found (the least index).
 	 * \{
 	 */
 
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam Query The type to be queried for.
+	 * \tparam List The provided type-list.
+	 */
 	template <class Query, concepts::type_list_like List>
 	struct index_of;
 
+	/**
+	 * \brief Specialization if the queried type appears at the beginning of the type-list.
+	 * \tparam Query The type to be queried for.
+	 * \tparam Container The container type.
+	 * \tparam Others All other type-lists elements, not yet investigated.
+	 */
 	template <class Query, template <class...> class Container, class... Others>
 	struct index_of<Query, Container<Query, Others...>>
 		: public std::integral_constant<std::size_t, 0>
 	{
 	};
 
+	/**
+	 * \brief Specialization if the queried type doesn't appear at the beginning of the type-list.
+	 * \tparam Query The type to be queried for.
+	 * \tparam Container The container type.
+	 * \tparam First The current first element.
+	 * \tparam Others All other type-lists elements, not yet investigated.
+	 */
 	template <class Query, template <class...> class Container, class First, class... Others>
 	struct index_of<Query, Container<First, Others...>>
 		: public std::integral_constant<
@@ -187,6 +210,11 @@ namespace sl::type_list
 	{
 	};
 
+	/**
+	 * \brief Convenience constant, exposing the ``value`` member of the \ref sl::type_list::index_of "index_of" trait.
+	 * \tparam Query The type to be queried for.
+	 * \tparam List The provided type-list.
+	 */
 	template <class Query, concepts::type_list_like List>
 	inline constexpr std::size_t index_of_v = index_of<Query, List>::value;
 
@@ -200,15 +228,31 @@ namespace sl::type_list
 	 * \{
 	 */
 
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam Query The type to be queried for.
+	 * \tparam List The provided type-list.
+	 */
 	template <class Query, concepts::type_list_like List>
 	struct contained_by;
 
+	/**
+	 * \brief Specialization determining the presence of the query type, due to comparing it with each element of the type-list.
+	 * \tparam Query The type to be queried for.
+	 * \tparam Container The container type.
+	 * \tparam Elements The element types.
+	 */
 	template <class Query, template <class...> class Container, class... Elements>
 	struct contained_by<Query, Container<Elements...>>
-		: public std::disjunction<std::is_same<Query, Elements>...>
+		: public std::bool_constant<(std::same_as<Query, Elements> || ...)>
 	{
 	};
 
+	/**
+	 * \brief Convenience constant, exposing the ``value`` member of the \ref sl::type_list::contained_by "contained_by" trait.
+	 * \tparam Query The type to be queried for.
+	 * \tparam List The provided type-list.
+	 */
 	template <class Query, concepts::type_list_like List>
 	inline constexpr bool contained_by_v = contained_by<Query, List>::value;
 
@@ -219,18 +263,37 @@ namespace sl::type_list
 	/**
 	 * \defgroup GROUP_TYPE_LIST_TRANSFORM transform
 	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Applies the given unary operation on each element of the source type-list and stores them into a new type-list.
+	 * \detail The unary operation must accept a template argument and store its result in a member alias named ``type``.
+	 * For example: \snippet TypeList.cpp transformation definition
 	 * \{
 	 */
 
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam UnaryOperation The operation to be applied on each element.
+	 * \tparam List The provided type-list.
+	 */
 	template <template <class> class UnaryOperation, concepts::type_list_like List>
 	struct transform;
 
+	/**
+	 * \brief Specialization, which applies the UnaryOperation on each element of the given type-list.
+	 * \tparam UnaryOperation The operation to be applied on each element.
+	 * \tparam Container The container type.
+	 * \tparam Elements The element types.
+	 */
 	template <template <class> class UnaryOperation, template <class...> class Container, class... Elements>
 	struct transform<UnaryOperation, Container<Elements...>>
 	{
 		using type = Container<typename UnaryOperation<Elements>::type...>;
 	};
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::transform "transform" trait.
+	 * \tparam UnaryOperation The operation to be applied on each element.
+	 * \tparam List The provided type-list.
+	 */
 	template <template <class> class UnaryOperation, concepts::type_list_like List>
 	using transform_t = typename transform<UnaryOperation, List>::type;
 
