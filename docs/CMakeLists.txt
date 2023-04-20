@@ -11,19 +11,19 @@ message(VERBOSE "Using dot at: ${DOXY_DOT_PATH}")
 CPMAddPackage("gh:jothepro/doxygen-awesome-css@2.2.0")
 
 set(DOXY_PROJECT_VERSION ${PROJECT_VERSION})
-set(DOXY_INPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../include")
-set(DOXY_EXAMPLE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../tests")
-set(DOXY_README_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../README.md")
-set(DOXY_OUTPUT_DIR ".")
+set(DOXY_INPUT_DIR "include")
+set(DOXY_EXAMPLE_DIR "tests")
+set(DOXY_README_PATH "README.md")
+set(DOXY_OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 set(DOXY_HTML_EXTRA_STYLESHEET "${doxygen-awesome-css_SOURCE_DIR}/doxygen-awesome.css")
 	
 configure_file(Doxyfile.in Doxyfile @ONLY)
 
 add_custom_target(
 	GenerateDocs
-	COMMAND "$<TARGET_FILE:Doxygen::doxygen>" Doxyfile
+	COMMAND "$<TARGET_FILE:Doxygen::doxygen>" "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile"
 	COMMENT "Generate Documentation"
-	WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+	WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
 	COMMAND_EXPAND_LISTS
 	VERBATIM
 )
