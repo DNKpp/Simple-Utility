@@ -92,7 +92,7 @@ namespace sl::type_list::detail
 namespace sl::concepts
 {
 	/**
-	 * \brief Determines whether a type can be used as a type-list.
+	 * \brief Determines whether a type satisfies the requirements of a type-list.
 	 * \details Requires the traits ``std::tuple_size`` to be specialized for the given type and its member ``value`` denoting the the correct tuple size.
 	 * The ``std::tuple_element`` trait must be defined for each index in the interval ``[0, N)``, where ``N`` is the size of the given type-list.
 	 * \concept type_list_like
@@ -116,7 +116,7 @@ namespace sl::type_list
 	 * \defgroup GROUP_TYPE_LIST_COMMON_CONTAINER common_container
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Trait determining whether some type-lists have the container type in common.
-	 * \detail The container is the actual template of a type-list. For example, given the type-list ``A<B, C>``
+	 * \details The container is the actual template of a type-list. For example, given the type-list ``A<B, C>``
 	 * ``A`` denotes the container. Two (or more) type-lists have a common container, if their containers are exactly the same,
 	 * thus no conversions will be applied. If only one type-list is provided, its container is used.
 	 *
@@ -168,7 +168,7 @@ namespace sl::type_list
 	 * \defgroup GROUP_TYPE_LIST_INDEX_OF index_of
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Queries the given type-list for a specific type.
-	 * \detail If the query type is contained in the given type-list, the ``value`` member contains the index
+	 * \details If the query type is contained in the given type-list, the ``value`` member contains the index
 	 * at which the query type appears inside the type-list. If it's not contained, no such member is defined.
 	 * \note The query type may appear multiple times, but the algorithm finds only returns the index of the
 	 * first one found (the least index).
@@ -264,7 +264,7 @@ namespace sl::type_list
 	 * \defgroup GROUP_TYPE_LIST_TRANSFORM transform
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Applies the given unary operation on each element of the source type-list and stores them into a new type-list.
-	 * \detail The unary operation must accept a template argument and store its result in a member alias named ``type``.
+	 * \details The unary operation must accept a template argument and store its result in a member alias named ``type``.
 	 * For example: \snippet TypeList.cpp transformation definition
 	 * \{
 	 */
