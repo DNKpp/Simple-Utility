@@ -115,12 +115,27 @@ namespace sl::type_list
 	/**
 	 * \defgroup GROUP_TYPE_LIST_COMMON_CONTAINER common_container
 	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Trait determining whether some type-lists have the container type in common.
+	 * \detail The container is the actual template of a type-list. For example, given the type-list ``A<B, C>``
+	 * ``A`` denotes the container. Two (or more) type-lists have a common container, if their containers are exactly the same,
+	 * thus no conversions will be applied. If only one type-list is provided, its container is used.
+	 *
+	 * If no such common container can be determined, the member alias ``type`` will be omitted.
 	 * \{
 	 */
 
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam Lists The provided type-lists.
+	 */
 	template <concepts::type_list_like... Lists>
 	struct common_container;
 
+	/**
+	 * \brief Unary trait defining the ``type`` member-alias.
+	 * \tparam Container The container template.
+	 * \tparam Elements The elements of the type-list.
+	 */
 	template <template <class...> class Container, class... Elements>
 	struct common_container<Container<Elements...>>
 	{
@@ -128,6 +143,13 @@ namespace sl::type_list
 		using type = Container<Ts...>;
 	};
 
+	/**
+	 * \brief Trait reducing the amount of participating type-lists, if the first two have the container in common.
+	 * \tparam Container The current common container template.
+	 * \tparam LhsElements The elements of the first given type-list.
+	 * \tparam RhsElements The elements of the second given type-list.
+	 * \tparam Others All other type-lists, not yet investigated.
+	 */
 	template <
 		template <class...> class Container,
 		class... LhsElements,
