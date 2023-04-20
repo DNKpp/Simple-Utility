@@ -476,18 +476,36 @@ namespace sl::type_list
 	/**
 	 * \defgroup GROUP_TYPE_LIST_CONCAT concat
 	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Appends at the end of the first type-list all elements of the other type-lists. 
 	 * \{
 	 */
 
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam Lists The provided type-lists.
+	 */
 	template <concepts::type_list_like... Lists>
 	struct concat;
 
+	/**
+	 * \brief Unary specialization, simply using the given type-list as result.
+	 * \tparam List The provided type-list.
+	 */
 	template <concepts::type_list_like List>
 	struct concat<List>
 	{
 		using type = List;
 	};
 
+	/**
+	 * \brief Specialization appending all elements of the second type-list at the back of the first type-list and
+	 * repeating it for any other not yet investigated type-lists.
+	 * \tparam LhsContainer The container of the first type-list.
+	 * \tparam LhsElements The elements of the first type-list.
+	 * \tparam RhsContainer The container of the second type-list.
+	 * \tparam RhsElements The elements of the second type-list.
+	 * \tparam Others  All other type-lists, not yet investigated.
+	 */
 	template <
 		template <class...> class LhsContainer,
 		class... LhsElements,
@@ -499,6 +517,10 @@ namespace sl::type_list
 	{
 	};
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::concat "concat" trait.
+	 * \tparam Lists The provided type-lists.
+	 */
 	template <concepts::type_list_like... Lists>
 	using concat_t = typename concat<Lists...>::type;
 
