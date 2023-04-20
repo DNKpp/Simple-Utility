@@ -16,10 +16,19 @@
 
 namespace sl::type_list
 {
+	/**
+	 * \defgroup GROUP_TYPE_LIST type-list
+	 * \{
+	 */
+
 	template <class... Types>
 	struct TypeList
 	{
 	};
+
+	/**
+	 * \}
+	 */
 }
 
 namespace sl::type_list::detail
@@ -40,12 +49,22 @@ namespace sl::type_list::detail
 	};
 }
 
+/**
+ * \brief Specialization of ``std::tuple_size`` for \ref sl::type_list::TypeList "TypeList"
+ * \ingroup GROUP_TYPE_LIST
+ * \see https://en.cppreference.com/w/cpp/utility/tuple_size
+ */
 template <class... Types>
 struct std::tuple_size<sl::type_list::TypeList<Types...>> // NOLINT(cert-dcl58-cpp)
 	: public std::integral_constant<std::size_t, sizeof...(Types)>
 {
 };
 
+/**
+ * \brief Specialization of ``std::tuple_element`` for \ref sl::type_list::TypeList "TypeList"
+ * \ingroup GROUP_TYPE_LIST
+ * \see https://en.cppreference.com/w/cpp/utility/tuple_element
+ */
 template <std::size_t index, class... Types>
 struct std::tuple_element<index, sl::type_list::TypeList<Types...>> // NOLINT(cert-dcl58-cpp)
 	: public sl::type_list::detail::element<index, sl::type_list::TypeList<Types...>>
@@ -79,109 +98,11 @@ namespace sl::concepts
 
 namespace sl::type_list
 {
-	template <class Query, concepts::type_list_like List>
-	struct index_of;
-
-	template <class Query, template <class...> class Container, class... Others>
-	struct index_of<Query, Container<Query, Others...>>
-		: public std::integral_constant<std::size_t, 0>
-	{
-	};
-
-	template <class Query, template <class...> class Container, class First, class... Others>
-	struct index_of<Query, Container<First, Others...>>
-		: public std::integral_constant<
-			std::size_t,
-			1u + index_of<Query, Container<Others...>>::value>
-	{
-	};
-
-	template <class Query, concepts::type_list_like List>
-	inline constexpr std::size_t index_of_v = index_of<Query, List>::value;
-
-	template <class Query, concepts::type_list_like List>
-	struct contained_by;
-
-	template <class Query, template <class...> class Container, class... Elements>
-	struct contained_by<Query, Container<Elements...>>
-		: public std::disjunction<std::is_same<Query, Elements>...>
-	{
-	};
-
-	template <class Query, concepts::type_list_like List>
-	inline constexpr bool contained_by_v = contained_by<Query, List>::value;
-
-	template <template <class> class UnaryOperation, concepts::type_list_like List>
-	struct transform;
-
-	template <template <class> class UnaryOperation, template <class...> class Container, class... Elements>
-	struct transform<UnaryOperation, Container<Elements...>>
-	{
-		using type = Container<typename UnaryOperation<Elements>::type...>;
-	};
-
-	template <template <class> class UnaryOperation, concepts::type_list_like List>
-	using transform_t = typename transform<UnaryOperation, List>::type;
-
-	template <template <class...> class TargetContainer, concepts::type_list_like List>
-	struct populated_from;
-
-	template <template <class...> class TargetContainer, class... Elements, template <class...> class SourceContainer>
-	struct populated_from<TargetContainer, SourceContainer<Elements...>>
-	{
-		using type = TargetContainer<Elements...>;
-	};
-
-	template <template <class...> class TargetContainer, concepts::type_list_like List>
-	using populated_from_t = typename populated_from<TargetContainer, List>::type;
-
-	template <concepts::type_list_like List>
-	struct tail;
-
-	template <template <class...> class Container>
-	struct tail<Container<>>
-	{
-		using type = Container<>;
-	};
-
-	template <template <class...> class Container, class First, class... Others>
-	struct tail<Container<First, Others...>>
-	{
-		using type = Container<Others...>;
-	};
-
-	template <concepts::type_list_like List>
-	using tail_t = typename tail<List>::type;
-
-	template <concepts::type_list_like List>
-	struct front;
-
-	template <template <class...> class Container, class First, class... Others>
-	struct front<Container<First, Others...>>
-	{
-		using type = First;
-	};
-
-	template <concepts::type_list_like List>
-	using front_t = typename front<List>::type;
-
-	template <concepts::type_list_like List>
-	struct back;
-
-	template <template <class...> class Container, class First, class... Others>
-	struct back<Container<First, Others...>>
-		: public back<Container<Others...>>
-	{
-	};
-
-	template <template <class...> class Container, class Element>
-	struct back<Container<Element>>
-	{
-		using type = Element;
-	};
-
-	template <concepts::type_list_like List>
-	using back_t = typename back<List>::type;
+	/**
+	 * \defgroup GROUP_TYPE_LIST_COMMON_CONTAINER common_container
+	 * \ingroup GROUP_TYPE_LIST
+	 * \{
+	 */
 
 	template <concepts::type_list_like... Lists>
 	struct common_container;
@@ -202,6 +123,190 @@ namespace sl::type_list
 		: public common_container<Container<LhsElements...>, Others...>
 	{
 	};
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_INDEX_OF index_of
+	 * \ingroup GROUP_TYPE_LIST
+	 * \{
+	 */
+
+	template <class Query, concepts::type_list_like List>
+	struct index_of;
+
+	template <class Query, template <class...> class Container, class... Others>
+	struct index_of<Query, Container<Query, Others...>>
+		: public std::integral_constant<std::size_t, 0>
+	{
+	};
+
+	template <class Query, template <class...> class Container, class First, class... Others>
+	struct index_of<Query, Container<First, Others...>>
+		: public std::integral_constant<
+			std::size_t,
+			1u + index_of<Query, Container<Others...>>::value>
+	{
+	};
+
+	template <class Query, concepts::type_list_like List>
+	inline constexpr std::size_t index_of_v = index_of<Query, List>::value;
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_CONTAINED_BY contained_by
+	 * \ingroup GROUP_TYPE_LIST
+	 * \{
+	 */
+
+	template <class Query, concepts::type_list_like List>
+	struct contained_by;
+
+	template <class Query, template <class...> class Container, class... Elements>
+	struct contained_by<Query, Container<Elements...>>
+		: public std::disjunction<std::is_same<Query, Elements>...>
+	{
+	};
+
+	template <class Query, concepts::type_list_like List>
+	inline constexpr bool contained_by_v = contained_by<Query, List>::value;
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_TRANSFORM transform
+	 * \ingroup GROUP_TYPE_LIST
+	 * \{
+	 */
+
+	template <template <class> class UnaryOperation, concepts::type_list_like List>
+	struct transform;
+
+	template <template <class> class UnaryOperation, template <class...> class Container, class... Elements>
+	struct transform<UnaryOperation, Container<Elements...>>
+	{
+		using type = Container<typename UnaryOperation<Elements>::type...>;
+	};
+
+	template <template <class> class UnaryOperation, concepts::type_list_like List>
+	using transform_t = typename transform<UnaryOperation, List>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_POPULATED_FROM populated_from
+	 * \ingroup GROUP_TYPE_LIST
+	 * \{
+	 */
+
+	template <template <class...> class TargetContainer, concepts::type_list_like List>
+	struct populated_from;
+
+	template <template <class...> class TargetContainer, class... Elements, template <class...> class SourceContainer>
+	struct populated_from<TargetContainer, SourceContainer<Elements...>>
+	{
+		using type = TargetContainer<Elements...>;
+	};
+
+	template <template <class...> class TargetContainer, concepts::type_list_like List>
+	using populated_from_t = typename populated_from<TargetContainer, List>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_TAIL tail
+	 * \ingroup GROUP_TYPE_LIST
+	 * \{
+	 */
+
+	template <concepts::type_list_like List>
+	struct tail;
+
+	template <template <class...> class Container>
+	struct tail<Container<>>
+	{
+		using type = Container<>;
+	};
+
+	template <template <class...> class Container, class First, class... Others>
+	struct tail<Container<First, Others...>>
+	{
+		using type = Container<Others...>;
+	};
+
+	template <concepts::type_list_like List>
+	using tail_t = typename tail<List>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_FRONT front
+	 * \ingroup GROUP_TYPE_LIST
+	 * \{
+	 */
+
+	template <concepts::type_list_like List>
+	struct front;
+
+	template <template <class...> class Container, class First, class... Others>
+	struct front<Container<First, Others...>>
+	{
+		using type = First;
+	};
+
+	template <concepts::type_list_like List>
+	using front_t = typename front<List>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_BACK back
+	 * \ingroup GROUP_TYPE_LIST
+	 * \{
+	 */
+
+	template <concepts::type_list_like List>
+	struct back;
+
+	template <template <class...> class Container, class First, class... Others>
+	struct back<Container<First, Others...>>
+		: public back<Container<Others...>>
+	{
+	};
+
+	template <template <class...> class Container, class Element>
+	struct back<Container<Element>>
+	{
+		using type = Element;
+	};
+
+	template <concepts::type_list_like List>
+	using back_t = typename back<List>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_CONCAT concat
+	 * \ingroup GROUP_TYPE_LIST
+	 * \{
+	 */
 
 	template <concepts::type_list_like... Lists>
 	struct concat;
@@ -226,6 +331,16 @@ namespace sl::type_list
 	template <concepts::type_list_like... Lists>
 	using concat_t = typename concat<Lists...>::type;
 
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_ZIP_ELEMENT zip_element
+	 * \ingroup GROUP_TYPE_LIST
+	 * \{
+	 */
+
 	template <template <class...> class TargetContainer, std::size_t index, concepts::type_list_like... Lists>
 		requires (sizeof...(Lists) == 0)
 				|| (index < std::min({std::tuple_size_v<Lists>...}))
@@ -237,11 +352,16 @@ namespace sl::type_list
 	template <template <class...> class TargetContainer, std::size_t index, concepts::type_list_like... Lists>
 	using zip_elements_as_t = typename zip_elements_as<TargetContainer, index, Lists...>::type;
 
+
 	template <std::size_t index, concepts::type_list_like... Lists>
 	using zip_elements = zip_elements_as<common_container<Lists...>::template type, index, Lists...>;
 
 	template <std::size_t index, concepts::type_list_like... Lists>
 	using zip_elements_t = typename zip_elements<index, Lists...>::type;
+
+	/**
+	 * \}
+	 */
 }
 
 namespace sl::type_list::detail
@@ -266,6 +386,12 @@ namespace sl::type_list::detail
 
 namespace sl::type_list
 {
+	/**
+	 * \defgroup GROUP_TYPE_LIST_ZIP zip
+	 * \ingroup GROUP_TYPE_LIST
+	 * \{
+	 */
+
 	template <template <class...> class TargetContainer, concepts::type_list_like... Lists>
 	struct zip_as
 	{
@@ -280,6 +406,10 @@ namespace sl::type_list
 
 	template <concepts::type_list_like... Lists>
 	using zip_t = typename zip<Lists...>::type;
+
+	/**
+	 * \}
+	 */
 }
 
 #endif
