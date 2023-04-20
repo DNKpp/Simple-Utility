@@ -87,11 +87,13 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(sl::concepts::type_list_like<T> == expected);
 }
 
+//! [transformation definition]
 template <class T>
 struct test_transformation
 {
 	using type = tl::TypeList<T>;
 };
+//! [transformation definition]
 
 TEMPLATE_PRODUCT_TEST_CASE(
 	"type_list::transform transforms each element.",
