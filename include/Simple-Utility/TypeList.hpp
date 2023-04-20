@@ -21,6 +21,11 @@ namespace sl::type_list
 	 * \{
 	 */
 
+	/**
+	 * \brief A variadic template type, which's only serves as a container for an arbitrary amount of types.
+	 * Neither of the given types will be actually instantiated.
+	 * \tparam Types The provided elements.
+	 */
 	template <class... Types>
 	struct TypeList
 	{
@@ -50,7 +55,7 @@ namespace sl::type_list::detail
 }
 
 /**
- * \brief Specialization of ``std::tuple_size`` for \ref sl::type_list::TypeList "TypeList"
+ * \brief Specialization of ``std::tuple_size`` for \ref sl::type_list::TypeList "TypeList".
  * \ingroup GROUP_TYPE_LIST
  * \see https://en.cppreference.com/w/cpp/utility/tuple_size
  */
@@ -61,7 +66,7 @@ struct std::tuple_size<sl::type_list::TypeList<Types...>> // NOLINT(cert-dcl58-c
 };
 
 /**
- * \brief Specialization of ``std::tuple_element`` for \ref sl::type_list::TypeList "TypeList"
+ * \brief Specialization of ``std::tuple_element`` for \ref sl::type_list::TypeList "TypeList".
  * \ingroup GROUP_TYPE_LIST
  * \see https://en.cppreference.com/w/cpp/utility/tuple_element
  */
@@ -86,6 +91,15 @@ namespace sl::type_list::detail
 
 namespace sl::concepts
 {
+	/**
+	 * \brief Determines whether a type can be used as a type-list.
+	 * \details Requires the traits ``std::tuple_size`` to be specialized for the given type and its member ``value`` denoting the the correct tuple size.
+	 * The ``std::tuple_element`` trait must be defined for each index in the interval ``[0, N)``, where ``N`` is the size of the given type-list.
+	 * \concept type_list_like
+	 * \ingroup GROUP_TYPE_LIST GROUP_UTILITY_CONCEPTS
+	 * \see https://en.cppreference.com/w/cpp/utility/tuple_element
+	 * \see https://en.cppreference.com/w/cpp/utility/tuple_size
+	 */
 	template <class T>
 	concept type_list_like = requires
 							{
@@ -351,7 +365,6 @@ namespace sl::type_list
 
 	template <template <class...> class TargetContainer, std::size_t index, concepts::type_list_like... Lists>
 	using zip_elements_as_t = typename zip_elements_as<TargetContainer, index, Lists...>::type;
-
 
 	template <std::size_t index, concepts::type_list_like... Lists>
 	using zip_elements = zip_elements_as<common_container<Lists...>::template type, index, Lists...>;
