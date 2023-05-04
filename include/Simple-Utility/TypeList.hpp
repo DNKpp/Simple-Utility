@@ -536,7 +536,7 @@ namespace sl::type_list
 	 */
 
 	/**
-	 * \defgroup GROUP_TYPE_LIST_ZIP_ELEMENT zip_element
+	 * \defgroup GROUP_TYPE_LIST_ZIP_NTH_ELEMENT zip_nth_element
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Given multiple type-lists and an index ``n`` (where each type-lists has at least the length ``n + 1``) this algorithm
 	 * yields a new type-list consisting of the ``n-th`` elements of all source type-lists.
@@ -572,7 +572,7 @@ namespace sl::type_list
 	using zip_nth_elements_as_t = typename zip_nth_elements_as<TargetContainer, index, Lists...>::type;
 
 	/**
-	 * \brief Alternating algorithm yielding the result as the ``type`` member alias and determining the result container via
+	 * \brief Alternative algorithm yielding the result as the ``type`` member alias and determining the result container via
 	 * \ref sl::type_list::common_container "common_container" trait.
 	 * \tparam index The elements index.
 	 * \tparam Lists The provided type-lists.
@@ -618,21 +618,53 @@ namespace sl::type_list
 	/**
 	 * \defgroup GROUP_TYPE_LIST_ZIP zip
 	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Given multiple type-lists this algorithm yields a new type-list consisting of the ``n`` type-lists (where ``n`` is the
+	 * minimal size of the source type-lists).
+	 * \details Let ``t0, t1, ..., tn`` be type-lists with ``ti[j]`` denoting the ``j-th`` element of the ``i-th`` type-list
+	 * and ``m`` the minimum size of the source type-lists.
+	 * The resulting type-list will then be built like the following pattern:
+	 * \code{.unparsed}
+	 * <
+	 *		<t0[0], t1[0], ..., tn[0]>,
+	 *		<t0[1], t1[1], ..., tn[1]>,
+	 *		...,
+	 *		<t0[m], t1[m], ..., tn[m]>
+	 * >
+	 *	\endcode
 	 * \{
 	 */
 
+	/**
+	 * \brief Algorithm yielding the result as the ``type`` member alias.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam Lists The provided type-lists.
+	 */
 	template <template <class...> class TargetContainer, concepts::type_list_like... Lists>
 	struct zip_as
 	{
 		using type = detail::zip_as_t<TargetContainer, Lists...>;
 	};
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::zip_as "zip_as" trait.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam Lists The provided type-lists.
+	 */
 	template <template <class...> class TargetContainer, concepts::type_list_like... Lists>
 	using zip_as_t = typename zip_as<TargetContainer, Lists...>::type;
 
+	/**
+	 * \brief Alternative algorithm yielding the result as the ``type`` member alias and determining the result container via
+	 * \ref sl::type_list::common_container "common_container" trait.
+	 * \tparam Lists The provided type-lists.
+	 */
 	template <concepts::type_list_like... Lists>
 	using zip = zip_as<common_container<Lists...>::template type, Lists...>;
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::zip "zip" trait.
+	 * \tparam Lists The provided type-lists.
+	 */
 	template <concepts::type_list_like... Lists>
 	using zip_t = typename zip<Lists...>::type;
 
