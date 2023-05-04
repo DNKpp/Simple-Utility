@@ -478,10 +478,11 @@ namespace sl::type_list
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Appends at the end of the first type-list all elements of the other type-lists.
 	 * \note The resulting type-list container will always be the one of the first type-list.
-	 * \details Let ``t0, t1, ..., tn`` be type-lists with ``ei_0, ei_1, ..., ei_ni`` the elements of the ``ti`` (the i-th type-list).
+	 * \details Let ``t0, t1, ..., tn`` be type-lists with ``ti[j]`` denoting the ``j-th`` element of the ``i-th`` type-list
+	 * and ``li`` the length of the ``i-th`` type-list.
 	 * The resulting type-list will then be built like the following pattern:
 	 * \code{.unparsed}
-	 * <e0_0, e0_1, ..., e0_n0, e1_0, e1_1, ..., e1_n1, en_0, en_1, ..., en_nn>
+	 * <t0[0], t0[1], ..., t0[l0 - 1], t1[0], t1[1], ..., t1[l1 - 1], tn[0], tn[1], ..., tn[ln - 1]>
 	 * \endcode
 	 * \{
 	 */
@@ -537,25 +538,55 @@ namespace sl::type_list
 	/**
 	 * \defgroup GROUP_TYPE_LIST_ZIP_ELEMENT zip_element
 	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Given multiple type-lists and an index ``n`` (where each type-lists has at least the length ``n + 1``) this algorithm
+	 * yields a new type-list consisting of the ``n-th`` elements of all source type-lists.
+	 * \details Let ``t0, t1, ..., tm`` be type-lists with ``ti[j]`` denoting the ``j-th`` element of the ``i-th`` type-list and ``n``
+	 * the given index. The resulting type-list will then be built like the following pattern:
+	 * \code{.unparsed}
+	 * <t0[n], t1[n], ..., tm[n]>
+	 * \endcode
 	 * \{
 	 */
 
+	/**
+	 * \brief Algorithm yielding the result as the ``type`` member alias.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam index The elements index.
+	 * \tparam Lists The provided type-lists.
+	 */
 	template <template <class...> class TargetContainer, std::size_t index, concepts::type_list_like... Lists>
 		requires (sizeof...(Lists) == 0)
 				|| (index < std::min({std::tuple_size_v<Lists>...}))
-	struct zip_elements_as
+	struct zip_nth_elements_as
 	{
 		using type = TargetContainer<std::tuple_element_t<index, Lists>...>;
 	};
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::zip_nth_elements_as "zip_nth_elements_as" trait.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam index The elements index.
+	 * \tparam Lists The provided type-lists.
+	 */
 	template <template <class...> class TargetContainer, std::size_t index, concepts::type_list_like... Lists>
-	using zip_elements_as_t = typename zip_elements_as<TargetContainer, index, Lists...>::type;
+	using zip_nth_elements_as_t = typename zip_nth_elements_as<TargetContainer, index, Lists...>::type;
 
+	/**
+	 * \brief Alternating algorithm yielding the result as the ``type`` member alias and determining the result container via
+	 * \ref sl::type_list::common_container "common_container" trait.
+	 * \tparam index The elements index.
+	 * \tparam Lists The provided type-lists.
+	 */
 	template <std::size_t index, concepts::type_list_like... Lists>
-	using zip_elements = zip_elements_as<common_container<Lists...>::template type, index, Lists...>;
+	using zip_nth_elements = zip_nth_elements_as<common_container<Lists...>::template type, index, Lists...>;
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::zip_nth_elements "zip_nth_elements" trait.
+	 * \tparam index The elements index.
+	 * \tparam Lists The provided type-lists.
+	 */
 	template <std::size_t index, concepts::type_list_like... Lists>
-	using zip_elements_t = typename zip_elements<index, Lists...>::type;
+	using zip_nth_elements_t = typename zip_nth_elements<index, Lists...>::type;
 
 	/**
 	 * \}
@@ -570,7 +601,7 @@ namespace sl::type_list::detail
 	template <std::size_t... indices, template <class...> class TargetContainer, concepts::type_list_like... Lists>
 	struct zip_as<std::index_sequence<indices...>, TargetContainer, Lists...>
 	{
-		using type = TargetContainer<zip_elements_as_t<TargetContainer, indices, Lists...>...>;
+		using type = TargetContainer<zip_nth_elements_as_t<TargetContainer, indices, Lists...>...>;
 	};
 
 	template <template <class...> class TargetContainer, concepts::type_list_like... Lists>
