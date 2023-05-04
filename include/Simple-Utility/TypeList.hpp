@@ -225,6 +225,7 @@ namespace sl::type_list
 	/**
 	 * \defgroup GROUP_TYPE_LIST_CONTAINED_BY contained_by
 	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Queries the source type-list whether it contains a specific type.
 	 * \{
 	 */
 
