@@ -216,7 +216,7 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"type_list::zip_elements_as creates a TargetContainer with elements at a specific index of the provides lists.",
+	"type_list::zip_nth_elements_as creates a TargetContainer with elements at a specific index of the provides lists.",
 	"[type_list]",
 	((class Expected, template <class...> class TargetContainer, std::size_t index, class... Lists),
 		Expected, TargetContainer, index, Lists...),
@@ -229,12 +229,12 @@ TEMPLATE_TEST_CASE_SIG(
 	(std::tuple<int&&, const int&>, std::tuple, 1, std::tuple<int, int&&>, std::tuple<int&, const int&>)
 )
 {
-	STATIC_REQUIRE(std::same_as<Expected, typename tl::zip_elements_as<TargetContainer, index, Lists...>::type>);
-	STATIC_REQUIRE(std::same_as<Expected, tl::zip_elements_as_t<TargetContainer, index, Lists...>>);
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::zip_nth_elements_as<TargetContainer, index, Lists...>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::zip_nth_elements_as_t<TargetContainer, index, Lists...>>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"type_list::zip_elements creates a common_container type with elements at a specific index of the provides lists.",
+	"type_list::zip_nth_elements creates a common_container type with elements at a specific index of the provides lists.",
 	"[type_list]",
 	((class Expected, std::size_t index, class... Lists), Expected, index, Lists...),
 	//(tl::TypeList<>, 0), common_container isn't possible with zero lists
@@ -245,8 +245,8 @@ TEMPLATE_TEST_CASE_SIG(
 	(std::tuple<int&&, const int&>, 1, std::tuple<int, int&&>, std::tuple<int&, const int&>)
 )
 {
-	STATIC_REQUIRE(std::same_as<Expected, typename tl::zip_elements<index, Lists...>::type>);
-	STATIC_REQUIRE(std::same_as<Expected, tl::zip_elements_t<index, Lists...>>);
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::zip_nth_elements<index, Lists...>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::zip_nth_elements_t<index, Lists...>>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
