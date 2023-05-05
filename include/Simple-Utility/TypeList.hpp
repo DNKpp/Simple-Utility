@@ -630,6 +630,84 @@ namespace sl::type_list
 	 */
 
 	/**
+	 * \defgroup GROUP_TYPE_LIST_APPEND append
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Adds all of given types at the end of the source type-list.
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam List The provided type-lists.
+	 * \tparam Types The types to be added.
+	 */
+	template <concepts::type_list_like List, class... Types>
+	struct append;
+
+	/**
+	 * \brief Adds the given types at the end of the source type-list.
+	 * \tparam Container The container type.
+	 * \tparam Elements The element types.
+	 * \tparam Types The types to be added.
+	 */
+	template <template <class...> class Container, class... Elements, class... Types>
+	struct append<Container<Elements...>, Types...>
+	{
+		using type = Container<Elements..., Types...>;
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::append "append" trait.
+	 * \tparam List The provided type-lists.
+	 * \tparam Types The types to be added.
+	 */
+	template <concepts::type_list_like List, class... Types>
+	using append_t = typename append<List, Types...>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_APPEND prepend
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Adds all of given types at the begin of the source type-list.
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam List The provided type-lists.
+	 * \tparam Types The types to be added.
+	 */
+	template <concepts::type_list_like List, class... Types>
+	struct prepend;
+
+	/**
+	 * \brief Adds the given types at the begin of the source type-list.
+	 * \tparam Container The container type.
+	 * \tparam Elements The element types.
+	 * \tparam Types The types to be added.
+	 */
+	template <template <class...> class Container, class... Elements, class... Types>
+	struct prepend<Container<Elements...>, Types...>
+	{
+		using type = Container<Types..., Elements...>;
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::prepend "prepend" trait.
+	 * \tparam List The provided type-lists.
+	 * \tparam Types The types to be added.
+	 */
+	template <concepts::type_list_like List, class... Types>
+	using prepend_t = typename prepend<List, Types...>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
 	 * \defgroup GROUP_TYPE_LIST_ZIP_NTH_ELEMENT zip_nth_element
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Given multiple type-lists and an index ``n`` (where each type-lists has at least the length ``n + 1``) this algorithm
