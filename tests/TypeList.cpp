@@ -216,6 +216,22 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+	"type_list::remove_at removes the given index from the source type-list.",
+	"[type_list]",
+	((class Expected, class SourceList, std::size_t index), Expected, SourceList, index),
+	(tl::TypeList<>, tl::TypeList<int>, 0),
+	(tl::TypeList<int&>, tl::TypeList<int, int&>, 0),
+	(tl::TypeList<int>, tl::TypeList<int, int&>, 1),
+	(std::tuple<int>, std::tuple<int, int&>, 1)
+)
+{
+	using T = tl::remove_at_t<1, tl::TypeList<int, int&>>;
+
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::remove_at<index, SourceList>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::remove_at_t<index, SourceList>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
 	"type_list::append adds all given types at the end of the source type-list.",
 	"[type_list]",
 	((bool dummy, class Expected, class SourceList, class... Types), dummy, Expected, SourceList, Types...),
