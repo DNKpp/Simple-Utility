@@ -93,6 +93,7 @@ struct test_transformation
 {
 	using type = tl::TypeList<T>;
 };
+
 //! [transformation definition]
 
 TEMPLATE_PRODUCT_TEST_CASE(
@@ -212,6 +213,38 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(std::same_as<Expected, typename tl::remove<Type, Input>::type>);
 	STATIC_REQUIRE(std::same_as<Expected, tl::remove_t<Type, Input>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_list::append adds all given types at the end of the source type-list.",
+	"[type_list]",
+	((bool dummy, class Expected, class SourceList, class... Types), dummy, Expected, SourceList, Types...),
+	(true, tl::TypeList<>, tl::TypeList<>),
+	(true, tl::TypeList<int>, tl::TypeList<>, int),
+	(true, tl::TypeList<int, float>, tl::TypeList<int>, float),
+	(true, tl::TypeList<int, float, tl::TypeList<float&>>, tl::TypeList<int, float>, tl::TypeList<float&>),
+	(true, std::tuple<int, float>, std::tuple<int>, float),
+	(true, std::tuple<int, float, tl::TypeList<float&>>, std::tuple<int, float>, tl::TypeList<float&>)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::append<SourceList, Types...>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::append_t<SourceList, Types...>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_list::prepend adds all given types at the begin of the source type-list.",
+	"[type_list]",
+	((bool dummy, class Expected, class SourceList, class... Types), dummy, Expected, SourceList, Types...),
+	(true, tl::TypeList<>, tl::TypeList<>),
+	(true, tl::TypeList<int>, tl::TypeList<>, int),
+	(true, tl::TypeList<float, int>, tl::TypeList<int>, float),
+	(true, tl::TypeList<tl::TypeList<float&>, int, float>, tl::TypeList<int, float>, tl::TypeList<float&>),
+	(true, std::tuple<float, int>, std::tuple<int>, float),
+	(true, std::tuple<tl::TypeList<float&>, int, float>, std::tuple<int, float>, tl::TypeList<float&>)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::prepend<SourceList, Types...>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::prepend_t<SourceList, Types...>>);
 }
 
 /*
