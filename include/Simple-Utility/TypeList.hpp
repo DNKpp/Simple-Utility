@@ -342,54 +342,6 @@ namespace sl::type_list
 	 */
 
 	/**
-	 * \defgroup GROUP_TYPE_LIST_TAIL tail
-	 * \ingroup GROUP_TYPE_LIST
-	 * \brief Skips the first element of the given type-list and defines a ``type`` member-alias containing the rest of the elements.
-	 * \note If the provided type-list contains no elements, the result is an empty type-list, too.
-	 * \{
-	 */
-
-	/**
-	 * \brief Primary template isn't defined on purpose.
-	 * \tparam List The provided type-list.
-	 */
-	template <concepts::type_list_like List>
-	struct tail;
-
-	/**
-	 * \brief Specialization for empty source type-lists.
-	 * \tparam Container The target container template.
-	 */
-	template <template <class...> class Container>
-	struct tail<Container<>>
-	{
-		using type = Container<>;
-	};
-
-	/**
-	 * \brief Specialization for non-empty source type-lists.
-	 * \tparam Container The target container template.
-	 * \tparam First The element to be omitted.
-	 * \tparam Others The rest of the elements.
-	 */
-	template <template <class...> class Container, class First, class... Others>
-	struct tail<Container<First, Others...>>
-	{
-		using type = Container<Others...>;
-	};
-
-	/**
-	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::tail "tail" trait.
-	 * \tparam List The provided type-list.
-	 */
-	template <concepts::type_list_like List>
-	using tail_t = typename tail<List>::type;
-
-	/**
-	 * \}
-	 */
-
-	/**
 	 * \defgroup GROUP_TYPE_LIST_FRONT front
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Defines the ``type`` member-alias containing the first element of the given type-list.
@@ -756,6 +708,56 @@ namespace sl::type_list
 	 */
 	template <std::size_t index, concepts::type_list_like List>
 	using remove_at_t = typename remove_at<index, List>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_POP_FRONT pop front
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Removes the first element of the given type-list.
+	 * \{
+	 */
+
+	/**
+	 * \brief Removes the first element of the given type-list.
+	 * \tparam List The provided type-list.
+	 */
+	template <concepts::type_list_like List>
+	using pop_front = remove_at<0, List>;
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::pop_front "pop_front" trait.
+	 * \tparam List The provided type-list.
+	 */
+	template <concepts::type_list_like List>
+	using pop_front_t = typename pop_front<List>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_POP_BACK pop back
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Removes the last element of the given type-list.
+	 * \{
+	 */
+
+	/**
+	 * \brief Removes the last element of the given type-list.
+	 * \tparam List The provided type-list.
+	 */
+	template <concepts::type_list_like List>
+	using pop_back = remove_at<std::tuple_size_v<List> - 1u, List>;
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::pop_back "pop_back" trait.
+	 * \tparam List The provided type-list.
+	 */
+	template <concepts::type_list_like List>
+	using pop_back_t = typename pop_back<List>::type;
 
 	/**
 	 * \}

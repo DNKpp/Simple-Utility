@@ -129,23 +129,6 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_PRODUCT_TEST_CASE(
-	"type_list::tail_t trims the first element from the container.",
-	"[type_list]",
-	trait_test,
-	(
-		(tl::TypeList<>, tl::TypeList<>),
-		(tl::TypeList<int>, tl::TypeList<>),
-		(tl::TypeList<float, int>, tl::TypeList<int>),
-		(tl::TypeList<float, tl::TypeList<int>>, tl::TypeList<tl::TypeList<int>>),
-		(std::tuple<float, int>, std::tuple<int>)
-	)
-)
-{
-	STATIC_REQUIRE(std::same_as<expected_t<TestType>, typename tl::tail<input_t<TestType>>::type>);
-	STATIC_REQUIRE(std::same_as<expected_t<TestType>, tl::tail_t<input_t<TestType>>>);
-}
-
-TEMPLATE_PRODUCT_TEST_CASE(
 	"type_list::front_t yields the type of the first element.",
 	"[type_list]",
 	trait_test,
@@ -225,10 +208,40 @@ TEMPLATE_TEST_CASE_SIG(
 	(std::tuple<int>, std::tuple<int, int&>, 1)
 )
 {
-	using T = tl::remove_at_t<1, tl::TypeList<int, int&>>;
-
 	STATIC_REQUIRE(std::same_as<Expected, typename tl::remove_at<index, SourceList>::type>);
 	STATIC_REQUIRE(std::same_as<Expected, tl::remove_at_t<index, SourceList>>);
+}
+
+TEMPLATE_PRODUCT_TEST_CASE(
+	"type_list::pop_front trims the first element from the container.",
+	"[type_list]",
+	trait_test,
+	(
+		(tl::TypeList<int>, tl::TypeList<>),
+		(tl::TypeList<float, int>, tl::TypeList<int>),
+		(tl::TypeList<float, tl::TypeList<int>>, tl::TypeList<tl::TypeList<int>>),
+		(std::tuple<float, int>, std::tuple<int>)
+	)
+)
+{
+	STATIC_REQUIRE(std::same_as<expected_t<TestType>, typename tl::pop_front<input_t<TestType>>::type>);
+	STATIC_REQUIRE(std::same_as<expected_t<TestType>, tl::pop_front_t<input_t<TestType>>>);
+}
+
+TEMPLATE_PRODUCT_TEST_CASE(
+	"type_list::pop_front trims the last element from the container.",
+	"[type_list]",
+	trait_test,
+	(
+		(tl::TypeList<int>, tl::TypeList<>),
+		(tl::TypeList<float, int>, tl::TypeList<float>),
+		(tl::TypeList<float, tl::TypeList<int>>, tl::TypeList<float>),
+		(std::tuple<float, int>, std::tuple<float>)
+	)
+)
+{
+	STATIC_REQUIRE(std::same_as<expected_t<TestType>, typename tl::pop_back<input_t<TestType>>::type>);
+	STATIC_REQUIRE(std::same_as<expected_t<TestType>, tl::pop_back_t<input_t<TestType>>>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
