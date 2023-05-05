@@ -535,6 +535,99 @@ namespace sl::type_list
 	/**
 	 * \}
 	 */
+}
+
+namespace sl::type_list
+{
+	/**
+	 * \defgroup GROUP_TYPE_LIST_FILTER filter
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Applies the given filter trait an each element and omits it from the resulting type-list if the filter yields ``false``.
+	 * \details The filter trait must be a template template type accepting one template type argument and defining the
+	 * ``static constexpr bool value`` member.
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam Filter The provided filter trait.
+	 * \tparam List The provided type-lists.
+	 */
+	template <template <class> class Filter, concepts::type_list_like List>
+	struct filter;
+
+	/**
+	 * \brief Applies the filter trait on each element of the source type-list.
+	 * \tparam Filter The provided filter trait.
+	 * \tparam Container The container type.
+	 * \tparam Elements The element types.
+	 */
+	template <template <class> class Filter, template <class...> class Container, class... Elements>
+	struct filter<Filter, Container<Elements...>>
+	{
+		using type = concat_t<
+			Container<>,
+			std::conditional_t<
+				Filter<Elements>::value,
+				Container<Elements>,
+				Container<>>...
+		>;
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::filter "filter" trait.
+	 * \tparam Filter The provided filter trait.
+	 * \tparam List The provided type-lists.
+	 */
+	template <template <class> class Filter, concepts::type_list_like List>
+	using filter_t = typename filter<Filter, List>::type;
+
+	/**
+	 * \}
+	 */
+}
+
+namespace sl::type_list::detail
+{
+	template <class Type>
+	struct not_same_as_filter
+	{
+		template <class Other>
+		using type = std::negation<std::is_same<Type, Other>>;
+	};
+}
+
+namespace sl::type_list
+{
+	/**
+	 * \defgroup GROUP_TYPE_LIST_REMOVE remove
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Removes all appearances of the given type from the source type-list.
+	 * \{
+	 */
+
+	/**
+	 * \brief Applies the filter trait on each element of the source type-list.
+	 * \tparam Type The type to be removed.
+	 * \tparam List The provided type-lists.
+	 */
+	template <class Type, concepts::type_list_like List>
+	struct remove
+		: public filter<detail::not_same_as_filter<Type>::template type, List>
+	{
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::remove "remove" trait.
+	 * \tparam Type The type to be removed.
+	 * \tparam List The provided type-lists.
+	 */
+	template <class Type, concepts::type_list_like List>
+	using remove_t = typename remove<Type, List>::type;
+
+	/**
+	 * \}
+	 */
 
 	/**
 	 * \defgroup GROUP_TYPE_LIST_ZIP_NTH_ELEMENT zip_nth_element
