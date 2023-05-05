@@ -59,6 +59,33 @@ The ``sl::nullables`` namespace offers four simple algorithms:
 which are chainable and can be applied on objects which satisfy the ``nullable`` concept. What's a ``nullable`` you may ask? It's a type which has an explicit invalid state; e.g. ``std::optional``, ``std::unique_ptr`` or the ``sl::unique_handle``.
 Feel free to have a look into the docs pages.
 
+### type-list
+The ``type-list`` module offers several algorithms which operate on any template type accepting variadic template arguments. It is explicitly designed to work
+with any such ``type-list`` type interchangingly.
+
+```cpp
+namespace tl = sl::type_list;
+
+using MyTypes = tl::TypeList<int, int&>;
+using MyTypesCart2 = tl::cartesian_product_t<MyTypes, MyTypes>;
+
+static_assert(std::same_as<
+	MyTypesCart2,
+	tl::TypeList<
+		tl::TypeList<int, int>,
+		tl::TypeList<int, int&>,
+		tl::TypeList<int&, int>,
+		tl::TypeList<int, int&>>>);
+
+using Zipped = tl::zip_as_t<std::tuple, MyTypesCart2, std::tuple<float, double>>;	// note the _as prefix. This is necessary if different type-list templates are combined.
+
+static_assert(std::same_as<
+	Zipped,
+	std::tuple<
+		std::tuple<tl::TypeList<int, int>, float>,
+		std::tuple<tl::TypeList<int, int&>, double>>>);
+```
+
 ## Installation with CMake
 This library can easily be integrated into your project via CMake target_link_libraries command.
 
