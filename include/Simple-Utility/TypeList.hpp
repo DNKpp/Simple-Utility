@@ -669,7 +669,7 @@ namespace sl::type_list
 	 */
 
 	/**
-	 * \defgroup GROUP_TYPE_LIST_APPEND prepend
+	 * \defgroup GROUP_TYPE_LIST_PREPEND prepend
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Adds all of given types at the begin of the source type-list.
 	 * \{
@@ -839,6 +839,124 @@ namespace sl::type_list
 	 */
 	template <concepts::type_list_like... Lists>
 	using zip_t = typename zip<Lists...>::type;
+
+	/**
+	 * \}
+	 */
+}
+
+namespace sl::type_list::detail
+{
+	template <class... Types>
+	struct prepend_transform
+	{
+		template <concepts::type_list_like CurList>
+		using type = prepend<CurList, Types...>;
+	};
+}
+
+namespace sl::type_list
+{
+	/**
+	 * \defgroup GROUP_TYPE_LIST_CARTESIAN_PRODUCT cartesian product
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Given multiple source type-lists this algorithm yields a new type-list combining each element of each list with each other.
+	 * \details Let ``t0, t1, ..., tn`` be type-lists with ``ti[j]`` denoting the ``j-th`` element of the ``i-th`` type-list
+	 * and ``li`` the size of the ``i-th`` source type-lists.
+	 * The resulting type-list will then be built like the following pattern:
+	 * \code{.unparsed}
+	 * <
+	 *		<t0[0], t1[0], ..., tn[0]>,
+	 *		...,
+	 *		<t0[0], t1[0], ..., tn[ln-1]>,
+	 *
+	 *		...,
+	 *
+	 *		<t0[0], t1[l1-1], ..., tn[0]>,
+	 *		...,
+	 *		<t0[0], t1[l1-1], ..., tn[ln-1]>,
+	 *
+	 *		...,
+	 *
+	 *		<t0[l0-1], t1[0], ..., tn[0]>,
+	 *		...,
+	 *		<t0[l0-1], t1[0], ..., tn[ln-1]>,
+	 *
+	 *		...,
+	 *
+	 *		<t0[l0-1], t1[l1-1], ..., tn[0]>,
+	 *		...,
+	 *		<t0[l0-1], t1[l1-1], ..., tn[ln-1]>
+	 * >
+	 *	\endcode
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam Lists The provided type-lists.
+	 */
+	template <template <class...> class TargetContainer, concepts::type_list_like... Lists>
+	struct cartesian_product_as;
+
+	/**
+	 * \brief Root specialization, enveloping each element of the list in a ``TargetContainer```.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam Container The container type.
+	 * \tparam Elements The element types.
+	 */
+	template <template <class...> class TargetContainer, template <class...> class Container, class... Elements>
+	struct cartesian_product_as<TargetContainer, Container<Elements...>>
+	{
+		using type = TargetContainer<
+			TargetContainer<Elements>...
+		>;
+	};
+
+	/**
+	 * \brief Specialization, prepending all elements of the current type-list to the already created type-lists. 
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam Container The container type.
+	 * \tparam Elements The element types.
+	 * \tparam OtherLists All other type-lists.
+	 */
+	template <
+		template <class...> class TargetContainer,
+		template <class...> class Container,
+		class... Elements,
+		concepts::type_list_like... OtherLists>
+	struct cartesian_product_as<TargetContainer, Container<Elements...>, OtherLists...>
+	{
+		using type = concat_t<
+			transform_t<
+				detail::prepend_transform<Elements>::template type,
+				typename cartesian_product_as<TargetContainer, OtherLists...>::type>...
+		>;
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::cartesian_product_as "cartesian_product_as" trait.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam Lists The provided type-lists.
+	 */
+	template <template <class...> class TargetContainer, concepts::type_list_like... Lists>
+	using cartesian_product_as_t = typename cartesian_product_as<TargetContainer, Lists...>::type;
+
+	/**
+	 * \brief Alternative algorithm yielding the result as the ``type`` member alias and determining the result container via
+	 * \ref sl::type_list::common_container "common_container" trait.
+	 * \tparam Lists The provided type-lists.
+	 */
+	template <concepts::type_list_like... Lists>
+	using cartesian_product = cartesian_product_as<common_container<Lists...>::template type, Lists...>;
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::cartesian_product "cartesian_product" trait.
+	 * \tparam Lists The provided type-lists.
+	 */
+	template <concepts::type_list_like... Lists>
+	using cartesian_product_t = typename cartesian_product<Lists...>::type;
 
 	/**
 	 * \}
