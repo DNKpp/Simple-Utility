@@ -535,6 +535,84 @@ namespace sl::type_list
 	/**
 	 * \}
 	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_APPEND append
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Adds all of given types at the end of the source type-list.
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam List The provided type-lists.
+	 * \tparam Types The types to be added.
+	 */
+	template <concepts::type_list_like List, class... Types>
+	struct append;
+
+	/**
+	 * \brief Adds the given types at the end of the source type-list.
+	 * \tparam Container The container type.
+	 * \tparam Elements The element types.
+	 * \tparam Types The types to be added.
+	 */
+	template <template <class...> class Container, class... Elements, class... Types>
+	struct append<Container<Elements...>, Types...>
+	{
+		using type = Container<Elements..., Types...>;
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::append "append" trait.
+	 * \tparam List The provided type-lists.
+	 * \tparam Types The types to be added.
+	 */
+	template <concepts::type_list_like List, class... Types>
+	using append_t = typename append<List, Types...>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_PREPEND prepend
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Adds all of given types at the begin of the source type-list.
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam List The provided type-lists.
+	 * \tparam Types The types to be added.
+	 */
+	template <concepts::type_list_like List, class... Types>
+	struct prepend;
+
+	/**
+	 * \brief Adds the given types at the begin of the source type-list.
+	 * \tparam Container The container type.
+	 * \tparam Elements The element types.
+	 * \tparam Types The types to be added.
+	 */
+	template <template <class...> class Container, class... Elements, class... Types>
+	struct prepend<Container<Elements...>, Types...>
+	{
+		using type = Container<Types..., Elements...>;
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::prepend "prepend" trait.
+	 * \tparam List The provided type-lists.
+	 * \tparam Types The types to be added.
+	 */
+	template <concepts::type_list_like List, class... Types>
+	using prepend_t = typename prepend<List, Types...>::type;
+
+	/**
+	 * \}
+	 */
 }
 
 namespace sl::type_list
@@ -630,78 +708,54 @@ namespace sl::type_list
 	 */
 
 	/**
-	 * \defgroup GROUP_TYPE_LIST_APPEND append
+	 * \defgroup GROUP_TYPE_LIST_REMOVE_AT remove at
 	 * \ingroup GROUP_TYPE_LIST
-	 * \brief Adds all of given types at the end of the source type-list.
+	 * \brief Removes the element at the given index.
 	 * \{
 	 */
 
 	/**
 	 * \brief Primary template isn't defined on purpose.
+	 * \tparam index The index to be removed.
 	 * \tparam List The provided type-lists.
-	 * \tparam Types The types to be added.
 	 */
-	template <concepts::type_list_like List, class... Types>
-	struct append;
+	template <std::size_t index, concepts::type_list_like List>
+		requires (index < std::tuple_size_v<List>)
+	struct remove_at;
 
 	/**
-	 * \brief Adds the given types at the end of the source type-list.
+	 * \brief Root specialization, omitting the current element from the source type-list.
 	 * \tparam Container The container type.
-	 * \tparam Elements The element types.
-	 * \tparam Types The types to be added.
+	 * \tparam Element The current element type.
+	 * \tparam Others The other element types.
 	 */
-	template <template <class...> class Container, class... Elements, class... Types>
-	struct append<Container<Elements...>, Types...>
+	template <template <class...> class Container, class Element, class... Others>
+	struct remove_at<0, Container<Element, Others...>>
 	{
-		using type = Container<Elements..., Types...>;
+		using type = Container<Others...>;
 	};
 
 	/**
-	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::append "append" trait.
-	 * \tparam List The provided type-lists.
-	 * \tparam Types The types to be added.
-	 */
-	template <concepts::type_list_like List, class... Types>
-	using append_t = typename append<List, Types...>::type;
-
-	/**
-	 * \}
-	 */
-
-	/**
-	 * \defgroup GROUP_TYPE_LIST_PREPEND prepend
-	 * \ingroup GROUP_TYPE_LIST
-	 * \brief Adds all of given types at the begin of the source type-list.
-	 * \{
-	 */
-
-	/**
-	 * \brief Primary template isn't defined on purpose.
-	 * \tparam List The provided type-lists.
-	 * \tparam Types The types to be added.
-	 */
-	template <concepts::type_list_like List, class... Types>
-	struct prepend;
-
-	/**
-	 * \brief Adds the given types at the begin of the source type-list.
+	 * \brief Specialization, searching for the given index.
 	 * \tparam Container The container type.
-	 * \tparam Elements The element types.
-	 * \tparam Types The types to be added.
+	 * \tparam Element The current element type.
+	 * \tparam Others The other element types.
 	 */
-	template <template <class...> class Container, class... Elements, class... Types>
-	struct prepend<Container<Elements...>, Types...>
+	template <std::size_t index, template <class...> class Container, class Element, class... Others>
+	struct remove_at<index, Container<Element, Others...>>
 	{
-		using type = Container<Types..., Elements...>;
+		using type = concat_t<
+			Container<Element>,
+			typename remove_at<index - 1u, Container<Others...>>::type>;
 	};
 
 	/**
-	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::prepend "prepend" trait.
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::remove_at "remove_at" trait.
+	 * \tparam index The index to be removed.
 	 * \tparam List The provided type-lists.
-	 * \tparam Types The types to be added.
 	 */
-	template <concepts::type_list_like List, class... Types>
-	using prepend_t = typename prepend<List, Types...>::type;
+	template <std::size_t index, concepts::type_list_like List>
+	using remove_at_t = typename remove_at<index, List>::type;
 
 	/**
 	 * \}
@@ -901,7 +955,7 @@ namespace sl::type_list
 	struct cartesian_product_as;
 
 	/**
-	 * \brief Root specialization, enveloping each element of the list in a ``TargetContainer```.
+	 * \brief Root specialization, enveloping each element of the list in a ``TargetContainer``.
 	 * \tparam TargetContainer The resulting container.
 	 * \tparam Container The container type.
 	 * \tparam Elements The element types.
