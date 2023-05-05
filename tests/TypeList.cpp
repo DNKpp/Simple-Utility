@@ -348,3 +348,50 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(std::same_as<Expected, typename tl::zip<Lists...>::type>);
 	STATIC_REQUIRE(std::same_as<Expected, tl::zip_t<Lists...>>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_list::cartesian_product_as creates a TargetContainer of TargetContainer with elements of the provides lists.",
+	"[type_list]",
+	((bool dummy, class Expected, template <class...> class TargetContainer, class... Lists),
+		dummy, Expected, TargetContainer, Lists...),
+	//(true, tl::TypeList<>, tl::TypeList),
+	(true, tl::TypeList<>, tl::TypeList, tl::TypeList<>),
+	(true, tl::TypeList<tl::TypeList<int>>, tl::TypeList, tl::TypeList<int>),
+	(true, tl::TypeList<tl::TypeList<int>, tl::TypeList<float>>, tl::TypeList, tl::TypeList<int, float>),
+	(true, tl::TypeList<>, tl::TypeList, tl::TypeList<int, float>, tl::TypeList<>),
+	(true, tl::TypeList<tl::TypeList<int>, tl::TypeList<tl::TypeList<float>>>, tl::TypeList, tl::TypeList<int, tl::TypeList<float>>),
+	(true, tl::TypeList<
+		tl::TypeList<int, double>, tl::TypeList<tl::TypeList<float>, double>
+		>, tl::TypeList, tl::TypeList<int, tl::TypeList<float>>, tl::TypeList<double>),
+	(true, tl::TypeList<
+		tl::TypeList<int, float>, tl::TypeList<int&, float>
+		>, tl::TypeList, tl::TypeList<int, int&>, tl::TypeList<float>),
+	(true, (tl::TypeList<
+		tl::TypeList<int, float>, tl::TypeList<int, float&>, tl::TypeList<int&, float>, tl::TypeList<int&, float&>
+		>), tl::TypeList, tl::TypeList<int, int&>, tl::TypeList<float, float&>),
+	(true, (tl::TypeList<
+		tl::TypeList<int, double, float>,
+		tl::TypeList<int, double, float&>,
+		tl::TypeList<int&, double, float>,
+		tl::TypeList<int&, double, float&>
+		>), tl::TypeList, tl::TypeList<int, int&>, tl::TypeList<double>, tl::TypeList<float, float&>),
+	(true, (std::tuple<
+		std::tuple<int, float>, std::tuple<int, float&>, std::tuple<int&, float>, std::tuple<int&, float&>
+		>), std::tuple, tl::TypeList<int, int&>, std::tuple<float, float&>)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::cartesian_product_as<TargetContainer, Lists...>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::cartesian_product_as_t<TargetContainer, Lists...>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_list::cartesian_product a common_container of common_container with elements with elements of the provides lists.",
+	"[type_list]",
+	((bool dummy, class Expected, class... Lists), dummy, Expected, Lists...),
+	(true, tl::TypeList<tl::TypeList<int, std::tuple<int&>>>, tl::TypeList<int>, tl::TypeList<std::tuple<int&>>),
+	(true, std::tuple<std::tuple<int, tl::TypeList<int&>>>, std::tuple<int>, std::tuple<tl::TypeList<int&>>)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::cartesian_product<Lists...>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::cartesian_product_t<Lists...>>);
+}
