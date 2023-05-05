@@ -176,6 +176,44 @@ TEMPLATE_PRODUCT_TEST_CASE(
 	STATIC_REQUIRE(std::same_as<expected_t<TestType>, tl::back_t<input_t<TestType>>>);
 }
 
+template <class T>
+struct lvalue_reference_filter
+	: public std::bool_constant<std::is_lvalue_reference_v<T>>
+{
+};
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_list::filter removes all types from the type-list for which the predicate yields false.",
+	"[type_list]",
+	((bool dummy, class Expected, class Input), dummy, Expected, Input),
+	(true, tl::TypeList<>, tl::TypeList<>),
+	(true, tl::TypeList<>, tl::TypeList<int>),
+	(true, tl::TypeList<>, tl::TypeList<int, int>),
+	(true, tl::TypeList<float&, int&>, tl::TypeList<float&, int, int&>),
+	(true, tl::TypeList<int&, float&>, tl::TypeList<float, int&, float&, int>),
+	(true, std::tuple<int&, float&>, std::tuple<float, int&, float&, int>)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::filter<std::is_lvalue_reference, Input>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::filter_t<std::is_lvalue_reference, Input>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_list::remove removes all appearances of a given type from the type-list.",
+	"[type_list]",
+	((bool dummy, class Expected, class Input, class Type), dummy, Expected, Input, Type),
+	(true, tl::TypeList<>, tl::TypeList<>, int),
+	(true, tl::TypeList<>, tl::TypeList<int>, int),
+	(true, tl::TypeList<>, tl::TypeList<int, int>, int),
+	(true, tl::TypeList<float>, tl::TypeList<float, int, int>, int),
+	(true, tl::TypeList<float, float&>, tl::TypeList<float, int, float&, int>, int),
+	(true, std::tuple<float, float&>, std::tuple<float, int, float&, int>, int)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::remove<Type, Input>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::remove_t<Type, Input>>);
+}
+
 /*
  * This test case was very tricky, as the initial approach, just comparing the two templates via the usual specialization technique,
  * was flawed and lead me to a language defect. It is perfectly answered here:
