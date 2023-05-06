@@ -722,45 +722,34 @@ namespace sl::type_list
 	 */
 
 	/**
-	 * \defgroup GROUP_TYPE_LIST_REMOVE_AT remove at
+	 * \defgroup GROUP_TYPE_LIST_REMOVE_AT remove_at
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Removes the element at the given index.
 	 * \{
 	 */
 
 	/**
-	 * \brief Primary template isn't defined on purpose.
-	 * \tparam index The index to be removed.
+	 * \brief Primary template, traversing all elements of the given type-list.
 	 * \tparam List The provided type-lists.
+	 * \tparam index The index to be removed.
 	 */
-	template <std::size_t index, concepts::type_list_like List>
+	template <concepts::populated_type_list List, std::size_t index>
 		requires (index < std::tuple_size_v<List>)
-	struct remove_at;
-
-	/**
-	 * \brief Root specialization, omitting the current element from the source type-list.
-	 * \tparam Container The container type.
-	 * \tparam Element The current element type.
-	 * \tparam Others The other element types.
-	 */
-	template <template <class...> class Container, class Element, class... Others>
-	struct remove_at<0, Container<Element, Others...>>
+	struct remove_at
 	{
-		using type = Container<Others...>;
+		using type = prepend_t<
+			typename remove_at<tail_t<List>, index - 1u>::type,
+			front_t<List>>;
 	};
 
 	/**
-	 * \brief Specialization, searching for the given index.
-	 * \tparam Container The container type.
-	 * \tparam Element The current element type.
-	 * \tparam Others The other element types.
+	 * \brief Root specialization, omitting the first element from the source type-list.
+	 * \tparam List The provided type-lists.
 	 */
-	template <std::size_t index, template <class...> class Container, class Element, class... Others>
-	struct remove_at<index, Container<Element, Others...>>
+	template <concepts::populated_type_list List>
+	struct remove_at<List, 0>
 	{
-		using type = concat_t<
-			Container<Element>,
-			typename remove_at<index - 1u, Container<Others...>>::type>;
+		using type = tail_t<List>;
 	};
 
 	/**
@@ -768,8 +757,8 @@ namespace sl::type_list
 	 * \tparam index The index to be removed.
 	 * \tparam List The provided type-lists.
 	 */
-	template <std::size_t index, concepts::type_list_like List>
-	using remove_at_t = typename remove_at<index, List>::type;
+	template <concepts::populated_type_list List, std::size_t index>
+	using remove_at_t = typename remove_at<List, index>::type;
 
 	/**
 	 * \}
@@ -786,14 +775,14 @@ namespace sl::type_list
 	 * \brief Removes the first element of the given type-list.
 	 * \tparam List The provided type-list.
 	 */
-	template <concepts::type_list_like List>
-	using pop_front = remove_at<0, List>;
+	template <concepts::populated_type_list List>
+	using pop_front = remove_at<List, 0>;
 
 	/**
 	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::pop_front "pop_front" trait.
 	 * \tparam List The provided type-list.
 	 */
-	template <concepts::type_list_like List>
+	template <concepts::populated_type_list List>
 	using pop_front_t = typename pop_front<List>::type;
 
 	/**
@@ -811,14 +800,14 @@ namespace sl::type_list
 	 * \brief Removes the last element of the given type-list.
 	 * \tparam List The provided type-list.
 	 */
-	template <concepts::type_list_like List>
-	using pop_back = remove_at<std::tuple_size_v<List> - 1u, List>;
+	template <concepts::populated_type_list List>
+	using pop_back = remove_at<List, std::tuple_size_v<List> - 1u>;
 
 	/**
 	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::pop_back "pop_back" trait.
 	 * \tparam List The provided type-list.
 	 */
-	template <concepts::type_list_like List>
+	template <concepts::populated_type_list List>
 	using pop_back_t = typename pop_back<List>::type;
 
 	/**

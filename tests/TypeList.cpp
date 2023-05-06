@@ -273,8 +273,8 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, std::tuple<int&, float&>, std::tuple<float, int&, float&, int>)
 )
 {
-	STATIC_REQUIRE(std::same_as<Expected, typename tl::filter<std::is_lvalue_reference, Input>::type>);
-	STATIC_REQUIRE(std::same_as<Expected, tl::filter_t<std::is_lvalue_reference, Input>>);
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::filter<Input, std::is_lvalue_reference>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::filter_t<Input, std::is_lvalue_reference>>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -289,8 +289,8 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, std::tuple<float, float&>, std::tuple<float, int, float&, int>, int)
 )
 {
-	STATIC_REQUIRE(std::same_as<Expected, typename tl::remove<Type, Input>::type>);
-	STATIC_REQUIRE(std::same_as<Expected, tl::remove_t<Type, Input>>);
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::remove<Input, Type>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::remove_t<Input, Type>>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -303,8 +303,8 @@ TEMPLATE_TEST_CASE_SIG(
 	(std::tuple<int>, std::tuple<int, int&>, 1)
 )
 {
-	STATIC_REQUIRE(std::same_as<Expected, typename tl::remove_at<index, SourceList>::type>);
-	STATIC_REQUIRE(std::same_as<Expected, tl::remove_at_t<index, SourceList>>);
+	STATIC_REQUIRE(std::same_as<Expected, typename tl::remove_at<SourceList, index>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, tl::remove_at_t<SourceList, index>>);
 }
 
 TEMPLATE_PRODUCT_TEST_CASE(
