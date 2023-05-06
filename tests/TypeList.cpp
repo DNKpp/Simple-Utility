@@ -69,11 +69,11 @@ TEMPLATE_TEST_CASE_SIG(
 )
 {
 	STATIC_REQUIRE(expected == tl::index_of<T, Query>::value);
-	STATIC_REQUIRE(expected == tl::index_of_v<Query, T>);
+	STATIC_REQUIRE(expected == tl::index_of_v<T, Query>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"type_list::contained_by determines whether the queried type is contained inside the type-list.",
+	"type_list::contains determines whether the queried type is contained inside the type-list.",
 	"[type_list]",
 	((bool expected, class Query, class T), expected, Query, T),
 	(false, int, tl::TypeList<>),
@@ -85,8 +85,8 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, int&, std::tuple<int, int&, int&, float>)
 )
 {
-	STATIC_REQUIRE(expected == tl::contained_by<Query, T>::value);
-	STATIC_REQUIRE(expected == tl::contained_by_v<Query, T>);
+	STATIC_REQUIRE(expected == tl::contains<T, Query>::value);
+	STATIC_REQUIRE(expected == tl::contains_v<T, Query>);
 }
 
 TEMPLATE_TEST_CASE_SIG(

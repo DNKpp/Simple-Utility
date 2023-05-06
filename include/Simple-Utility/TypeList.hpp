@@ -182,7 +182,6 @@ namespace sl::type_list
 
 	/**
 	 * \brief Primary template isn't defined on purpose.
-	 * \tparam Query The type to be queried for.
 	 * \tparam List The provided type-list.
 	 */
 	template <concepts::type_list_like List>
@@ -216,45 +215,6 @@ namespace sl::type_list
 	 */
 	template <concepts::type_list_like List>
 	using tail_t = typename tail<List>::type;
-
-	/**
-	 * \}
-	 */
-
-	/**
-	 * \defgroup GROUP_TYPE_LIST_CONTAINED_BY contained_by
-	 * \ingroup GROUP_TYPE_LIST
-	 * \brief Queries the source type-list whether it contains a specific type.
-	 * \{
-	 */
-
-	/**
-	 * \brief Primary template isn't defined on purpose.
-	 * \tparam Query The type to be queried for.
-	 * \tparam List The provided type-list.
-	 */
-	template <class Query, concepts::type_list_like List>
-	struct contained_by;
-
-	/**
-	 * \brief Specialization determining the presence of the query type, due to comparing it with each element of the type-list.
-	 * \tparam Query The type to be queried for.
-	 * \tparam Container The container type.
-	 * \tparam Elements The element types.
-	 */
-	template <class Query, template <class...> class Container, class... Elements>
-	struct contained_by<Query, Container<Elements...>>
-		: public std::bool_constant<(std::same_as<Query, Elements> || ...)>
-	{
-	};
-
-	/**
-	 * \brief Convenience constant, exposing the ``value`` member of the \ref sl::type_list::contained_by "contained_by" trait.
-	 * \tparam Query The type to be queried for.
-	 * \tparam List The provided type-list.
-	 */
-	template <class Query, concepts::type_list_like List>
-	inline constexpr bool contained_by_v = contained_by<Query, List>::value;
 
 	/**
 	 * \}
@@ -887,8 +847,8 @@ namespace sl::type_list
 	 * \tparam List The provided type-list.
 	 * \tparam Query The type to be queried for.
 	 */
-	template <concepts::populated_type_list List, std::same_as<front_t<List>> Query>
-	struct index_of<List, Query>
+	template <concepts::populated_type_list List>
+	struct index_of<List, front_t<List>>
 		: public std::integral_constant<std::size_t, 0u>
 	{
 	};
@@ -901,6 +861,45 @@ namespace sl::type_list
 	 */
 	template <concepts::populated_type_list List, class Query>
 	inline constexpr std::size_t index_of_v = index_of<List, Query>::value;
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_CONTAINS contains
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Queries the source type-list whether it contains a specific type.
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam List The provided type-list.
+	 * \tparam Query The type to be queried for.
+	 */
+	template <concepts::type_list_like List, class Query>
+	struct contains;
+
+	/**
+	 * \brief Specialization determining the presence of the query type, due to comparing it with each element of the type-list.
+	 * \tparam Container The container type.
+	 * \tparam Elements The element types.
+	 * \tparam Query The type to be queried for.
+	 */
+	template <template <class...> class Container, class... Elements, class Query>
+	struct contains<Container<Elements...>, Query>
+		: public std::bool_constant<(std::same_as<Query, Elements> || ...)>
+	{
+	};
+
+	/**
+	 * \brief Convenience constant, exposing the ``value`` member of the \ref sl::type_list::contained_by "contains" trait.
+	 * \tparam List The provided type-list.
+	 * \tparam Query The type to be queried for.
+	 */
+	template <concepts::type_list_like List, class Query>
+	inline constexpr bool contains_v = contains<List, Query>::value;
 
 	/**
 	 * \}
