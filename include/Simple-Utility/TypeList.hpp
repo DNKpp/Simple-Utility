@@ -1004,9 +1004,9 @@ namespace sl::type_list
 	 * \tparam index The elements index.
 	 * \tparam Lists The provided type-lists.
 	 */
-	template <template <class...> class TargetContainer, std::size_t index, concepts::type_list_like... Lists>
-		requires (sizeof...(Lists) == 0)
-				|| (index < std::min({std::tuple_size_v<Lists>...}))
+	template <template <class...> class TargetContainer, std::size_t index, concepts::populated_type_list... Lists>
+		requires (0 == sizeof...(Lists))
+				|| (... && (index < std::tuple_size_v<Lists>))
 	struct zip_nth_elements_as
 	{
 		using type = TargetContainer<std::tuple_element_t<index, Lists>...>;
@@ -1018,7 +1018,7 @@ namespace sl::type_list
 	 * \tparam index The elements index.
 	 * \tparam Lists The provided type-lists.
 	 */
-	template <template <class...> class TargetContainer, std::size_t index, concepts::type_list_like... Lists>
+	template <template <class...> class TargetContainer, std::size_t index, concepts::populated_type_list... Lists>
 	using zip_nth_elements_as_t = typename zip_nth_elements_as<TargetContainer, index, Lists...>::type;
 
 	/**
@@ -1027,7 +1027,7 @@ namespace sl::type_list
 	 * \tparam index The elements index.
 	 * \tparam Lists The provided type-lists.
 	 */
-	template <std::size_t index, concepts::type_list_like... Lists>
+	template <std::size_t index, concepts::populated_type_list... Lists>
 	using zip_nth_elements = zip_nth_elements_as<common_container<Lists...>::template type, index, Lists...>;
 
 	/**
@@ -1035,7 +1035,7 @@ namespace sl::type_list
 	 * \tparam index The elements index.
 	 * \tparam Lists The provided type-lists.
 	 */
-	template <std::size_t index, concepts::type_list_like... Lists>
+	template <std::size_t index, concepts::populated_type_list... Lists>
 	using zip_nth_elements_t = typename zip_nth_elements<index, Lists...>::type;
 
 	/**
