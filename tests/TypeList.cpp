@@ -546,8 +546,8 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, tl::TypeList<>, tl::TypeList, tl::TypeList<>, tl::TypeList<int>),
 	(true, tl::TypeList<int>, tl::TypeList, tl::TypeList<int>, tl::TypeList<int>),
 	(true, tl::TypeList<double, int>, tl::TypeList, tl::TypeList<double, int>, tl::TypeList<int, double>),
-	(true, std::tuple<double, int>, std::tuple, tl::TypeList<double, int&, int>, tl::TypeList<int, double>),
-	(true, tl::TypeList<double, int>, tl::TypeList, std::tuple<double, int&, int>, std::tuple<int, double>)
+	(true, std::tuple<double, int>, std::tuple, tl::TypeList<double, int&, int>, std::tuple<int, double>),
+	(true, tl::TypeList<double, int>, tl::TypeList, tl::TypeList<double, int&, int>, std::tuple<int, double>)
 )
 {
 	STATIC_REQUIRE(tl::unordered_equal_v<Expected, typename tl::intersection_as<TargetContainer, FirstList, SecondList>::type>);
@@ -561,7 +561,7 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"type_list::intersection_as determines which types are contained in both type-lists and yields the result in common_container.",
+	"type_list::intersection determines which types are contained in both type-lists and yields the result in common_container.",
 	"[type_list]",
 	((bool dummy, class Expected, class FirstList, class SecondList), dummy, Expected, FirstList, SecondList),
 	(true, tl::TypeList<>, tl::TypeList<>, tl::TypeList<>),
