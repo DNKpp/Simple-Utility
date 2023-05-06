@@ -40,6 +40,23 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(std::same_as<Expected, std::tuple_element_t<index, tl::TypeList<Ts...>>>);
 }
 
+TEMPLATE_PRODUCT_TEST_CASE(
+	"type_list::tail trims the first element from the container.",
+	"[type_list]",
+	trait_test,
+	(
+		(tl::TypeList<>, tl::TypeList<>),
+		(tl::TypeList<int>, tl::TypeList<>),
+		(tl::TypeList<float, int>, tl::TypeList<int>),
+		(tl::TypeList<float, tl::TypeList<int>>, tl::TypeList<tl::TypeList<int>>),
+		(std::tuple<float, int>, std::tuple<int>)
+	)
+)
+{
+	STATIC_REQUIRE(std::same_as<expected_t<TestType>, typename tl::tail<input_t<TestType>>::type>);
+	STATIC_REQUIRE(std::same_as<expected_t<TestType>, tl::tail_t<input_t<TestType>>>);
+}
+
 TEMPLATE_TEST_CASE_SIG(
 	"type_list::index_of yields index of the queried type.",
 	"[type_list]",
@@ -51,7 +68,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(1, int&, std::tuple<int, int&, int&, float>)
 )
 {
-	STATIC_REQUIRE(expected == tl::index_of<Query, T>::value);
+	STATIC_REQUIRE(expected == tl::index_of<T, Query>::value);
 	STATIC_REQUIRE(expected == tl::index_of_v<Query, T>);
 }
 

@@ -173,13 +173,10 @@ namespace sl::type_list
 	 */
 
 	/**
-	 * \defgroup GROUP_TYPE_LIST_INDEX_OF index_of
+	 * \defgroup GROUP_TYPE_LIST_TAIL tail
 	 * \ingroup GROUP_TYPE_LIST
-	 * \brief Queries the given type-list for a specific type.
-	 * \details If the query type is contained in the given type-list, the ``value`` member contains the index
-	 * at which the query type appears inside the type-list. If it's not contained, no such member is defined.
-	 * \note The query type may appear multiple times, but the algorithm finds only returns the index of the
-	 * first one found (the least index).
+	 * \brief Skips the first element of the given type-list and defines a ``type`` member-alias containing the rest of the elements.
+	 * \note If the provided type-list contains no elements, the result is an empty type-list, too.
 	 * \{
 	 */
 
@@ -188,43 +185,37 @@ namespace sl::type_list
 	 * \tparam Query The type to be queried for.
 	 * \tparam List The provided type-list.
 	 */
-	template <class Query, concepts::type_list_like List>
-	struct index_of;
+	template <concepts::type_list_like List>
+	struct tail;
 
 	/**
-	 * \brief Specialization if the queried type appears at the beginning of the type-list.
-	 * \tparam Query The type to be queried for.
-	 * \tparam Container The container type.
-	 * \tparam Others All other type-lists elements, not yet investigated.
+	 * \brief Specialization for empty source type-lists.
+	 * \tparam Container The target container template.
 	 */
-	template <class Query, template <class...> class Container, class... Others>
-	struct index_of<Query, Container<Query, Others...>>
-		: public std::integral_constant<std::size_t, 0>
+	template <template <class...> class Container>
+	struct tail<Container<>>
 	{
+		using type = Container<>;
 	};
 
 	/**
-	 * \brief Specialization if the queried type doesn't appear at the beginning of the type-list.
-	 * \tparam Query The type to be queried for.
-	 * \tparam Container The container type.
-	 * \tparam First The current first element.
-	 * \tparam Others All other type-lists elements, not yet investigated.
+	 * \brief Specialization for non-empty source type-lists.
+	 * \tparam Container The target container template.
+	 * \tparam First The element to be omitted.
+	 * \tparam Others The rest of the elements.
 	 */
-	template <class Query, template <class...> class Container, class First, class... Others>
-	struct index_of<Query, Container<First, Others...>>
-		: public std::integral_constant<
-			std::size_t,
-			1u + index_of<Query, Container<Others...>>::value>
+	template <template <class...> class Container, class First, class... Others>
+	struct tail<Container<First, Others...>>
 	{
+		using type = Container<Others...>;
 	};
 
 	/**
-	 * \brief Convenience constant, exposing the ``value`` member of the \ref sl::type_list::index_of "index_of" trait.
-	 * \tparam Query The type to be queried for.
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::tail "tail" trait.
 	 * \tparam List The provided type-list.
 	 */
-	template <class Query, concepts::type_list_like List>
-	inline constexpr std::size_t index_of_v = index_of<Query, List>::value;
+	template <concepts::type_list_like List>
+	using tail_t = typename tail<List>::type;
 
 	/**
 	 * \}
@@ -864,6 +855,52 @@ namespace sl::type_list
 	 */
 	template <concepts::type_list_like List>
 	using pop_back_t = typename pop_back<List>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_INDEX_OF index_of
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Queries the given type-list for a specific type.
+	 * \details If the query type is contained in the given type-list, the ``value`` member contains the index
+	 * at which the query type appears inside the type-list. If it's not contained, no such member is defined.
+	 * \note The query type may appear multiple times, but the algorithm finds only returns the index of the
+	 * first one found (the least index).
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template, traversing the elements of the source type-list.
+	 * \tparam List The provided type-list.
+	 * \tparam Query The type to be queried for.
+	 */
+	template <concepts::populated_type_list List, class Query>
+	struct index_of
+		: public std::integral_constant<std::size_t, 1u + index_of<tail_t<List>, Query>::value>
+	{
+	};
+
+	/**
+	 * \brief Specialization if the queried type appears at the beginning of the type-list.
+	 * \tparam List The provided type-list.
+	 * \tparam Query The type to be queried for.
+	 */
+	template <concepts::populated_type_list List, std::same_as<front_t<List>> Query>
+	struct index_of<List, Query>
+		: public std::integral_constant<std::size_t, 0u>
+	{
+	};
+
+	/**
+	 * \brief Convenience constant, exposing the ``value`` member of the \ref sl::type_list::index_of "index_of" trait.
+	 * \tparam Query The type to be queried for.
+	 * \tparam List The provided type-list.
+	 * \tparam Query The type to be queried for.
+	 */
+	template <concepts::populated_type_list List, class Query>
+	inline constexpr std::size_t index_of_v = index_of<List, Query>::value;
 
 	/**
 	 * \}
