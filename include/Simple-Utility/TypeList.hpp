@@ -988,6 +988,90 @@ namespace sl::type_list
 	 */
 
 	/**
+	 * \defgroup GROUP_TYPE_LIST_DIFFERENCE difference
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Determines which elements of the first type-list are not contained in the second type-list and yields these as the result.
+	 * The order doesn't matter.
+	 * \note The element order of the resulting type-list is unspecified.
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template, yielding a the elements of First in the TargetContainer.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam First The first type-list.
+	 * \tparam Second The second type-lists.
+	 */
+	template <template <class...> class TargetContainer, concepts::type_list_like First, concepts::type_list_like Second>
+	struct difference_as
+	{
+		static_assert(
+			0 == std::tuple_size_v<First> || 0 == std::tuple_size_v<Second>,
+			"The expectation doesn't hold. Possible bug detected."
+		);
+
+		using type = populated_from_t<TargetContainer, First>;
+	};
+
+	/**
+	 * \brief Specialization, if the front element of Second is not contained in First.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam First The first type-list.
+	 * \tparam Second The second type-lists.
+	 */
+	template <template <class...> class TargetContainer, concepts::populated_type_list First, concepts::populated_type_list Second>
+	struct difference_as<TargetContainer, First, Second>
+	{
+		using type = typename difference_as<TargetContainer, First, pop_front_t<Second>>::type;
+	};
+
+	/**
+	 * \brief Specialization, if the front element of Second is contained in First.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam First The first type-list.
+	 * \tparam Second The second type-lists.
+	 */
+	template <template <class...> class TargetContainer, concepts::populated_type_list First, concepts::populated_type_list Second>
+		requires contains_v<First, front_t<Second>>
+	struct difference_as<TargetContainer, First, Second>
+		: public difference_as<
+			TargetContainer,
+			remove_at_t<First, index_of_v<First, front_t<Second>>>,
+			pop_front_t<Second>>
+	{
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::difference_as "difference_as" trait.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam First The first type-list.
+	 * \tparam Second The second type-lists.
+	 */
+	template <template <class...> class TargetContainer, concepts::type_list_like First, concepts::type_list_like Second>
+	using difference_as_t = typename difference_as<TargetContainer, First, Second>::type;
+
+	/**
+	 * \brief Alternative algorithm yielding the result as the ``type`` member alias and determining the result container via
+	 * \ref sl::type_list::common_container "common_container" trait.
+	 * \tparam First The first type-list.
+	 * \tparam Second The second type-lists.
+	 */
+	template <concepts::type_list_like First, concepts::type_list_like Second>
+	using difference = difference_as<common_container<First, Second>::template type, First, Second>;
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::difference "difference" trait.
+	 * \tparam First The first type-list.
+	 * \tparam Second The second type-lists.
+	 */
+	template <concepts::type_list_like First, concepts::type_list_like Second>
+	using difference_t = typename difference<First, Second>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
 	 * \defgroup GROUP_TYPE_LIST_INTERSECTION intersection
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Determines the intersection between the elements of two type-lists. The order doesn't matter.
