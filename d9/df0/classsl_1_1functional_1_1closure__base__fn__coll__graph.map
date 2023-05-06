@@ -1,5 +1,5 @@
 <map id="sl::functional::closure_base_fn&lt; TFunc &gt;" name="sl::functional::closure_base_fn&lt; TFunc &gt;">
-<area shape="rect" id="node1" title="Helper type which simply stores functional objects or function pointers." alt="" coords="16,200,177,241"/>
-<area shape="rect" id="node2" href="$d6/d62/structsl_1_1unified__base.html" title=" " alt="" coords="9,109,184,151"/>
-<area shape="rect" id="node3" href="$d6/d62/structsl_1_1unified__base.html" title="Helper type, which can be used to create a unified base class for templated derived classes and thus ..." alt="" coords="5,5,188,32"/>
+<area shape="rect" id="node1" title="Helper type which simply stores functional objects or function pointers." alt="" coords="15,197,163,237"/>
+<area shape="rect" id="node2" href="$d6/d62/structsl_1_1unified__base.html" title=" " alt="" coords="9,108,168,148"/>
+<area shape="rect" id="node3" href="$d6/d62/structsl_1_1unified__base.html" title="Helper type, which can be used to create a unified base class for templated derived classes and thus ..." alt="" coords="5,5,172,31"/>
 </map>

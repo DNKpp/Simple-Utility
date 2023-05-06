@@ -1,10 +1,10 @@
 <map id="sl::functional::predicate_fn&lt; TFunc &gt;" name="sl::functional::predicate_fn&lt; TFunc &gt;">
-<area shape="rect" id="node1" title="Adapter type for predicates, which accepts a functional type and enables pipe, conjunctive and disjun..." alt="" coords="1547,76,1721,117"/>
-<area shape="rect" id="node2" href="$d9/de4/classsl_1_1functional_1_1closure__base__fn.html" title="Helper type which simply stores functional objects or function pointers." alt="" coords="985,9,1147,51"/>
-<area shape="rect" id="node3" href="$d6/d62/structsl_1_1unified__base.html" title=" " alt="" coords="438,5,613,47"/>
-<area shape="rect" id="node4" href="$d6/d62/structsl_1_1unified__base.html" title="Helper type, which can be used to create a unified base class for templated derived classes and thus ..." alt="" coords="5,46,188,73"/>
-<area shape="rect" id="node6" href="$d6/d62/structsl_1_1unified__base.html" title=" " alt="" coords="413,71,637,112"/>
-<area shape="rect" id="node5" href="$d0/d50/structsl_1_1functional_1_1enable__operation.html" title=" " alt="" coords="1219,100,1497,229"/>
-<area shape="rect" id="node8" href="$d0/d50/structsl_1_1functional_1_1enable__operation.html" title=" " alt="" coords="687,150,913,206"/>
-<area shape="rect" id="node7" title=" " alt="" coords="464,205,587,231"/>
+<area shape="rect" id="node1" title="Adapter type for predicates, which accepts a functional type and enables pipe, conjunctive and disjun..." alt="" coords="1447,75,1608,115"/>
+<area shape="rect" id="node2" href="$d9/de4/classsl_1_1functional_1_1closure__base__fn.html" title="Helper type which simply stores functional objects or function pointers." alt="" coords="922,11,1070,51"/>
+<area shape="rect" id="node3" href="$d6/d62/structsl_1_1unified__base.html" title=" " alt="" coords="406,5,565,45"/>
+<area shape="rect" id="node4" href="$d6/d62/structsl_1_1unified__base.html" title="Helper type, which can be used to create a unified base class for templated derived classes and thus ..." alt="" coords="5,46,172,71"/>
+<area shape="rect" id="node6" href="$d6/d62/structsl_1_1unified__base.html" title=" " alt="" coords="381,69,589,109"/>
+<area shape="rect" id="node5" href="$d0/d50/structsl_1_1functional_1_1enable__operation.html" title=" " alt="" coords="1139,99,1397,227"/>
+<area shape="rect" id="node8" href="$d0/d50/structsl_1_1functional_1_1enable__operation.html" title=" " alt="" coords="639,150,853,205"/>
+<area shape="rect" id="node7" title=" " alt="" coords="425,205,545,230"/>
 </map>

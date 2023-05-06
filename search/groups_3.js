@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['functional_744',['functional',['../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html',1,'']]]
+  ['difference_0',['difference',['../d1/d01/group___g_r_o_u_p___t_y_p_e___l_i_s_t___d_i_f_f_e_r_e_n_c_e.html',1,'']]]
 ];

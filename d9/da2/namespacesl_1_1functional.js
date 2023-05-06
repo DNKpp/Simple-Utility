@@ -23,7 +23,7 @@ var namespacesl_1_1functional =
       [ "concat", "dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#gad31effe07166660489fd0060a0d5a66f", null ],
       [ "get", "dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#ga15180ba02f9d99ba22b8e0ca9925f99e", null ],
       [ "get_at", "dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#ga61d6a6745f2d9681a912801081507c00", null ],
-      [ "reduce", "dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#gabdc6e6151e1e6a5b5c2b73d42643f856", null ],
+      [ "reduce", "dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#ga9dcac9a14968a567d95b42179b5ae8b1", null ],
       [ "tie", "dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#ga2e1fa2f321d83afea5a9953146371790", null ]
     ] ],
     [ "util", "d8/d2f/namespacesl_1_1functional_1_1util.html", [
@@ -33,11 +33,11 @@ var namespacesl_1_1functional =
     ] ],
     [ "closure_base_fn", "d9/de4/classsl_1_1functional_1_1closure__base__fn.html", "d9/de4/classsl_1_1functional_1_1closure__base__fn" ],
     [ "composition_fn", "d9/d09/classsl_1_1functional_1_1composition__fn.html", "d9/d09/classsl_1_1functional_1_1composition__fn" ],
-    [ "value_fn", "da/d72/classsl_1_1functional_1_1value__fn.html", "da/d72/classsl_1_1functional_1_1value__fn" ],
     [ "enable_operation", "d0/d50/structsl_1_1functional_1_1enable__operation.html", "d0/d50/structsl_1_1functional_1_1enable__operation" ],
     [ "overloaded", "d8/da3/structsl_1_1functional_1_1overloaded.html", null ],
     [ "predicate_fn", "df/d86/classsl_1_1functional_1_1predicate__fn.html", "df/d86/classsl_1_1functional_1_1predicate__fn" ],
     [ "transform_fn", "da/dbe/classsl_1_1functional_1_1transform__fn.html", "da/dbe/classsl_1_1functional_1_1transform__fn" ],
+    [ "value_fn", "da/d72/classsl_1_1functional_1_1value__fn.html", "da/d72/classsl_1_1functional_1_1value__fn" ],
     [ "closure_function_t", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga219bf23f133d37fe64c6b69ef399bf53", null ],
     [ "closure_base_fn", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga9ee1b452aa1643df2ca99f880ce68c5a", null ],
     [ "composition_fn", "d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#gac330b28c93020dd9d1585031aa074639", null ],

@@ -1,28 +1,7 @@
 var searchData=
 [
-  ['minus_634',['minus',['../d5/dc1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___a_r_i_t_h_m_e_t_i_c.html#gac66d7ef4989e1fc54982e67859993c98',1,'sl::functional::arithmetic::minus()'],['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga91409f8dad2b8f776cc7786037b694d9',1,'sl::concepts::minus()']]],
-  ['minus_5fassign_635',['minus_assign',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga0b6d98aecaebd73aee26b4333eec98b5',1,'sl::concepts']]],
-  ['minus_5fassign_5fr_636',['minus_assign_r',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gab0a8714a24562685ea08d3eaea3bdc45',1,'sl::concepts']]],
-  ['minus_5fassign_5fwith_637',['minus_assign_with',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gab2faada3ef70001000e79fd16874fb00',1,'sl::concepts']]],
-  ['minus_5fassign_5fwith_5fr_638',['minus_assign_with_r',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gacf2994c52922573fcdc662de6fcea796',1,'sl::concepts']]],
-  ['minus_5fr_639',['minus_r',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga019d9c32c21adcdca247c82d49b2dc39',1,'sl::concepts']]],
-  ['minus_5fwith_640',['minus_with',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga839a5eee7537dcee79325aee5a6a5d58',1,'sl::concepts']]],
-  ['minus_5fwith_5fr_641',['minus_with_r',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gae43f0383c536166bc40086c5482b14d8',1,'sl::concepts']]],
-  ['modf_642',['modf',['../d4/db0/group___g_r_o_u_p___m_a_t_h.html#gad4c2f60dd2a24dac54f82a95603c91c0',1,'sl::math']]],
-  ['modulus_643',['modulus',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga07eefa76f7ce88bfcdf6c5cd394bd152',1,'sl::concepts::modulus()'],['../d5/dc1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___a_r_i_t_h_m_e_t_i_c.html#gabdf4088fb87813b134f3a2be1cc6ca12',1,'sl::functional::arithmetic::modulus()']]],
-  ['modulus_5fassign_644',['modulus_assign',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga382109bdf93ca3cd5d7ad13bddc05a86',1,'sl::concepts']]],
-  ['modulus_5fassign_5fr_645',['modulus_assign_r',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga3cd13b3a0032da78f5c5e225e47589b7',1,'sl::concepts']]],
-  ['modulus_5fassign_5fwith_646',['modulus_assign_with',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga63f4b535932eef2c8bf65724376d80db',1,'sl::concepts']]],
-  ['modulus_5fassign_5fwith_5fr_647',['modulus_assign_with_r',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gae3239f0a21eba336b7e5fedee5df1583',1,'sl::concepts']]],
-  ['modulus_5fr_648',['modulus_r',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga922ed6ef91d45c6de701cbe06d0f99f6',1,'sl::concepts']]],
-  ['modulus_5fwith_649',['modulus_with',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gacd16302d6aabf80e8ecba4fa9cac0df3',1,'sl::concepts']]],
-  ['modulus_5fwith_5fr_650',['modulus_with_r',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga83fb94d7576f410491d93b2591536c4c',1,'sl::concepts']]],
-  ['multiplies_651',['multiplies',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga18fdf013b69c9a4701e1a227f66a5455',1,'sl::concepts::multiplies()'],['../d5/dc1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___a_r_i_t_h_m_e_t_i_c.html#ga6526b439cde27d161fea4841cf24f673',1,'sl::functional::arithmetic::multiplies()']]],
-  ['multiplies_5fassign_652',['multiplies_assign',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga112ee36f2b692a8e765b44b2efa68c31',1,'sl::concepts']]],
-  ['multiplies_5fassign_5fr_653',['multiplies_assign_r',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga09580487f361e24e8684d914c2410e3c',1,'sl::concepts']]],
-  ['multiplies_5fassign_5fwith_654',['multiplies_assign_with',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#gac1f4cd14d6e843f32ab64de4ef193d4b',1,'sl::concepts']]],
-  ['multiplies_5fassign_5fwith_5fr_655',['multiplies_assign_with_r',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga91ca1b2b7d3a1a95851fe4a33beabba2',1,'sl::concepts']]],
-  ['multiplies_5fr_656',['multiplies_r',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga900b51c534647da83a2373d7ccdc9699',1,'sl::concepts']]],
-  ['multiplies_5fwith_657',['multiplies_with',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga0a95561fa0f94bc06c131cd4ef25c056',1,'sl::concepts']]],
-  ['multiplies_5fwith_5fr_658',['multiplies_with_r',['../dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html#ga45dad0254b6786230b80077970db5c8d',1,'sl::concepts']]]
+  ['minus_0',['minus',['../d5/dc1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___a_r_i_t_h_m_e_t_i_c.html#gac66d7ef4989e1fc54982e67859993c98',1,'sl::functional::arithmetic']]],
+  ['modf_1',['modf',['../d4/db0/group___g_r_o_u_p___m_a_t_h.html#gad4c2f60dd2a24dac54f82a95603c91c0',1,'sl::math']]],
+  ['modulus_2',['modulus',['../d5/dc1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___a_r_i_t_h_m_e_t_i_c.html#gabdf4088fb87813b134f3a2be1cc6ca12',1,'sl::functional::arithmetic']]],
+  ['multiplies_3',['multiplies',['../d5/dc1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___a_r_i_t_h_m_e_t_i_c.html#ga6526b439cde27d161fea4841cf24f673',1,'sl::functional::arithmetic']]]
 ];

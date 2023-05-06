@@ -5,5 +5,6 @@ var modules =
     [ "math", "d4/db0/group___g_r_o_u_p___m_a_t_h.html", "d4/db0/group___g_r_o_u_p___m_a_t_h" ],
     [ "nullables", "d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html", "d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s" ],
     [ "tuple", "d9/d21/group___g_r_o_u_p___t_u_p_l_e.html", "d9/d21/group___g_r_o_u_p___t_u_p_l_e" ],
+    [ "type-list", "d2/d50/group___g_r_o_u_p___t_y_p_e___l_i_s_t.html", "d2/d50/group___g_r_o_u_p___t_y_p_e___l_i_s_t" ],
     [ "unique_handle", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e" ]
 ];

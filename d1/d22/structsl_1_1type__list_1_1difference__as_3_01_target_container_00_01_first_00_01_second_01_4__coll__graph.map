@@ -1,0 +1,5 @@
+<map id="sl::type_list::difference_as&lt; TargetContainer, First, Second &gt;" name="sl::type_list::difference_as&lt; TargetContainer, First, Second &gt;">
+<area shape="rect" id="node1" title="Specialization, if the front element of Second is not contained in First." alt="" coords="685,51,875,106"/>
+<area shape="rect" id="node2" href="$d2/d4c/structsl_1_1type__list_1_1difference__as.html" title=" " alt="" coords="412,37,636,121"/>
+<area shape="rect" id="node3" href="$d2/d4c/structsl_1_1type__list_1_1difference__as.html" title="Primary template, yielding a the elements of First in the TargetContainer." alt="" coords="5,51,195,106"/>
+</map>

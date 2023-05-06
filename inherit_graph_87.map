@@ -1,0 +1,5 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" title=" " alt="" coords="5,56,140,81"/>
+<area shape="rect" id="node2" href="$d1/d64/structsl_1_1type__list_1_1contains_3_01_container_3_01_elements_8_8_8_01_4_00_01_query_01_4.html" title="Specialization determining the presence of the query type, due to comparing it with each element of t..." alt="" coords="197,5,367,60"/>
+<area shape="rect" id="node3" href="$d0/d33/structsl_1_1type__list_1_1unordered__equal_3_01_first_00_01_other_lists_8_8_8_01_4.html" title="Specialization, determining whether the current element appears equally often in all type&#45;lists." alt="" coords="188,85,376,125"/>
+</map>

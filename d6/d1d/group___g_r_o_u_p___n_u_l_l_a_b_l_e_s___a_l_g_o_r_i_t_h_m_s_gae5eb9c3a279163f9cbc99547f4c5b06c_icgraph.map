@@ -1,4 +1,4 @@
 <map id="sl::nullables::or_else" name="sl::nullables::or_else">
-<area shape="rect" id="node1" title="Returns the nullable if it&#39;s not equal to its &#39;&#39;null&#39;&#39;&#45;object. Executes the passed function otherwise..." alt="" coords="228,5,383,32"/>
-<area shape="rect" id="node2" href="$d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga3ff49a992d0cf2d2d25259364cfa6918" title="Creates a functional object which can be used for composing with other functional objects." alt="" coords="5,5,180,32"/>
+<area shape="rect" id="node1" title="Returns the nullable if it&#39;s not equal to its &#39;&#39;null&#39;&#39;&#45;object. Executes the passed function otherwise..." alt="" coords="216,5,359,31"/>
+<area shape="rect" id="node2" href="$d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga3ff49a992d0cf2d2d25259364cfa6918" title="Creates a functional object which can be used for composing with other functional objects." alt="" coords="5,5,168,31"/>
 </map>

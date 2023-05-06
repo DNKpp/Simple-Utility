@@ -1,9 +1,9 @@
 <map id="concepts" name="concepts">
-<area shape="rect" id="node1" href="$dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html" title="Contains several concept extensions for existing stl concepts." alt="" coords="154,5,267,31"/>
-<area shape="rect" id="node2" href="$d8/d43/group___g_r_o_u_p___a_c_c_e_s_s___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html" title=" " alt="" coords="145,55,277,80"/>
-<area shape="rect" id="node3" href="$d7/d37/group___g_r_o_u_p___l_o_g_i_c_a_l___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html" title="Contains concepts which determines whether a type is usable in operator &amp;, &amp;=, |, |=,..." alt="" coords="143,105,279,145"/>
-<area shape="rect" id="node4" href="$dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html" title="Contains concepts which determines whether a type is usable in operator +, +=, &#45;, &#45;=,..." alt="" coords="133,169,288,195"/>
-<area shape="rect" id="node5" href="$dc/d1b/group___g_r_o_u_p___u_t_i_l_i_t_y___c_o_n_c_e_p_t_s.html" title=" " alt="" coords="181,219,241,244"/>
-<area shape="rect" id="node6" href="$de/d27/group___g_r_o_u_p___s_h_i_f_t___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html" title="Contains concepts which determines whether a type is usable in operator &lt;&lt;, &lt;&lt;=, &gt;&gt; and &gt;&gt;= expressio..." alt="" coords="153,268,269,293"/>
-<area shape="rect" id="node7" title="Contains concepts for different purposes." alt="" coords="5,141,85,167"/>
+<area shape="rect" id="node1" href="$d8/d43/group___g_r_o_u_p___a_c_c_e_s_s___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html" title=" " alt="" coords="141,5,263,31"/>
+<area shape="rect" id="node2" href="$dd/da6/group___g_r_o_u_p___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html" title="Contains concepts which determines whether a type is usable in operator +, +=, &#45;, &#45;=,..." alt="" coords="129,55,275,80"/>
+<area shape="rect" id="node3" title="Contains concepts for different purposes." alt="" coords="5,141,81,167"/>
+<area shape="rect" id="node4" href="$d7/d37/group___g_r_o_u_p___l_o_g_i_c_a_l___a_r_i_t_h_m_e_t_i_c___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html" title="Contains concepts which determines whether a type is usable in operator &amp;, &amp;=, |, |=,..." alt="" coords="139,105,265,145"/>
+<area shape="rect" id="node5" href="$de/d27/group___g_r_o_u_p___s_h_i_f_t___o_p_e_r_a_t_o_r___c_o_n_c_e_p_t_s.html" title="Contains concepts which determines whether a type is usable in operator &lt;&lt;, &lt;&lt;=, &gt;&gt; and &gt;&gt;= expressio..." alt="" coords="147,169,257,195"/>
+<area shape="rect" id="node6" href="$dd/dae/group___g_r_o_u_p___s_t_l___e_x_t_e_n_s_i_o_n___c_o_n_c_e_p_t_s.html" title="Contains several concept extensions for existing stl concepts." alt="" coords="150,219,254,244"/>
+<area shape="rect" id="node7" href="$dc/d1b/group___g_r_o_u_p___u_t_i_l_i_t_y___c_o_n_c_e_p_t_s.html" title=" " alt="" coords="175,268,229,293"/>
 </map>
