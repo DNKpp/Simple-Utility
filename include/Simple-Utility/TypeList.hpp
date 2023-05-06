@@ -101,20 +101,20 @@ namespace sl::concepts
 	 * \see https://en.cppreference.com/w/cpp/utility/tuple_size
 	 */
 	template <class T>
-	concept type_list_like = requires
-							{
-								typename std::tuple_size<T>::type;
-								{ std::tuple_size_v<T> } -> std::convertible_to<std::size_t>;
-							}
-							&& 0u <= std::tuple_size_v<T>
-							&& type_list::detail::checkIndices<T>;
+	concept type_list = requires
+						{
+							typename std::tuple_size<T>::type;
+							{ std::tuple_size_v<T> } -> std::convertible_to<std::size_t>;
+						}
+						&& 0u <= std::tuple_size_v<T>
+						&& type_list::detail::checkIndices<T>;
 
 	/**
 	 * \brief Determines whether a type is a type-list and contains elements.
 	 * \ingroup GROUP_TYPE_LIST GROUP_UTILITY_CONCEPTS
 	 */
 	template <class T>
-	concept populated_type_list = type_list_like<T>
+	concept populated_type_list = type_list<T>
 								&& 0u < std::tuple_size_v<T>;
 }
 
@@ -136,7 +136,7 @@ namespace sl::type_list
 	 * \brief Primary template isn't defined on purpose.
 	 * \tparam Lists The provided type-lists.
 	 */
-	template <concepts::type_list_like... Lists>
+	template <concepts::type_list... Lists>
 	struct common_container;
 
 	/**
@@ -162,7 +162,7 @@ namespace sl::type_list
 		template <class...> class Container,
 		class... LhsElements,
 		class... RhsElements,
-		concepts::type_list_like... Others>
+		concepts::type_list... Others>
 	struct common_container<Container<LhsElements...>, Container<RhsElements...>, Others...>
 		: public common_container<Container<LhsElements...>, Others...>
 	{
@@ -184,7 +184,7 @@ namespace sl::type_list
 	 * \brief Primary template isn't defined on purpose.
 	 * \tparam List The provided type-list.
 	 */
-	template <concepts::type_list_like List>
+	template <concepts::type_list List>
 	struct tail;
 
 	/**
@@ -213,7 +213,7 @@ namespace sl::type_list
 	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::tail "tail" trait.
 	 * \tparam List The provided type-list.
 	 */
-	template <concepts::type_list_like List>
+	template <concepts::type_list List>
 	using tail_t = typename tail<List>::type;
 
 	/**
@@ -232,7 +232,7 @@ namespace sl::type_list
 	 * \tparam Query The type to be queried for.
 	 * \tparam List The provided type-list.
 	 */
-	template <class Query, concepts::type_list_like List>
+	template <class Query, concepts::type_list List>
 	struct count;
 
 	/**
@@ -254,7 +254,7 @@ namespace sl::type_list
 	 * \tparam Query The type to be queried for.
 	 * \tparam List The provided type-list.
 	 */
-	template <class Query, concepts::type_list_like List>
+	template <class Query, concepts::type_list List>
 	inline constexpr auto count_v = count<Query, List>::value;
 
 	/**
@@ -273,7 +273,7 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam Others Other type-lists.
 	 */
-	template <concepts::type_list_like First, concepts::type_list_like... Others>
+	template <concepts::type_list First, concepts::type_list... Others>
 	struct equal
 		: public std::false_type
 	{
@@ -283,7 +283,7 @@ namespace sl::type_list
 	 * \brief Specialization for single type-list.
 	 * \tparam First The first type-list.
 	 */
-	template <concepts::type_list_like First>
+	template <concepts::type_list First>
 	struct equal<First>
 		: public std::true_type
 	{
@@ -300,7 +300,7 @@ namespace sl::type_list
 		template <class...> class FirstContainer,
 		template <class...> class SecondContainer,
 		class... Elements,
-		concepts::type_list_like... Others>
+		concepts::type_list... Others>
 	struct equal<FirstContainer<Elements...>, SecondContainer<Elements...>, Others...>
 		: public equal<FirstContainer<Elements...>, Others...>
 	{
@@ -311,7 +311,7 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam Others Other type-lists to be compared to.
 	 */
-	template <concepts::type_list_like First, concepts::type_list_like... Others>
+	template <concepts::type_list First, concepts::type_list... Others>
 	inline constexpr bool equal_v = equal<First, Others...>::value;
 
 	/**
@@ -332,7 +332,7 @@ namespace sl::type_list
 	 * \tparam UnaryOperation The operation to be applied on each element.
 	 * \tparam List The provided type-list.
 	 */
-	template <template <class> class UnaryOperation, concepts::type_list_like List>
+	template <template <class> class UnaryOperation, concepts::type_list List>
 	struct transform;
 
 	/**
@@ -352,7 +352,7 @@ namespace sl::type_list
 	 * \tparam UnaryOperation The operation to be applied on each element.
 	 * \tparam List The provided type-list.
 	 */
-	template <template <class> class UnaryOperation, concepts::type_list_like List>
+	template <template <class> class UnaryOperation, concepts::type_list List>
 	using transform_t = typename transform<UnaryOperation, List>::type;
 
 	/**
@@ -371,7 +371,7 @@ namespace sl::type_list
 	 * \tparam TargetContainer The target container template.
 	 * \tparam List The provided type-list.
 	 */
-	template <template <class...> class TargetContainer, concepts::type_list_like List>
+	template <template <class...> class TargetContainer, concepts::type_list List>
 	struct populated_from;
 
 	/**
@@ -391,7 +391,7 @@ namespace sl::type_list
 	 * \tparam TargetContainer The target container template.
 	 * \tparam List The provided type-list.
 	 */
-	template <template <class...> class TargetContainer, concepts::type_list_like List>
+	template <template <class...> class TargetContainer, concepts::type_list List>
 	using populated_from_t = typename populated_from<TargetContainer, List>::type;
 
 	/**
@@ -501,14 +501,14 @@ namespace sl::type_list
 	 * \brief Primary template isn't defined on purpose.
 	 * \tparam Lists The provided type-lists.
 	 */
-	template <concepts::type_list_like... Lists>
+	template <concepts::type_list... Lists>
 	struct concat;
 
 	/**
 	 * \brief Unary specialization, simply using the given type-list as result.
 	 * \tparam List The provided type-list.
 	 */
-	template <concepts::type_list_like List>
+	template <concepts::type_list List>
 	struct concat<List>
 	{
 		using type = List;
@@ -528,7 +528,7 @@ namespace sl::type_list
 		class... LhsElements,
 		template <class...> class RhsContainer,
 		class... RhsElements,
-		concepts::type_list_like... Others>
+		concepts::type_list... Others>
 	struct concat<LhsContainer<LhsElements...>, RhsContainer<RhsElements...>, Others...>
 		: public concat<LhsContainer<LhsElements..., RhsElements...>, Others...>
 	{
@@ -538,7 +538,7 @@ namespace sl::type_list
 	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::concat "concat" trait.
 	 * \tparam Lists The provided type-lists.
 	 */
-	template <concepts::type_list_like... Lists>
+	template <concepts::type_list... Lists>
 	using concat_t = typename concat<Lists...>::type;
 
 	/**
@@ -557,7 +557,7 @@ namespace sl::type_list
 	 * \tparam List The provided type-lists.
 	 * \tparam Types The types to be added.
 	 */
-	template <concepts::type_list_like List, class... Types>
+	template <concepts::type_list List, class... Types>
 	struct append;
 
 	/**
@@ -577,7 +577,7 @@ namespace sl::type_list
 	 * \tparam List The provided type-lists.
 	 * \tparam Types The types to be added.
 	 */
-	template <concepts::type_list_like List, class... Types>
+	template <concepts::type_list List, class... Types>
 	using append_t = typename append<List, Types...>::type;
 
 	/**
@@ -596,7 +596,7 @@ namespace sl::type_list
 	 * \tparam List The provided type-lists.
 	 * \tparam Types The types to be added.
 	 */
-	template <concepts::type_list_like List, class... Types>
+	template <concepts::type_list List, class... Types>
 	struct prepend;
 
 	/**
@@ -616,7 +616,7 @@ namespace sl::type_list
 	 * \tparam List The provided type-lists.
 	 * \tparam Types The types to be added.
 	 */
-	template <concepts::type_list_like List, class... Types>
+	template <concepts::type_list List, class... Types>
 	using prepend_t = typename prepend<List, Types...>::type;
 
 	/**
@@ -640,7 +640,7 @@ namespace sl::type_list
 	 * \tparam List The provided type-lists.
 	 * \tparam Filter The provided filter trait.
 	 */
-	template <concepts::type_list_like List, template <class> class Filter>
+	template <concepts::type_list List, template <class> class Filter>
 	struct filter;
 
 	/**
@@ -666,7 +666,7 @@ namespace sl::type_list
 	 * \tparam List The provided type-lists.
 	 * \tparam Filter The provided filter trait.
 	 */
-	template <concepts::type_list_like List, template <class> class Filter>
+	template <concepts::type_list List, template <class> class Filter>
 	using filter_t = typename filter<List, Filter>::type;
 
 	/**
@@ -698,7 +698,7 @@ namespace sl::type_list
 	 * \tparam List The provided type-lists.
 	 * \tparam Type The type to be removed.
 	 */
-	template <concepts::type_list_like List, class Type>
+	template <concepts::type_list List, class Type>
 	struct remove
 		: public filter<List, detail::not_same_as_filter<Type>::template type>
 	{
@@ -709,7 +709,7 @@ namespace sl::type_list
 	 * \tparam List The provided type-lists.
 	 * \tparam Type The type to be removed.
 	 */
-	template <concepts::type_list_like List, class Type>
+	template <concepts::type_list List, class Type>
 	using remove_t = typename remove<List, Type>::type;
 
 	/**
@@ -865,7 +865,7 @@ namespace sl::type_list
 	 * \tparam List The provided type-list.
 	 * \tparam Query The type to be queried for.
 	 */
-	template <concepts::type_list_like List, class Query>
+	template <concepts::type_list List, class Query>
 	struct contains;
 
 	/**
@@ -885,7 +885,7 @@ namespace sl::type_list
 	 * \tparam List The provided type-list.
 	 * \tparam Query The type to be queried for.
 	 */
-	template <concepts::type_list_like List, class Query>
+	template <concepts::type_list List, class Query>
 	inline constexpr bool contains_v = contains<List, Query>::value;
 
 	/**
@@ -903,7 +903,7 @@ namespace sl::type_list
 	 * \brief Reverses the order of all elements.
 	 * \tparam List The provided type-list.
 	 */
-	template <concepts::type_list_like List>
+	template <concepts::type_list List>
 	struct reverse
 	{
 		using type = append_t<
@@ -925,7 +925,7 @@ namespace sl::type_list
 	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::reverse "reverse" trait.
 	 * \tparam List The provided type-list.
 	 */
-	template <concepts::type_list_like List>
+	template <concepts::type_list List>
 	using reverse_t = typename reverse<List>::type;
 
 	/**
@@ -944,7 +944,7 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam OtherLists Other type-lists to be compared to.
 	 */
-	template <concepts::type_list_like First, class... OtherLists>
+	template <concepts::type_list First, class... OtherLists>
 	struct unordered_equal;
 
 	/**
@@ -952,7 +952,7 @@ namespace sl::type_list
 	 * \tparam FirstContainer The container template of the first type-list.
 	 * \tparam OtherLists Other type-lists to be compared to.
 	 */
-	template <template <class...> class FirstContainer, concepts::type_list_like... OtherLists>
+	template <template <class...> class FirstContainer, concepts::type_list... OtherLists>
 	struct unordered_equal<FirstContainer<>, OtherLists...>
 		: public equal<FirstContainer<>, OtherLists...>
 	{
@@ -980,7 +980,7 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam Others Other type-lists to be compared to.
 	 */
-	template <concepts::type_list_like First, concepts::type_list_like... Others>
+	template <concepts::type_list First, concepts::type_list... Others>
 	inline constexpr bool unordered_equal_v = unordered_equal<First, Others...>::value;
 
 	/**
@@ -1002,7 +1002,7 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam Second The second type-lists.
 	 */
-	template <template <class...> class TargetContainer, concepts::type_list_like First, concepts::type_list_like Second>
+	template <template <class...> class TargetContainer, concepts::type_list First, concepts::type_list Second>
 	struct difference_as
 	{
 		static_assert(
@@ -1047,7 +1047,7 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam Second The second type-lists.
 	 */
-	template <template <class...> class TargetContainer, concepts::type_list_like First, concepts::type_list_like Second>
+	template <template <class...> class TargetContainer, concepts::type_list First, concepts::type_list Second>
 	using difference_as_t = typename difference_as<TargetContainer, First, Second>::type;
 
 	/**
@@ -1056,7 +1056,7 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam Second The second type-lists.
 	 */
-	template <concepts::type_list_like First, concepts::type_list_like Second>
+	template <concepts::type_list First, concepts::type_list Second>
 	using difference = difference_as<common_container<First, Second>::template type, First, Second>;
 
 	/**
@@ -1064,7 +1064,7 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam Second The second type-lists.
 	 */
-	template <concepts::type_list_like First, concepts::type_list_like Second>
+	template <concepts::type_list First, concepts::type_list Second>
 	using difference_t = typename difference<First, Second>::type;
 
 	/**
@@ -1085,10 +1085,10 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam Second The second type-lists.
 	 */
-	template <template <class...> class TargetContainer, concepts::type_list_like First, concepts::type_list_like Second>
+	template <template <class...> class TargetContainer, concepts::type_list First, concepts::type_list Second>
 	struct symmetric_difference_as
 		: public concat<
-			difference_as_t<TargetContainer,First, Second>,
+			difference_as_t<TargetContainer, First, Second>,
 			difference_as_t<TargetContainer, Second, First>>
 	{
 	};
@@ -1099,7 +1099,7 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam Second The second type-lists.
 	 */
-	template <template <class...> class TargetContainer, concepts::type_list_like First, concepts::type_list_like Second>
+	template <template <class...> class TargetContainer, concepts::type_list First, concepts::type_list Second>
 	using symmetric_difference_as_t = typename symmetric_difference_as<TargetContainer, First, Second>::type;
 
 	/**
@@ -1108,7 +1108,7 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam Second The second type-lists.
 	 */
-	template <concepts::type_list_like First, concepts::type_list_like Second>
+	template <concepts::type_list First, concepts::type_list Second>
 	using symmetric_difference = symmetric_difference_as<common_container<First, Second>::template type, First, Second>;
 
 	/**
@@ -1116,7 +1116,7 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam Second The second type-lists.
 	 */
-	template <concepts::type_list_like First, concepts::type_list_like Second>
+	template <concepts::type_list First, concepts::type_list Second>
 	using symmetric_difference_t = typename symmetric_difference<First, Second>::type;
 
 	/**
@@ -1137,7 +1137,7 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam Second The second type-lists.
 	 */
-	template <template <class...> class TargetContainer, concepts::type_list_like First, concepts::type_list_like Second>
+	template <template <class...> class TargetContainer, concepts::type_list First, concepts::type_list Second>
 	struct intersection_as
 		: public difference_as<
 			TargetContainer,
@@ -1152,7 +1152,7 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam Second The second type-lists.
 	 */
-	template <template <class...> class TargetContainer, concepts::type_list_like First, concepts::type_list_like Second>
+	template <template <class...> class TargetContainer, concepts::type_list First, concepts::type_list Second>
 	using intersection_as_t = typename intersection_as<TargetContainer, First, Second>::type;
 
 	/**
@@ -1161,7 +1161,7 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam Second The second type-lists.
 	 */
-	template <concepts::type_list_like First, concepts::type_list_like Second>
+	template <concepts::type_list First, concepts::type_list Second>
 	using intersection = intersection_as<common_container<First, Second>::template type, First, Second>;
 
 	/**
@@ -1169,7 +1169,7 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam Second The second type-lists.
 	 */
-	template <concepts::type_list_like First, concepts::type_list_like Second>
+	template <concepts::type_list First, concepts::type_list Second>
 	using intersection_t = typename intersection<First, Second>::type;
 
 	/**
@@ -1236,16 +1236,16 @@ namespace sl::type_list
 
 namespace sl::type_list::detail
 {
-	template <class, template <class...> class TargetContainer, concepts::type_list_like... Lists>
+	template <class, template <class...> class TargetContainer, concepts::type_list... Lists>
 	struct zip_as;
 
-	template <std::size_t... indices, template <class...> class TargetContainer, concepts::type_list_like... Lists>
+	template <std::size_t... indices, template <class...> class TargetContainer, concepts::type_list... Lists>
 	struct zip_as<std::index_sequence<indices...>, TargetContainer, Lists...>
 	{
 		using type = TargetContainer<zip_nth_elements_as_t<TargetContainer, indices, Lists...>...>;
 	};
 
-	template <template <class...> class TargetContainer, concepts::type_list_like... Lists>
+	template <template <class...> class TargetContainer, concepts::type_list... Lists>
 	using zip_as_t = typename zip_as<
 		// handles zero Lists case correctly
 		std::make_index_sequence<std::min({std::max<std::size_t>({0u, std::tuple_size_v<Lists>...}), std::tuple_size_v<Lists>...})>,
@@ -1280,7 +1280,7 @@ namespace sl::type_list
 	 * \tparam TargetContainer The resulting container.
 	 * \tparam Lists The provided type-lists.
 	 */
-	template <template <class...> class TargetContainer, concepts::type_list_like... Lists>
+	template <template <class...> class TargetContainer, concepts::type_list... Lists>
 	struct zip_as
 	{
 		using type = detail::zip_as_t<TargetContainer, Lists...>;
@@ -1291,7 +1291,7 @@ namespace sl::type_list
 	 * \tparam TargetContainer The resulting container.
 	 * \tparam Lists The provided type-lists.
 	 */
-	template <template <class...> class TargetContainer, concepts::type_list_like... Lists>
+	template <template <class...> class TargetContainer, concepts::type_list... Lists>
 	using zip_as_t = typename zip_as<TargetContainer, Lists...>::type;
 
 	/**
@@ -1299,14 +1299,14 @@ namespace sl::type_list
 	 * \ref sl::type_list::common_container "common_container" trait.
 	 * \tparam Lists The provided type-lists.
 	 */
-	template <concepts::type_list_like... Lists>
+	template <concepts::type_list... Lists>
 	using zip = zip_as<common_container<Lists...>::template type, Lists...>;
 
 	/**
 	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::zip "zip" trait.
 	 * \tparam Lists The provided type-lists.
 	 */
-	template <concepts::type_list_like... Lists>
+	template <concepts::type_list... Lists>
 	using zip_t = typename zip<Lists...>::type;
 
 	/**
@@ -1319,7 +1319,7 @@ namespace sl::type_list::detail
 	template <class... Types>
 	struct prepend_transform
 	{
-		template <concepts::type_list_like CurList>
+		template <concepts::type_list CurList>
 		using type = prepend<CurList, Types...>;
 	};
 }
@@ -1366,7 +1366,7 @@ namespace sl::type_list
 	 * \tparam TargetContainer The resulting container.
 	 * \tparam Lists The provided type-lists.
 	 */
-	template <template <class...> class TargetContainer, concepts::type_list_like... Lists>
+	template <template <class...> class TargetContainer, concepts::type_list... Lists>
 	struct cartesian_product_as;
 
 	/**
@@ -1394,7 +1394,7 @@ namespace sl::type_list
 		template <class...> class TargetContainer,
 		template <class...> class Container,
 		class... Elements,
-		concepts::type_list_like... OtherLists>
+		concepts::type_list... OtherLists>
 	struct cartesian_product_as<TargetContainer, Container<Elements...>, OtherLists...>
 	{
 		using type = concat_t<
@@ -1409,7 +1409,7 @@ namespace sl::type_list
 	 * \tparam TargetContainer The resulting container.
 	 * \tparam Lists The provided type-lists.
 	 */
-	template <template <class...> class TargetContainer, concepts::type_list_like... Lists>
+	template <template <class...> class TargetContainer, concepts::type_list... Lists>
 	using cartesian_product_as_t = typename cartesian_product_as<TargetContainer, Lists...>::type;
 
 	/**
@@ -1417,14 +1417,14 @@ namespace sl::type_list
 	 * \ref sl::type_list::common_container "common_container" trait.
 	 * \tparam Lists The provided type-lists.
 	 */
-	template <concepts::type_list_like... Lists>
+	template <concepts::type_list... Lists>
 	using cartesian_product = cartesian_product_as<common_container<Lists...>::template type, Lists...>;
 
 	/**
 	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::cartesian_product "cartesian_product" trait.
 	 * \tparam Lists The provided type-lists.
 	 */
-	template <concepts::type_list_like... Lists>
+	template <concepts::type_list... Lists>
 	using cartesian_product_t = typename cartesian_product<Lists...>::type;
 
 	/**
