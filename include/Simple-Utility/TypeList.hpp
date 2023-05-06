@@ -1080,45 +1080,18 @@ namespace sl::type_list
 	 */
 
 	/**
-	 * \brief Primary template, yielding an empty TargetContainer as result.
+	 * \brief Determines the intersection between the elements of two type-lists. The order doesn't matter.
 	 * \tparam TargetContainer The resulting container.
 	 * \tparam First The first type-list.
 	 * \tparam Second The second type-lists.
 	 */
 	template <template <class...> class TargetContainer, concepts::type_list_like First, concepts::type_list_like Second>
 	struct intersection_as
+		: public difference_as<
+			TargetContainer,
+			First,
+			difference_as_t<TargetContainer, First, Second>>
 	{
-		using type = TargetContainer<>;
-	};
-
-	/**
-	 * \brief Specialization, if the front element of first is not contained in Second.
-	 * \tparam TargetContainer The resulting container.
-	 * \tparam First The first type-list.
-	 * \tparam Second The second type-lists.
-	 */
-	template <template <class...> class TargetContainer, concepts::populated_type_list First, concepts::populated_type_list Second>
-	struct intersection_as<TargetContainer, First, Second>
-	{
-		using type = typename intersection_as<TargetContainer, pop_front_t<First>, Second>::type;
-	};
-
-	/**
-	 * \brief Specialization, if the front element of first is contained in Second.
-	 * \tparam TargetContainer The resulting container.
-	 * \tparam First The first type-list.
-	 * \tparam Second The second type-lists.
-	 */
-	template <template <class...> class TargetContainer, concepts::populated_type_list First,concepts::populated_type_list Second>
-		requires contains_v<Second, front_t<First>>
-	struct intersection_as<TargetContainer, First, Second>
-	{
-		using type = prepend_t<
-			typename intersection_as<
-				TargetContainer,
-				pop_front_t<First>,
-				remove_at_t<Second, index_of_v<Second, front_t<First>>>>::type,
-			front_t<First>>;
 	};
 
 	/**
