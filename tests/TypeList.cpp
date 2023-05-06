@@ -538,6 +538,47 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+	"type_list::difference_as determines which elements of first are not contained in second and yields the result as TargetContainer.",
+	"[type_list]",
+	((bool dummy, class Expected, template <class...> class TargetContainer, class FirstList, class SecondList),
+		dummy, Expected, TargetContainer, FirstList, SecondList),
+	(true, tl::TypeList<>, tl::TypeList, tl::TypeList<>, tl::TypeList<>),
+	(true, tl::TypeList<>, tl::TypeList, tl::TypeList<>, tl::TypeList<int>),
+	(true, tl::TypeList<int>, tl::TypeList, tl::TypeList<int>, tl::TypeList<>),
+	(true, tl::TypeList<>, tl::TypeList, tl::TypeList<int>, tl::TypeList<int>),
+	(true, tl::TypeList<>, tl::TypeList, tl::TypeList<double, int>, tl::TypeList<int, double>),
+	(true, std::tuple<int&>, std::tuple, tl::TypeList<double, int&, int>, std::tuple<int, double>),
+	(true, tl::TypeList<int&>, tl::TypeList, tl::TypeList<double, int&, int>, std::tuple<int, double>)
+)
+{
+	STATIC_REQUIRE(tl::unordered_equal_v<Expected, typename tl::difference_as<TargetContainer, FirstList, SecondList>::type>);
+	STATIC_REQUIRE(tl::unordered_equal_v<Expected, tl::difference_as_t<TargetContainer, FirstList, SecondList>>);
+
+	using ResultContainer = tl::common_container<tl::difference_as_t<TargetContainer, FirstList, SecondList>>;
+	STATIC_REQUIRE(std::same_as<TargetContainer<>, typename ResultContainer::template type<>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_list::difference determines which elements of first are not contained in second and yields the result as common_container.",
+	"[type_list]",
+	((bool dummy, class Expected, class FirstList, class SecondList), dummy, Expected, FirstList, SecondList),
+	(true, tl::TypeList<>, tl::TypeList<>, tl::TypeList<>),
+	(true, tl::TypeList<>, tl::TypeList<>, tl::TypeList<int>),
+	(true, tl::TypeList<int>, tl::TypeList<int>, tl::TypeList<>),
+	(true, tl::TypeList<>,  tl::TypeList<int>, tl::TypeList<int>),
+	(true, tl::TypeList<>, tl::TypeList<double, int>, tl::TypeList<int, double>),
+	(true, tl::TypeList<int&>, tl::TypeList<double, int&, int>, tl::TypeList<int, double>),
+	(true, std::tuple<int&>, std::tuple<double, int&, int>, std::tuple<int, double>)
+)
+{
+	STATIC_REQUIRE(tl::unordered_equal_v<Expected, typename tl::difference<FirstList, SecondList>::type>);
+	STATIC_REQUIRE(tl::unordered_equal_v<Expected, tl::difference_t<FirstList, SecondList>>);
+
+	using ResultContainer = tl::common_container<tl::difference_t<FirstList, SecondList>>;
+	STATIC_REQUIRE(std::same_as<typename tl::common_container<Expected>::template type<>, typename ResultContainer::template type<>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
 	"type_list::intersection_as determines which types are contained in both type-lists and yields the result in the given TargetContainer.",
 	"[type_list]",
 	((bool dummy, class Expected, template <class...> class TargetContainer, class FirstList, class SecondList),
