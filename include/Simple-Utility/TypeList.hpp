@@ -898,6 +898,58 @@ namespace sl::type_list
 	 */
 
 	/**
+	 * \defgroup GROUP_TYPE_LIST_UNORDERED_EQUAL unordered_equal
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Determines whether the source type-lists contain the same elements.
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam First The first type-list.
+	 * \tparam OtherLists Other type-lists to be compared to.
+	 */
+	template <concepts::type_list_like First, concepts::type_list_like... OtherLists>
+	struct unordered_equal;
+
+	/**
+	 * \brief Root specialization, determining whether all type-lists are empty.
+	 * \tparam FirstContainer The container template of the first type-list.
+	 * \tparam OtherLists Other type-lists to be compared to.
+	 */
+	template <template <class...> class FirstContainer, concepts::type_list_like... OtherLists>
+	struct unordered_equal<FirstContainer<>, OtherLists...>
+		: public std::bool_constant<((0 == std::tuple_size_v<OtherLists>) && ...)>
+	{
+	};
+
+	/**
+	 * \brief Specialization, determining whether the current element appears equally often in all type-lists.
+	 * \tparam FirstContainer The container template of the first type-list.
+	 * \tparam CurElement The current element to be checked.
+	 * \tparam OtherElements Other elements of the first type-list.
+	 * \tparam OtherLists Other type-lists to be compared to.
+	 */
+	template <template <class...> class FirstContainer, class CurElement, class... OtherElements, concepts::type_list_like... OtherLists>
+	struct unordered_equal<FirstContainer<CurElement, OtherElements...>, OtherLists...>
+		: public std::conditional_t<
+			(... && (count_v<CurElement, FirstContainer<CurElement, OtherElements...>> == count_v<CurElement, OtherLists>)),
+			unordered_equal<remove_t<CurElement, FirstContainer<OtherElements...>>, remove_t<CurElement, OtherLists>...>,
+			std::false_type>
+	{
+	};
+
+	/**
+	 * \brief Convenience constant, exposing the ``value`` member of the \ref sl::type_list::unordered_equal "unordered_equal" trait.
+	 * \tparam First The first type-list.
+	 * \tparam Others Other type-lists to be compared to.
+	 */
+	template <concepts::type_list_like First, concepts::type_list_like... Others>
+	inline constexpr bool unordered_equal_v = unordered_equal<First, Others...>::value;
+
+	/**
+	 * \}
+	 */
 	 * \defgroup GROUP_TYPE_LIST_ZIP_NTH_ELEMENT zip_nth_element
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Given multiple type-lists and an index ``n`` (where each type-lists has at least the length ``n + 1``) this algorithm
