@@ -881,7 +881,7 @@ namespace sl::type_list
 	};
 
 	/**
-	 * \brief Convenience constant, exposing the ``value`` member of the \ref sl::type_list::contained_by "contains" trait.
+	 * \brief Convenience constant, exposing the ``value`` member of the \ref sl::type_list::contains "contains" trait.
 	 * \tparam List The provided type-list.
 	 * \tparam Query The type to be queried for.
 	 */
