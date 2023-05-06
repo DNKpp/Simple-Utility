@@ -409,7 +409,7 @@ namespace sl::type_list
 	 * \brief Primary template isn't defined on purpose.
 	 * \tparam List The provided type-list.
 	 */
-	template <concepts::type_list_like List>
+	template <concepts::populated_type_list List>
 	struct front;
 
 	/**
@@ -428,7 +428,7 @@ namespace sl::type_list
 	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::front "front" trait.
 	 * \tparam List The provided type-list.
 	 */
-	template <concepts::type_list_like List>
+	template <concepts::populated_type_list List>
 	using front_t = typename front<List>::type;
 
 	/**
@@ -446,7 +446,7 @@ namespace sl::type_list
 	 * \brief Primary template isn't defined on purpose.
 	 * \tparam List The provided type-list.
 	 */
-	template <concepts::type_list_like List>
+	template <concepts::populated_type_list List>
 	struct back;
 
 	/**
@@ -476,7 +476,7 @@ namespace sl::type_list
 	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::back "back" trait.
 	 * \tparam List The provided type-list.
 	 */
-	template <concepts::type_list_like List>
+	template <concepts::populated_type_list List>
 	using back_t = typename back<List>::type;
 
 	/**
