@@ -262,6 +262,63 @@ namespace sl::type_list
 	 */
 
 	/**
+	 * \defgroup GROUP_TYPE_LIST_EQUAL equal
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Determines whether the source type-lists contain the same elements in the same order.
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template yields ``false``.
+	 * \tparam First The first type-list.
+	 * \tparam Others Other type-lists.
+	 */
+	template <concepts::type_list_like First, concepts::type_list_like... Others>
+	struct equal
+		: public std::false_type
+	{
+	};
+
+	/**
+	 * \brief Specialization for single type-list.
+	 * \tparam First The first type-list.
+	 */
+	template <concepts::type_list_like First>
+	struct equal<First>
+		: public std::true_type
+	{
+	};
+
+	/**
+	 * \brief Specialization, determining whether the first two type-lists have equal template arguments.
+	 * \tparam FirstContainer The first container template.
+	 * \tparam SecondContainer The second container template.
+	 * \tparam Elements The elements contained in the first and second container.
+	 * \tparam Others Other type-lists.
+	 */
+	template <
+		template <class...> class FirstContainer,
+		template <class...> class SecondContainer,
+		class... Elements,
+		concepts::type_list_like... Others>
+	struct equal<FirstContainer<Elements...>, SecondContainer<Elements...>, Others...>
+		: public equal<FirstContainer<Elements...>, Others...>
+	{
+	};
+
+	/**
+	 * \brief Convenience constant, exposing the ``value`` member of the \ref sl::type_list::equal "equal" trait.
+	 * \tparam First The first type-list.
+	 * \tparam Others Other type-lists to be compared to.
+	 */
+	template <concepts::type_list_like First, concepts::type_list_like... Others>
+	inline constexpr bool equal_v = equal<First, Others...>::value;
+
+	/**
+	 * \}
+	 */
+
+	/**
 	 * \defgroup GROUP_TYPE_LIST_TRANSFORM transform
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Applies the given unary operation on each element of the source type-list and stores them into a new type-list.
