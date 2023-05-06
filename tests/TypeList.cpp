@@ -147,6 +147,23 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(sl::concepts::type_list_like<T> == expected);
 }
 
+TEMPLATE_TEST_CASE_SIG(
+	"concepts::populated_type_list checks whether a type-list contains elements.",
+	"[type_list][concept]",
+	((bool expected, class T), expected, T),
+	(false, std::vector<int>),
+	(false, tl::TypeList<>),
+	(false, std::tuple<>),
+	(false, std::array<int, 0>),
+	(true, tl::TypeList<int>),
+	(true, std::tuple<int>),
+	(true, std::pair<int, int>),
+	(true, std::array<int, 1>)
+)
+{
+	STATIC_REQUIRE(sl::concepts::populated_type_list<T> == expected);
+}
+
 //! [transformation definition]
 template <class T>
 struct test_transformation

@@ -108,6 +108,14 @@ namespace sl::concepts
 							}
 							&& std::cmp_less_equal(0, std::tuple_size_v<T>)
 							&& type_list::detail::checkIndices<T>;
+
+	/**
+	 * \brief Determines whether a type is a type-list and contains elements.
+	 * \ingroup GROUP_TYPE_LIST GROUP_UTILITY_CONCEPTS
+	 */
+	template <class T>
+	concept populated_type_list = type_list_like<T>
+							&& 0u < std::tuple_size_v<T>;
 }
 
 namespace sl::type_list
