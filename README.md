@@ -77,7 +77,7 @@ static_assert(std::same_as<
 		tl::TypeList<int&, int>,
 		tl::TypeList<int, int&>>>);
 
-using Zipped = tl::zip_as_t<std::tuple, MyTypesCart2, std::tuple<float, double>>;	// note the _as prefix. This is necessary if different type-list templates are combined.
+using Zipped = tl::zip_as_t<std::tuple, MyTypesCart2, std::tuple<float, double>>;	// note the _as suffix. This is necessary if different type-list templates are combined.
 
 static_assert(std::same_as<
 	Zipped,
