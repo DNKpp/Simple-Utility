@@ -3,6 +3,7 @@ include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
 
 add_executable(
 	Simple-Utility-Tests
+	"Config.cpp"
 	"bind_back.cpp"
 	"helper.cpp"
 	"math.cpp"
