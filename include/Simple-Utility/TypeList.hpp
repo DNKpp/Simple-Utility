@@ -262,6 +262,47 @@ namespace sl::type_list
 	 */
 
 	/**
+	 * \defgroup GROUP_TYPE_LIST_COUNT count
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Determines how often the query type appears in the source type-list.
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template isn't defined on purpose.
+	 * \tparam Query The type to be queried for.
+	 * \tparam List The provided type-list.
+	 */
+	template <class Query, concepts::type_list_like List>
+	struct count;
+
+	/**
+	 * \brief Specialization counting the presence of the query type, due to comparing it with each element of the type-list.
+	 * \tparam Query The type to be queried for.
+	 * \tparam Container The container type.
+	 * \tparam Elements The element types.
+	 */
+	template <class Query, template <class...> class Container, class... Elements>
+	struct count<Query, Container<Elements...>>
+		: public std::integral_constant<
+			std::size_t,
+			(0u + ... + static_cast<std::size_t>(std::same_as<Query, Elements>))>
+	{
+	};
+
+	/**
+	 * \brief Convenience constant, exposing the ``value`` member of the \ref sl::type_list::count "count" trait.
+	 * \tparam Query The type to be queried for.
+	 * \tparam List The provided type-list.
+	 */
+	template <class Query, concepts::type_list_like List>
+	inline constexpr auto count_v = count<Query, List>::value;
+
+	/**
+	 * \}
+	 */
+
+	/**
 	 * \defgroup GROUP_TYPE_LIST_EQUAL equal
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Determines whether the source type-lists contain the same elements in the same order.

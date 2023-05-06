@@ -73,6 +73,23 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+	"type_list::count determines how often the queried type is contained inside the type-list.",
+	"[type_list]",
+	((std::size_t expected, class Query, class T), expected, Query, T),
+	(0, int, tl::TypeList<>),
+	(0, int&&, tl::TypeList<int, int&>),
+	(1, int, tl::TypeList<int>),
+	(1, int, tl::TypeList<int, int&>),
+	(2, int&, tl::TypeList<int, int&, int&, float>),
+	(1, float, tl::TypeList<int, int&, int&, float>),
+	(2, int&, std::tuple<int, int&, int&, float>)
+)
+{
+	STATIC_REQUIRE(expected == tl::count<Query, T>::value);
+	STATIC_REQUIRE(expected == tl::count_v<Query, T>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
 	"type_list::equal determines whether all given type-lists contain the same elements in equal order.",
 	"[type_list]",
 	((bool expected, class... Lists), expected, Lists...),
