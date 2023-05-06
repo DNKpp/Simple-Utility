@@ -1072,6 +1072,58 @@ namespace sl::type_list
 	 */
 
 	/**
+	 * \defgroup GROUP_TYPE_LIST_SYMMETRIC_DIFFERENCE symmetric_difference
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Determines which elements are in either of the source type-lists, but not in both. The order doesn't matter.
+	 * \note The element order of the resulting type-list is unspecified.
+	 * \{
+	 */
+
+	/**
+	 * \brief Determines which elements are in either of the source type-lists, but not in both. The order doesn't matter.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam First The first type-list.
+	 * \tparam Second The second type-lists.
+	 */
+	template <template <class...> class TargetContainer, concepts::type_list_like First, concepts::type_list_like Second>
+	struct symmetric_difference_as
+		: public concat<
+			difference_as_t<TargetContainer,First, Second>,
+			difference_as_t<TargetContainer, Second, First>>
+	{
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::symmetric_difference_as "symmetric_difference_as" trait.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam First The first type-list.
+	 * \tparam Second The second type-lists.
+	 */
+	template <template <class...> class TargetContainer, concepts::type_list_like First, concepts::type_list_like Second>
+	using symmetric_difference_as_t = typename symmetric_difference_as<TargetContainer, First, Second>::type;
+
+	/**
+	 * \brief Alternative algorithm yielding the result as the ``type`` member alias and determining the result container via
+	 * \ref sl::type_list::common_container "common_container" trait.
+	 * \tparam First The first type-list.
+	 * \tparam Second The second type-lists.
+	 */
+	template <concepts::type_list_like First, concepts::type_list_like Second>
+	using symmetric_difference = symmetric_difference_as<common_container<First, Second>::template type, First, Second>;
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::symmetric_difference "symmetric_difference" trait.
+	 * \tparam First The first type-list.
+	 * \tparam Second The second type-lists.
+	 */
+	template <concepts::type_list_like First, concepts::type_list_like Second>
+	using symmetric_difference_t = typename symmetric_difference<First, Second>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
 	 * \defgroup GROUP_TYPE_LIST_INTERSECTION intersection
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Determines the intersection between the elements of two type-lists. The order doesn't matter.
