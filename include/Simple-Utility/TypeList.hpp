@@ -639,8 +639,9 @@ namespace sl::type_list
 	 * \brief Primary template isn't defined on purpose.
 	 * \tparam Filter The provided filter trait.
 	 * \tparam List The provided type-lists.
+	 * \tparam Filter The provided filter trait.
 	 */
-	template <template <class> class Filter, concepts::type_list_like List>
+	template <concepts::type_list_like List, template <class> class Filter>
 	struct filter;
 
 	/**
@@ -648,9 +649,10 @@ namespace sl::type_list
 	 * \tparam Filter The provided filter trait.
 	 * \tparam Container The container type.
 	 * \tparam Elements The element types.
+	 * \tparam Filter The provided filter trait.
 	 */
-	template <template <class> class Filter, template <class...> class Container, class... Elements>
-	struct filter<Filter, Container<Elements...>>
+	template <template <class...> class Container, class... Elements, template <class> class Filter>
+	struct filter<Container<Elements...>, Filter>
 	{
 		using type = concat_t<
 			Container<>,
@@ -665,9 +667,10 @@ namespace sl::type_list
 	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::filter "filter" trait.
 	 * \tparam Filter The provided filter trait.
 	 * \tparam List The provided type-lists.
+	 * \tparam Filter The provided filter trait.
 	 */
-	template <template <class> class Filter, concepts::type_list_like List>
-	using filter_t = typename filter<Filter, List>::type;
+	template <concepts::type_list_like List, template <class> class Filter>
+	using filter_t = typename filter<List, Filter>::type;
 
 	/**
 	 * \}
@@ -697,10 +700,11 @@ namespace sl::type_list
 	 * \brief Applies the filter trait on each element of the source type-list.
 	 * \tparam Type The type to be removed.
 	 * \tparam List The provided type-lists.
+	 * \tparam Type The type to be removed.
 	 */
-	template <class Type, concepts::type_list_like List>
+	template <concepts::type_list_like List, class Type>
 	struct remove
-		: public filter<detail::not_same_as_filter<Type>::template type, List>
+		: public filter<List, detail::not_same_as_filter<Type>::template type>
 	{
 	};
 
@@ -708,9 +712,10 @@ namespace sl::type_list
 	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::remove "remove" trait.
 	 * \tparam Type The type to be removed.
 	 * \tparam List The provided type-lists.
+	 * \tparam Type The type to be removed.
 	 */
-	template <class Type, concepts::type_list_like List>
-	using remove_t = typename remove<Type, List>::type;
+	template <concepts::type_list_like List, class Type>
+	using remove_t = typename remove<List, Type>::type;
 
 	/**
 	 * \}
@@ -978,11 +983,15 @@ namespace sl::type_list
 	 * \tparam OtherElements Other elements of the first type-list.
 	 * \tparam OtherLists Other type-lists to be compared to.
 	 */
-	template <template <class...> class FirstContainer, class CurElement, class... OtherElements, concepts::type_list_like... OtherLists>
+	template <
+		template <class...> class FirstContainer,
+		class CurElement,
+		class... OtherElements,
+		concepts::type_list_like... OtherLists>
 	struct unordered_equal<FirstContainer<CurElement, OtherElements...>, OtherLists...>
 		: public std::conditional_t<
 			(... && (count_v<CurElement, FirstContainer<CurElement, OtherElements...>> == count_v<CurElement, OtherLists>)),
-			unordered_equal<remove_t<CurElement, FirstContainer<OtherElements...>>, remove_t<CurElement, OtherLists>...>,
+			unordered_equal<remove_t<FirstContainer<OtherElements...>, CurElement>, remove_t<OtherLists, CurElement>...>,
 			std::false_type>
 	{
 	};
