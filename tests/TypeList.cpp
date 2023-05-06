@@ -151,7 +151,7 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"concepts::type_list_like checks for valid types.",
+	"concepts::type_list checks for valid types.",
 	"[type_list][concept]",
 	((bool expected, class T), expected, T),
 	(false, std::vector<int>),
@@ -162,7 +162,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, std::array<int, 0>)
 )
 {
-	STATIC_REQUIRE(sl::concepts::type_list_like<T> == expected);
+	STATIC_REQUIRE(sl::concepts::type_list<T> == expected);
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -565,7 +565,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, tl::TypeList<>, tl::TypeList<>, tl::TypeList<>),
 	(true, tl::TypeList<>, tl::TypeList<>, tl::TypeList<int>),
 	(true, tl::TypeList<int>, tl::TypeList<int>, tl::TypeList<>),
-	(true, tl::TypeList<>,  tl::TypeList<int>, tl::TypeList<int>),
+	(true, tl::TypeList<>, tl::TypeList<int>, tl::TypeList<int>),
 	(true, tl::TypeList<>, tl::TypeList<double, int>, tl::TypeList<int, double>),
 	(true, tl::TypeList<int&>, tl::TypeList<double, int&, int>, tl::TypeList<int, double>),
 	(true, std::tuple<int&>, std::tuple<double, int&, int>, std::tuple<int, double>)
@@ -591,10 +591,20 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, tl::TypeList<int&>, tl::TypeList, tl::TypeList<double, int&, int>, std::tuple<int, double>)
 )
 {
-	STATIC_REQUIRE(tl::unordered_equal_v<Expected, typename tl::symmetric_difference_as<TargetContainer, FirstList, SecondList>::type>);
+	STATIC_REQUIRE(
+		tl::unordered_equal_v<Expected,
+		typename tl::symmetric_difference_as<TargetContainer,
+		FirstList,
+		SecondList>::type>
+	);
 	STATIC_REQUIRE(tl::unordered_equal_v<Expected, tl::symmetric_difference_as_t<TargetContainer, FirstList, SecondList>>);
 
-	STATIC_REQUIRE(tl::unordered_equal_v<Expected, typename tl::symmetric_difference_as<TargetContainer, SecondList, FirstList>::type>);
+	STATIC_REQUIRE(
+		tl::unordered_equal_v<Expected,
+		typename tl::symmetric_difference_as<TargetContainer,
+		SecondList,
+		FirstList>::type>
+	);
 	STATIC_REQUIRE(tl::unordered_equal_v<Expected, tl::symmetric_difference_as_t<TargetContainer, SecondList, FirstList>>);
 
 	using ResultContainer = tl::common_container<tl::symmetric_difference_as_t<TargetContainer, FirstList, SecondList>>;
@@ -604,7 +614,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
 	"type_list::symmetric_difference determines which elements are contained in either type-list but not in both and yields the result as common_container.",
 	"[type_list]",
-	((bool dummy, class Expected, class FirstList, class SecondList), dummy, Expected,  FirstList, SecondList),
+	((bool dummy, class Expected, class FirstList, class SecondList), dummy, Expected, FirstList, SecondList),
 	(true, tl::TypeList<>, tl::TypeList<>, tl::TypeList<>),
 	(true, tl::TypeList<int>, tl::TypeList<>, tl::TypeList<int>),
 	(true, tl::TypeList<>, tl::TypeList<int>, tl::TypeList<int>),
