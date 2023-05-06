@@ -117,6 +117,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, std::tuple<int>, tl::TypeList<int>, tl::TypeList<int>),
 	(false, tl::TypeList<int>, tl::TypeList<int&>),
 	(false, tl::TypeList<int>, tl::TypeList<int, int>),
+	(false, tl::TypeList<int, int&>, tl::TypeList<int&, int>),
 	(false, std::tuple<float>, tl::TypeList<int>, tl::TypeList<int>),
 	(false, std::tuple<int>, tl::TypeList<float>, tl::TypeList<int>)
 )
