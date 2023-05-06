@@ -9,6 +9,7 @@
 
 #include <concepts>
 #include <regex>
+#include <utility>
 
 template <auto v>
 concept version_part = requires { { v } -> std::integral; }
