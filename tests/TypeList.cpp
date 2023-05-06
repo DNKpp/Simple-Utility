@@ -111,6 +111,28 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+	"type_list::unordered_equal determines whether all given type-lists contain the same elements.",
+	"[type_list]",
+	((bool expected, class... Lists), expected, Lists...),
+	(true, tl::TypeList<>),
+	(true, tl::TypeList<int, int&>),
+	(true, tl::TypeList<int>, tl::TypeList<int>),
+	(true, tl::TypeList<int>, tl::TypeList<int>, tl::TypeList<int>),
+	(true, std::tuple<int>, tl::TypeList<int>, tl::TypeList<int>),
+	(false, tl::TypeList<int>, tl::TypeList<int&>),
+	(false, tl::TypeList<int>, tl::TypeList<int, int>),
+	(true, tl::TypeList<int, int&>, tl::TypeList<int&, int>),
+	(false, std::tuple<float>, tl::TypeList<int>, tl::TypeList<int>),
+	(false, std::tuple<int>, tl::TypeList<float>, tl::TypeList<int>)
+)
+{
+	STATIC_REQUIRE(expected == tl::unordered_equal<Lists...>::value);
+	STATIC_REQUIRE(expected == tl::unordered_equal_v<Lists...>);
+
+	STATIC_REQUIRE(expected == tl::populated_from_t<tl::unordered_equal, tl::reverse_t<tl::TypeList<Lists...>>>::value);
+}
+
+TEMPLATE_TEST_CASE_SIG(
 	"concepts::type_list_like checks for valid types.",
 	"[type_list][concept]",
 	((bool expected, class T), expected, T),
