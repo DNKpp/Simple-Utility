@@ -890,6 +890,10 @@ namespace sl::type_list
 		using type = Container<>;
 	};
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::reverse "reverse" trait.
+	 * \tparam List The provided type-list.
+	 */
 	template <concepts::type_list_like List>
 	using reverse_t = typename reverse<List>::type;
 
