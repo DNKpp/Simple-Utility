@@ -95,7 +95,6 @@ namespace sl::concepts
 	 * \brief Determines whether a type satisfies the requirements of a type-list.
 	 * \details Requires the traits ``std::tuple_size`` to be specialized for the given type and its member ``value`` denoting the the correct tuple size.
 	 * The ``std::tuple_element`` trait must be defined for each index in the interval ``[0, N)``, where ``N`` is the size of the given type-list.
-	 * \concept type_list_like
 	 * \ingroup GROUP_TYPE_LIST GROUP_UTILITY_CONCEPTS
 	 * \see https://en.cppreference.com/w/cpp/utility/tuple_element
 	 * \see https://en.cppreference.com/w/cpp/utility/tuple_size
