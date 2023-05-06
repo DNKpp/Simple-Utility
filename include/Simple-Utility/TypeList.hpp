@@ -115,7 +115,7 @@ namespace sl::concepts
 	 */
 	template <class T>
 	concept populated_type_list = type_list_like<T>
-							&& 0u < std::tuple_size_v<T>;
+								&& 0u < std::tuple_size_v<T>;
 }
 
 namespace sl::type_list
@@ -986,6 +986,88 @@ namespace sl::type_list
 	/**
 	 * \}
 	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_LIST_INTERSECTION intersection
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Determines the intersection between the elements of two type-lists. The order doesn't matter.
+	 * \note The element order of the resulting type-list is unspecified.
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template, yielding an empty TargetContainer as result.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam First The first type-list.
+	 * \tparam Second The second type-lists.
+	 */
+	template <template <class...> class TargetContainer, concepts::type_list_like First, concepts::type_list_like Second>
+	struct intersection_as
+	{
+		using type = TargetContainer<>;
+	};
+
+	/**
+	 * \brief Specialization, if the front element of first is not contained in Second.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam First The first type-list.
+	 * \tparam Second The second type-lists.
+	 */
+	template <template <class...> class TargetContainer, concepts::populated_type_list First, concepts::populated_type_list Second>
+	struct intersection_as<TargetContainer, First, Second>
+	{
+		using type = typename intersection_as<TargetContainer, pop_front_t<First>, Second>::type;
+	};
+
+	/**
+	 * \brief Specialization, if the front element of first is contained in Second.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam First The first type-list.
+	 * \tparam Second The second type-lists.
+	 */
+	template <template <class...> class TargetContainer, concepts::populated_type_list First,concepts::populated_type_list Second>
+		requires contains_v<Second, front_t<First>>
+	struct intersection_as<TargetContainer, First, Second>
+	{
+		using type = prepend_t<
+			typename intersection_as<
+				TargetContainer,
+				pop_front_t<First>,
+				remove_at_t<Second, index_of_v<Second, front_t<First>>>>::type,
+			front_t<First>>;
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::intersection_as "intersection_as" trait.
+	 * \tparam TargetContainer The resulting container.
+	 * \tparam First The first type-list.
+	 * \tparam Second The second type-lists.
+	 */
+	template <template <class...> class TargetContainer, concepts::type_list_like First, concepts::type_list_like Second>
+	using intersection_as_t = typename intersection_as<TargetContainer, First, Second>::type;
+
+	/**
+	 * \brief Alternative algorithm yielding the result as the ``type`` member alias and determining the result container via
+	 * \ref sl::type_list::common_container "common_container" trait.
+	 * \tparam First The first type-list.
+	 * \tparam Second The second type-lists.
+	 */
+	template <concepts::type_list_like First, concepts::type_list_like Second>
+	using intersection = intersection_as<common_container<First, Second>::template type, First, Second>;
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::intersection "intersection" trait.
+	 * \tparam First The first type-list.
+	 * \tparam Second The second type-lists.
+	 */
+	template <concepts::type_list_like First, concepts::type_list_like Second>
+	using intersection_t = typename intersection<First, Second>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
 	 * \defgroup GROUP_TYPE_LIST_ZIP_NTH_ELEMENT zip_nth_element
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Given multiple type-lists and an index ``n`` (where each type-lists has at least the length ``n + 1``) this algorithm

@@ -536,3 +536,48 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(std::same_as<Expected, typename tl::cartesian_product<Lists...>::type>);
 	STATIC_REQUIRE(std::same_as<Expected, tl::cartesian_product_t<Lists...>>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_list::intersection_as determines which types are contained in both type-lists and yields the result in the given TargetContainer.",
+	"[type_list]",
+	((bool dummy, class Expected, template <class...> class TargetContainer, class FirstList, class SecondList),
+		dummy, Expected, TargetContainer, FirstList, SecondList),
+	(true, tl::TypeList<>, tl::TypeList, tl::TypeList<>, tl::TypeList<>),
+	(true, tl::TypeList<>, tl::TypeList, tl::TypeList<>, tl::TypeList<int>),
+	(true, tl::TypeList<int>, tl::TypeList, tl::TypeList<int>, tl::TypeList<int>),
+	(true, tl::TypeList<double, int>, tl::TypeList, tl::TypeList<double, int>, tl::TypeList<int, double>),
+	(true, std::tuple<double, int>, std::tuple, tl::TypeList<double, int&, int>, tl::TypeList<int, double>),
+	(true, tl::TypeList<double, int>, tl::TypeList, std::tuple<double, int&, int>, std::tuple<int, double>)
+)
+{
+	STATIC_REQUIRE(tl::unordered_equal_v<Expected, typename tl::intersection_as<TargetContainer, FirstList, SecondList>::type>);
+	STATIC_REQUIRE(tl::unordered_equal_v<Expected, tl::intersection_as_t<TargetContainer, FirstList, SecondList>>);
+
+	STATIC_REQUIRE(tl::unordered_equal_v<Expected, typename tl::intersection_as<TargetContainer, SecondList, FirstList>::type>);
+	STATIC_REQUIRE(tl::unordered_equal_v<Expected, tl::intersection_as_t<TargetContainer, SecondList, FirstList>>);
+
+	using ResultContainer = tl::common_container<tl::intersection_as_t<TargetContainer, FirstList, SecondList>>;
+	STATIC_REQUIRE(std::same_as<TargetContainer<>, typename ResultContainer::template type<>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_list::intersection_as determines which types are contained in both type-lists and yields the result in common_container.",
+	"[type_list]",
+	((bool dummy, class Expected, class FirstList, class SecondList), dummy, Expected, FirstList, SecondList),
+	(true, tl::TypeList<>, tl::TypeList<>, tl::TypeList<>),
+	(true, tl::TypeList<>, tl::TypeList<>, tl::TypeList<int>),
+	(true, tl::TypeList<int>, tl::TypeList<int>, tl::TypeList<int>),
+	(true, tl::TypeList<double, int>, tl::TypeList<double, int>, tl::TypeList<int, double>),
+	(true, tl::TypeList<double, int>, tl::TypeList<double, int&, int>, tl::TypeList<int, double>),
+	(true, std::tuple<double, int>, std::tuple<double, int&, int>, std::tuple<int, double>)
+)
+{
+	STATIC_REQUIRE(tl::unordered_equal_v<Expected, typename tl::intersection<FirstList, SecondList>::type>);
+	STATIC_REQUIRE(tl::unordered_equal_v<Expected, tl::intersection_t<FirstList, SecondList>>);
+
+	STATIC_REQUIRE(tl::unordered_equal_v<Expected, typename tl::intersection<SecondList, FirstList>::type>);
+	STATIC_REQUIRE(tl::unordered_equal_v<Expected, tl::intersection_t<SecondList, FirstList>>);
+
+	using ResultContainer = tl::common_container<tl::intersection_t<FirstList, SecondList>>;
+	STATIC_REQUIRE(std::same_as<typename tl::common_container<Expected>::template type<>, typename ResultContainer::template type<>>);
+}
