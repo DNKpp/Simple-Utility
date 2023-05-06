@@ -9,7 +9,7 @@
 #pragma once
 
 #define SL_UTILITY_STR(arg) #arg
-#define SL_UTILITY_XSTR(arg) ENTT_STR(arg)
+#define SL_UTILITY_XSTR(arg) SL_UTILITY_STR(arg)
 
 #if __has_cpp_attribute(no_unique_address)
 	#define SL_UTILITY_NO_UNIQUE_ADDRESS [[no_unique_address]]
