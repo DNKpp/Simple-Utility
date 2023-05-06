@@ -637,7 +637,6 @@ namespace sl::type_list
 
 	/**
 	 * \brief Primary template isn't defined on purpose.
-	 * \tparam Filter The provided filter trait.
 	 * \tparam List The provided type-lists.
 	 * \tparam Filter The provided filter trait.
 	 */
@@ -646,7 +645,6 @@ namespace sl::type_list
 
 	/**
 	 * \brief Applies the filter trait on each element of the source type-list.
-	 * \tparam Filter The provided filter trait.
 	 * \tparam Container The container type.
 	 * \tparam Elements The element types.
 	 * \tparam Filter The provided filter trait.
@@ -665,7 +663,6 @@ namespace sl::type_list
 
 	/**
 	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::filter "filter" trait.
-	 * \tparam Filter The provided filter trait.
 	 * \tparam List The provided type-lists.
 	 * \tparam Filter The provided filter trait.
 	 */
@@ -698,7 +695,6 @@ namespace sl::type_list
 
 	/**
 	 * \brief Applies the filter trait on each element of the source type-list.
-	 * \tparam Type The type to be removed.
 	 * \tparam List The provided type-lists.
 	 * \tparam Type The type to be removed.
 	 */
@@ -710,7 +706,6 @@ namespace sl::type_list
 
 	/**
 	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::remove "remove" trait.
-	 * \tparam Type The type to be removed.
 	 * \tparam List The provided type-lists.
 	 * \tparam Type The type to be removed.
 	 */
@@ -839,7 +834,6 @@ namespace sl::type_list
 	/**
 	 * \brief Specialization if the queried type appears at the beginning of the type-list.
 	 * \tparam List The provided type-list.
-	 * \tparam Query The type to be queried for.
 	 */
 	template <concepts::populated_type_list List>
 	struct index_of<List, front_t<List>>
@@ -849,7 +843,6 @@ namespace sl::type_list
 
 	/**
 	 * \brief Convenience constant, exposing the ``value`` member of the \ref sl::type_list::index_of "index_of" trait.
-	 * \tparam Query The type to be queried for.
 	 * \tparam List The provided type-list.
 	 * \tparam Query The type to be queried for.
 	 */
@@ -951,7 +944,7 @@ namespace sl::type_list
 	 * \tparam First The first type-list.
 	 * \tparam OtherLists Other type-lists to be compared to.
 	 */
-	template <concepts::type_list_like First, concepts::type_list_like... OtherLists>
+	template <concepts::type_list_like First, class... OtherLists>
 	struct unordered_equal;
 
 	/**
@@ -961,27 +954,24 @@ namespace sl::type_list
 	 */
 	template <template <class...> class FirstContainer, concepts::type_list_like... OtherLists>
 	struct unordered_equal<FirstContainer<>, OtherLists...>
-		: public std::bool_constant<((0 == std::tuple_size_v<OtherLists>) && ...)>
+		: public equal<FirstContainer<>, OtherLists...>
 	{
 	};
 
 	/**
 	 * \brief Specialization, determining whether the current element appears equally often in all type-lists.
-	 * \tparam FirstContainer The container template of the first type-list.
-	 * \tparam CurElement The current element to be checked.
-	 * \tparam OtherElements Other elements of the first type-list.
+	 * \tparam First The first type-list.
 	 * \tparam OtherLists Other type-lists to be compared to.
 	 */
 	template <
-		template <class...> class FirstContainer,
-		class CurElement,
-		class... OtherElements,
-		concepts::type_list_like... OtherLists>
-	struct unordered_equal<FirstContainer<CurElement, OtherElements...>, OtherLists...>
-		: public std::conditional_t<
-			(... && (count_v<CurElement, FirstContainer<CurElement, OtherElements...>> == count_v<CurElement, OtherLists>)),
-			unordered_equal<remove_t<FirstContainer<OtherElements...>, CurElement>, remove_t<OtherLists, CurElement>...>,
-			std::false_type>
+		concepts::populated_type_list First,
+		concepts::populated_type_list... OtherLists>
+	struct unordered_equal<First, OtherLists...>
+		: public std::bool_constant<
+			(... && (count_v<front_t<First>, First> == count_v<front_t<First>, OtherLists>))
+			&& unordered_equal<
+				remove_t<First, front_t<First>>,
+				remove_t<OtherLists, front_t<First>>...>::value>
 	{
 	};
 
