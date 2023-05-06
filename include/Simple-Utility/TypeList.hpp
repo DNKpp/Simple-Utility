@@ -106,7 +106,7 @@ namespace sl::concepts
 								typename std::tuple_size<T>::type;
 								{ std::tuple_size_v<T> } -> std::convertible_to<std::size_t>;
 							}
-							&& std::cmp_less_equal(0, std::tuple_size_v<T>)
+							&& 0u <= std::tuple_size_v<T>
 							&& type_list::detail::checkIndices<T>;
 
 	/**
