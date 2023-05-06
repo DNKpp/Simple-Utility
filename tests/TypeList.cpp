@@ -276,6 +276,23 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(std::same_as<Expected, tl::prepend_t<SourceList, Types...>>);
 }
 
+TEMPLATE_PRODUCT_TEST_CASE(
+	"type_list::reverse reverses the order of all elements of the source type-list.",
+	"[type_list]",
+	trait_test,
+	(
+		(tl::TypeList<>, tl::TypeList<>),
+		(tl::TypeList<int>, tl::TypeList<int>),
+		(tl::TypeList<float, int>, tl::TypeList<int, float>),
+		(tl::TypeList<float, tl::TypeList<int>>, tl::TypeList<tl::TypeList<int>, float>),
+		(std::tuple<float, int>, std::tuple<int, float>)
+	)
+)
+{
+	STATIC_REQUIRE(std::same_as<expected_t<TestType>, typename tl::reverse<input_t<TestType>>::type>);
+	STATIC_REQUIRE(std::same_as<expected_t<TestType>, tl::reverse_t<input_t<TestType>>>);
+}
+
 /*
  * This test case was very tricky, as the initial approach, just comparing the two templates via the usual specialization technique,
  * was flawed and lead me to a language defect. It is perfectly answered here:

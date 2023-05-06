@@ -764,6 +764,42 @@ namespace sl::type_list
 	 */
 
 	/**
+	 * \defgroup GROUP_TYPE_LIST_REVERSE reverse
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Reverses the order of all elements.
+	 * \{
+	 */
+
+	/**
+	 * \brief Reverses the order of all elements.
+	 * \tparam List The provided type-list.
+	 */
+	template <concepts::type_list_like List>
+	struct reverse
+	{
+		using type = append_t<
+			pop_front_t<List>,
+			front_t<List>>;
+	};
+
+	/**
+	 * \brief Specialization for empty type-lists.
+	 * \tparam Container The container template.
+	 */
+	template <template <class...> class Container>
+	struct reverse<Container<>>
+	{
+		using type = Container<>;
+	};
+
+	template <concepts::type_list_like List>
+	using reverse_t = typename reverse<List>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
 	 * \defgroup GROUP_TYPE_LIST_ZIP_NTH_ELEMENT zip_nth_element
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Given multiple type-lists and an index ``n`` (where each type-lists has at least the length ``n + 1``) this algorithm
