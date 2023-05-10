@@ -23,7 +23,7 @@
 
 #define SL_UTILITY_VERSION_MAJOR 2  // NOLINT(modernize-macro-to-enum)
 #define SL_UTILITY_VERSION_MINOR 2  // NOLINT(modernize-macro-to-enum)
-#define SL_UTILITY_VERSION_PATCH 0  // NOLINT(modernize-macro-to-enum)
+#define SL_UTILITY_VERSION_PATCH 1  // NOLINT(modernize-macro-to-enum)
 
 #define SL_UTILITY_VERSION \
     SL_UTILITY_XSTR(SL_UTILITY_VERSION_MAJOR) \
