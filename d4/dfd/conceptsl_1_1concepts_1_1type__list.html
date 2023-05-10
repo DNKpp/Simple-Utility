@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v2.2.0</span>
+   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v2.2.1</span>
    </div>
   </td>
  </tr>
@@ -90,9 +90,12 @@ $(document).ready(function(){initNavTree('d4/dfd/conceptsl_1_1concepts_1_1type__
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">sl::concepts::type_list Concept Reference</div></div>
+  <div class="headertitle"><div class="title">sl::concepts::type_list Concept Reference<div class="ingroups"><a class="el" href="../../d2/d50/group___g_r_o_u_p___t_y_p_e___l_i_s_t.html">type-list</a> &#124; <a class="el" href="../../d3/ddb/group___g_r_o_u_p___c_o_n_c_e_p_t_s.html">concepts</a> &raquo; <a class="el" href="../../dc/d1b/group___g_r_o_u_p___u_t_i_l_i_t_y___c_o_n_c_e_p_t_s.html">utility</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Determines whether a type satisfies the requirements of a type-list.  
+<a href="../../d4/dfd/conceptsl_1_1concepts_1_1type__list.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../df/d2e/_type_list_8hpp_source.html">TypeList.hpp</a>&gt;</code></p>
 <h2 class="groupheader">Concept definition</h2>
@@ -104,8 +107,14 @@ $(document).ready(function(){initNavTree('d4/dfd/conceptsl_1_1concepts_1_1type__
 <div class="line">                        }</div>
 <div class="line">                        &amp;&amp; 0u &lt;= std::tuple_size_v&lt;T&gt;</div>
 <div class="line">                        &amp;&amp; type_list::detail::checkIndices&lt;T&gt;</div>
-<div class="ttc" id="aconceptsl_1_1concepts_1_1type__list_html"><div class="ttname"><a href="../../d4/dfd/conceptsl_1_1concepts_1_1type__list.html">sl::concepts::type_list</a></div><div class="ttdef"><b>Definition:</b> TypeList.hpp:104</div></div>
-</div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="aconceptsl_1_1concepts_1_1type__list_html"><div class="ttname"><a href="../../d4/dfd/conceptsl_1_1concepts_1_1type__list.html">sl::concepts::type_list</a></div><div class="ttdoc">Determines whether a type satisfies the requirements of a type-list.</div><div class="ttdef"><b>Definition:</b> TypeList.hpp:103</div></div>
+</div><!-- fragment --><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >Determines whether a type satisfies the requirements of a type-list. </p>
+<p >Requires the traits <code>std::tuple_size</code> to be specialized for the given type and its member <code>value</code> denoting the the correct tuple size. The <code>std::tuple_element</code> trait must be defined for each index in the interval <code>[0, N)</code>, where <code>N</code> is the size of the given type-list.</p>
+<dl class="section see"><dt>See also</dt><dd><a href="https://en.cppreference.com/w/cpp/utility/tuple_element">https://en.cppreference.com/w/cpp/utility/tuple_element</a> </dd>
+<dd>
+<a href="https://en.cppreference.com/w/cpp/utility/tuple_size">https://en.cppreference.com/w/cpp/utility/tuple_size</a> </dd></dl>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->

@@ -1,10 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"da/da9/classsl_1_1unique__handle.html#a3fd0e32fc9f8ddc93653820502086f1f":[1,6,4,16],
-"da/da9/classsl_1_1unique__handle.html#a42bbe8c695dfbb76ffe27c15fc438897":[1,6,4,21],
-"da/da9/classsl_1_1unique__handle.html#a4c8178541735d2902e38c1f9c33193b8":[1,6,4,1],
-"da/da9/classsl_1_1unique__handle.html#a65b37f88f593d0099c1e4d6d61129771":[1,6,4,25],
-"da/da9/classsl_1_1unique__handle.html#a67483386bd7964d04e1b7e4d7747d17b":[1,6,4,26],
 "da/da9/classsl_1_1unique__handle.html#a8cdbb9b81b2787af2ce2318c611cdc71":[1,6,4,30],
 "da/da9/classsl_1_1unique__handle.html#a8d3948ac35b26a790a497e5a1fa0416f":[1,6,4,22],
 "da/da9/classsl_1_1unique__handle.html#a8f2246509b25463c6d0f23202858aa7d":[1,6,4,13],
@@ -45,8 +40,8 @@ var NAVTREEINDEX2 =
 "db/d0b/group___g_r_o_u_p___t_y_p_e___l_i_s_t___z_i_p.html#gad0a6dd2a8bcb3b508e5088bcebce6c23":[1,5,24,2],
 "db/d0b/group___g_r_o_u_p___t_y_p_e___l_i_s_t___z_i_p.html#gaf91ffe2892c56631d3d2e6fe09a23771":[1,5,24,1],
 "db/d27/conceptsl_1_1concepts_1_1explicitly__convertible__to.html":[1,0,4,5],
-"db/d47/conceptsl_1_1functional_1_1operators_1_1tag.html":[3,0,1,0,0],
 "db/d47/conceptsl_1_1functional_1_1operators_1_1tag.html":[2,0,0,1,2,19],
+"db/d47/conceptsl_1_1functional_1_1operators_1_1tag.html":[3,0,1,0,0],
 "db/d4f/conceptsl_1_1concepts_1_1disjunctive.html":[1,0,2,12],
 "db/d5e/structsl_1_1nullables_1_1traits_3_01_t_01_4.html":[1,3,3,2],
 "db/d65/conceptsl_1_1concepts_1_1bidirectional__shift__assignable__r.html":[1,0,3,23],
@@ -75,12 +70,12 @@ var NAVTREEINDEX2 =
 "dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html#gac429255e9fa1928f52a9dc0d401b603a":[1,1,3,1],
 "dc/d35/conceptsl_1_1concepts_1_1exclusive__disjunctive__assign__with.html":[1,0,2,22],
 "dc/d4c/conceptsl_1_1concepts_1_1bidirectional__shiftable.html":[1,0,3,10],
-"dc/d60/structsl_1_1nullables_1_1traits_3_01adapter_3_01_t_null_00_01_t_adapted_01_4_01_4.html":[1,3,3,0],
 "dc/d60/structsl_1_1nullables_1_1traits_3_01adapter_3_01_t_null_00_01_t_adapted_01_4_01_4.html":[1,3,0,4],
+"dc/d60/structsl_1_1nullables_1_1traits_3_01adapter_3_01_t_null_00_01_t_adapted_01_4_01_4.html":[1,3,3,0],
 "dc/d60/structsl_1_1nullables_1_1traits_3_01adapter_3_01_t_null_00_01_t_adapted_01_4_01_4.html#a1a926dca94b50bcb7cb79fd3fd65844c":[1,3,0,4,0],
 "dc/d60/structsl_1_1nullables_1_1traits_3_01adapter_3_01_t_null_00_01_t_adapted_01_4_01_4.html#a1a926dca94b50bcb7cb79fd3fd65844c":[1,3,3,0,0],
-"dc/d60/structsl_1_1nullables_1_1traits_3_01adapter_3_01_t_null_00_01_t_adapted_01_4_01_4.html#a2a71d0e9624f665e9e12b7491fa6fdbd":[1,3,3,0,1],
 "dc/d60/structsl_1_1nullables_1_1traits_3_01adapter_3_01_t_null_00_01_t_adapted_01_4_01_4.html#a2a71d0e9624f665e9e12b7491fa6fdbd":[1,3,0,4,1],
+"dc/d60/structsl_1_1nullables_1_1traits_3_01adapter_3_01_t_null_00_01_t_adapted_01_4_01_4.html#a2a71d0e9624f665e9e12b7491fa6fdbd":[1,3,3,0,1],
 "dc/d89/structsl_1_1type__list_1_1cartesian__product__as.html":[1,5,2,0],
 "dc/d92/structsl_1_1type__list_1_1count.html":[1,5,6,0],
 "dc/d96/conceptsl_1_1concepts_1_1right__shift__assignable.html":[1,0,3,14],
@@ -249,5 +244,10 @@ var NAVTREEINDEX2 =
 "index.html#autotoc_md12":[0,2,0],
 "index.html#autotoc_md13":[0,2,1],
 "index.html#autotoc_md14":[0,2,2],
-"index.html#autotoc_md15":[0,3]
+"index.html#autotoc_md15":[0,3],
+"index.html#autotoc_md16":[0,3,0],
+"index.html#autotoc_md17":[0,3,1],
+"index.html#autotoc_md9":[0,0],
+"modules.html":[1],
+"namespacemembers.html":[2,1,0]
 };
