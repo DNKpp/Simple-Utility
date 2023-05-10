@@ -146,26 +146,27 @@ TEMPLATE_PRODUCT_TEST_CASE(
 	STATIC_REQUIRE(std::same_as<value_type, std::decay_t<TestType>>);
 }
 
-TEMPLATE_TEST_CASE(
+TEMPLATE_TEST_CASE_SIG(
 	"Invoking value_fn yields expected types.",
 	"[functional][base]",
-	int,
-	int*,
-	const int*,
-	std::string,
-	std::reference_wrapper<int>,
-	std::reference_wrapper<const int>
+	((bool dummy, class Expected, class Input), dummy, Expected, Input),
+	(true, int, int),
+	(true, int*, int*),
+	(true, const int*, const int*),
+	(true, std::string, std::string),
+	(true, int&, std::reference_wrapper<int>),
+	(true, const int&, std::reference_wrapper<const int>)
 )
 {
-	using const_lvalue_result_t = std::invoke_result_t<as_const_lvalue_ref_t<value_fn<TestType>>>;
-	using lvalue_result_t = std::invoke_result_t<as_lvalue_ref_t<value_fn<TestType>>>;
-	using const_rvalue_result_t = std::invoke_result_t<as_const_rvalue_ref_t<value_fn<TestType>>>;
-	using rvalue_result_t = std::invoke_result_t<as_rvalue_ref_t<value_fn<TestType>>>;
+	using const_lvalue_result_t = std::invoke_result_t<as_const_lvalue_ref_t<value_fn<Input>>>;
+	using lvalue_result_t = std::invoke_result_t<as_lvalue_ref_t<value_fn<Input>>>;
+	using const_rvalue_result_t = std::invoke_result_t<as_const_rvalue_ref_t<value_fn<Input>>>;
+	using rvalue_result_t = std::invoke_result_t<as_rvalue_ref_t<value_fn<Input>>>;
 
-	STATIC_REQUIRE(std::same_as<const_lvalue_result_t, as_const_lvalue_ref_t<TestType>>);
-	STATIC_REQUIRE(std::same_as<lvalue_result_t, as_const_lvalue_ref_t<TestType>>);
-	STATIC_REQUIRE(std::same_as<const_rvalue_result_t, as_const_rvalue_ref_t<TestType>>);
-	STATIC_REQUIRE(std::same_as<rvalue_result_t, as_rvalue_ref_t<TestType>>);
+	STATIC_REQUIRE(std::same_as<Expected, const_lvalue_result_t>);
+	STATIC_REQUIRE(std::same_as<Expected, lvalue_result_t>);
+	STATIC_REQUIRE(std::same_as<Expected, const_rvalue_result_t>);
+	STATIC_REQUIRE(std::same_as<Expected, rvalue_result_t>);
 }
 
 TEMPLATE_LIST_TEST_CASE("value_fn supports trivial types.", "[functional][base]", all_ref_mods_list)

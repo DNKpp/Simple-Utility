@@ -432,7 +432,7 @@ namespace sl::functional
 		using value_type = T;
 
 	private:
-		value_type m_Value{};
+		T m_Value{};
 
 	public:
 		/**
@@ -479,42 +479,12 @@ namespace sl::functional
 
 		/**
 		 * \brief The invocation operator.
-		 * \return Returns a const lvalue reference to value.
+		 * \return The value object.
 		 */
 		[[nodiscard]]
-		constexpr const value_type& operator ()() const & noexcept
+		constexpr std::unwrap_reference_t<T> operator ()() const
 		{
 			return m_Value;
-		}
-
-		/**
-		 * \brief The invocation operator.
-		 * \return Returns a const lvalue reference to value.
-		 */
-		[[nodiscard]]
-		constexpr const value_type& operator ()() & noexcept
-		{
-			return m_Value;
-		}
-
-		/**
-		 * \brief The invocation operator.
-		 * \return Returns a const rvalue reference to value.
-		 */
-		[[nodiscard]]
-		constexpr const value_type&& operator ()() const && noexcept
-		{
-			return std::move(m_Value);
-		}
-
-		/**
-		 * \brief The invocation operator.
-		 * \return Returns a rvalue reference to value.
-		 */
-		[[nodiscard]]
-		constexpr value_type&& operator ()() && noexcept
-		{
-			return std::move(m_Value);
 		}
 	};
 
