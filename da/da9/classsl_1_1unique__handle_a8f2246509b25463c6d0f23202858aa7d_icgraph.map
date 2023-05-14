@@ -1,5 +1,5 @@
 <map id="sl::unique_handle::is_valid" name="sl::unique_handle::is_valid">
-<area shape="rect" id="node1" title="Checks whether the value is initialized." alt="" coords="187,37,320,77"/>
-<area shape="rect" id="node2" href="$da/da9/classsl_1_1unique__handle.html#a2430f32a657d572e3c3d5762d9b6158d" title="Three&#45;way&#45;comparison operator overload for comparison of unique_handle and nullhandle_t." alt="" coords="5,5,139,45"/>
-<area shape="rect" id="node3" href="$da/da9/classsl_1_1unique__handle.html#a67483386bd7964d04e1b7e4d7747d17b" title="Equality&#45;comparison operator overload for comparison of unique_handle and nullhandle_t." alt="" coords="5,69,139,109"/>
+<area shape="rect" id="node1" title="Checks whether the value is initialized." alt="" coords="186,40,318,85"/>
+<area shape="rect" id="node2" href="$da/da9/classsl_1_1unique__handle.html#a2430f32a657d572e3c3d5762d9b6158d" title="Three&#45;way&#45;comparison operator overload for comparison of unique_handle and nullhandle_t." alt="" coords="5,5,138,50"/>
+<area shape="rect" id="node3" href="$da/da9/classsl_1_1unique__handle.html#a67483386bd7964d04e1b7e4d7747d17b" title="Equality&#45;comparison operator overload for comparison of unique_handle and nullhandle_t." alt="" coords="5,75,138,119"/>
 </map>

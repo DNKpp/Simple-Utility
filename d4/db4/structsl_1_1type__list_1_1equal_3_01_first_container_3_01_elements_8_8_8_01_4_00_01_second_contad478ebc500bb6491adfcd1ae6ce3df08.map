@@ -1,6 +1,6 @@
 <map id="sl::type_list::equal&lt; FirstContainer&lt; Elements... &gt;, SecondContainer&lt; Elements... &gt;, Others... &gt;" name="sl::type_list::equal&lt; FirstContainer&lt; Elements... &gt;, SecondContainer&lt; Elements... &gt;, Others... &gt;">
-<area shape="rect" id="node1" title="Specialization, determining whether the first two type&#45;lists have equal template arguments." alt="" coords="5,301,225,371"/>
-<area shape="rect" id="node2" href="$dd/d9c/structsl_1_1type__list_1_1equal.html" title=" " alt="" coords="17,197,214,252"/>
-<area shape="rect" id="node3" title=" " alt="" coords="55,5,165,31"/>
-<area shape="rect" id="node4" href="$dd/d9c/structsl_1_1type__list_1_1equal.html" title="Primary template yields false." alt="" coords="131,80,259,120"/>
+<area shape="rect" id="node1" title="Specialization, determining whether the first two type&#45;lists have equal template arguments." alt="" coords="5,320,225,399"/>
+<area shape="rect" id="node2" href="$dd/d9c/structsl_1_1type__list_1_1equal.html" title=" " alt="" coords="17,209,213,271"/>
+<area shape="rect" id="node3" title=" " alt="" coords="56,5,164,33"/>
+<area shape="rect" id="node4" href="$dd/d9c/structsl_1_1type__list_1_1equal.html" title="Primary template yields false." alt="" coords="131,82,259,127"/>
 </map>

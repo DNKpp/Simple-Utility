@@ -1,4 +1,4 @@
 <map id="unique_handle" name="unique_handle">
-<area shape="rect" id="node1" href="$dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html" title="These traits are used by the algorithms and my be specialized by users for their custom types." alt="" coords="337,37,391,62"/>
-<area shape="rect" id="node2" title="A helper type, which acts as a nullable resource handle with self&#45;cleanup support." alt="" coords="5,37,116,62"/>
+<area shape="rect" id="node1" href="$dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html" title="These traits are used by the algorithms and my be specialized by users for their custom types." alt="" coords="336,43,388,70"/>
+<area shape="rect" id="node2" title="A helper type, which acts as a nullable resource handle with self&#45;cleanup support." alt="" coords="5,43,116,70"/>
 </map>

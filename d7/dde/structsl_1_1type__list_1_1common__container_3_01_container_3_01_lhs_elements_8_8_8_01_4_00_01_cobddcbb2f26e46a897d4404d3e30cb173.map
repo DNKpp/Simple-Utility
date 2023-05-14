@@ -1,5 +1,5 @@
 <map id="sl::type_list::common_container&lt; Container&lt; LhsElements... &gt;, Container&lt; RhsElements... &gt;, Others... &gt;" name="sl::type_list::common_container&lt; Container&lt; LhsElements... &gt;, Container&lt; RhsElements... &gt;, Others... &gt;">
-<area shape="rect" id="node1" title="Trait reducing the amount of participating type&#45;lists, if the first two have the container in common." alt="" coords="5,227,204,296"/>
-<area shape="rect" id="node2" href="$d1/d1b/structsl_1_1type__list_1_1common__container.html" title=" " alt="" coords="5,123,204,177"/>
-<area shape="rect" id="node3" href="$d1/d1b/structsl_1_1type__list_1_1common__container.html" title="Primary template isn&#39;t defined on purpose." alt="" coords="30,5,179,45"/>
+<area shape="rect" id="node1" title="Trait reducing the amount of participating type&#45;lists, if the first two have the container in common." alt="" coords="5,243,204,322"/>
+<area shape="rect" id="node2" href="$d1/d1b/structsl_1_1type__list_1_1common__container.html" title=" " alt="" coords="6,132,203,194"/>
+<area shape="rect" id="node3" href="$d1/d1b/structsl_1_1type__list_1_1common__container.html" title="Primary template isn&#39;t defined on purpose." alt="" coords="30,5,179,50"/>
 </map>

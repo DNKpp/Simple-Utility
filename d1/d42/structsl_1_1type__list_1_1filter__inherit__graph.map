@@ -1,5 +1,5 @@
 <map id="sl::type_list::filter&lt; List, Filter &gt;" name="sl::type_list::filter&lt; List, Filter &gt;">
-<area shape="rect" id="node1" title="Primary template isn&#39;t defined on purpose." alt="" coords="59,5,183,45"/>
-<area shape="rect" id="node2" href="$db/d6d/structsl_1_1type__list_1_1filter.html" title=" " alt="" coords="5,137,236,192"/>
-<area shape="rect" id="node3" href="$db/ddb/structsl_1_1type__list_1_1remove.html" title="Applies the filter trait on each element of the source type&#45;list." alt="" coords="51,241,191,281"/>
+<area shape="rect" id="node1" title="Primary template isn&#39;t defined on purpose." alt="" coords="58,5,182,50"/>
+<area shape="rect" id="node2" href="$db/d6d/structsl_1_1type__list_1_1filter.html" title=" " alt="" coords="5,149,235,211"/>
+<area shape="rect" id="node3" href="$db/ddb/structsl_1_1type__list_1_1remove.html" title="Applies the filter trait on each element of the source type&#45;list." alt="" coords="50,260,190,305"/>
 </map>

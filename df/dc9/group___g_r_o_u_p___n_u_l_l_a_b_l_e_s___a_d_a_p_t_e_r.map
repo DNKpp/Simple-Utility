@@ -1,5 +1,5 @@
 <map id="adapter" name="adapter">
-<area shape="rect" id="node1" href="$d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html" title="This library offers some simple algorithms for convenient working with nullable types." alt="" coords="5,22,83,47"/>
-<area shape="rect" id="node2" title=" " alt="" coords="132,22,201,47"/>
-<area shape="rect" id="node3" href="$dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html" title="These traits are used by the algorithms and my be specialized by users for their custom types." alt="" coords="439,22,492,47"/>
+<area shape="rect" id="node1" href="$d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html" title="This library offers some simple algorithms for convenient working with nullable types." alt="" coords="5,26,82,53"/>
+<area shape="rect" id="node2" title=" " alt="" coords="131,26,199,53"/>
+<area shape="rect" id="node3" href="$dd/dc8/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___t_r_a_i_t_s.html" title="These traits are used by the algorithms and my be specialized by users for their custom types." alt="" coords="436,26,489,53"/>
 </map>

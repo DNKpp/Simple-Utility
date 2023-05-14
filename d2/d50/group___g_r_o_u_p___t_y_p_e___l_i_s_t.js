@@ -23,6 +23,7 @@ var group___g_r_o_u_p___t_y_p_e___l_i_s_t =
     [ "symmetric_difference", "d8/daa/group___g_r_o_u_p___t_y_p_e___l_i_s_t___s_y_m_m_e_t_r_i_c___d_i_f_f_e_r_e_n_c_e.html", "d8/daa/group___g_r_o_u_p___t_y_p_e___l_i_s_t___s_y_m_m_e_t_r_i_c___d_i_f_f_e_r_e_n_c_e" ],
     [ "tail", "de/d34/group___g_r_o_u_p___t_y_p_e___l_i_s_t___t_a_i_l.html", "de/d34/group___g_r_o_u_p___t_y_p_e___l_i_s_t___t_a_i_l" ],
     [ "transform", "d6/d02/group___g_r_o_u_p___t_y_p_e___l_i_s_t___t_r_a_n_s_f_o_r_m.html", "d6/d02/group___g_r_o_u_p___t_y_p_e___l_i_s_t___t_r_a_n_s_f_o_r_m" ],
+    [ "unique", "d0/d6a/group___g_r_o_u_p___t_y_p_e___l_i_s_t___u_n_i_q_u_e.html", "d0/d6a/group___g_r_o_u_p___t_y_p_e___l_i_s_t___u_n_i_q_u_e" ],
     [ "unordered_equal", "d1/da8/group___g_r_o_u_p___t_y_p_e___l_i_s_t___u_n_o_r_d_e_r_e_d___e_q_u_a_l.html", "d1/da8/group___g_r_o_u_p___t_y_p_e___l_i_s_t___u_n_o_r_d_e_r_e_d___e_q_u_a_l" ],
     [ "zip", "db/d0b/group___g_r_o_u_p___t_y_p_e___l_i_s_t___z_i_p.html", "db/d0b/group___g_r_o_u_p___t_y_p_e___l_i_s_t___z_i_p" ],
     [ "zip_nth_element", "d1/d28/group___g_r_o_u_p___t_y_p_e___l_i_s_t___z_i_p___n_t_h___e_l_e_m_e_n_t.html", "d1/d28/group___g_r_o_u_p___t_y_p_e___l_i_s_t___z_i_p___n_t_h___e_l_e_m_e_n_t" ],

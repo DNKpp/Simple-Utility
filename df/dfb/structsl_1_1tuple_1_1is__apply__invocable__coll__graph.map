@@ -1,6 +1,6 @@
 <map id="sl::tuple::is_apply_invocable&lt; TFunc, TTuple &gt;" name="sl::tuple::is_apply_invocable&lt; TFunc, TTuple &gt;">
-<area shape="rect" id="node1" title="Trait type determining whether the function is invocable with elements of the given tuple." alt="" coords="807,27,1000,67"/>
-<area shape="rect" id="node2" title=" " alt="" coords="571,5,757,89"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,32,115,57"/>
-<area shape="rect" id="node4" title=" " alt="" coords="164,55,327,95"/>
+<area shape="rect" id="node1" title="Trait type determining whether the function is invocable with elements of the given tuple." alt="" coords="804,31,996,76"/>
+<area shape="rect" id="node2" title=" " alt="" coords="568,5,755,101"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,34,114,62"/>
+<area shape="rect" id="node4" title=" " alt="" coords="163,60,325,105"/>
 </map>

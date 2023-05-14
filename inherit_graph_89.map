@@ -1,7 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,109,160,134"/>
-<area shape="rect" id="node2" href="$de/dc0/structsl_1_1type__list_1_1count_3_01_query_00_01_container_3_01_elements_8_8_8_01_4_01_4.html" title="Specialization counting the presence of the query type, due to comparing it with each element of the ..." alt="" coords="208,5,441,45"/>
-<area shape="rect" id="node3" href="$dd/ded/structsl_1_1type__list_1_1index__of.html" title="Primary template, traversing the elements of the source type&#45;list." alt="" coords="261,69,388,109"/>
-<area shape="rect" id="node4" href="$db/dec/structsl_1_1type__list_1_1index__of_3_01_list_00_01front__t_3_01_list_01_4_01_4.html" title="Specialization if the queried type appears at the beginning of the type&#45;list." alt="" coords="236,133,413,173"/>
-<area shape="rect" id="node5" href="$df/dc1/structstd_1_1tuple__size_3_01sl_1_1type__list_1_1_type_list_3_01_types_8_8_8_01_4_01_4.html" title="Specialization of std::tuple_size for TypeList." alt="" coords="257,198,392,253"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,61,140,89"/>
+<area shape="rect" id="node2" href="$d1/d64/structsl_1_1type__list_1_1contains_3_01_container_3_01_elements_8_8_8_01_4_00_01_query_01_4.html" title="Specialization determining the presence of the query type, due to comparing it with each element of t..." alt="" coords="197,5,366,67"/>
+<area shape="rect" id="node3" href="$d0/d33/structsl_1_1type__list_1_1unordered__equal_3_01_first_00_01_other_lists_8_8_8_01_4.html" title="Specialization, determining whether the current element appears equally often in all type&#45;lists." alt="" coords="188,91,375,136"/>
 </map>

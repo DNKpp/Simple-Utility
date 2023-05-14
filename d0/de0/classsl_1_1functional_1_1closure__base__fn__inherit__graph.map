@@ -1,8 +1,8 @@
 <map id="sl::functional::closure_base_fn&lt; TFunc &gt;" name="sl::functional::closure_base_fn&lt; TFunc &gt;">
-<area shape="rect" id="node1" title="Helper type which simply stores functional objects or function pointers." alt="" coords="561,69,709,109"/>
-<area shape="rect" id="node4" href="$df/d86/classsl_1_1functional_1_1predicate__fn.html" title="Adapter type for predicates, which accepts a functional type and enables pipe, conjunctive and disjun..." alt="" coords="761,5,923,45"/>
-<area shape="rect" id="node5" href="$da/dbe/classsl_1_1functional_1_1transform__fn.html" title="Adapter type which accepts a functional type and enables pipe chaining and currying." alt="" coords="759,69,925,109"/>
-<area shape="rect" id="node6" href="$d6/d3b/classsl_1_1nullables_1_1algorithm__fn.html" title="The core algorithm helper, which executes the held algorithm when used as the right&#45;hand&#45;side of oper..." alt="" coords="763,133,921,173"/>
-<area shape="rect" id="node2" href="$d6/d62/structsl_1_1unified__base.html" title=" " alt="" coords="353,69,512,109"/>
-<area shape="rect" id="node3" href="$d6/d62/structsl_1_1unified__base.html" title="Helper type, which can be used to create a unified base class for templated derived classes and thus ..." alt="" coords="5,77,172,102"/>
+<area shape="rect" id="node1" title="Helper type which simply stores functional objects or function pointers." alt="" coords="559,75,707,119"/>
+<area shape="rect" id="node4" href="$df/d86/classsl_1_1functional_1_1predicate__fn.html" title="Adapter type for predicates, which accepts a functional type and enables pipe, conjunctive and disjun..." alt="" coords="759,5,919,50"/>
+<area shape="rect" id="node5" href="$da/dbe/classsl_1_1functional_1_1transform__fn.html" title="Adapter type which accepts a functional type and enables pipe chaining and currying." alt="" coords="756,75,921,119"/>
+<area shape="rect" id="node6" href="$d6/d3b/classsl_1_1nullables_1_1algorithm__fn.html" title="The core algorithm helper, which executes the held algorithm when used as the right&#45;hand&#45;side of oper..." alt="" coords="760,144,918,189"/>
+<area shape="rect" id="node2" href="$d6/d62/structsl_1_1unified__base.html" title=" " alt="" coords="352,75,510,119"/>
+<area shape="rect" id="node3" href="$d6/d62/structsl_1_1unified__base.html" title="Helper type, which can be used to create a unified base class for templated derived classes and thus ..." alt="" coords="5,83,172,111"/>
 </map>

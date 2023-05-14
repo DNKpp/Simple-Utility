@@ -28,6 +28,7 @@ var _type_list_8hpp =
     [ "symmetric_difference_t", "df/d2e/_type_list_8hpp.html#ga3e5cf02efe9ca8d6da9c325a77eea87e", null ],
     [ "tail_t", "df/d2e/_type_list_8hpp.html#ga920634d819a94cc5fab84d1c3fe8d272", null ],
     [ "transform_t", "df/d2e/_type_list_8hpp.html#ga000ba1cf8c341e6f97e4c6a41ab8ad4e", null ],
+    [ "unique_t", "df/d2e/_type_list_8hpp.html#ga37af2c319aa9e5187f3bb74e160017b1", null ],
     [ "zip", "df/d2e/_type_list_8hpp.html#gaf91ffe2892c56631d3d2e6fe09a23771", null ],
     [ "zip_as_t", "df/d2e/_type_list_8hpp.html#gad0a6dd2a8bcb3b508e5088bcebce6c23", null ],
     [ "zip_nth_elements", "df/d2e/_type_list_8hpp.html#ga0b21d280b1b65dd72ebf33abb5c117a7", null ],

@@ -1,6 +1,6 @@
 <map id="sl::tuple::is_nothrow_apply_invocable&lt; TFunc, TTuple &gt;" name="sl::tuple::is_nothrow_apply_invocable&lt; TFunc, TTuple &gt;">
-<area shape="rect" id="node1" title="Trait type determining whether the function is invocable with elements of the given tuple without thr..." alt="" coords="875,20,1052,75"/>
-<area shape="rect" id="node2" title=" " alt="" coords="631,5,825,89"/>
-<area shape="rect" id="node3" title=" " alt="" coords="5,32,115,57"/>
-<area shape="rect" id="node4" title=" " alt="" coords="164,55,387,95"/>
+<area shape="rect" id="node1" title="Trait type determining whether the function is invocable with elements of the given tuple without thr..." alt="" coords="870,22,1046,84"/>
+<area shape="rect" id="node2" title=" " alt="" coords="627,5,821,101"/>
+<area shape="rect" id="node3" title=" " alt="" coords="5,34,114,62"/>
+<area shape="rect" id="node4" title=" " alt="" coords="163,60,384,105"/>
 </map>

@@ -1,4 +1,4 @@
 <map id="customization points" name="customization points">
-<area shape="rect" id="node1" href="$d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html" title="This library offers some simple algorithms for convenient working with nullable types." alt="" coords="5,5,83,31"/>
-<area shape="rect" id="node2" title="Contains several customization points, which users may hook for their custom types." alt="" coords="131,5,277,31"/>
+<area shape="rect" id="node1" href="$d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html" title="This library offers some simple algorithms for convenient working with nullable types." alt="" coords="5,5,82,33"/>
+<area shape="rect" id="node2" title="Contains several customization points, which users may hook for their custom types." alt="" coords="130,5,276,33"/>
 </map>

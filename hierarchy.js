@@ -154,6 +154,8 @@ var hierarchy =
       [ "sl::functional::enable_operation< algorithm_fn, functional::operators::bind_back, functional::operators::bind_front >", "d0/d50/structsl_1_1functional_1_1enable__operation.html", null ],
       [ "sl::functional::enable_operation< TClosureTemplate, TOperationTags >", "d0/d50/structsl_1_1functional_1_1enable__operation.html", null ]
     ] ],
+    [ "sl::type_list::unique< List >", "d2/d17/structsl_1_1type__list_1_1unique.html", null ],
+    [ "sl::type_list::unique< List >", "d3/d13/structsl_1_1type__list_1_1unique_3_01_list_01_4.html", null ],
     [ "sl::unique_handle< T, TDeleteAction >", "da/da9/classsl_1_1unique__handle.html", null ],
     [ "sl::type_list::unordered_equal< First, OtherLists >", "d9/d85/structsl_1_1type__list_1_1unordered__equal.html", null ],
     [ "sl::functional::value_fn< T >", "da/d72/classsl_1_1functional_1_1value__fn.html", null ],

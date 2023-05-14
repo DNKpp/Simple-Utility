@@ -105,6 +105,8 @@ var annotated_dup =
         [ "transform", "dd/ddf/structsl_1_1type__list_1_1transform.html", null ],
         [ "transform< UnaryOperation, Container< Elements... > >", "dc/d0f/structsl_1_1type__list_1_1transform_3_01_unary_operation_00_01_container_3_01_elements_8_8_8_01_4_01_4.html", "dc/d0f/structsl_1_1type__list_1_1transform_3_01_unary_operation_00_01_container_3_01_elements_8_8_8_01_4_01_4" ],
         [ "TypeList", "d0/ddc/structsl_1_1type__list_1_1_type_list.html", null ],
+        [ "unique", "d2/d17/structsl_1_1type__list_1_1unique.html", "d2/d17/structsl_1_1type__list_1_1unique" ],
+        [ "unique< List >", "d3/d13/structsl_1_1type__list_1_1unique_3_01_list_01_4.html", "d3/d13/structsl_1_1type__list_1_1unique_3_01_list_01_4" ],
         [ "unordered_equal", "d9/d85/structsl_1_1type__list_1_1unordered__equal.html", null ],
         [ "unordered_equal< First, OtherLists... >", "d0/d33/structsl_1_1type__list_1_1unordered__equal_3_01_first_00_01_other_lists_8_8_8_01_4.html", null ],
         [ "unordered_equal< FirstContainer<>, OtherLists... >", "de/d8f/structsl_1_1type__list_1_1unordered__equal_3_01_first_container_3_4_00_01_other_lists_8_8_8_01_4.html", null ],

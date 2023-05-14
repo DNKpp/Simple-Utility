@@ -25,19 +25,7 @@
 var NAVTREE =
 [
   [ "Simple-Utility", "index.html", [
-    [ "Simple-Utility C++20 header-only library", "index.html", [
-      [ "Author", "index.html#autotoc_md9", null ],
-      [ "License", "index.html#autotoc_md10", null ],
-      [ "Description", "index.html#autotoc_md11", [
-        [ "functional", "index.html#autotoc_md12", null ],
-        [ "nullables & unique_handle", "index.html#autotoc_md13", null ],
-        [ "type-list", "index.html#autotoc_md14", null ]
-      ] ],
-      [ "Installation with CMake", "index.html#autotoc_md15", [
-        [ "FetchContent", "index.html#autotoc_md16", null ],
-        [ "CPM", "index.html#autotoc_md17", null ]
-      ] ]
-    ] ],
+    [ "Simple-Utility C++20 header-only library", "index.html", "index" ],
     [ "Modules", "modules.html", "modules" ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
@@ -75,9 +63,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d5/d44/structsl_1_1tuple_1_1is__apply__invocable.html",
-"da/da9/classsl_1_1unique__handle.html#a8cdbb9b81b2787af2ce2318c611cdc71",
-"namespacemembers_enum.html"
+"d4/dfe/group___g_r_o_u_p___t_y_p_e___l_i_s_t___a_p_p_e_n_d.html#ga326d9d4e8e328b1861eade7b8f35ce1d",
+"da/da9/classsl_1_1unique__handle.html#a39e9e858df64e3a8764b72a1f5e988c0",
+"index.html#autotoc_md15"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
