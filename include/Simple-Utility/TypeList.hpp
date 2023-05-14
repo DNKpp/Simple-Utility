@@ -932,6 +932,61 @@ namespace sl::type_list
 	 */
 
 	/**
+	 * \defgroup GROUP_TYPE_LIST_UNIQUE unique
+	 * \ingroup GROUP_TYPE_LIST
+	 * \brief Removes all element duplicates contained by the source type-list.
+	 * \details The algorithm populates the result type-list with elements beginning from the front of the source
+	 * type-list. If the current element isn't already contained in the result type-list, then it will be appended.
+	 *
+	 * I.e. let ``<int, float, int>`` be a source type-list with arbitrary container type. The result type-list will
+	 * then be ``<int, float>``, thus omitting the second appearance of ``int``.
+	 * \{
+	 */
+
+	/**
+	 * \brief Root specialization for empty type lists.
+	 * \tparam List The provided type-list.
+	 */
+	template <concepts::type_list List>
+	struct unique
+	{
+		static_assert(
+			0 == std::tuple_size_v<List>,
+			"The expectation doesn't hold. Possible bug detected."
+		);
+
+		using type = List;
+	};
+
+	/**
+	 * \brief Specialization, traversing each element of the given type-list.
+	 * \tparam List The provided type-list.
+	 */
+	template <concepts::populated_type_list List>
+	struct unique<List>
+	{
+	private:
+		using recursive_state = typename unique<pop_back_t<List>>::type;
+
+	public:
+		using type = std::conditional_t<
+			contains_v<recursive_state, back_t<List>>,
+			recursive_state,
+			append_t<recursive_state, back_t<List>>>;
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_list::unique "unique" trait.
+	 * \tparam List The provided type-list.
+	 */
+	template <concepts::type_list List>
+	using unique_t = typename unique<List>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
 	 * \defgroup GROUP_TYPE_LIST_UNORDERED_EQUAL unordered_equal
 	 * \ingroup GROUP_TYPE_LIST
 	 * \brief Determines whether the source type-lists contain the same elements.

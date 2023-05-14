@@ -388,6 +388,25 @@ TEMPLATE_PRODUCT_TEST_CASE(
 	STATIC_REQUIRE(std::same_as<expected_t<TestType>, tl::reverse_t<input_t<TestType>>>);
 }
 
+TEMPLATE_PRODUCT_TEST_CASE(
+	"type_list::unique removes all type duplicates.",
+	"[type_list]",
+	trait_test,
+	(
+		(tl::TypeList<>, tl::TypeList<>),
+		(tl::TypeList<int>, tl::TypeList<int>),
+		(tl::TypeList<int, int&>, tl::TypeList<int, int&>),
+		(tl::TypeList<int, int>, tl::TypeList<int>),
+		(tl::TypeList<int, int&, int>, tl::TypeList<int, int&>),
+		(tl::TypeList<int, int, int>, tl::TypeList<int>),
+		(std::tuple<int, int, int>, std::tuple<int>)
+	)
+)
+{
+	STATIC_REQUIRE(std::same_as<expected_t<TestType>, typename tl::unique<input_t<TestType>>::type>);
+	STATIC_REQUIRE(std::same_as<expected_t<TestType>, tl::unique_t<input_t<TestType>>>);
+}
+
 /*
  * This test case was very tricky, as the initial approach, just comparing the two templates via the usual specialization technique,
  * was flawed and lead me to a language defect. It is perfectly answered here:
