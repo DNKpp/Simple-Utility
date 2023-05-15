@@ -118,7 +118,6 @@ namespace sl
 	/**
 	 * \brief Primary template, removing ``const`` from value types.
 	 * \tparam T Qualification be removed from.
-	 * \detail This trait solves the usual struggle when removing const from a type with a reference category.
 	 */
 	template <class T>
 	struct remove_type_const
@@ -374,6 +373,37 @@ namespace sl
 	{
 		using type = remove_type_volatile_t<T>* const volatile;
 	};
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_TRAITS_ADD_TYPE_CV add_type_cv
+	 * \ingroup GROUP_TYPE_TRAITS
+	 * \brief This trait adds the ``const`` and ``volatile`` qualifications to the actual type, instead of the top-level reference or pointer category.
+	 * \details Following some examples comparing the behaviour of ``std::add_cv`` with ``sl::add_type_cv``.
+	 * \see https://en.cppreference.com/w/cpp/types/add_cv
+	 * \snippet TypeTraits.cpp add_type_cv
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template, adding ``const`` and ``volatile`` to value types.
+	 * \tparam T Qualification to be applied to.
+	 */
+	template <class T>
+	struct add_type_cv
+	{
+		using type = add_type_const_t<add_type_volatile_t<T>>;
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::add_type_cv "add_type_cv" trait.
+	 * \tparam T Qualification to be applied to.
+	 */
+	template <class T>
+	using add_type_cv_t = typename add_type_cv<T>::type;
 
 	/**
 	 * \}
