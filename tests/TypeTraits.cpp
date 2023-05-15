@@ -267,3 +267,57 @@ TEST_CASE("Explicit examples for the documenation of add_type_cv.", "[type_trait
 	STATIC_REQUIRE(std::same_as<const volatile int* const volatile, sl::add_type_cv_t<int* const volatile>>);
 	//! [add_type_cv]
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"remove_type_cv applies the volatile qualification in any value category.",
+	"[type_traits]",
+	((bool dummy, class Expected, class T), dummy, Expected, T),
+	(true, int, int),
+	(true, int, volatile int),
+	(true, int, const int),
+	(true, int, const volatile int),
+	(true, int*, int*),
+	(true, int* const, int* const),
+	(true, int* volatile, int* volatile),
+	(true, int*, const int*),
+	(true, int*, volatile int*),
+	(true, int* volatile, volatile int* volatile),
+	(true, int* const, volatile int* const),
+	(true, int* const volatile, volatile int* const volatile)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::remove_type_cv<T>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::remove_type_cv_t<T>>);
+
+	STATIC_REQUIRE(std::same_as<Expected&, typename sl::remove_type_cv<T&>::type>);
+	STATIC_REQUIRE(std::same_as<Expected&, sl::remove_type_cv_t<T&>>);
+
+	STATIC_REQUIRE(std::same_as<Expected&&, typename sl::remove_type_cv<T&&>::type>);
+	STATIC_REQUIRE(std::same_as<Expected&&, sl::remove_type_cv_t<T&&>>);
+
+	STATIC_REQUIRE(std::same_as<Expected*, typename sl::remove_type_cv<T*>::type>);
+	STATIC_REQUIRE(std::same_as<Expected*, sl::remove_type_cv_t<T*>>);
+
+	STATIC_REQUIRE(std::same_as<Expected* const, typename sl::remove_type_cv<T* const>::type>);
+	STATIC_REQUIRE(std::same_as<Expected* const, sl::remove_type_cv_t<T* const>>);
+
+	STATIC_REQUIRE(std::same_as<Expected* volatile, typename sl::remove_type_cv<T* volatile>::type>);
+	STATIC_REQUIRE(std::same_as<Expected* volatile, sl::remove_type_cv_t<T* volatile>>);
+
+	STATIC_REQUIRE(std::same_as<Expected* const volatile, typename sl::remove_type_cv<T* const volatile>::type>);
+	STATIC_REQUIRE(std::same_as<Expected* const volatile, sl::remove_type_cv_t<T* const volatile>>);
+}
+
+TEST_CASE("Explicit examples for the documenation of remove_type_cv.", "[type_traits][example]")
+{
+	//! [remove_type_cv]
+	STATIC_REQUIRE(std::same_as<const volatile int&, std::remove_cv_t<const volatile int&>>);
+	STATIC_REQUIRE(std::same_as<int&, sl::remove_type_cv_t<const volatile int&>>);
+
+	STATIC_REQUIRE(std::same_as<int*, std::remove_cv_t<int* const volatile>>);
+	STATIC_REQUIRE(std::same_as<int*, sl::remove_type_cv_t<const volatile int*>>);
+
+	STATIC_REQUIRE(std::same_as<const volatile int*, std::remove_cv_t<const volatile int* const volatile >>);
+	STATIC_REQUIRE(std::same_as<int* const volatile, sl::remove_type_cv_t<const volatile int* const volatile>>);
+	//! [remove_type_cv]
+}
