@@ -439,10 +439,6 @@ namespace sl
 	/**
 	 * \}
 	 */
-
-
-	 * \}
-	 */
 }
 
 #endif
