@@ -22,26 +22,62 @@ namespace sl::tuple
 	 */
 }
 
+namespace sl::tuple::detail
+{
+	template <std::size_t index>
+	inline constexpr auto get = []<class Tuple>(Tuple&& tuple) -> decltype(auto)
+	{
+		using std::get;
+		return get<index>(std::forward<Tuple>(tuple));
+	};
+
+	template <std::size_t index, class Tuple>
+	struct get_result
+	{
+		using type = decltype(get<index>(std::declval<Tuple>()));
+	};
+
+	template <std::size_t index, class Tuple>
+	using get_result_t = typename get_result<index, Tuple>::type;
+}
+
 namespace sl::concepts::detail
 {
 	template <std::size_t index, class Tuple>
-	inline constexpr bool check_tuple_index_v = []
-	{
-		using std::get;
-		return requires
-		{
-			{ get<index>(std::declval<Tuple&>()) } -> std::common_reference_with<std::tuple_element_t<index, Tuple>>;
-			{ get<index>(std::declval<const Tuple&>()) } -> std::common_reference_with<std::tuple_element_t<index, Tuple>>;
-			{ get<index>(std::declval<Tuple&&>()) } -> std::common_reference_with<std::tuple_element_t<index, Tuple>>;
-			{ get<index>(std::declval<const Tuple&&>()) } -> std::common_reference_with<std::tuple_element_t<index, Tuple>>;
-		};
-	}();
+	concept tuple_index = std::common_reference_with<
+							tuple::detail::get_result_t<index, Tuple&>,
+							std::tuple_element_t<index, Tuple>>
+						&& std::common_reference_with<
+							tuple::detail::get_result_t<index, const Tuple&>,
+							std::tuple_element_t<index, Tuple>>
+						&& std::common_reference_with<
+							tuple::detail::get_result_t<index, Tuple&&>,
+							std::tuple_element_t<index, Tuple>>
+						&& std::common_reference_with<
+							tuple::detail::get_result_t<index, const Tuple&&>,
+							std::tuple_element_t<index, Tuple>>;
 
 	template <class Tuple>
-	inline constexpr bool check_tuple_indices_v = []<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...>)
+	inline constexpr bool tuple_indices_v = []<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...>)
 	{
-		return (check_tuple_index_v<indices, Tuple> && ...);
+		return (... && tuple_index<indices, Tuple>);
 	}(std::make_index_sequence<std::tuple_size_v<Tuple>>{});
+
+	template <class Func, class Tuple>
+	inline constexpr bool applicable_v = []<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...>)
+	{
+		return std::is_invocable_v<
+			Func,
+			tuple::detail::get_result_t<indices, Tuple>...>;
+	}(std::make_index_sequence<std::tuple_size_v<std::remove_cvref_t<Tuple>>>{});
+
+	template <class Func, class Tuple>
+	inline constexpr bool nothrow_applicable_v = []<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...>)
+	{
+		return std::is_nothrow_invocable_v<
+			Func,
+			tuple::detail::get_result_t<indices, Tuple>...>;
+	}(std::make_index_sequence<std::tuple_size_v<std::remove_cvref_t<Tuple>>>{});
 }
 
 namespace sl::concepts
@@ -58,7 +94,7 @@ namespace sl::concepts
 	 */
 	template <class Tuple>
 	concept tuple = type_list<Tuple>
-					&& detail::check_tuple_indices_v<Tuple>;
+					&& detail::tuple_indices_v<Tuple>;
 
 	/**  
 	 * \brief Determines whether the function is invocable with the elements of the given tuple.
@@ -69,11 +105,7 @@ namespace sl::concepts
 	 */
 	template <class Func, class Tuple>
 	concept applicable = tuple<std::remove_cvref_t<Tuple>>
-						&& []<std::size_t... indices>(std::index_sequence<indices...>)
-						{
-							using std::get;
-							return std::invocable<Func, decltype(get<indices>(std::declval<Tuple>()))...>;
-						}(std::make_index_sequence<std::tuple_size_v<std::remove_cvref_t<Tuple>>>{});
+						&& detail::applicable_v<Func, Tuple>;
 
 	/**
 	 * \brief Determines whether the function is invocable with the elements of the given tuple without throwing.
@@ -84,11 +116,7 @@ namespace sl::concepts
 	 */
 	template <class Func, class Tuple>
 	concept nothrow_applicable = tuple<std::remove_cvref_t<Tuple>>
-								&& []<std::size_t... indices>(std::index_sequence<indices...>)
-								{
-									using std::get;
-									return std::is_nothrow_invocable_v<Func, decltype(get<indices>(std::declval<Tuple>()))...>;
-								}(std::make_index_sequence<std::tuple_size_v<std::remove_cvref_t<Tuple>>>{});
+								&& detail::nothrow_applicable_v<Func, Tuple>;
 }
 
 namespace sl::tuple
