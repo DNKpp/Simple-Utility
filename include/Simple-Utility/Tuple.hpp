@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Simple-Utility/tuple/algorithm.hpp"
-#include "Simple-Utility/tuple/general.hpp"
+#include "Simple-Utility/tuple/Algorithm.hpp"
+#include "Simple-Utility/tuple/General.hpp"
 
 #endif
