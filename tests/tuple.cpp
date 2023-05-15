@@ -50,9 +50,9 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"tuple_like concept determines if a type can be used as tuple.",
+	"tuple concept determines if a type can be used as tuple.",
 	"[tuple][trait]",
-	((bool VExpected, class TTuple), VExpected, TTuple),
+	((bool expected, class Tuple), expected, Tuple),
 	(false, std::vector<int>),
 	(true, std::tuple<>),
 	(true, std::tuple<int>),
@@ -61,7 +61,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, std::array<int, 0>)
 )
 {
-	STATIC_REQUIRE(concepts::tuple_like<TTuple> == VExpected);
+	STATIC_REQUIRE(expected == concepts::tuple<Tuple>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
