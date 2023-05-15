@@ -112,7 +112,7 @@ namespace sl::tuple
 	 */
 	template <class Func, class Tuple>
 		requires concepts::applicable<Func, Tuple>
-	struct applicable_result
+	struct apply_result
 	{
 		using type = decltype(std::apply(std::declval<Func>(), std::declval<Tuple>()));
 	};
@@ -124,7 +124,7 @@ namespace sl::tuple
 	 * \tparam Tuple Provided tuple argument type.
 	 */
 	template <class Func, class Tuple>
-	using applicable_result_t = typename applicable_result<Func, Tuple>::type;
+	using apply_result_t = typename apply_result<Func, Tuple>::type;
 
 	/** @} */
 
