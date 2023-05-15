@@ -9,25 +9,24 @@
 #pragma once
 
 #include <algorithm>
+#include <type_traits>
 
 #include "Simple-Utility/tuple/general.hpp"
 
 namespace sl::tuple::detail
 {
-	template <class TTuple>
-		requires concepts::tuple<std::remove_cvref_t<TTuple>>
+	template <class Tuple>
+		requires concepts::tuple<std::remove_cvref_t<Tuple>>
 	[[nodiscard]]
-	constexpr auto envelop_elements(TTuple&& tuple)
+	constexpr auto envelop_elements(Tuple&& tuple)
 	{
 		return std::apply(
-			[]<class... TElement>(TElement&&... element)
+			[]<class... Elements>(Elements&&... element)
 			{
 				return std::make_tuple(
-					std::make_tuple(std::forward<TElement>(element))...
-				);
+					std::make_tuple(std::forward<Elements>(element))...);
 			},
-			std::forward<TTuple>(tuple)
-		);
+			std::forward<Tuple>(tuple));
 	}
 }
 
@@ -47,23 +46,23 @@ namespace sl::tuple
 	/**
 	 * \brief Trait type determining the result of a ``tuple_envelop_elements`` call.
 	 */
-	template <class TTuple>
-		requires concepts::tuple<std::remove_cvref_t<TTuple>>
+	template <class Tuple>
+		requires concepts::tuple<std::remove_cvref_t<Tuple>>
 	struct envelop_elements_result
 	{
-		using type = decltype(detail::envelop_elements(std::declval<TTuple>()));
+		using type = decltype(detail::envelop_elements(std::declval<Tuple>()));
 	};
 
 	/**
 	 * \brief Alias type determining the result of a ``tuple_envelop_elements`` call.
 	 */
-	template <class TTuple>
-		requires concepts::tuple<std::remove_cvref_t<TTuple>>
-	using envelop_elements_result_t = typename envelop_elements_result<TTuple>::type;
+	template <class Tuple>
+		requires concepts::tuple<std::remove_cvref_t<Tuple>>
+	using envelop_elements_result_t = typename envelop_elements_result<Tuple>::type;
 
 	/**
 	 * \brief Envelops all elements of the given tuple into their own ``std::tuple`` and creates a tuple of tuples.
-	 * \tparam TTuple The tuple type.
+	 * \tparam Tuple The tuple type.
 	 * \param tuple The tuple.
 	 * \return A new tuple which elements are tuples.
 	 *
@@ -72,14 +71,14 @@ namespace sl::tuple
 	 * (	(e0), (e1), ..., (en)	)
 	 * \endcode
 	 */
-	template <class TTuple>
-		requires concepts::tuple<std::remove_cvref_t<TTuple>>
+	template <class Tuple>
+		requires concepts::tuple<std::remove_cvref_t<Tuple>>
 	[[nodiscard]]
-	constexpr envelop_elements_result_t<TTuple> envelop_elements(
-		TTuple&& tuple
-	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<TTuple>, TTuple>)
+	constexpr envelop_elements_result_t<Tuple> envelop_elements(
+		Tuple&& tuple
+	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Tuple>, Tuple>)
 	{
-		return detail::envelop_elements(std::forward<TTuple>(tuple));
+		return detail::envelop_elements(std::forward<Tuple>(tuple));
 	}
 
 	/** @} */
@@ -87,19 +86,19 @@ namespace sl::tuple
 
 namespace sl::tuple::detail
 {
-	template <class... TTuples>
+	template <class... Tuples>
 	[[nodiscard]]
-	constexpr auto zip(TTuples&&... tuples)
+	constexpr auto zip(Tuples&&... tuples)
 	{
-		return [&]<std::size_t... VIndices>([[maybe_unused]] std::index_sequence<VIndices...>)
+		return [&]<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...>)
 		{
 			return std::make_tuple(
-				[&]<std::size_t VIndex>()
+				[&]<std::size_t index>()
 				{
-					return std::make_tuple(std::get<VIndex>(std::forward<TTuples>(tuples))...);
-				}.template operator()<VIndices>()...
+					return std::make_tuple(std::get<index>(std::forward<Tuples>(tuples))...);
+				}.template operator()<indices>()...
 			);
-		}(std::make_index_sequence<std::min({std::tuple_size_v<TTuples>...})>{});
+		}(std::make_index_sequence<std::min({std::tuple_size_v<Tuples>...})>{});
 	}
 }
 
@@ -114,27 +113,27 @@ namespace sl::tuple
 	/**
 	 * \brief Trait type determining the result of a ``zip`` call.
 	 */
-	template <class... TTuples>
-		requires (2 <= sizeof...(TTuples))
-				&& (concepts::tuple<std::remove_cvref_t<TTuples>> && ...)
+	template <class... Tuples>
+		requires (2 <= sizeof...(Tuples))
+				&& (concepts::tuple<std::remove_cvref_t<Tuples>> && ...)
 	struct zip_result
 	{
-		using type = decltype(detail::zip(std::declval<TTuples>()...));
+		using type = decltype(detail::zip(std::declval<Tuples>()...));
 	};
 
 	/**
 	 * \brief Alias type determining the result of a ``zip`` call.
 	 */
-	template <class... TTuples>
-		requires (2 <= sizeof...(TTuples))
-				&& (concepts::tuple<std::remove_cvref_t<TTuples>> && ...)
-	using zip_result_t = typename zip_result<TTuples...>::type;
+	template <class... Tuples>
+		requires (2 <= sizeof...(Tuples))
+				&& (concepts::tuple<std::remove_cvref_t<Tuples>> && ...)
+	using zip_result_t = typename zip_result<Tuples...>::type;
 
 	/**
 	 * \brief Zips elements of all provided source tuples and creates a tuple of tuples.
-	 * \tparam TFirst The first tuple type.
-	 * \tparam TSecond The second tuple type.
-	 * \tparam TOthers Other tuple types.
+	 * \tparam First The first tuple type.
+	 * \tparam Second The second tuple type.
+	 * \tparam Others Other tuple types.
 	 * \param first The first tuple.
 	 * \param second The second tuple.
 	 * \param others Other tuples.
@@ -155,18 +154,17 @@ namespace sl::tuple
 	 *
 	 * \note If any of the given tuples are empty, then the resulting tuple will contain no elements.
 	 */
-	template <class TFirst, class TSecond, class... TOthers>
-		requires concepts::tuple<std::remove_cvref_t<TFirst>>
-				&& concepts::tuple<std::remove_cvref_t<TSecond>>
-				&& (concepts::tuple<std::remove_cvref_t<TOthers>> && ...)
+	template <class First, class Second, class... Others>
+		requires concepts::tuple<std::remove_cvref_t<First>>
+				&& concepts::tuple<std::remove_cvref_t<Second>>
+				&& (concepts::tuple<std::remove_cvref_t<Others>> && ...)
 	[[nodiscard]]
-	constexpr zip_result_t<TFirst, TSecond, TOthers...> zip(TFirst&& first, TSecond&& second, TOthers&&... others)
+	constexpr zip_result_t<First, Second, Others...> zip(First&& first, Second&& second, Others&&... others)
 	{
 		return detail::zip(
-			std::forward<TFirst>(first),
-			std::forward<TSecond>(second),
-			std::forward<TOthers>(others)...
-		);
+			std::forward<First>(first),
+			std::forward<Second>(second),
+			std::forward<Others>(others)...);
 	}
 
 	/** @} */
@@ -217,27 +215,27 @@ namespace sl::tuple
 	/**
 	 * \brief Trait type determining the result of a ``cartesian_product`` call.
 	 */
-	template <class... TTuples>
-		requires (2 <= sizeof...(TTuples))
-				&& (concepts::tuple<std::remove_cvref_t<TTuples>> && ...)
+	template <class... Tuples>
+		requires (2 <= sizeof...(Tuples))
+				&& (concepts::tuple<std::remove_cvref_t<Tuples>> && ...)
 	struct cartesian_product_result
 	{
-		using type = decltype(detail::cartesian_product(std::declval<TTuples>()...));
+		using type = decltype(detail::cartesian_product(std::declval<Tuples>()...));
 	};
 
 	/**
 	 * \brief Alias type determining the result of a ``cartesian_product`` call.
 	 */
-	template <class... TTuples>
-		requires (2 <= sizeof...(TTuples))
-				&& (concepts::tuple<std::remove_cvref_t<TTuples>> && ...)
-	using cartesian_product_result_t = typename cartesian_product_result<TTuples...>::type;
+	template <class... Tuples>
+		requires (2 <= sizeof...(Tuples))
+				&& (concepts::tuple<std::remove_cvref_t<Tuples>> && ...)
+	using cartesian_product_result_t = typename cartesian_product_result<Tuples...>::type;
 
 	/**
 	 * \brief Creates the cartesian product of the given tuples.
-	 * \tparam TFirst The first tuple type.
-	 * \tparam TSecond The second tuple type.
-	 * \tparam TOthers Other tuple types.
+	 * \tparam First The first tuple type.
+	 * \tparam Second The second tuple type.
+	 * \tparam Others Other tuple types.
 	 * \param first The first tuple.
 	 * \param second The second tuple.
 	 * \param others Other tuples.
@@ -253,15 +251,15 @@ namespace sl::tuple
 	 *		(en, f0), (en, f1), ..., (en, fm)	)
 	 * \endcode
 	 */
-	template <concepts::tuple TFirst, concepts::tuple TSecond, concepts::tuple... TOthers>
+	template <concepts::tuple First, concepts::tuple Second, concepts::tuple... Others>
 	[[nodiscard]]
-	constexpr cartesian_product_result_t<TFirst, TSecond, TOthers...> cartesian_product(
-		const TFirst& first,
-		const TSecond& second,
-		const TOthers&... others
-	) noexcept(std::is_nothrow_copy_constructible_v<TFirst>
-				&& std::is_nothrow_copy_constructible_v<TSecond>
-				&& (std::is_nothrow_copy_constructible_v<TOthers> && ...))
+	constexpr cartesian_product_result_t<First, Second, Others...> cartesian_product(
+		const First& first,
+		const Second& second,
+		const Others&... others
+	) noexcept(std::is_nothrow_copy_constructible_v<First>
+				&& std::is_nothrow_copy_constructible_v<Second>
+				&& (std::is_nothrow_copy_constructible_v<Others> && ...))
 	{
 		return detail::cartesian_product(first, second, others...);
 	}
