@@ -78,7 +78,7 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"applicable_result yields type of the apply invocation.",
+	"apply_result yields type of the apply invocation.",
 	"[tuple][trait]",
 	((bool dummy, class Expected, class Tuple), dummy, Expected, Tuple),
 	(true, const int&, const std::tuple<int, float, int&>&),
@@ -92,8 +92,8 @@ TEMPLATE_TEST_CASE_SIG(
 	};
 	using get_front_t = decltype(front);
 
-	STATIC_REQUIRE(std::same_as<Expected, typename applicable_result<get_front_t, Tuple>::type>);
-	STATIC_REQUIRE(std::same_as<Expected, applicable_result_t<get_front_t, Tuple>>);
+	STATIC_REQUIRE(std::same_as<Expected, typename apply_result<get_front_t, Tuple>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, apply_result_t<get_front_t, Tuple>>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
