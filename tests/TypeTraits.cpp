@@ -57,3 +57,56 @@ TEST_CASE("Explicit examples for the documenation of add_type_const.", "[type_tr
 	STATIC_REQUIRE(std::same_as<const int* const, sl::add_type_const_t<int* const>>);
 	//! [add_type_const]
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"remove_type_const removes the const qualification from any value category.",
+	"[type_traits]",
+	((bool dummy, class Expected, class T), dummy, Expected, T),
+	(true, int, int),
+	(true, int, const int),
+	(true, volatile int, const volatile int),
+	(true, int*, int*),
+	(true, int* volatile, int* volatile),
+	(true, volatile int*, const volatile int*),
+	(true, int*, const int*),
+	(true, int* const, int* const),
+	(true, int* const, const int* const),
+	(true, int* volatile, const int* volatile),
+	(true, int* const volatile, const int* const volatile)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::remove_type_const<T>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::remove_type_const_t<T>>);
+
+	STATIC_REQUIRE(std::same_as<Expected&, typename sl::remove_type_const<T&>::type>);
+	STATIC_REQUIRE(std::same_as<Expected&, sl::remove_type_const_t<T&>>);
+
+	STATIC_REQUIRE(std::same_as<Expected&&, typename sl::remove_type_const<T&&>::type>);
+	STATIC_REQUIRE(std::same_as<Expected&&, sl::remove_type_const_t<T&&>>);
+
+	STATIC_REQUIRE(std::same_as<Expected*, typename sl::remove_type_const<T*>::type>);
+	STATIC_REQUIRE(std::same_as<Expected*, sl::remove_type_const_t<T*>>);
+
+	STATIC_REQUIRE(std::same_as<Expected* const, typename sl::remove_type_const<T* const>::type>);
+	STATIC_REQUIRE(std::same_as<Expected* const, sl::remove_type_const_t<T* const>>);
+
+	STATIC_REQUIRE(std::same_as<Expected* volatile, typename sl::remove_type_const<T* volatile>::type>);
+	STATIC_REQUIRE(std::same_as<Expected* volatile, sl::remove_type_const_t<T* volatile>>);
+
+	STATIC_REQUIRE(std::same_as<Expected* const volatile, typename sl::remove_type_const<T* const volatile>::type>);
+	STATIC_REQUIRE(std::same_as<Expected* const volatile, sl::remove_type_const_t<T* const volatile>>);
+}
+
+TEST_CASE("Explicit examples for the documenation of remove_type_const.", "[type_traits][example]")
+{
+	//! [add_type_const]
+	STATIC_REQUIRE(std::same_as<const int&, std::remove_const_t<const int&>>);
+	STATIC_REQUIRE(std::same_as<int&, sl::remove_type_const_t<const int&>>);
+
+	STATIC_REQUIRE(std::same_as<const int*, std::remove_const_t<const int*>>);
+	STATIC_REQUIRE(std::same_as<int*, sl::remove_type_const_t<const int*>>);
+
+	STATIC_REQUIRE(std::same_as<const int*, std::remove_const_t<const int* const>>);
+	STATIC_REQUIRE(std::same_as<int* const, sl::remove_type_const_t<const int* const>>);
+	//! [add_type_const]
+}
