@@ -409,6 +409,37 @@ namespace sl
 	 * \}
 	 */
 
+	/**
+	 * \defgroup GROUP_TYPE_TRAITS_REMOVE_TYPE_CV remove_type_cv
+	 * \ingroup GROUP_TYPE_TRAITS
+	 * \brief This trait removes the ``const`` and ``volatile`` qualifications from the actual type, instead of the top-level reference or pointer category.
+	 * \details Following some examples comparing the behaviour of ``std::remove_cv`` with ``sl::remove_type_cv``.
+	 * \see https://en.cppreference.com/w/cpp/types/remove_cv
+	 * \snippet TypeTraits.cpp remove_type_cv
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template, removing ``const`` and ``volatile`` from value types.
+	 * \tparam T Qualification to be removed from.
+	 */
+	template <class T>
+	struct remove_type_cv
+	{
+		using type = remove_type_const_t<remove_type_volatile_t<T>>;
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::remove_type_cv "remove_type_cv" trait.
+	  * \tparam T Qualification to be removed from.
+	 */
+	template <class T>
+	using remove_type_cv_t = typename remove_type_cv<T>::type;
+
+	/**
+	 * \}
+	 */
+
 
 	 * \}
 	 */
