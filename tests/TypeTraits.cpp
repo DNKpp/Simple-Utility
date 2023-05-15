@@ -213,3 +213,57 @@ TEST_CASE("Explicit examples for the documenation of remove_type_volatile.", "[t
 	STATIC_REQUIRE(std::same_as<int* volatile, sl::remove_type_volatile_t<volatile int* volatile>>);
 	//! [add_type_const]
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"add_type_cv applies the volatile qualification in any value category.",
+	"[type_traits]",
+	((bool dummy, class Expected, class T), dummy, Expected, T),
+	(true, const volatile int, int),
+	(true, const volatile int, volatile int),
+	(true, const volatile int, const int),
+	(true, const volatile int, const volatile int),
+	(true, const volatile int*, int*),
+	(true, const volatile int* const, int* const),
+	(true, const volatile int* volatile, int* volatile),
+	(true, const volatile int*, const int*),
+	(true, const volatile int*, volatile int*),
+	(true, const volatile int* volatile, volatile int* volatile),
+	(true, const volatile int* const, volatile int* const),
+	(true, const volatile int* const volatile, volatile int* const volatile)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::add_type_cv<T>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::add_type_cv_t<T>>);
+
+	STATIC_REQUIRE(std::same_as<Expected&, typename sl::add_type_cv<T&>::type>);
+	STATIC_REQUIRE(std::same_as<Expected&, sl::add_type_cv_t<T&>>);
+
+	STATIC_REQUIRE(std::same_as<Expected&&, typename sl::add_type_cv<T&&>::type>);
+	STATIC_REQUIRE(std::same_as<Expected&&, sl::add_type_cv_t<T&&>>);
+
+	STATIC_REQUIRE(std::same_as<Expected*, typename sl::add_type_cv<T*>::type>);
+	STATIC_REQUIRE(std::same_as<Expected*, sl::add_type_cv_t<T*>>);
+
+	STATIC_REQUIRE(std::same_as<Expected* const, typename sl::add_type_cv<T* const>::type>);
+	STATIC_REQUIRE(std::same_as<Expected* const, sl::add_type_cv_t<T* const>>);
+
+	STATIC_REQUIRE(std::same_as<Expected* volatile, typename sl::add_type_cv<T* volatile>::type>);
+	STATIC_REQUIRE(std::same_as<Expected* volatile, sl::add_type_cv_t<T* volatile>>);
+
+	STATIC_REQUIRE(std::same_as<Expected* const volatile, typename sl::add_type_cv<T* const volatile>::type>);
+	STATIC_REQUIRE(std::same_as<Expected* const volatile, sl::add_type_cv_t<T* const volatile>>);
+}
+
+TEST_CASE("Explicit examples for the documenation of add_type_cv.", "[type_traits][example]")
+{
+	//! [add_type_cv]
+	STATIC_REQUIRE(std::same_as<int&, std::add_cv_t<int&>>);
+	STATIC_REQUIRE(std::same_as<const volatile int&, sl::add_type_cv_t<int&>>);
+
+	STATIC_REQUIRE(std::same_as<int* const volatile, std::add_cv_t<int*>>);
+	STATIC_REQUIRE(std::same_as<const volatile int*, sl::add_type_cv_t<int*>>);
+
+	STATIC_REQUIRE(std::same_as<const volatile int* const volatile, std::add_cv_t<const volatile int*>>);
+	STATIC_REQUIRE(std::same_as<const volatile int* const volatile, sl::add_type_cv_t<int* const volatile>>);
+	//! [add_type_cv]
+}
