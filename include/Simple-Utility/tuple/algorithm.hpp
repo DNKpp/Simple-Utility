@@ -15,7 +15,7 @@
 namespace sl::tuple::detail
 {
 	template <class TTuple>
-		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
+		requires concepts::tuple<std::remove_cvref_t<TTuple>>
 	[[nodiscard]]
 	constexpr auto envelop_elements(TTuple&& tuple)
 	{
@@ -48,7 +48,7 @@ namespace sl::tuple
 	 * \brief Trait type determining the result of a ``tuple_envelop_elements`` call.
 	 */
 	template <class TTuple>
-		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
+		requires concepts::tuple<std::remove_cvref_t<TTuple>>
 	struct envelop_elements_result
 	{
 		using type = decltype(detail::envelop_elements(std::declval<TTuple>()));
@@ -58,7 +58,7 @@ namespace sl::tuple
 	 * \brief Alias type determining the result of a ``tuple_envelop_elements`` call.
 	 */
 	template <class TTuple>
-		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
+		requires concepts::tuple<std::remove_cvref_t<TTuple>>
 	using envelop_elements_result_t = typename envelop_elements_result<TTuple>::type;
 
 	/**
@@ -73,7 +73,7 @@ namespace sl::tuple
 	 * \endcode
 	 */
 	template <class TTuple>
-		requires concepts::tuple_like<std::remove_cvref_t<TTuple>>
+		requires concepts::tuple<std::remove_cvref_t<TTuple>>
 	[[nodiscard]]
 	constexpr envelop_elements_result_t<TTuple> envelop_elements(
 		TTuple&& tuple
@@ -116,7 +116,7 @@ namespace sl::tuple
 	 */
 	template <class... TTuples>
 		requires (2 <= sizeof...(TTuples))
-				&& (concepts::tuple_like<std::remove_cvref_t<TTuples>> && ...)
+				&& (concepts::tuple<std::remove_cvref_t<TTuples>> && ...)
 	struct zip_result
 	{
 		using type = decltype(detail::zip(std::declval<TTuples>()...));
@@ -127,7 +127,7 @@ namespace sl::tuple
 	 */
 	template <class... TTuples>
 		requires (2 <= sizeof...(TTuples))
-				&& (concepts::tuple_like<std::remove_cvref_t<TTuples>> && ...)
+				&& (concepts::tuple<std::remove_cvref_t<TTuples>> && ...)
 	using zip_result_t = typename zip_result<TTuples...>::type;
 
 	/**
@@ -156,9 +156,9 @@ namespace sl::tuple
 	 * \note If any of the given tuples are empty, then the resulting tuple will contain no elements.
 	 */
 	template <class TFirst, class TSecond, class... TOthers>
-		requires concepts::tuple_like<std::remove_cvref_t<TFirst>>
-				&& concepts::tuple_like<std::remove_cvref_t<TSecond>>
-				&& (concepts::tuple_like<std::remove_cvref_t<TOthers>> && ...)
+		requires concepts::tuple<std::remove_cvref_t<TFirst>>
+				&& concepts::tuple<std::remove_cvref_t<TSecond>>
+				&& (concepts::tuple<std::remove_cvref_t<TOthers>> && ...)
 	[[nodiscard]]
 	constexpr zip_result_t<TFirst, TSecond, TOthers...> zip(TFirst&& first, TSecond&& second, TOthers&&... others)
 	{
@@ -176,13 +176,13 @@ namespace sl::tuple::detail
 {
 	// idea taken from: https://stackoverflow.com/questions/70404549/cartesian-product-of-stdtuple/70405807#70405807
 	[[nodiscard]]
-	constexpr auto cartesian_product(const concepts::tuple_like auto& first)
+	constexpr auto cartesian_product(const concepts::tuple auto& first)
 	{
 		return envelop_elements(first);
 	}
 
 	[[nodiscard]]
-	constexpr auto cartesian_product(const concepts::tuple_like auto& first, const concepts::tuple_like auto&... others)
+	constexpr auto cartesian_product(const concepts::tuple auto& first, const concepts::tuple auto&... others)
 	{
 		auto trailers = cartesian_product(others...);
 		return std::apply(
@@ -219,7 +219,7 @@ namespace sl::tuple
 	 */
 	template <class... TTuples>
 		requires (2 <= sizeof...(TTuples))
-				&& (concepts::tuple_like<std::remove_cvref_t<TTuples>> && ...)
+				&& (concepts::tuple<std::remove_cvref_t<TTuples>> && ...)
 	struct cartesian_product_result
 	{
 		using type = decltype(detail::cartesian_product(std::declval<TTuples>()...));
@@ -230,7 +230,7 @@ namespace sl::tuple
 	 */
 	template <class... TTuples>
 		requires (2 <= sizeof...(TTuples))
-				&& (concepts::tuple_like<std::remove_cvref_t<TTuples>> && ...)
+				&& (concepts::tuple<std::remove_cvref_t<TTuples>> && ...)
 	using cartesian_product_result_t = typename cartesian_product_result<TTuples...>::type;
 
 	/**
@@ -253,7 +253,7 @@ namespace sl::tuple
 	 *		(en, f0), (en, f1), ..., (en, fm)	)
 	 * \endcode
 	 */
-	template <concepts::tuple_like TFirst, concepts::tuple_like TSecond, concepts::tuple_like... TOthers>
+	template <concepts::tuple TFirst, concepts::tuple TSecond, concepts::tuple... TOthers>
 	[[nodiscard]]
 	constexpr cartesian_product_result_t<TFirst, TSecond, TOthers...> cartesian_product(
 		const TFirst& first,

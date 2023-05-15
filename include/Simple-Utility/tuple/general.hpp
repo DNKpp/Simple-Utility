@@ -13,6 +13,8 @@
 #include <type_traits>
 #include <utility>
 
+#include "Simple-Utility/TypeList.hpp"
+
 namespace sl::tuple
 {
 	/**
@@ -22,27 +24,24 @@ namespace sl::tuple
 
 namespace sl::concepts::detail
 {
-	template <std::size_t VIndex, class TTuple>
-	static constexpr bool check_tuple_index = []
+	template <std::size_t index, class Tuple>
+	concept tuple_index = []
 	{
 		using std::get;
-
-		// ReSharper disable once CppUseTypeTraitAlias
-		return requires { typename std::tuple_element<VIndex, TTuple>::type; }
-				&& requires(TTuple t)
+		return requires
 				{
-					{ get<VIndex>(t) } -> std::common_reference_with<std::tuple_element_t<VIndex, TTuple>>;
-					{ get<VIndex>(std::as_const(t)) } -> std::common_reference_with<std::tuple_element_t<VIndex, TTuple>>;
-					{ get<VIndex>(std::move(t)) } -> std::common_reference_with<std::tuple_element_t<VIndex, TTuple>>;
-					{ get<VIndex>(std::move(std::as_const(t))) } -> std::common_reference_with<std::tuple_element_t<VIndex, TTuple>>;
+					{ get<index>(std::declval<Tuple&>()) } -> std::common_reference_with<std::tuple_element_t<index, Tuple>>;
+					{ get<index>(std::declval<const Tuple&>()) } -> std::common_reference_with<std::tuple_element_t<index, Tuple>>;
+					{ get<index>(std::declval<Tuple&&>()) } -> std::common_reference_with<std::tuple_element_t<index, Tuple>>;
+					{ get<index>(std::declval<const Tuple&&>()) } -> std::common_reference_with<std::tuple_element_t<index, Tuple>>;
 				};
 	}();
 
-	template <class TTuple>
-	static constexpr bool check_tuple_indices = []<std::size_t... VIndices>([[maybe_unused]] std::index_sequence<VIndices...>)
+	template <class Tuple>
+	concept tuple_indices = []<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...>)
 	{
-		return (check_tuple_index<VIndices, TTuple> && ...);
-	}(std::make_index_sequence<std::tuple_size_v<TTuple>>{});
+		return (tuple_index<indices, Tuple> && ...);
+	}(std::make_index_sequence<std::tuple_size_v<Tuple>>{});
 }
 
 namespace sl::concepts
@@ -51,21 +50,17 @@ namespace sl::concepts
 	 * \brief Determines whether a type can be used as a tuple-like.
 	 * \details Requires the type-traits ``std::tuple_size`` to be defined for the given type and its member ``value`` denoting the the correct tuple size.
 	 * The ``std::tuple_element`` trait and the ``get`` function must to be defined for each index in the interval ``[0, N)``, where ``N`` is the tuple size of the given type.
-	 * \concept tuple_like
+	 * \concept tuple
 	 * \ingroup GROUP_TUPLE GROUP_UTILITY_CONCEPTS
 	 * \see https://en.cppreference.com/w/cpp/utility/tuple_element
 	 * \see https://en.cppreference.com/w/cpp/utility/tuple_size
+	 * \tparam Tuple Type to check.
 	 */
-	template <class TTuple>
-	concept tuple_like = requires
-						{
-							typename std::tuple_size<TTuple>::type;
-							{ std::tuple_size_v<TTuple> } -> std::convertible_to<std::size_t>;
-						}
-						&& std::cmp_less_equal(0, std::tuple_size_v<TTuple>)
-						&& detail::check_tuple_indices<TTuple>;
+	template <class Tuple>
+	concept tuple = type_list<Tuple>
+						&& detail::tuple_indices<Tuple>;
 
-	/**
+	/**  
 	 * \brief Determines whether the function is invocable with the elements of the given tuple.
 	 * \see https://en.cppreference.com/w/cpp/utility/apply
 	 * \ingroup GROUP_TUPLE_STL_EXT_APPLY GROUP_UTILITY_CONCEPTS
@@ -73,7 +68,7 @@ namespace sl::concepts
 	 * \tparam Tuple Provided tuple argument type.
 	 */
 	template <class Func, class Tuple>
-	concept applicable = tuple_like<std::remove_cvref_t<Tuple>>
+	concept applicable = tuple<std::remove_cvref_t<Tuple>>
 						&& []<std::size_t... indices>(std::index_sequence<indices...>)
 						{
 							using std::get;
@@ -88,7 +83,7 @@ namespace sl::concepts
 	 * \tparam Tuple Provided tuple argument type.
 	 */
 	template <class Func, class Tuple>
-	concept nothrow_applicable = tuple_like<std::remove_cvref_t<Tuple>>
+	concept nothrow_applicable = tuple<std::remove_cvref_t<Tuple>>
 								&& []<std::size_t... indices>(std::index_sequence<indices...>)
 								{
 									using std::get;
@@ -143,7 +138,7 @@ namespace sl::tuple
 	 * \brief Trait type determining the result of a ``std::tuple_cat`` call.
 	 */
 	template <class... TTuples>
-		requires (concepts::tuple_like<std::remove_cvref_t<TTuples>> && ...)
+		requires (concepts::tuple<std::remove_cvref_t<TTuples>> && ...)
 	struct tuple_cat_result
 	{
 		using type = decltype(std::tuple_cat(std::declval<TTuples>()...));
