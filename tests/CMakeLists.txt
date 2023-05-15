@@ -10,6 +10,7 @@ add_executable(
 	"unique_handle.cpp"
 	"Tuple.cpp"
 	"TypeList.cpp"
+	"TypeTraits.cpp"
 )
 
 add_subdirectory("nullables")
