@@ -16,7 +16,7 @@ namespace sl::functional::operators::detail
 	struct bind_front_caller_fn
 	{
 		template <class TCallArgsTuple, class TFunction, class... TBoundFunctions>
-			requires concepts::apply_invocable<
+			requires concepts::applicable<
 				TFunction, tuple::tuple_cat_result_t<std::tuple<std::invoke_result_t<TBoundFunctions>...>, TCallArgsTuple>
 			>
 		[[nodiscard]]
@@ -24,7 +24,7 @@ namespace sl::functional::operators::detail
 			TCallArgsTuple&& callArgsTuple,
 			TFunction&& func,
 			TBoundFunctions&&... boundFunctions
-		) const noexcept(concepts::nothrow_apply_invocable<
+		) const noexcept(concepts::nothrow_applicable<
 			TFunction, tuple::tuple_cat_result_t<std::tuple<std::invoke_result_t<TBoundFunctions>...>, TCallArgsTuple>
 		>)
 		{
@@ -48,7 +48,7 @@ namespace sl::functional::operators::detail
 	struct bind_back_caller_fn
 	{
 		template <class TCallArgsTuple, class TFunction, class... TBoundFunctions>
-			requires concepts::apply_invocable<
+			requires concepts::applicable<
 				TFunction, tuple::tuple_cat_result_t<TCallArgsTuple, std::tuple<std::invoke_result_t<TBoundFunctions>...>>
 			>
 		[[nodiscard]]
@@ -56,7 +56,7 @@ namespace sl::functional::operators::detail
 			TCallArgsTuple&& callArgsTuple,
 			TFunction&& func,
 			TBoundFunctions&&... boundFunctions
-		) const noexcept(concepts::nothrow_apply_invocable<
+		) const noexcept(concepts::nothrow_applicable<
 			TFunction, tuple::tuple_cat_result_t<TCallArgsTuple, std::tuple<std::invoke_result_t<TBoundFunctions>...>>
 		>)
 		{

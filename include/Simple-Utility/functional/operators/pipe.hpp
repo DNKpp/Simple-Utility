@@ -73,16 +73,16 @@ namespace sl::functional::operators::detail
 
 	struct nested_invoke_caller_fn
 	{
-		template <class TCallArgsTuple, concepts::apply_invocable<TCallArgsTuple> TInitFunction, class... TFunctions>
-			requires recursive_supply_invocable<tuple::apply_invoke_result_t<TInitFunction, TCallArgsTuple>, TFunctions...>
+		template <class TCallArgsTuple, concepts::applicable<TCallArgsTuple> TInitFunction, class... TFunctions>
+			requires recursive_supply_invocable<tuple::applicable_result_t<TInitFunction, TCallArgsTuple>, TFunctions...>
 		[[nodiscard]]
 		constexpr auto operator ()(
 			TCallArgsTuple&& callArgsTuple,
 			TInitFunction&& initFunction,
 			TFunctions&&... functions
-		) const noexcept(concepts::nothrow_apply_invocable<TInitFunction, TCallArgsTuple>
+		) const noexcept(concepts::nothrow_applicable<TInitFunction, TCallArgsTuple>
 						&& nothrow_recursive_supply_invocable<
-							tuple::apply_invoke_result_t<TInitFunction, TCallArgsTuple>, TFunctions...>)
+							tuple::applicable_result_t<TInitFunction, TCallArgsTuple>, TFunctions...>)
 		{
 			return recursive_supply_invoke(
 				std::apply(std::forward<TInitFunction>(initFunction), std::forward<TCallArgsTuple>(callArgsTuple)),

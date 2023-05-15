@@ -16,8 +16,8 @@ namespace sl::functional::operators::detail
 	struct equivalent_caller_fn
 	{
 		template <class TCallArgsTuple,
-			concepts::apply_invocable<TCallArgsTuple> TInitFunction,
-			concepts::apply_invocable<TCallArgsTuple>... TFunctions
+			concepts::applicable<TCallArgsTuple> TInitFunction,
+			concepts::applicable<TCallArgsTuple>... TFunctions
 		>
 		[[nodiscard]]
 		constexpr auto operator ()
@@ -26,8 +26,8 @@ namespace sl::functional::operators::detail
 			TInitFunction&& initFunction,
 			TFunctions&&... functions
 		) const
-		noexcept(concepts::nothrow_apply_invocable<TInitFunction, TCallArgsTuple>
-				&& (concepts::nothrow_apply_invocable<TFunctions, TCallArgsTuple> && ...))
+			noexcept(concepts::nothrow_applicable<TInitFunction, TCallArgsTuple>
+					&& (concepts::nothrow_applicable<TFunctions, TCallArgsTuple> && ...))
 		{
 			auto&& init{ std::apply(std::forward<TInitFunction>(initFunction), callArgsTuple) };
 			return ((init == std::apply(std::forward<TFunctions>(functions), callArgsTuple)) && ...);

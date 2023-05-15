@@ -15,14 +15,14 @@ namespace sl::functional::operators::detail
 {
 	struct disjunction_caller_fn
 	{
-		template <class TCallArgsTuple, concepts::apply_invocable<TCallArgsTuple>... TFunctions>
+		template <class TCallArgsTuple, concepts::applicable<TCallArgsTuple>... TFunctions>
 		[[nodiscard]]
 		constexpr auto operator ()
 		(
 			TCallArgsTuple&& callArgsTuple,
 			TFunctions&&... functions
 		) const
-		noexcept((concepts::nothrow_apply_invocable<TFunctions, TCallArgsTuple> && ...))
+			noexcept((concepts::nothrow_applicable<TFunctions, TCallArgsTuple> && ...))
 		{
 			return (std::apply(std::forward<TFunctions>(functions), callArgsTuple) || ...);
 		}
