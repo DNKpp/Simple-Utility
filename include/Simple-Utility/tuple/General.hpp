@@ -129,7 +129,7 @@ namespace sl::tuple
 	/** @} */
 
 	/**
-	 * \defgroup GROUP_TUPLE_STL_EXT_TUPLE_CAT tuple cat
+	 * \defgroup GROUP_TUPLE_STL_EXT_CAT cat
 	 * \ingroup GROUP_TUPLE_STL_EXT
 	 * @{
 	 */
@@ -137,19 +137,23 @@ namespace sl::tuple
 	/**
 	 * \brief Trait type determining the result of a ``std::tuple_cat`` call.
 	 */
-	template <class... TTuples>
-		requires (concepts::tuple<std::remove_cvref_t<TTuples>> && ...)
-	struct tuple_cat_result
+	template <class Tuple, class... Others>
+		requires concepts::tuple<std::remove_cvref_t<Tuple>>
+				&& (... && concepts::tuple<std::remove_cvref_t<Others>>)
+	struct cat_result
 	{
-		using type = decltype(std::tuple_cat(std::declval<TTuples>()...));
+		using type = decltype(std::tuple_cat(
+			std::declval<Tuple>(),
+			std::declval<Others>()...
+		));
 	};
 
 	/**
 	 * \brief Alias type determining the result of a ``std::tuple_cat`` call.
 	 * \see https://en.cppreference.com/w/cpp/utility/tuple/tuple_cat
 	 */
-	template <class... TTuples>
-	using tuple_cat_result_t = typename tuple_cat_result<TTuples...>::type;
+	template <class... Tuples>
+	using tuple_cat_result_t = typename cat_result<Tuples...>::type;
 
 	/** @} */
 }

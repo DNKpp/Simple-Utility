@@ -65,7 +65,7 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"tuple_cat_result yields type of the concatenated tuple.",
+	"cat_result yields type of the concatenated tuple.",
 	"[tuple][trait]",
 	((bool VDummy, class TExpected, class... TTuples), VDummy, TExpected, TTuples...),
 	(true, std::tuple<int, float, int&>, const std::tuple<int, float, int&>&, std::tuple<>&),
@@ -73,7 +73,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, std::tuple<int, float>, const std::tuple<int, float>&)
 )
 {
-	STATIC_REQUIRE(std::same_as<typename tuple_cat_result<TTuples...>::type, TExpected>);
+	STATIC_REQUIRE(std::same_as<typename cat_result<TTuples...>::type, TExpected>);
 	STATIC_REQUIRE(std::same_as<tuple_cat_result_t<TTuples...>, TExpected>);
 }
 
