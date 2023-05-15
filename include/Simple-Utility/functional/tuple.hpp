@@ -100,14 +100,14 @@ namespace sl::functional::tuple
 		struct apply_fn
 		{
 			template <class TFunc, class TTuple>
-				requires concepts::apply_invocable<TFunc, TTuple>
+				requires concepts::applicable<TFunc, TTuple>
 			[[nodiscard]]
 			constexpr decltype(auto) operator ()
 			(
 				TFunc&& func,
 				TTuple&& tuple
 			) const
-			noexcept(concepts::nothrow_apply_invocable<TFunc, TTuple>)
+			noexcept(concepts::nothrow_applicable<TFunc, TTuple>)
 			{
 				return std::apply(std::forward<TFunc>(func), std::forward<TTuple>(tuple));
 			}
