@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <type_traits>
 
-#include "Simple-Utility/tuple/general.hpp"
+#include "Simple-Utility/tuple/General.hpp"
 
 namespace sl::tuple::detail
 {
