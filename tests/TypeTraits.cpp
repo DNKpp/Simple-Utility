@@ -110,3 +110,56 @@ TEST_CASE("Explicit examples for the documenation of remove_type_const.", "[type
 	STATIC_REQUIRE(std::same_as<int* const, sl::remove_type_const_t<const int* const>>);
 	//! [add_type_const]
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"add_type_volatile applies the volatile qualification in any value category.",
+	"[type_traits]",
+	((bool dummy, class Expected, class T), dummy, Expected, T),
+	(true, volatile int, int),
+	(true, volatile int, volatile int),
+	(true, const volatile int, const volatile int),
+	(true, volatile int*, int*),
+	(true, volatile int* const, int* const),
+	(true, const volatile int*, const int*),
+	(true, volatile int*, volatile int*),
+	(true, volatile int* volatile, int* volatile),
+	(true, volatile int* volatile, volatile int* volatile),
+	(true, volatile int* const, volatile int* const),
+	(true, volatile int* const volatile, volatile int* const volatile)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::add_type_volatile<T>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::add_type_volatile_t<T>>);
+
+	STATIC_REQUIRE(std::same_as<Expected&, typename sl::add_type_volatile<T&>::type>);
+	STATIC_REQUIRE(std::same_as<Expected&, sl::add_type_volatile_t<T&>>);
+
+	STATIC_REQUIRE(std::same_as<Expected&&, typename sl::add_type_volatile<T&&>::type>);
+	STATIC_REQUIRE(std::same_as<Expected&&, sl::add_type_volatile_t<T&&>>);
+
+	STATIC_REQUIRE(std::same_as<Expected*, typename sl::add_type_volatile<T*>::type>);
+	STATIC_REQUIRE(std::same_as<Expected*, sl::add_type_volatile_t<T*>>);
+
+	STATIC_REQUIRE(std::same_as<Expected* const, typename sl::add_type_volatile<T* const>::type>);
+	STATIC_REQUIRE(std::same_as<Expected* const, sl::add_type_volatile_t<T* const>>);
+
+	STATIC_REQUIRE(std::same_as<Expected* volatile, typename sl::add_type_volatile<T* volatile>::type>);
+	STATIC_REQUIRE(std::same_as<Expected* volatile, sl::add_type_volatile_t<T* volatile>>);
+
+	STATIC_REQUIRE(std::same_as<Expected* const volatile, typename sl::add_type_volatile<T* const volatile>::type>);
+	STATIC_REQUIRE(std::same_as<Expected* const volatile, sl::add_type_volatile_t<T* const volatile>>);
+}
+
+TEST_CASE("Explicit examples for the documenation of add_type_volatile.", "[type_traits][example]")
+{
+	//! [add_type_volatile]
+	STATIC_REQUIRE(std::same_as<int&, std::add_volatile_t<int&>>);
+	STATIC_REQUIRE(std::same_as<volatile int&, sl::add_type_volatile_t<int&>>);
+
+	STATIC_REQUIRE(std::same_as<int* volatile, std::add_volatile_t<int*>>);
+	STATIC_REQUIRE(std::same_as<volatile int*, sl::add_type_volatile_t<int*>>);
+
+	STATIC_REQUIRE(std::same_as<volatile int* volatile, std::add_volatile_t<volatile int*>>);
+	STATIC_REQUIRE(std::same_as<volatile int* volatile, sl::add_type_volatile_t<int* volatile>>);
+	//! [add_type_volatile]
+}
