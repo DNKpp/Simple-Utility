@@ -25,22 +25,22 @@ namespace sl::tuple
 namespace sl::concepts::detail
 {
 	template <std::size_t index, class Tuple>
-	concept tuple_index = []
+	inline constexpr bool check_tuple_index_v = []
 	{
 		using std::get;
 		return requires
-				{
-					{ get<index>(std::declval<Tuple&>()) } -> std::common_reference_with<std::tuple_element_t<index, Tuple>>;
-					{ get<index>(std::declval<const Tuple&>()) } -> std::common_reference_with<std::tuple_element_t<index, Tuple>>;
-					{ get<index>(std::declval<Tuple&&>()) } -> std::common_reference_with<std::tuple_element_t<index, Tuple>>;
-					{ get<index>(std::declval<const Tuple&&>()) } -> std::common_reference_with<std::tuple_element_t<index, Tuple>>;
-				};
+		{
+			{ get<index>(std::declval<Tuple&>()) } -> std::common_reference_with<std::tuple_element_t<index, Tuple>>;
+			{ get<index>(std::declval<const Tuple&>()) } -> std::common_reference_with<std::tuple_element_t<index, Tuple>>;
+			{ get<index>(std::declval<Tuple&&>()) } -> std::common_reference_with<std::tuple_element_t<index, Tuple>>;
+			{ get<index>(std::declval<const Tuple&&>()) } -> std::common_reference_with<std::tuple_element_t<index, Tuple>>;
+		};
 	}();
 
 	template <class Tuple>
-	concept tuple_indices = []<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...>)
+	inline constexpr bool check_tuple_indices_v = []<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...>)
 	{
-		return (tuple_index<indices, Tuple> && ...);
+		return (check_tuple_index_v<indices, Tuple> && ...);
 	}(std::make_index_sequence<std::tuple_size_v<Tuple>>{});
 }
 
@@ -58,7 +58,7 @@ namespace sl::concepts
 	 */
 	template <class Tuple>
 	concept tuple = type_list<Tuple>
-						&& detail::tuple_indices<Tuple>;
+					&& detail::check_tuple_indices_v<Tuple>;
 
 	/**  
 	 * \brief Determines whether the function is invocable with the elements of the given tuple.
