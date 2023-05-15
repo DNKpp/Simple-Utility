@@ -15,7 +15,7 @@ namespace sl
 	 */
 
 	/**
-	 * \defgroup GROUP_TYPE_TRAITS_ADD_CONST add_type_const
+	 * \defgroup GROUP_TYPE_TRAITS_ADD_TYPE_CONST add_type_const
 	 * \ingroup GROUP_TYPE_TRAITS
 	 * \brief This trait adds the ``const`` qualification to the actual type, instead of the top-level reference or pointer category.
 	 * \details Following some examples comparing the behaviour of ``std::add_const`` with ``sl::add_type_const``.
@@ -35,51 +35,75 @@ namespace sl
 	};
 
 	/**
-	 * \brief Specialization, adding const to lvalue reference types.
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::add_type_const "add_type_const" trait.
+	 * \tparam T Qualification to be applied to.
+	 */
+	template <class T>
+	using add_type_const_t = typename add_type_const<T>::type;
+
+	/**
+	 * \brief Specialization, unwrapping lvalue reference types.
 	 * \tparam T Qualification to be applied to.
 	 */
 	template <class T>
 	struct add_type_const<T&>
 	{
-		using type = const std::remove_reference_t<T>&;
+		using type = add_type_const_t<T>&;
 	};
 
 	/**
-	 * \brief Specialization, adding const to rvalue reference types.
+	 * \brief Specialization, unwrapping rvalue reference types.
 	 * \tparam T Qualification to be applied to.
 	 */
 	template <class T>
 	struct add_type_const<T&&>
 	{
-		using type = const std::remove_reference_t<T>&&;
+		using type = add_type_const_t<T>&&;
 	};
 
 	/**
-	 * \brief Specialization, adding const pointer types.
+	 * \brief Specialization, unwrapping pointer types.
 	 * \tparam T Qualification to be applied to.
 	 */
 	template <class T>
 	struct add_type_const<T*>
 	{
-		using type = std::add_pointer_t<typename add_type_const<std::remove_pointer_t<T>>::type>;
+		using type = add_type_const_t<T>*;
 	};
 
 	/**
-	 * \brief Specialization, adding const pointer types.
+	 * \brief Specialization, unwrapping volatile pointer types.
+	 * \tparam T Qualification to be applied to.
+	 */
+	template <class T>
+	struct add_type_const<T* volatile>
+	{
+		using type = add_type_const_t<T>* volatile;
+	};
+
+	/**
+	 * \brief Specialization, unwrapping const pointer types.
 	 * \tparam T Qualification to be applied to.
 	 */
 	template <class T>
 	struct add_type_const<T* const>
 	{
-		using type = const std::add_pointer_t<typename add_type_const<std::remove_pointer_t<T>>::type>;
+		using type = add_type_const_t<T>* const;
 	};
 
 	/**
-	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::add_const "add_type_const" trait.
+	 * \brief Specialization, unwrapping const volatile pointer types.
 	 * \tparam T Qualification to be applied to.
 	 */
 	template <class T>
-	using add_type_const_t = typename add_type_const<T>::type;
+	struct add_type_const<T* const volatile>
+	{
+		using type = add_type_const_t<T>* const volatile;
+	};
+
+	/**
+	 * \}
+	 */
 
 	/**
 	 * \}
