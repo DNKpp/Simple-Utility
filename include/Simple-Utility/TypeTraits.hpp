@@ -472,6 +472,38 @@ namespace sl
 	 * \}
 	 */
 
+	/**
+	 * \defgroup GROUP_TYPE_TRAITS_REMOVE_TYPE_VOLATILENESS_AS type_volatileness_as
+	 * \ingroup GROUP_TYPE_TRAITS
+	 * \brief This trait either applies the ``volatile`` qualification on the actual type of ``To``, or removes it.
+	 * \{
+	 */
+
+	/**
+	 * \brief Applies or removes the ``volatile`` qualification of ``To`` in regards of ``From``.
+	 * \tparam To Qualification to be modified on.
+	 * \tparam From Qualification to be taken from.
+	 */
+	template <class To, class From>
+	struct type_volatileness_as
+	{
+		using type = std::conditional_t<
+			std::is_volatile_v<std::remove_reference_t<std::remove_pointer_t<From>>>,
+			add_type_volatile_t<To>,
+			remove_type_volatile_t<To>>;
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::volatileness_as "type_volatileness_as" trait.
+	 * \tparam To Qualification to be applied to.
+	 * \tparam From Qualification to be taken from.
+	 */
+	template <class To, class From>
+	using type_volatileness_as_t = typename type_volatileness_as<To, From>::type;
+
+	/**
+	 * \}
+	 */
 }
 
 #endif
