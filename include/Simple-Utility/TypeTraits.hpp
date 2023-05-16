@@ -439,6 +439,39 @@ namespace sl
 	/**
 	 * \}
 	 */
+	/**
+	 * \defgroup GROUP_TYPE_TRAITS_REMOVE_TYPE_CONSTNESS_AS type_constness_as
+	 * \ingroup GROUP_TYPE_TRAITS
+	 * \brief This trait either applies the ``const`` qualification on the actual type of ``To``, or removes it.
+	 * \{
+	 */
+
+	/**
+	 * \brief Applies or removes the const qualification of ``To`` in regards of ``From``.
+	 * \tparam To Qualification to be modified on.
+	 * \tparam From Qualification to be taken from.
+	 */
+	template <class To, class From>
+	struct type_constness_as
+	{
+		using type = std::conditional_t<
+			std::is_const_v<std::remove_reference_t<std::remove_pointer_t<From>>>,
+			add_type_const_t<To>,
+			remove_type_const_t<To>>;
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::constness_as "type_constness_as" trait.
+	 * \tparam To Qualification to be modified on.
+	 * \tparam From Qualification to be taken from.
+	 */
+	template <class To, class From>
+	using type_constness_as_t = typename type_constness_as<To, From>::type;
+
+	/**
+	 * \}
+	 */
+
 }
 
 #endif
