@@ -321,3 +321,56 @@ TEST_CASE("Explicit examples for the documenation of remove_type_cv.", "[type_tr
 	STATIC_REQUIRE(std::same_as<int* const volatile, sl::remove_type_cv_t<const volatile int* const volatile>>);
 	//! [remove_type_cv]
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"type_constness_as applies const qualification from other.",
+	"[type_traits]",
+	((bool dummy, class Expected, class To, class From), dummy, Expected, To, From),
+	(true, int, int, float),
+	(true, int, const int, float),
+	(true, int, const int, volatile float),
+	(true, const int, int, const float),
+	(true, const int, int, const volatile float)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::type_constness_as<To, From>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::type_constness_as_t<To, From>>);
+
+	// value categories on From are invariant 
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::type_constness_as<To, From&>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::type_constness_as_t<To, From&>>);
+
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::type_constness_as<To, From&&>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::type_constness_as_t<To, From&&>>);
+
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::type_constness_as<To, From*>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::type_constness_as_t<To, From*>>);
+
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::type_constness_as<To, From* const>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::type_constness_as_t<To, From* const>>);
+
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::type_constness_as<To, From* volatile>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::type_constness_as_t<To, From* volatile>>);
+
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::type_constness_as<To, From* const volatile>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::type_constness_as_t<To, From* const volatile>>);
+
+	// value categories on To change the expectations 
+	STATIC_REQUIRE(std::same_as<Expected&, typename sl::type_constness_as<To&, From>::type>);
+	STATIC_REQUIRE(std::same_as<Expected&, sl::type_constness_as_t<To&, From>>);
+
+	STATIC_REQUIRE(std::same_as<Expected&&, typename sl::type_constness_as<To&&, From>::type>);
+	STATIC_REQUIRE(std::same_as<Expected&&, sl::type_constness_as_t<To&&, From>>);
+
+	STATIC_REQUIRE(std::same_as<Expected*, typename sl::type_constness_as<To*, From>::type>);
+	STATIC_REQUIRE(std::same_as<Expected*, sl::type_constness_as_t<To*, From>>);
+
+	STATIC_REQUIRE(std::same_as<Expected* const, typename sl::type_constness_as<To* const, From>::type>);
+	STATIC_REQUIRE(std::same_as<Expected* const, sl::type_constness_as_t<To* const, From>>);
+
+	STATIC_REQUIRE(std::same_as<Expected* volatile, typename sl::type_constness_as<To* volatile, From>::type>);
+	STATIC_REQUIRE(std::same_as<Expected* volatile, sl::type_constness_as_t<To* volatile, From>>);
+
+	STATIC_REQUIRE(std::same_as<Expected* const volatile, typename sl::type_constness_as<To* const volatile, From>::type>);
+	STATIC_REQUIRE(std::same_as<Expected* const volatile, sl::type_constness_as_t<To* const volatile, From>>);
+}
