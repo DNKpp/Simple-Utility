@@ -505,7 +505,7 @@ namespace sl
 	struct type_constness_as
 	{
 		using type = std::conditional_t<
-			std::is_const_v<std::remove_reference_t<std::remove_pointer_t<From>>>,
+			std::is_const_v<cv_qualified_type_t<From>>,
 			add_type_const_t<To>,
 			remove_type_const_t<To>>;
 	};
@@ -538,7 +538,7 @@ namespace sl
 	struct type_volatileness_as
 	{
 		using type = std::conditional_t<
-			std::is_volatile_v<std::remove_reference_t<std::remove_pointer_t<From>>>,
+			std::is_volatile_v<cv_qualified_type_t<From>>,
 			add_type_volatile_t<To>,
 			remove_type_volatile_t<To>>;
 	};
