@@ -59,7 +59,8 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, std::vector<int>),
 	(true, std::tuple<>),
 	(true, std::tuple<int>),
-	(true, std::tuple<std::tuple<int&>>), // got this case from real experience
+	// got this case from real experience
+	(true, std::tuple<std::tuple<int&>>),
 	(true, std::pair<int, int>),
 	(true, std::array<int, 0>)
 )
@@ -109,7 +110,8 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, std::tuple<std::tuple<int>&, int&>, std::tuple<std::tuple<int>, int>)
 )
 {
-	using Result = decltype(transform_elements(std::declval<Tuple&>(), [](auto& v) -> auto& { return v; }));
+	[[maybe_unused]] static constexpr auto as_lvalue_ref = [](auto& v) -> auto& { return v; };
+	using Result = decltype(transform_elements(std::declval<Tuple&>(), as_lvalue_ref));
 
 	STATIC_REQUIRE(std::same_as<Expected, Result>);
 }
