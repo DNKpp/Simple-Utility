@@ -24,12 +24,21 @@ namespace sl::tuple
 
 namespace sl::tuple::detail
 {
+	// use an explicit type here, because a simple lambda type seems to confuse resharper a lot!
 	template <std::size_t index>
-	inline constexpr auto get = []<class Tuple>(Tuple&& tuple) -> decltype(auto)
+	struct get_fn
+	{
+		template <class Tuple>
+		[[nodiscard]]
+		constexpr decltype(auto) operator ()(Tuple&& tuple) const noexcept
 	{
 		using std::get;
-		return get<index>(std::forward<Tuple>(tuple));
+			return get<index>(std::forward<decltype(tuple)>(tuple));
+		}
 	};
+
+	template <std::size_t index>
+	inline constexpr get_fn<index> get{};
 
 	template <std::size_t index, class Tuple>
 	struct get_result
@@ -44,18 +53,18 @@ namespace sl::tuple::detail
 namespace sl::concepts::detail
 {
 	template <std::size_t index, class Tuple>
-	concept tuple_index = std::common_reference_with<
+	concept tuple_index = std::convertible_to<
 							tuple::detail::get_result_t<index, Tuple&>,
-							std::tuple_element_t<index, Tuple>>
-						&& std::common_reference_with<
+			const std::tuple_element_t<index, Tuple>&>
+		&& std::convertible_to<
 							tuple::detail::get_result_t<index, const Tuple&>,
-							std::tuple_element_t<index, Tuple>>
-						&& std::common_reference_with<
+			const std::tuple_element_t<index, Tuple>&>
+		&& std::convertible_to<
 							tuple::detail::get_result_t<index, Tuple&&>,
-							std::tuple_element_t<index, Tuple>>
-						&& std::common_reference_with<
+			const std::tuple_element_t<index, Tuple>&&>
+		&& std::convertible_to<
 							tuple::detail::get_result_t<index, const Tuple&&>,
-							std::tuple_element_t<index, Tuple>>;
+			const std::tuple_element_t<index, Tuple>&&>;
 
 	template <class Tuple>
 	inline constexpr bool tuple_indices_v = []<std::size_t... indices>([[maybe_unused]] std::index_sequence<indices...>)
