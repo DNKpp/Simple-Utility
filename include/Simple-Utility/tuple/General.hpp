@@ -31,8 +31,8 @@ namespace sl::tuple::detail
 		template <class Tuple>
 		[[nodiscard]]
 		constexpr decltype(auto) operator ()(Tuple&& tuple) const noexcept
-	{
-		using std::get;
+		{
+			using std::get;
 			return get<index>(std::forward<decltype(tuple)>(tuple));
 		}
 	};
@@ -54,16 +54,16 @@ namespace sl::concepts::detail
 {
 	template <std::size_t index, class Tuple>
 	concept tuple_index = std::convertible_to<
-							tuple::detail::get_result_t<index, Tuple&>,
+			tuple::detail::get_result_t<index, Tuple&>,
 			const std::tuple_element_t<index, Tuple>&>
 		&& std::convertible_to<
-							tuple::detail::get_result_t<index, const Tuple&>,
+			tuple::detail::get_result_t<index, const Tuple&>,
 			const std::tuple_element_t<index, Tuple>&>
 		&& std::convertible_to<
-							tuple::detail::get_result_t<index, Tuple&&>,
+			tuple::detail::get_result_t<index, Tuple&&>,
 			const std::tuple_element_t<index, Tuple>&&>
 		&& std::convertible_to<
-							tuple::detail::get_result_t<index, const Tuple&&>,
+			tuple::detail::get_result_t<index, const Tuple&&>,
 			const std::tuple_element_t<index, Tuple>&&>;
 
 	template <class Tuple>
