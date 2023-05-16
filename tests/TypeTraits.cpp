@@ -3,6 +3,42 @@
 #include <catch2/catch_template_test_macros.hpp>
 
 TEMPLATE_TEST_CASE_SIG(
+	"cv_qualified_type decays the const qualification type regardless the value category.",
+	"[type_traits]",
+	((bool dummy, class Expected, class T), dummy, Expected, T),
+	(true, int, int),
+	(true, const int, const int),
+	(true, volatile int, volatile int),
+	(true, const volatile int, const volatile int),
+	(true, int, int*),
+	(true, const int, const int*),
+	(true, volatile int, volatile int*),
+	(true, const volatile int, const volatile int*)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::cv_qualified_type<T>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::cv_qualified_type_t<T>>);
+
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::cv_qualified_type<T&>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::cv_qualified_type_t<T&>>);
+
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::cv_qualified_type<T&&>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::cv_qualified_type_t<T&&>>);
+
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::cv_qualified_type<T*>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::cv_qualified_type_t<T*>>);
+
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::cv_qualified_type<T* const>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::cv_qualified_type_t<T* const>>);
+
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::cv_qualified_type<T* volatile>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::cv_qualified_type_t<T* volatile>>);
+
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::cv_qualified_type<T* const volatile>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::cv_qualified_type_t<T* const volatile>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
 	"add_type_const applies the const qualification in any value category.",
 	"[type_traits]",
 	((bool dummy, class Expected, class T), dummy, Expected, T),
