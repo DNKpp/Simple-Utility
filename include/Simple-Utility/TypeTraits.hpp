@@ -8,10 +8,60 @@
 
 #include <type_traits>
 
+#include "Simple-Utility/concepts/stl_extensions.hpp"
+
 namespace sl
 {
 	/**
 	 * \defgroup GROUP_TYPE_TRAITS type-traits
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_TRAITS_CV_QUALIFIED_TYPE cv_qualified_type
+	 * \ingroup GROUP_TYPE_TRAITS
+	 * \brief This trait decays every reference or pointer category and yields the (possibly cv-qualified) underlying type.
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template, taking the ``T`` as-is.
+	 * \tparam T Type to be decayed.
+	 */
+	template <class T>
+	struct cv_qualified_type
+	{
+		using type = T;
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::cv_qualified_type "cv_qualified_type" trait.
+	 * \tparam T Qualification to be applied to.
+	 */
+	template <class T>
+	using cv_qualified_type_t = typename cv_qualified_type<T>::type;
+
+	/**
+	 * \brief Specialization, unwrapping reference types.
+	 * \tparam T Type to be decayed.
+	 */
+	template <concepts::reference T>
+	struct cv_qualified_type<T>
+	{
+		using type = cv_qualified_type_t<std::remove_reference_t<T>>;
+	};
+
+	/**
+	 * \brief Specialization, unwrapping pointer types.
+	 * \tparam T Type to be decayed.
+	 */
+	template <concepts::pointer T>
+	struct cv_qualified_type<T>
+	{
+		using type = cv_qualified_type_t<std::remove_pointer_t<T>>;
+	};
+
+	/**
+	 * \}
 	 */
 
 	/**
