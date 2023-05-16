@@ -96,7 +96,7 @@ TEMPLATE_TEST_CASE_SIG(
 
 TEST_CASE("Explicit examples for the documenation of remove_type_const.", "[type_traits][example]")
 {
-	//! [add_type_const]
+	//! [remove_type_const]
 	STATIC_REQUIRE(std::same_as<const int&, std::remove_const_t<const int&>>);
 	STATIC_REQUIRE(std::same_as<int&, sl::remove_type_const_t<const int&>>);
 
@@ -105,7 +105,7 @@ TEST_CASE("Explicit examples for the documenation of remove_type_const.", "[type
 
 	STATIC_REQUIRE(std::same_as<const int*, std::remove_const_t<const int* const>>);
 	STATIC_REQUIRE(std::same_as<int* const, sl::remove_type_const_t<const int* const>>);
-	//! [add_type_const]
+	//! [remove_type_const]
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -202,7 +202,7 @@ TEMPLATE_TEST_CASE_SIG(
 
 TEST_CASE("Explicit examples for the documenation of remove_type_volatile.", "[type_traits][example]")
 {
-	//! [add_type_const]
+	//! [remove_type_volatile]
 	STATIC_REQUIRE(std::same_as<volatile int&, std::remove_volatile_t<volatile int&>>);
 	STATIC_REQUIRE(std::same_as<int&, sl::remove_type_volatile_t<volatile int&>>);
 
@@ -211,7 +211,7 @@ TEST_CASE("Explicit examples for the documenation of remove_type_volatile.", "[t
 
 	STATIC_REQUIRE(std::same_as<volatile int*, std::remove_volatile_t<volatile int* volatile>>);
 	STATIC_REQUIRE(std::same_as<int* volatile, sl::remove_type_volatile_t<volatile int* volatile>>);
-	//! [add_type_const]
+	//! [remove_type_volatile]
 }
 
 TEMPLATE_TEST_CASE_SIG(
