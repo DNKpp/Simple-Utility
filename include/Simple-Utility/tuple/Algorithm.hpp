@@ -9,26 +9,10 @@
 #pragma once
 
 #include <algorithm>
+#include <functional>
 #include <type_traits>
 
 #include "Simple-Utility/tuple/General.hpp"
-
-namespace sl::tuple::detail
-{
-	template <class Tuple>
-		requires concepts::tuple<std::remove_cvref_t<Tuple>>
-	[[nodiscard]]
-	constexpr auto envelop_elements(Tuple&& tuple)
-	{
-		return std::apply(
-			[]<class... Elements>(Elements&&... element)
-			{
-				return std::make_tuple(
-					std::make_tuple(std::forward<Elements>(element))...);
-			},
-			std::forward<Tuple>(tuple));
-	}
-}
 
 namespace sl::tuple
 {
@@ -37,6 +21,56 @@ namespace sl::tuple
 	 * \ingroup GROUP_TUPLE
 	 */
 
+	/**
+	 * \defgroup GROUP_TUPLE_ALGORITHM_TRANSFORM_ELEMENTS transform_elements
+	 * \ingroup GROUP_TUPLE_ALGORITHM
+	 * @{
+	 */
+
+	/**
+	 * \brief Applies the transform on each element of the given source tuple and returns the results as a new tuple.
+	 * \tparam Tuple The tuple type.
+	 * \tparam Transform The transform type.
+	 * \param tuple The source tuple.
+	 * \param transform The transformation to be applied on each element.
+	 * \return A newly created tuple with the transformed elements of the source tuple.
+	 *
+	 * \details The elements will be stored as they are retrieved from the transformation, thus no automatically
+	 * conversion will be applied.
+	 */
+	template <class Tuple, class Transform>
+		requires concepts::tuple<std::remove_cvref_t<Tuple>>
+	[[nodiscard]]
+	constexpr auto transform_elements(Tuple&& tuple, Transform transform)
+	{
+		return std::apply(
+			[&]<class... Elements>(Elements&&... elements) -> std::tuple<std::invoke_result_t<Transform, Elements>...>
+			{
+				return {std::invoke(transform, std::forward<Elements>(elements))...};
+			},
+			std::forward<Tuple>(tuple));
+	}
+
+	/**
+	 * \}
+	 */
+}
+
+namespace sl::tuple::detail
+{
+	template <class Tuple>
+		requires concepts::tuple<std::remove_cvref_t<Tuple>>
+	[[nodiscard]]
+	constexpr auto envelop_elements(Tuple&& tuple)
+	{
+		return transform_elements(
+			std::forward<Tuple>(tuple),
+			[]<class Element>(Element&& el) { return std::make_tuple(std::forward<Element>(el)); });
+	}
+}
+
+namespace sl::tuple
+{
 	/**
 	 * \defgroup GROUP_TUPLE_ALGORITHM_ENVELOP_ELEMENTS envelop elements
 	 * \ingroup GROUP_TUPLE_ALGORITHM
