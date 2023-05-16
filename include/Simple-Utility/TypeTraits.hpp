@@ -447,7 +447,7 @@ namespace sl
 	 */
 
 	/**
-	 * \brief Applies or removes the const qualification of ``To`` in regards of ``From``.
+	 * \brief Applies or removes the ``const`` qualification of ``To`` in regards of ``From``.
 	 * \tparam To Qualification to be modified on.
 	 * \tparam From Qualification to be taken from.
 	 */
@@ -461,7 +461,7 @@ namespace sl
 	};
 
 	/**
-	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::constness_as "type_constness_as" trait.
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_constness_as "type_constness_as" trait.
 	 * \tparam To Qualification to be modified on.
 	 * \tparam From Qualification to be taken from.
 	 */
@@ -494,12 +494,44 @@ namespace sl
 	};
 
 	/**
-	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::volatileness_as "type_volatileness_as" trait.
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_volatileness_as "type_volatileness_as" trait.
 	 * \tparam To Qualification to be applied to.
 	 * \tparam From Qualification to be taken from.
 	 */
 	template <class To, class From>
 	using type_volatileness_as_t = typename type_volatileness_as<To, From>::type;
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_TRAITS_REMOVE_TYPE_QUALIFICATION_AS type_qualification_as
+	 * \ingroup GROUP_TYPE_TRAITS
+	 * \brief This trait either applies the ``const`` and/or ``volatile`` qualifications on the actual type of ``To``, or removes it.
+	 * \{
+	 */
+
+	/**
+	 * \brief Applies or removes the ``const`` and/or ``volatile`` qualifications of ``To`` in regards of ``From``.
+	 * \tparam To Qualification to be modified on.
+	 * \tparam From Qualification to be taken from.
+	 */
+	template <class To, class From>
+	struct type_qualification_as
+	{
+		using type = type_constness_as_t<
+			type_volatileness_as_t<To, From>,
+			From>;
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::type_qualification_as "type_qualification_as" trait.
+	 * \tparam To Qualification to be applied to.
+	 * \tparam From Qualification to be taken from.
+	 */
+	template <class To, class From>
+	using type_qualification_as_t = typename type_qualification_as<To, From>::type;
 
 	/**
 	 * \}

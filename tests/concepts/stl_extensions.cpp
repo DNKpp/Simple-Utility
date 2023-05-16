@@ -156,3 +156,38 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(nothrow_explicitly_convertible_to<TFrom, TTo> == VExpected);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"pointer behaves exactly as std::is_pointer.",
+	"[concepts][stl_ext]",
+	((bool expected, class T), expected, T),
+	(true, int*),
+	(true, int**),
+	(true, const int * volatile),
+	(true, void*),
+	(false, int),
+	(false, int&),
+	(false, int&&),
+	(false, int[10]),
+	(false, std::nullptr_t)
+)
+{
+	STATIC_REQUIRE(expected == pointer<T>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"reference behaves exactly as std::is_reference.",
+	"[concepts][stl_ext]",
+	((bool expected, class T), expected, T),
+	(true, int&),
+	(true, int&&),
+	(true, const int&),
+	(true, const int&&),
+	(true, double*&),
+	(true, double*&&),
+	(false, int),
+	(false, int*)
+)
+{
+	STATIC_REQUIRE(expected == reference<T>);
+}

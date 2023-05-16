@@ -17,10 +17,28 @@ namespace sl::concepts
 	/**
 	* \defgroup GROUP_STL_EXTENSION_CONCEPTS stl extensions
 	*
-	* \brief Contains several concept extensions for existing stl concepts.
+	* \brief Contains several concept extensions for existing stl concepts and traits.
 	* \ingroup GROUP_CONCEPTS
 	* @{
 	*/
+
+	/**
+	 * \brief Checks whether the ``T`` denotes a (possibly cv-qualified) pointer type.
+	 * \details This is the concept version of ``std::is_pointer``.
+	 * \see https://en.cppreference.com/w/cpp/types/is_pointer
+	 * \tparam T The type to check.
+	 */
+	template <class T>
+	concept pointer = std::is_pointer_v<T>;
+
+	/**
+	 * \brief Checks whether the ``T`` denotes a reference type.
+	 * \details This is the concept version of ``std::is_reference``.
+	 * \see https://en.cppreference.com/w/cpp/types/is_reference
+	 * \tparam T The type to check.
+	 */
+	template <class T>
+	concept reference = std::is_reference_v<T>;
 
 	/**
 	 * \brief Checks whether the left-hand-side type is unequal to the right-hand-side type.
