@@ -3,10 +3,13 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
+#include "Simple-Utility/Tuple.hpp"
+
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_all.hpp>
 
-#include "Simple-Utility/Tuple.hpp"
+// include this header after catch headers
+#include <catch2/trompeloeil.hpp>
 
 #include <array>
 
@@ -94,6 +97,83 @@ TEMPLATE_TEST_CASE_SIG(
 
 	STATIC_REQUIRE(std::same_as<Expected, typename apply_result<get_front_t, Tuple>::type>);
 	STATIC_REQUIRE(std::same_as<Expected, apply_result_t<get_front_t, Tuple>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"tuple::transform_elements creates a new tuple containing the transformed elements.",
+	"[tuple][algorithm]",
+	((bool dummy, class Expected, class Tuple), dummy, Expected, Tuple),
+	(true, std::tuple<>, std::tuple<>),
+	(true, std::tuple<int&>, std::tuple<int>),
+	(true, std::tuple<int&, float&>, std::tuple<int, float>),
+	(true, std::tuple<std::tuple<int>&, int&>, std::tuple<std::tuple<int>, int>)
+)
+{
+	using Result = decltype(transform_elements(std::declval<Tuple&>(), [](auto& v) -> auto& { return v; }));
+
+	STATIC_REQUIRE(std::same_as<Expected, Result>);
+}
+
+class TransformMock
+{
+public:
+	static constexpr bool trompeloeil_movable_mock = true;
+
+	template <class... Args>
+	decltype(auto) operator ()(Args&&... args) { return call(std::forward<Args>(args)...); }
+
+	MAKE_MOCK1(call, int&(int&));
+	MAKE_MOCK1(call, float&(float&));
+	MAKE_MOCK1(call, std::reference_wrapper<int>&(std::reference_wrapper<int>&));
+};
+
+TEST_CASE("tuple::transform_elements applies the transformation on each element.")
+{
+	using namespace trompeloeil;
+
+	SECTION("given an empty tuple.")
+	{
+		std::tuple source{};
+
+		TransformMock transform{};
+
+		std::tuple<> result = transform_elements(source, std::move(transform));
+
+		REQUIRE(result == source);
+	}
+
+	SECTION("given a tuple with one element.")
+	{
+		std::tuple source{42};
+
+		TransformMock transform{};
+		REQUIRE_CALL(transform, call(eq<int&>(42)))
+			.LR_RETURN(_1);
+
+		std::tuple<int&> result = transform_elements(source, std::move(transform));
+
+		REQUIRE(result == source);
+	}
+
+	SECTION("given a tuple with multiple elements.")
+	{
+		int value{42};
+		std::tuple source{1337, 2.f, std::ref(value)};
+
+		TransformMock transform{};
+		REQUIRE_CALL(transform, call(eq<int&>(1337)))
+			.LR_RETURN((_1));
+
+		REQUIRE_CALL(transform, call(eq<float&>(2.f)))
+			.LR_RETURN((_1));
+
+		REQUIRE_CALL(transform, call(eq<std::reference_wrapper<int>&>(42)))
+			.LR_RETURN((_1));
+
+		std::tuple<int&, float&, int&> result = transform_elements(source, std::move(transform));
+
+		REQUIRE(result == source);
+	}
 }
 
 TEMPLATE_TEST_CASE_SIG(
