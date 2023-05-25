@@ -191,3 +191,41 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(expected == reference<T>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"decayed determines whether T is a decayed type.",
+	"[concepts][stl_ext]",
+	((bool expected, class T), expected, T),
+	(true, int),
+	(true, int*),
+	(true, int**),
+	(true, int(*)(int)),
+	(false, int&),
+	(false, int&&),
+	(false, const int),
+	(false, volatile int),
+	(false, int[5]),
+	(false, int(int))
+)
+{
+	STATIC_REQUIRE(expected == decayed<T>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"unqualified determines whether T denotes a unqualified type.",
+	"[concepts][stl_ext]",
+	((bool expected, class T), expected, T),
+	(true, int),
+	(true, int*),
+	(true, int**),
+	(true, int(*)(int)),
+	(true, int(int)),
+	(true, int[5]),
+	(false, int&),
+	(false, int&&),
+	(false, const int),
+	(false, volatile int)
+)
+{
+	STATIC_REQUIRE(expected == unqualified<T>);
+}
