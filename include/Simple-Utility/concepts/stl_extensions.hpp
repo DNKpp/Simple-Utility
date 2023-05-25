@@ -41,6 +41,22 @@ namespace sl::concepts
 	concept reference = std::is_reference_v<T>;
 
 	/**
+	 * \brief Checks whether the ``T`` denotes a decayed type.
+	 * \see https://en.cppreference.com/w/cpp/types/decay
+	 * \tparam T The type to check.
+	 */
+	template <class T>
+	concept decayed = std::same_as<std::decay_t<T>, T>;
+
+	/**
+	 * \brief Checks whether the ``T`` denotes an unqualified type.
+	 * \see https://en.cppreference.com/w/cpp/types/remove_cvref
+	 * \tparam T The type to check.
+	 */
+	template <class T>
+	concept unqualified = std::same_as<std::remove_cvref_t<T>, T>;
+
+	/**
 	 * \brief Checks whether the left-hand-side type is unequal to the right-hand-side type.
 	 * \details This is the inverted counterpart of ``std::same_as`` concept.
 	 * \tparam TLhs The source type handed over to the target
