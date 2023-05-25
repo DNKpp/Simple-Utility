@@ -15,12 +15,12 @@ namespace sl
 	/**
 	 * \brief Utility type, which can be used as a base class for the crtp pattern.
 	 * \tparam Derived The derived type.
-	 * \note This type should usually be privately inherited from.
+	 * \tparam Disambiguity In cases of multiple inheritance, this param can be used to disambiguity the base class.
 	 */
-	template <concepts::unqualified Derived>
+	template <concepts::unqualified Derived, class Disambiguity = void>
 	class CRTPBase
 	{
-	public:
+	protected:
 		/**
 		 * \brief Up-casts the this pointer to a const lvalue reference to ``Derived``.
 		 * \return A const lvalue reference.
@@ -70,10 +70,31 @@ namespace sl
 		}
 
 		/**
+		 * \brief Defaulted copy-constructor.
+		 */
+		constexpr CRTPBase(const CRTPBase&) noexcept = default;
+
+		/**
+		 * \brief Defaulted copy-assignment operator.
+		 */
+		constexpr CRTPBase& operator =(const CRTPBase&) noexcept = default;
+
+		/**
+		 * \brief Defaulted move-constructor.
+		 */
+		constexpr CRTPBase(CRTPBase&&) noexcept = default;
+
+		/**
+		 * \brief Defaulted move-assignment operator.
+		 */
+		constexpr CRTPBase& operator =(CRTPBase&&) noexcept = default;
+
+		/**
 		 * \brief Defaulted destructor.
 		 */
 		constexpr ~CRTPBase() noexcept = default;
 
+	public:
 		/**
 		 * \brief Defaulted equality operator.
 		 * \return Returns true, if both operators are equal.
