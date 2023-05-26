@@ -1,6 +1,7 @@
 target_sources(
 	Simple-Utility-Tests
 	PRIVATE
+	"BasicClosure.cpp"
 	"base.cpp"
 	"predicate.cpp"
 	"transform.cpp"
