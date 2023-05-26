@@ -38,6 +38,23 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+	"functional::forward_unwrapped unwraps functionals if stored in a BasicClosure and forwards it.",
+	"[functional]",
+	((bool dummy, class Expected, class Fun), dummy, Expected, Fun),
+	(true, TestFun&, TestFun&),
+	(true, const TestFun&, const TestFun&),
+	(true, TestFun&&, TestFun&&),
+	(true, const TestFun&&, const TestFun&&),
+	(true, const TestFun&, const sf::BasicClosure<TestFun, sf::BasicInvokePolicy>&),
+	(true, TestFun&, sf::BasicClosure<TestFun, sf::BasicInvokePolicy>&),
+	(true, const TestFun&&, const sf::BasicClosure<TestFun, sf::BasicInvokePolicy>&&),
+	(true, TestFun&&, sf::BasicClosure<TestFun, sf::BasicInvokePolicy>&&)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, decltype(sf::forward_unwrapped<Fun>(std::declval<Fun&>()))>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
 	"functional::BasicClosure is invocable in any qualification, regardless the applied InvokePolicy.",
 	"[functional]",
 	((bool dummy, template <class, class> class InvokePolicy), dummy, InvokePolicy),
