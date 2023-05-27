@@ -28,11 +28,9 @@ namespace sl::functional
 		requires (... && operator_policy<OperatorPolicies>)
 	class BasicClosure
 		: public InvokablePolicy<BasicClosure<Fun, InvokablePolicy, OperatorPolicies...>, Fun>,
-		public OperatorPolicies<BasicClosure<Fun, InvokablePolicy, OperatorPolicies...>>...
+		private OperatorPolicies<BasicClosure<Fun, InvokablePolicy, OperatorPolicies...>>...
 	{
 	public:
-		using InvokablePolicy<BasicClosure, Fun>::operator ();
-
 		template <class... Args>
 			requires std::constructible_from<Fun, Args...>
 		constexpr BasicClosure(Args&&... args) noexcept(std::is_nothrow_constructible_v<Fun, Args...>)
@@ -122,11 +120,23 @@ namespace sl::functional
 
 		using Fun = InnerFun;
 
-	public:
+	protected:
 		constexpr BasicInvokePolicy() noexcept
 		{
-			static_assert(std::derived_from<Derived, BasicInvokePolicy>, "Derived doesn't inherit from BasicInvokePolicy.");
+			static_assert(std::is_base_of_v<BasicInvokePolicy, Derived>, "Derived doesn't inherit from BasicInvokePolicy.");
 		}
+
+		[[nodiscard]]
+		constexpr BasicInvokePolicy(const BasicInvokePolicy&) noexcept = default;
+		constexpr BasicInvokePolicy& operator =(const BasicInvokePolicy&) noexcept = default;
+
+		[[nodiscard]]
+		constexpr BasicInvokePolicy(BasicInvokePolicy&&) noexcept = default;
+		constexpr BasicInvokePolicy& operator =(BasicInvokePolicy&&) noexcept = default;
+
+		constexpr ~BasicInvokePolicy() noexcept = default;
+
+	public:
 
 		template <class... Args>
 			requires std::invocable<const Fun&, Args...>
