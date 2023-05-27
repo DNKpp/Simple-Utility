@@ -115,6 +115,24 @@ namespace sl::functional
 	{
 		return static_cast<unwrap_functional_t<Fn>&&>(std::forward<Fn>(fn));
 	}
+
+	template <class T>
+	struct closure_template;
+
+	template <class Fn, template <class, class> class InvokablePolicy, template <class> class... OperatorPolicies>
+	struct closure_template<BasicClosure<Fn, InvokablePolicy, OperatorPolicies...>>
+	{
+		template <class NewFn>
+		using type = BasicClosure<NewFn, InvokablePolicy, OperatorPolicies...>;
+	};
+
+	template <template <class> class Closure, class Fn>
+	constexpr Closure<std::remove_cvref_t<Fn>> enclose_functional(
+		Fn&& fn
+	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Fn>, Fn>)
+	{
+		return Closure<std::remove_cvref_t<Fn>>{std::forward<Fn>(fn)};
+	}
 }
 
 #endif
