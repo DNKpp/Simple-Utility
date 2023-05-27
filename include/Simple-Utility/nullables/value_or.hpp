@@ -8,10 +8,9 @@
 
 #pragma once
 
-#include "Simple-Utility/nullables/base.hpp"
+#include "Simple-Utility/functional/bind_back.hpp"
 #include "Simple-Utility/functional/transform.hpp"
-
-#include "Simple-Utility/bind_back.hpp"
+#include "Simple-Utility/nullables/base.hpp"
 
 namespace sl::nullables::detail
 {
@@ -21,9 +20,9 @@ namespace sl::nullables::detail
 	{
 		if (inputNullable != null_v<TInputNullable>)
 		{
-			return value_t<TInputNullable>{ unwrap(std::forward<TInputNullable>(inputNullable)) };
+			return value_t<TInputNullable>{unwrap(std::forward<TInputNullable>(inputNullable))};
 		}
-		return value_t<TInputNullable>{ std::forward<TAlternative>(alternative) };
+		return value_t<TInputNullable>{std::forward<TAlternative>(alternative)};
 	}
 
 	class value_or_caller_fn
@@ -31,12 +30,11 @@ namespace sl::nullables::detail
 	public:
 		template <input_nullable TInputNullable, std::convertible_to<value_t<TInputNullable>> TAlternative>
 		[[nodiscard]]
-		constexpr value_t<TInputNullable> operator ()
-		(
+		constexpr value_t<TInputNullable> operator ()(
 			TInputNullable&& inputNullable,
 			TAlternative&& alternative
 		) const
-		noexcept(noexcept(value_or(std::declval<TInputNullable>(), std::declval<TAlternative>())))
+			noexcept(noexcept(value_or(std::declval<TInputNullable>(), std::declval<TAlternative>())))
 		{
 			return value_or(
 				std::forward<TInputNullable>(inputNullable),
@@ -77,7 +75,7 @@ namespace sl::nullables
 	[[nodiscard]]
 	constexpr auto value_or(TValue&& value)
 	{
-		return algorithm_fn{ detail::value_or_caller_fn{} } >> std::forward<TValue>(value);
+		return algorithm_fn{detail::value_or_caller_fn{}} >> std::forward<TValue>(value);
 	}
 
 	/**
@@ -91,7 +89,7 @@ namespace sl::nullables
 	[[nodiscard]]
 	constexpr auto value_or_fn(TValue&& value)
 	{
-		return functional::transform_fn{ value_or(std::forward<TValue>(value)) };
+		return functional::transform_fn{value_or(std::forward<TValue>(value))};
 	}
 
 	/** @} */
