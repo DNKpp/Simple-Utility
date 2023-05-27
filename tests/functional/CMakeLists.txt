@@ -12,6 +12,7 @@ target_sources(
 	"compare.cpp"
 	"arithmetic.cpp"
 	"utility.cpp"
+	"mixins/Disjunction.cpp"
 	"mixins/Conjunction.cpp"
 	"mixins/Pipe.cpp"
 )
