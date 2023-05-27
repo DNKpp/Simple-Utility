@@ -211,6 +211,9 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(expected == std::is_nothrow_invocable_v<sf::DisjunctionStrategy, std::tuple<Funs...>, int>);
 }
 
+template <class Fn>
+using Closure = sf::BasicClosure<Fn, sf::BasicInvokePolicy, sf::DisjunctionOperator>;
+
 TEST_CASE(
 	"functional::DisjunctionOperator enables enables || composing for functional::BasicClosure.",
 	"[functional][functional::Disjunction]"
@@ -231,8 +234,8 @@ TEST_CASE(
 			.RETURN(true)
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure<decltype(firstFn), sf::BasicInvokePolicy, sf::DisjunctionOperator> fun{std::move(firstFn)};
-		const sf::Composition composedFun = std::move(fun) || std::move(secondFn);
+		sf::BasicClosure fun = sf::enclose_functional<Closure>(std::move(firstFn));
+		const sf::BasicClosure composedFun = std::move(fun) || std::move(secondFn);
 
 		const bool result = std::invoke(composedFun, 42);
 
@@ -249,8 +252,8 @@ TEST_CASE(
 			.RETURN(true)
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure<decltype(firstFn), sf::BasicInvokePolicy, sf::DisjunctionOperator> fun{std::move(firstFn)};
-		sf::Composition composedFun = std::move(fun) || std::move(secondFn);
+		sf::BasicClosure fun = sf::enclose_functional<Closure>(std::move(firstFn));
+		sf::BasicClosure composedFun = std::move(fun) || std::move(secondFn);
 
 		const bool result = std::invoke(composedFun, 42);
 
@@ -267,8 +270,8 @@ TEST_CASE(
 			.RETURN(true)
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure<decltype(firstFn), sf::BasicInvokePolicy, sf::DisjunctionOperator> fun{std::move(firstFn)};
-		const sf::Composition composedFun = std::move(fun) || std::move(secondFn);
+		sf::BasicClosure fun = sf::enclose_functional<Closure>(std::move(firstFn));
+		const sf::BasicClosure composedFun = std::move(fun) || std::move(secondFn);
 
 		const bool result = std::invoke(std::move(composedFun), 42);
 
@@ -285,8 +288,8 @@ TEST_CASE(
 			.RETURN(true)
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure<decltype(firstFn), sf::BasicInvokePolicy, sf::DisjunctionOperator> fun{std::move(firstFn)};
-		sf::Composition composedFun = std::move(fun) || std::move(secondFn);
+		sf::BasicClosure fun = sf::enclose_functional<Closure>(std::move(firstFn));
+		sf::BasicClosure composedFun = std::move(fun) || std::move(secondFn);
 
 		const bool result = std::invoke(std::move(composedFun), 42);
 
@@ -308,7 +311,7 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	using FirstFun = NoThrowConstructible<lhsNothrowCopyable, lhsNothrowMovable>;
 	using SecondFun = NoThrowConstructible<rhsNothrowCopyable, rhsNothrowMovable>;
-	using LhsClosure = sf::BasicClosure<FirstFun, sf::BasicInvokePolicy, sf::DisjunctionOperator>;
+	using LhsClosure = Closure<FirstFun>;
 
 	STATIC_REQUIRE(
 		(lhsNothrowCopyable && rhsNothrowCopyable)
