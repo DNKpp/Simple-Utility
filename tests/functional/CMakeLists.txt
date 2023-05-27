@@ -3,6 +3,7 @@ target_sources(
 	PRIVATE
 	"BasicClosure.cpp"
 	"bind_back.cpp"
+	"Composition.cpp"
 	"base.cpp"
 	"predicate.cpp"
 	"transform.cpp"
