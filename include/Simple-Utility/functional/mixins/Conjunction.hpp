@@ -49,14 +49,14 @@ namespace sl::functional
 		}
 
 		[[nodiscard]]
-		constexpr ConjunctionOperator(const ConjunctionOperator&) noexcept = default;
-		constexpr ConjunctionOperator& operator =(const ConjunctionOperator&) noexcept = default;
+		ConjunctionOperator(const ConjunctionOperator&) = default;
+		ConjunctionOperator& operator =(const ConjunctionOperator&) = default;
 
 		[[nodiscard]]
-		constexpr ConjunctionOperator(ConjunctionOperator&&) noexcept = default;
-		constexpr ConjunctionOperator& operator =(ConjunctionOperator&&) noexcept = default;
+		ConjunctionOperator(ConjunctionOperator&&) = default;
+		ConjunctionOperator& operator =(ConjunctionOperator&&) = default;
 
-		constexpr ~ConjunctionOperator() noexcept = default;
+		~ConjunctionOperator() = default;
 
 	public:
 		template <class Other>
