@@ -9,11 +9,15 @@
 
 #include "../Helper.hpp"
 
+#include "Simple-Utility/functional/mixins/InvokePolicies.hpp"
+
 namespace sf = sl::functional;
+
+// ReSharper disable CppClangTidyBugproneUseAfterMove
 
 TEMPLATE_TEST_CASE_SIG(
 	"functional::ConjunctionStrategy invokes a single function with the input params.",
-	"[functional][functional::ConjunctionStrategy]",
+	"[functional][functional::Conjunction]",
 	((bool fnResult), fnResult),
 	(true),
 	(false)
@@ -67,10 +71,10 @@ TEMPLATE_TEST_CASE_SIG(
 
 TEMPLATE_TEST_CASE_SIG(
 	"functional::ConjunctionStrategy with two functions invokes all functions with the given arguments.",
-	"[functional][functional::ConjunctionStrategy]",
+	"[functional][functional::Conjunction]",
 	((bool firstResult, bool secondResult), firstResult, secondResult),
 	(true, true),
-	(true, false)/*,
+	(true, false) /*,
 	let this test via a separate test
 	(false, true),
 	(false, false)*/
@@ -124,7 +128,7 @@ TEMPLATE_TEST_CASE_SIG(
 			.RETURN(secondResult)
 			.IN_SEQUENCE(seq);
 
-		const bool result = strategy(std::forward_as_tuple(std::move(std::as_const(first)),std::move(std::as_const(second))), 42);
+		const bool result = strategy(std::forward_as_tuple(std::move(std::as_const(first)), std::move(std::as_const(second))), 42);
 
 		REQUIRE(expected == result);
 	}
@@ -147,7 +151,7 @@ TEMPLATE_TEST_CASE_SIG(
 
 TEST_CASE(
 	"functional::ConjunctionStrategy with multiple functions invokes each function until false was returned.",
-	"[functional][functional::ConjunctionStrategy]"
+	"[functional][functional::Conjunction]"
 )
 {
 	constexpr sf::ConjunctionStrategy strategy{};
@@ -186,4 +190,153 @@ TEST_CASE(
 
 		REQUIRE(!result);
 	}
+}
+
+template <bool isNoexcept>
+struct NoThrowInvokable
+{
+	template <class First>
+	constexpr First operator ()(First&& first, [[maybe_unused]] auto&&...) const noexcept(isNoexcept)
+	{
+		return std::forward<First>(first);
+	}
+};
+
+TEMPLATE_TEST_CASE_SIG(
+	"functional::ConjunctionStrategy propagates noexcept specification.",
+	"[functional][functional::Conjunction]",
+	((bool expected, class... Funs), expected, Funs...),
+	(true, NoThrowInvokable<true>),
+	(true, NoThrowInvokable<true>, NoThrowInvokable<true>),
+	(true, NoThrowInvokable<true>, NoThrowInvokable<true>, NoThrowInvokable<true>),
+	(false, NoThrowInvokable<false>),
+	(false, NoThrowInvokable<false>, NoThrowInvokable<true>),
+	(false, NoThrowInvokable<true>, NoThrowInvokable<false>),
+	(false, NoThrowInvokable<false>, NoThrowInvokable<false>),
+	(false, NoThrowInvokable<false>, NoThrowInvokable<true>, NoThrowInvokable<true>),
+	(false, NoThrowInvokable<true>, NoThrowInvokable<false>, NoThrowInvokable<true>),
+	(false, NoThrowInvokable<true>, NoThrowInvokable<true>, NoThrowInvokable<false>)
+)
+{
+	STATIC_REQUIRE(expected == std::is_nothrow_invocable_v<sf::ConjunctionStrategy, std::tuple<Funs...>, int>);
+}
+
+TEST_CASE(
+	"functional::ConjunctionOperator enables enables && composing for functional::BasicClosure.",
+	"[functional][functional::Conjunction]"
+)
+{
+	GenericOperation1Mock<bool, int> firstFn{};
+	GenericOperation1Mock<bool, int> secondFn{};
+
+	trompeloeil::sequence seq{};
+
+	SECTION("Invoking as const lvalue ref.")
+	{
+		REQUIRE_CALL(firstFn, call_const_lvalue_ref(42))
+		   .RETURN(true)
+		   .IN_SEQUENCE(seq);
+
+		REQUIRE_CALL(secondFn, call_const_lvalue_ref(42))
+			.RETURN(false)
+			.IN_SEQUENCE(seq);
+
+		sf::BasicClosure<decltype(firstFn), sf::BasicInvokePolicy, sf::ConjunctionOperator> fun{std::move(firstFn)};
+		const sf::Composition composedFun = std::move(fun) && std::move(secondFn);
+
+		const bool result = std::invoke(composedFun, 42);
+
+		REQUIRE(!result);
+	}
+
+	SECTION("Invoking as lvalue ref.")
+	{
+		REQUIRE_CALL(firstFn, call_lvalue_ref(42))
+			.RETURN(true)
+			.IN_SEQUENCE(seq);
+
+		REQUIRE_CALL(secondFn, call_lvalue_ref(42))
+			.RETURN(false)
+			.IN_SEQUENCE(seq);
+
+		sf::BasicClosure<decltype(firstFn), sf::BasicInvokePolicy, sf::ConjunctionOperator> fun{std::move(firstFn)};
+		sf::Composition composedFun = std::move(fun) && std::move(secondFn);
+
+		const bool result = std::invoke(composedFun, 42);
+
+		REQUIRE(!result);
+	}
+
+	SECTION("Invoking as const rvalue ref.")
+	{
+		REQUIRE_CALL(firstFn, call_const_rvalue_ref(42))
+			.RETURN(true)
+			.IN_SEQUENCE(seq);
+
+		REQUIRE_CALL(secondFn, call_const_rvalue_ref(42))
+			.RETURN(false)
+			.IN_SEQUENCE(seq);
+
+		sf::BasicClosure<decltype(firstFn), sf::BasicInvokePolicy, sf::ConjunctionOperator> fun{std::move(firstFn)};
+		const sf::Composition composedFun = std::move(fun) && std::move(secondFn);
+
+		const bool result = std::invoke(std::move(composedFun), 42);
+
+		REQUIRE(!result);
+	}
+
+	SECTION("Invoking as rvalue ref.")
+	{
+		REQUIRE_CALL(firstFn, call_rvalue_ref(42))
+			.RETURN(true)
+			.IN_SEQUENCE(seq);
+
+		REQUIRE_CALL(secondFn, call_rvalue_ref(42))
+			.RETURN(false)
+			.IN_SEQUENCE(seq);
+
+		sf::BasicClosure<decltype(firstFn), sf::BasicInvokePolicy, sf::ConjunctionOperator> fun{std::move(firstFn)};
+		sf::Composition composedFun = std::move(fun) && std::move(secondFn);
+
+		const bool result = std::invoke(std::move(composedFun), 42);
+
+		REQUIRE(!result);
+	}
+}
+
+template <bool isNoexceptCopyable, bool isNoexceptMovable>
+struct NoThrowConstructible
+{
+	constexpr NoThrowConstructible() = default;
+
+	constexpr NoThrowConstructible(const NoThrowConstructible&) noexcept(isNoexceptCopyable) = default;
+	constexpr NoThrowConstructible& operator =(const NoThrowConstructible&) noexcept(isNoexceptCopyable) = default;
+
+	constexpr NoThrowConstructible(NoThrowConstructible&&) noexcept(isNoexceptMovable) = default;
+	constexpr NoThrowConstructible& operator =(NoThrowConstructible&&) noexcept(isNoexceptMovable) = default;
+};
+
+TEMPLATE_TEST_CASE_SIG(
+	"functional::ConjunctionOperator propagates noexcept specification during composing.",
+	"[functional][functional::Conjunction]",
+	((bool lhsNothrowCopyable, bool lhsNothrowMovable, bool rhsNothrowCopyable, bool rhsNothrowMovable),
+		lhsNothrowCopyable, lhsNothrowMovable, rhsNothrowCopyable, rhsNothrowMovable),
+	(true, true, true, true),
+	(false, true, true, true),
+	(true, true, false, true),
+	(true, false, true, true),
+	(true, true, true, false)
+)
+{
+	using FirstFun = NoThrowConstructible<lhsNothrowCopyable, lhsNothrowMovable>;
+	using SecondFun = NoThrowConstructible<rhsNothrowCopyable, rhsNothrowMovable>;
+	using LhsClosure = sf::BasicClosure<FirstFun, sf::BasicInvokePolicy, sf::ConjunctionOperator>;
+
+	STATIC_REQUIRE(
+		(lhsNothrowCopyable && rhsNothrowCopyable) == noexcept(std::declval<const LhsClosure&>() && std::declval<const SecondFun&>()));
+	STATIC_REQUIRE(
+		(lhsNothrowCopyable && rhsNothrowMovable) == noexcept(std::declval<const LhsClosure&>() && std::declval<SecondFun&&>()));
+	STATIC_REQUIRE(
+		(lhsNothrowMovable && rhsNothrowCopyable) == noexcept(std::declval<LhsClosure&&>() && std::declval<const SecondFun&>()));
+	STATIC_REQUIRE((lhsNothrowMovable && rhsNothrowMovable) == noexcept(std::declval<LhsClosure&&>() && std::declval<SecondFun&&>()));
 }
