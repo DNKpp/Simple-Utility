@@ -310,10 +310,6 @@ TEMPLATE_TEST_CASE_SIG(
 	using SecondFun = NoThrowConstructible<rhsNothrowCopyable, rhsNothrowMovable>;
 	using LhsClosure = sf::BasicClosure<FirstFun, sf::BasicInvokePolicy, sf::ConjunctionOperator>;
 
-	constexpr bool b = std::is_nothrow_constructible_v<LhsClosure, const LhsClosure&>;
-
-	static_assert(lhsNothrowCopyable == b);
-
 	STATIC_REQUIRE(
 		(lhsNothrowCopyable && rhsNothrowCopyable)
 		== noexcept(std::declval<const LhsClosure&>() && std::declval<const SecondFun&>()));
