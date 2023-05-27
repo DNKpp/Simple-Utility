@@ -19,7 +19,7 @@
 namespace sl::functional::detail
 {
 	template <class Fn, class BoundArgsTuple, class... CallArgs>
-	decltype(auto) call_bind_back(Fn&& func, BoundArgsTuple&& boundArgsTuple, CallArgs&&... callArgs)
+	constexpr decltype(auto) call_bind_back(Fn&& func, BoundArgsTuple&& boundArgsTuple, CallArgs&&... callArgs)
 	{
 		return std::apply(
 			[&]<class... TArgs>(TArgs&&... boundArgs) -> decltype(auto)
@@ -38,7 +38,7 @@ namespace sl::functional::detail
 	public:
 		template <class FnCTorArg, class... CTorArgs>
 			requires (sizeof...(CTorArgs) != 0 && !std::derived_from<std::remove_cvref_t<FnCTorArg>, BindBack>)
-		explicit BindBack(FnCTorArg&& fn, CTorArgs&&... ctorArgs)
+		explicit constexpr BindBack(FnCTorArg&& fn, CTorArgs&&... ctorArgs)
 			: m_Fn{std::forward<FnCTorArg>(fn)},
 			m_BoundArgs{std::forward<CTorArgs>(ctorArgs)...}
 		{
@@ -46,7 +46,7 @@ namespace sl::functional::detail
 
 		template <class... CallArgs>
 			requires std::invocable<const Fn&, CallArgs..., const BoundArgs&...>
-		decltype(auto) operator()(
+		constexpr decltype(auto) operator()(
 			CallArgs&&... callArgs
 		) const & noexcept(std::is_nothrow_invocable_v<const Fn&, CallArgs..., const BoundArgs&...>)
 		{
@@ -55,7 +55,7 @@ namespace sl::functional::detail
 
 		template <class... CallArgs>
 			requires std::invocable<Fn&, CallArgs..., BoundArgs&...>
-		decltype(auto) operator()(
+		constexpr decltype(auto) operator()(
 			CallArgs&&... callArgs
 		) & noexcept(std::is_nothrow_invocable_v<Fn&, CallArgs..., BoundArgs&...>)
 		{
@@ -64,7 +64,7 @@ namespace sl::functional::detail
 
 		template <class... CallArgs>
 			requires std::invocable<const Fn&&, CallArgs..., const BoundArgs&&...>
-		decltype(auto) operator()(
+		constexpr decltype(auto) operator()(
 			CallArgs&&... callArgs
 		) const && noexcept(std::is_nothrow_invocable_v<const Fn&&, CallArgs..., const BoundArgs&&...>)
 		{
@@ -73,7 +73,7 @@ namespace sl::functional::detail
 
 		template <class... CallArgs>
 			requires std::invocable<Fn&&, CallArgs..., BoundArgs&&...>
-		decltype(auto) operator()(
+		constexpr decltype(auto) operator()(
 			CallArgs&&... callArgs
 		) && noexcept(std::is_nothrow_invocable_v<Fn&&, CallArgs..., BoundArgs&&...>)
 		{
