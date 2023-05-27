@@ -7,7 +7,6 @@ add_executable(
 	Simple-Utility-Tests
 	"Config.cpp"
 	"CRTPBase.cpp"
-	"bind_back.cpp"
 	"helper.cpp"
 	"math.cpp"
 	"unique_handle.cpp"
