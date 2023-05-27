@@ -105,3 +105,54 @@ TEMPLATE_TEST_CASE_SIG(
 		REQUIRE(1337 == std::move(closure)(42));
 	}
 }
+
+template <template <class, class> class InvokablePolicy, template <class> class... OperatorPolicies>
+struct TemplatedClosure
+{
+	template <class Fn>
+	using type = sf::BasicClosure<Fn, InvokablePolicy, OperatorPolicies...>;
+};
+
+template <class>
+struct TestPolicy
+{
+};
+
+TEMPLATE_TEST_CASE_SIG(
+	"functional::closure_template yields the given closure template.",
+	"[functional]",
+	((bool dummy, template <class> class Closure), dummy, Closure),
+	(true, TemplatedClosure<sf::BasicInvokePolicy>::type),
+	(true, (TemplatedClosure<sf::BasicInvokePolicy, TestPolicy>::type))
+)
+{
+	using Fn = Closure<TestFun>;
+
+	STATIC_REQUIRE(std::same_as<Fn, typename sf::closure_template<Fn>::template type<TestFun>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"functional::enclose_functional wraps the given functional in the provided closure.",
+	"[functional]",
+	((bool dummy, template <class> class Closure), dummy, Closure),
+	(true, TemplatedClosure<sf::BasicInvokePolicy>::type),
+	(true, (TemplatedClosure<sf::BasicInvokePolicy, TestPolicy>::type))
+)
+{
+	TestFun fn{};
+
+	SECTION("Copy fn.")
+	{
+		auto enclosed = sf::enclose_functional<Closure>(fn);
+
+		STATIC_REQUIRE(std::same_as<Closure<TestFun>, decltype(enclosed)>);
+	}
+
+	SECTION("Move fn.")
+	{
+		auto enclosed = sf::enclose_functional<Closure>(std::move(fn));
+
+		STATIC_REQUIRE(std::same_as<Closure<TestFun>, decltype(enclosed)>);
+	}
+
+}
