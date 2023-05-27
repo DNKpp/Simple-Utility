@@ -77,11 +77,23 @@ struct NoThrowConstructible
 {
 	constexpr NoThrowConstructible() = default;
 
-	constexpr NoThrowConstructible(const NoThrowConstructible&) noexcept(isNoexceptCopyable) = default;
-	constexpr NoThrowConstructible& operator =(const NoThrowConstructible&) noexcept(isNoexceptCopyable) = default;
+	constexpr NoThrowConstructible(const NoThrowConstructible&) noexcept(isNoexceptCopyable)
+	{
+	}
 
-	constexpr NoThrowConstructible(NoThrowConstructible&&) noexcept(isNoexceptMovable) = default;
-	constexpr NoThrowConstructible& operator =(NoThrowConstructible&&) noexcept(isNoexceptMovable) = default;
+	constexpr NoThrowConstructible& operator =(const NoThrowConstructible&) noexcept(isNoexceptCopyable)
+	{
+		return *this;
+	}
+
+	constexpr NoThrowConstructible(NoThrowConstructible&&) noexcept(isNoexceptMovable)
+	{
+	}
+
+	constexpr NoThrowConstructible& operator =(NoThrowConstructible&&) noexcept(isNoexceptMovable)
+	{
+		return *this;
+	}
 };
 
 
