@@ -127,7 +127,7 @@ namespace sl::functional
 	};
 
 	template <template <class> class Closure, class Fn>
-	constexpr Closure<std::remove_cvref_t<Fn>> enclose_functional(
+	constexpr Closure<std::remove_cvref_t<Fn>> envelop(
 		Fn&& fn
 	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Fn>, Fn>)
 	{

@@ -56,14 +56,14 @@ namespace sl::functional
 		[[nodiscard]]
 		constexpr auto operator !() const & noexcept(std::is_nothrow_copy_constructible_v<Derived>)
 		{
-			return enclose_functional<closure_template<Derived>::template type>(
+			return envelop<closure_template<Derived>::template type>(
 				std::not_fn(derived()));
 		}
 
 		[[nodiscard]]
 		constexpr auto operator !() && noexcept(std::is_nothrow_move_constructible_v<Derived>)
 		{
-			return enclose_functional<closure_template<Derived>::template type>(
+			return envelop<closure_template<Derived>::template type>(
 				std::not_fn(std::move(derived())));
 		}
 	};
