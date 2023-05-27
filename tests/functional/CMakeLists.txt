@@ -14,5 +14,6 @@ target_sources(
 	"utility.cpp"
 	"mixins/Disjunction.cpp"
 	"mixins/Conjunction.cpp"
+	"mixins/Negation.cpp"
 	"mixins/Pipe.cpp"
 )
