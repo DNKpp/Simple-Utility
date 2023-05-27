@@ -67,7 +67,7 @@ namespace sl::functional
 			Other&& other
 		) noexcept(noexcept(make_composition<DisjunctionStrategy>(first, std::declval<Other>())))
 		{
-			return enclose_functional<closure_template<Derived>::template type>(
+			return envelop<closure_template<Derived>::template type>(
 				make_composition<DisjunctionStrategy>(first, std::forward<Other>(other)));
 		}
 
@@ -79,7 +79,7 @@ namespace sl::functional
 			Other&& other
 		) noexcept(noexcept(make_composition<DisjunctionStrategy>(std::move(first), std::declval<Other>())))
 		{
-			return enclose_functional<closure_template<Derived>::template type>(
+			return envelop<closure_template<Derived>::template type>(
 				make_composition<DisjunctionStrategy>(std::move(first), std::forward<Other>(other)));
 		}
 	};

@@ -85,7 +85,7 @@ TEMPLATE_TEST_CASE_SIG(
 		REQUIRE_CALL(func, call_const_lvalue_ref(arg))
 			.RETURN(expected);
 
-		sf::BasicClosure closure = sf::enclose_functional<Closure::template type>(std::move(func));
+		sf::BasicClosure closure = sf::envelop<Closure::template type>(std::move(func));
 
 		REQUIRE(expected == std::invoke(std::as_const(closure), arg));
 	}
@@ -95,7 +95,7 @@ TEMPLATE_TEST_CASE_SIG(
 		REQUIRE_CALL(func, call_lvalue_ref(arg))
 			.RETURN(expected);
 
-		sf::BasicClosure closure = sf::enclose_functional<Closure::template type>(std::move(func));
+		sf::BasicClosure closure = sf::envelop<Closure::template type>(std::move(func));
 
 		REQUIRE(expected == std::invoke(closure, arg));
 	}
@@ -105,7 +105,7 @@ TEMPLATE_TEST_CASE_SIG(
 		REQUIRE_CALL(func, call_const_rvalue_ref(arg))
 			.RETURN(expected);
 
-		sf::BasicClosure closure = sf::enclose_functional<Closure::template type>(std::move(func));
+		sf::BasicClosure closure = sf::envelop<Closure::template type>(std::move(func));
 
 		REQUIRE(expected == std::invoke(std::move(std::as_const(closure)), arg));
 	}
@@ -115,7 +115,7 @@ TEMPLATE_TEST_CASE_SIG(
 		REQUIRE_CALL(func, call_rvalue_ref(arg))
 			.RETURN(expected);
 
-		sf::BasicClosure closure = sf::enclose_functional<Closure::template type>(std::move(func));
+		sf::BasicClosure closure = sf::envelop<Closure::template type>(std::move(func));
 
 		REQUIRE(expected == std::invoke(std::move(closure), arg));
 	}
@@ -135,7 +135,7 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"functional::enclose_functional wraps the given functional in the provided closure.",
+	"functional::envelop wraps the given functional in the provided closure.",
 	"[functional]",
 	((bool dummy, template <class> class Closure), dummy, Closure),
 	(true, TemplatedClosure<sf::BasicInvokePolicy>::type),
@@ -146,14 +146,14 @@ TEMPLATE_TEST_CASE_SIG(
 
 	SECTION("Copy fn.")
 	{
-		auto enclosed = sf::enclose_functional<Closure>(fn);
+		auto enclosed = sf::envelop<Closure>(fn);
 
 		STATIC_REQUIRE(std::same_as<Closure<TestFun>, decltype(enclosed)>);
 	}
 
 	SECTION("Move fn.")
 	{
-		auto enclosed = sf::enclose_functional<Closure>(std::move(fn));
+		auto enclosed = sf::envelop<Closure>(std::move(fn));
 
 		STATIC_REQUIRE(std::same_as<Closure<TestFun>, decltype(enclosed)>);
 	}
