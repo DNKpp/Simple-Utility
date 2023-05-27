@@ -234,7 +234,7 @@ TEST_CASE(
 			.RETURN(true)
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure fun = sf::enclose_functional<Closure>(std::move(firstFn));
+		sf::BasicClosure fun = sf::envelop<Closure>(std::move(firstFn));
 		const sf::BasicClosure composedFun = std::move(fun) || std::move(secondFn);
 
 		const bool result = std::invoke(composedFun, 42);
@@ -252,7 +252,7 @@ TEST_CASE(
 			.RETURN(true)
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure fun = sf::enclose_functional<Closure>(std::move(firstFn));
+		sf::BasicClosure fun = sf::envelop<Closure>(std::move(firstFn));
 		sf::BasicClosure composedFun = std::move(fun) || std::move(secondFn);
 
 		const bool result = std::invoke(composedFun, 42);
@@ -270,7 +270,7 @@ TEST_CASE(
 			.RETURN(true)
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure fun = sf::enclose_functional<Closure>(std::move(firstFn));
+		sf::BasicClosure fun = sf::envelop<Closure>(std::move(firstFn));
 		const sf::BasicClosure composedFun = std::move(fun) || std::move(secondFn);
 
 		const bool result = std::invoke(std::move(composedFun), 42);
@@ -288,7 +288,7 @@ TEST_CASE(
 			.RETURN(true)
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure fun = sf::enclose_functional<Closure>(std::move(firstFn));
+		sf::BasicClosure fun = sf::envelop<Closure>(std::move(firstFn));
 		sf::BasicClosure composedFun = std::move(fun) || std::move(secondFn);
 
 		const bool result = std::invoke(std::move(composedFun), 42);
