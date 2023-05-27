@@ -67,7 +67,8 @@ namespace sl::functional
 			Other&& other
 		) noexcept(noexcept(make_composition<ConjunctionStrategy>(first, std::declval<Other>())))
 		{
-			return make_composition<ConjunctionStrategy>(first, std::forward<Other>(other));
+			return enclose_functional<closure_template<Derived>::type>(
+				make_composition<ConjunctionStrategy>(first, std::forward<Other>(other)));
 		}
 
 		template <class Other>
@@ -78,7 +79,8 @@ namespace sl::functional
 			Other&& other
 		) noexcept(noexcept(make_composition<ConjunctionStrategy>(std::move(first), std::declval<Other>())))
 		{
-			return make_composition<ConjunctionStrategy>(std::move(first), std::forward<Other>(other));
+			return enclose_functional<closure_template<Derived>::type>(
+				make_composition<ConjunctionStrategy>(std::move(first), std::forward<Other>(other)));
 		}
 	};
 }
