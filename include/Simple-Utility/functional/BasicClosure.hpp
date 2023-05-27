@@ -28,15 +28,29 @@ namespace sl::functional
 		requires (... && operator_policy<OperatorPolicies>)
 	class BasicClosure
 		: public InvokablePolicy<BasicClosure<Fun, InvokablePolicy, OperatorPolicies...>, Fun>,
-		private OperatorPolicies<BasicClosure<Fun, InvokablePolicy, OperatorPolicies...>>...
+		public OperatorPolicies<BasicClosure<Fun, InvokablePolicy, OperatorPolicies...>>...
 	{
 	public:
 		template <class... Args>
 			requires std::constructible_from<Fun, Args...>
-		constexpr BasicClosure(Args&&... args) noexcept(std::is_nothrow_constructible_v<Fun, Args...>)
+		explicit constexpr BasicClosure(Args&&... args) noexcept(std::is_nothrow_constructible_v<Fun, Args...>)
 			: m_Fun{std::forward<Args>(args)...}
 		{
 		}
+
+		BasicClosure(const BasicClosure&)
+			requires std::copy_constructible<Fun> = default;
+
+		BasicClosure& operator =(const BasicClosure&)
+			requires std::is_copy_assignable_v<Fun> = default;
+
+		BasicClosure(BasicClosure&&)
+			requires std::move_constructible<Fun> = default;
+
+		BasicClosure& operator =(BasicClosure&&)
+			requires std::is_move_assignable_v<Fun> = default;
+
+		~BasicClosure() = default;
 
 		explicit constexpr operator const Fun&() const & noexcept
 		{
