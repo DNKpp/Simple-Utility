@@ -13,6 +13,10 @@
 #include "Simple-Utility/functional/operators/bind.hpp"
 #include "Simple-Utility/functional/operators/pipe.hpp"
 
+#include "Simple-Utility/functional/BasicClosure.hpp"
+#include "Simple-Utility/functional/mixins/InvokePolicies.hpp"
+#include "Simple-Utility/functional/mixins/Pipe.hpp"
+
 namespace sl::functional
 {
 	/**
@@ -74,6 +78,9 @@ namespace sl::functional
 	 */
 	template <class TFunc>
 	transform_fn(TFunc) -> transform_fn<TFunc>;
+
+	template <function Fn>
+	using Transform = BasicClosure<Fn, NodiscardInvokePolicy, PipeOperator>;
 
 	/** @} */
 }
