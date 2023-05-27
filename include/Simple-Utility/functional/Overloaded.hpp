@@ -16,23 +16,23 @@ namespace sl::functional
 	/**
 	 * \brief Helper invocable type which can hold an arbitrary amount of functions,
 	 * from which the best match will be selected during invocation.
-	 * \tparam TFunctions The function types.
+	 * \tparam Fns The function types.
 	 *
 	 * \note All parameter sets must be distinguishable from each other.
 	 */
-	template <class... TFunctions>
-	struct overloaded
-		: public TFunctions...
+	template <class... Fns>
+	struct Overloaded
+		: public Fns...
 	{
-		using TFunctions::operator()...;
+		using Fns::operator()...;
 	};
 
 	/**
 	 * \brief Deduction guide of overloaded type.
-	 * \tparam TFunctions The function types.
+	 * \tparam Fns The function types.
 	 */
-	template <class... TFunctions>
-	overloaded(TFunctions...) -> overloaded<TFunctions...>;
+	template <class... Fns>
+	Overloaded(Fns...) -> Overloaded<Fns...>;
 
 	/** @} */
 }
