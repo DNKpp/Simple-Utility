@@ -8,7 +8,7 @@
 
 #include "../helper.hpp"
 
-#include "Simple-Utility/functional/overloaded.hpp"
+#include "Simple-Utility/functional/Overloaded.hpp"
 
 #include <functional>
 #include <variant>
@@ -16,21 +16,21 @@
 using namespace sl::functional;
 
 TEMPLATE_LIST_TEST_CASE(
-	"overloaded bound to arbitrary reference can be invoke.",
-	"[functional][overloaded]",
+	"Overloaded bound to arbitrary reference can be invoke.",
+	"[functional][Overloaded]",
 	all_ref_mods_list
 )
 {
 	const int value = GENERATE(42, 1337);
 
-	overloaded func{std::identity{}};
+	Overloaded func{std::identity{}};
 
 	const auto result = std::invoke(TestType::cast(func), value);
 
 	REQUIRE(result == value);
 }
 
-TEST_CASE("overloaded invokes correct overload.", "[functional][overloaded]")
+TEST_CASE("Overloaded invokes correct overload.", "[functional][Overloaded]")
 {
 	const auto& value = GENERATE(as<std::variant<int, std::string>>{}, 42, "Hello, World!");
 
@@ -38,7 +38,7 @@ TEST_CASE("overloaded invokes correct overload.", "[functional][overloaded]")
 	const auto stringOverload = [&]([[maybe_unused]] const std::string&) { return std::holds_alternative<std::string>(value); };
 
 	const bool result = std::visit(
-		overloaded{
+		Overloaded{
 			intOverload,
 			stringOverload
 		},
