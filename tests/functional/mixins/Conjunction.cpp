@@ -192,16 +192,6 @@ TEST_CASE(
 	}
 }
 
-template <bool isNoexcept>
-struct NoThrowInvokable
-{
-	template <class First>
-	constexpr First operator ()(First&& first, [[maybe_unused]] auto&&...) const noexcept(isNoexcept)
-	{
-		return std::forward<First>(first);
-	}
-};
-
 TEMPLATE_TEST_CASE_SIG(
 	"functional::ConjunctionStrategy propagates noexcept specification.",
 	"[functional][functional::Conjunction]",
@@ -303,18 +293,6 @@ TEST_CASE(
 		REQUIRE(!result);
 	}
 }
-
-template <bool isNoexceptCopyable, bool isNoexceptMovable>
-struct NoThrowConstructible
-{
-	constexpr NoThrowConstructible() = default;
-
-	constexpr NoThrowConstructible(const NoThrowConstructible&) noexcept(isNoexceptCopyable) = default;
-	constexpr NoThrowConstructible& operator =(const NoThrowConstructible&) noexcept(isNoexceptCopyable) = default;
-
-	constexpr NoThrowConstructible(NoThrowConstructible&&) noexcept(isNoexceptMovable) = default;
-	constexpr NoThrowConstructible& operator =(NoThrowConstructible&&) noexcept(isNoexceptMovable) = default;
-};
 
 TEMPLATE_TEST_CASE_SIG(
 	"functional::ConjunctionOperator propagates noexcept specification during composing.",
