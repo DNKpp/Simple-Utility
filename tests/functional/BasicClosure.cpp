@@ -10,6 +10,8 @@
 #include "Helper.hpp"
 #include "../helper.hpp"
 
+#include "Simple-Utility/functional/mixins/InvokePolicies.hpp"
+
 namespace sf = sl::functional;
 
 struct TestFun
