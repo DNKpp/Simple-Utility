@@ -11,4 +11,5 @@ target_sources(
 	"compare.cpp"
 	"arithmetic.cpp"
 	"utility.cpp"
+	"mixins/Pipe.cpp"
 )
