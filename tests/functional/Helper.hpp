@@ -62,5 +62,27 @@ public:
 	MAKE_CONST_MOCK2(call_const_rvalue_ref, Ret(Param1, Param2));
 };
 
+template <bool isNoexcept>
+struct NoThrowInvokable
+{
+	template <class First>
+	constexpr First operator ()(First&& first, [[maybe_unused]] auto&&...) const noexcept(isNoexcept)
+	{
+		return std::forward<First>(first);
+	}
+};
+
+template <bool isNoexceptCopyable, bool isNoexceptMovable>
+struct NoThrowConstructible
+{
+	constexpr NoThrowConstructible() = default;
+
+	constexpr NoThrowConstructible(const NoThrowConstructible&) noexcept(isNoexceptCopyable) = default;
+	constexpr NoThrowConstructible& operator =(const NoThrowConstructible&) noexcept(isNoexceptCopyable) = default;
+
+	constexpr NoThrowConstructible(NoThrowConstructible&&) noexcept(isNoexceptMovable) = default;
+	constexpr NoThrowConstructible& operator =(NoThrowConstructible&&) noexcept(isNoexceptMovable) = default;
+};
+
 
 #endif
