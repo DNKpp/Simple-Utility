@@ -7,7 +7,7 @@
 
 #include <optional>
 
-#include "Simple-Utility/functional/utility.hpp"
+#include "Simple-Utility/functional/Utility.hpp"
 
 using namespace sl::functional;
 

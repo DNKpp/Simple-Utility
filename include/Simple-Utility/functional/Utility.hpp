@@ -26,42 +26,39 @@ namespace sl::functional::util
 
 	/**
 	 * \brief Functional object which converts the given argument to the target type via static_cast.
-	 * \tparam TTo The target type.
+	 * \tparam To The target type.
 	 */
-	template <class TTo>
-	inline constexpr transform_fn as{
-		[]<class TFrom>(TFrom&& arg) constexpr noexcept(concepts::nothrow_explicitly_convertible_to<TFrom, TTo>) -> TTo
+	template <class To>
+	inline constexpr auto as = envelop<Transform>(
+		[]<class From>(From&& arg) constexpr noexcept(concepts::nothrow_explicitly_convertible_to<From, To>) -> To
 		{
-			static_assert(concepts::explicitly_convertible_to<TFrom, TTo>, "Argument is not convertible to target type.");
+			static_assert(concepts::explicitly_convertible_to<From, To>, "Argument is not convertible to target type.");
 
-			return static_cast<TTo>(std::forward<TFrom>(arg));
-		}
-	};
+			return static_cast<To>(std::forward<From>(arg));
+		});
 
 	/**
 	 * \brief Functional object which dereferences the given argument and returns the result.
 	 */
-	inline constexpr transform_fn dereference{
-		[]<class T>(T&& arg) constexpr noexcept(noexcept(*std::forward<T>(arg))) -> decltype(auto)
+	inline constexpr auto dereference = envelop<Transform>(
+		[]<class T>(T&& arg) constexpr noexcept(noexcept(*std::declval<T>())) -> decltype(auto)
 		{
 			static_assert(concepts::dereferencable<T>, "Argument is not usable as operand of unary operator *.");
 
 			return *std::forward<T>(arg);
-		}
-	};
+		});
 
 	/**
 	 * \brief Functional object which returns the address of the given argument.
 	 * \see https://en.cppreference.com/w/cpp/memory/addressof
 	 */
-	inline constexpr transform_fn addressof{
+	inline constexpr auto addressof = envelop<Transform>(
 		[](auto& arg) constexpr noexcept
 		{
 			static_assert(requires { std::addressof(arg); }, "Argument is not usable for std::addressof.");
 
 			return std::addressof(arg);
-		}
-	};
+		});
 
 	/** @} */
 }

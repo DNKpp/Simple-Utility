@@ -11,7 +11,7 @@ target_sources(
 	"Overloaded.cpp"
 	"compare.cpp"
 	"arithmetic.cpp"
-	"utility.cpp"
+	"Utility.cpp"
 	"mixins/Disjunction.cpp"
 	"mixins/Conjunction.cpp"
 	"mixins/Negation.cpp"
