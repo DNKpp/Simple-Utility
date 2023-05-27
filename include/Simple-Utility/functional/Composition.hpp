@@ -16,7 +16,7 @@
 #include "Simple-Utility/TypeList.hpp"
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/functional/BasicClosure.hpp"
-#include "Simple-Utility/functional/overloaded.hpp"
+#include "Simple-Utility/functional/Overloaded.hpp"
 
 namespace sl::functional
 {
@@ -150,7 +150,7 @@ namespace sl::functional
 				&& std::is_nothrow_constructible_v<std::remove_cvref_t<SecondFn>, SecondFn>
 				&& (... && std::is_nothrow_constructible_v<std::remove_cvref_t<OtherFns>, OtherFns>))
 	{
-		constexpr auto as_tuple = overloaded{
+		constexpr auto as_tuple = Overloaded{
 			[]<class T>(T&& fn)
 				requires is_composition_v<std::remove_cvref_t<T>>
 						&& std::same_as<CompositionStrategy, typename std::remove_cvref_t<T>::CompositionStrategy>
