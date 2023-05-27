@@ -72,14 +72,14 @@ namespace sl::functional
 		}
 
 		[[nodiscard]]
-		constexpr PipeOperator(const PipeOperator&) noexcept = default;
-		constexpr PipeOperator& operator =(const PipeOperator&) noexcept = default;
+		PipeOperator(const PipeOperator&) = default;
+		PipeOperator& operator =(const PipeOperator&) = default;
 
 		[[nodiscard]]
-		constexpr PipeOperator(PipeOperator&&) noexcept = default;
-		constexpr PipeOperator& operator =(PipeOperator&&) noexcept = default;
+		PipeOperator(PipeOperator&&) = default;
+		PipeOperator& operator =(PipeOperator&&) = default;
 
-		constexpr ~PipeOperator() noexcept = default;
+		~PipeOperator() = default;
 
 	public:
 		template <class Other>
