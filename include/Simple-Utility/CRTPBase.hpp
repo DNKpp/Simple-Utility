@@ -26,7 +26,7 @@ namespace sl
 		 * \return A const lvalue reference.
 		 */
 		[[nodiscard]]
-		constexpr const Derived& cast() const & noexcept
+		constexpr const Derived& derived() const noexcept
 		{
 			return static_cast<const Derived&>(*this);
 		}
@@ -36,29 +36,9 @@ namespace sl
 		 * \return A lvalue reference.
 		 */
 		[[nodiscard]]
-		constexpr Derived& cast() & noexcept
+		constexpr Derived& derived() noexcept
 		{
 			return static_cast<Derived&>(*this);
-		}
-
-		/**
-		 * \brief Up-casts the this pointer to a const rvalue reference to ``Derived``.
-		 * \return A const rvalue reference.
-		 */
-		[[nodiscard]]
-		constexpr const Derived&& cast() const && noexcept
-		{
-			return static_cast<const Derived&&>(*this);
-		}
-
-		/**
-		 * \brief Up-casts the this pointer to a rvalue reference to ``Derived``.
-		 * \return A rvalue reference.
-		 */
-		[[nodiscard]]
-		constexpr Derived&& cast() && noexcept
-		{
-			return static_cast<Derived&&>(*this);
 		}
 
 		/**
@@ -66,35 +46,34 @@ namespace sl
 		 */
 		constexpr CRTPBase() noexcept
 		{
-			static_assert(std::derived_from<Derived, CRTPBase>, "Derived doesn't inherit from CRTPBase.");
+			static_assert(std::is_base_of_v<CRTPBase, Derived>, "Derived doesn't inherit from CRTPBase.");
 		}
 
 		/**
 		 * \brief Defaulted copy-constructor.
 		 */
-		constexpr CRTPBase(const CRTPBase&) noexcept = default;
+		CRTPBase(const CRTPBase&) = default;
 
 		/**
 		 * \brief Defaulted copy-assignment operator.
 		 */
-		constexpr CRTPBase& operator =(const CRTPBase&) noexcept = default;
+		CRTPBase& operator =(const CRTPBase&) = default;
 
 		/**
 		 * \brief Defaulted move-constructor.
 		 */
-		constexpr CRTPBase(CRTPBase&&) noexcept = default;
+		CRTPBase(CRTPBase&&) = default;
 
 		/**
 		 * \brief Defaulted move-assignment operator.
 		 */
-		constexpr CRTPBase& operator =(CRTPBase&&) noexcept = default;
+		CRTPBase& operator =(CRTPBase&&) = default;
 
 		/**
 		 * \brief Defaulted destructor.
 		 */
-		constexpr ~CRTPBase() noexcept = default;
+		~CRTPBase() = default;
 
-	public:
 		/**
 		 * \brief Defaulted equality operator.
 		 * \return Returns true, if both operators are equal.
