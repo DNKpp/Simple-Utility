@@ -30,21 +30,21 @@ struct explicitly_constructible
 
 TEMPLATE_TEST_CASE_SIG(
 	"as casts the given argument when invoked.",
-	"[functional][transform][utility]",
-	((class TTarget, auto VSource, auto VExpected), TTarget, VSource, VExpected),
+	"[functional][functional::utility]",
+	((class Target, auto source, auto Expected), Target, source, Expected),
 	(int, 42ul, 42),
 	(char, 42, '*'),
 	(std::optional<int>, 3, 3),
 	(explicitly_constructible<int>, 1337, 1337)
 )
 {
-	STATIC_REQUIRE(std::same_as<TTarget, decltype(util::as<TTarget>(VSource))>);
-	REQUIRE(util::as<TTarget>(VSource) == VExpected);
+	STATIC_REQUIRE(std::same_as<Target, decltype(util::as<Target>(source))>);
+	REQUIRE(Expected == util::as<Target>(source));
 }
 
 TEST_CASE(
 	"util::dereference uses the dereferencing operator on the argument and returns the result.",
-	"[functional][transform][utility]"
+	"[functional][functional::utility]"
 )
 {
 	std::optional<int> opt{42};
@@ -54,7 +54,7 @@ TEST_CASE(
 	REQUIRE(util::dereference(std::move(opt)) == 42);
 }
 
-TEST_CASE("util::addressof returns the address of the given argument.", "[functional][transform][utility]")
+TEST_CASE("util::addressof returns the address of the given argument.", "[functional][functional::utility]")
 {
 	int value{1337};
 
