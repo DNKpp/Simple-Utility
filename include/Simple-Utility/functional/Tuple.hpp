@@ -110,8 +110,12 @@ namespace sl::functional::tuple
 		[]<class Tuple>(Tuple&& t) noexcept(noexcept(std::make_from_tuple<To>(std::forward<Tuple>(t))))
 			requires concepts::tuple<std::remove_cvref_t<Tuple>>
 		{
+			// Due to a bug in gcc-10, we must check this requirement in two steps
 			static_assert(
-				requires { { std::make_from_tuple<To>(std::forward<Tuple>(t)) } -> std::same_as<To>; },
+				requires { { std::make_from_tuple<To>(std::forward<Tuple>(t)) }; },
+				"The object is not constructible with the elements of the given tuple.");
+			static_assert(
+				std::same_as<To, decltype(std::make_from_tuple<To>(std::declval<Tuple>()))>,
 				"The object is not constructible with the elements of the given tuple.");
 
 			return std::make_from_tuple<To>(std::forward<Tuple>(t));
