@@ -12,7 +12,7 @@
 
 using namespace sl::functional;
 
-TEST_CASE("plus forwards the params to operator + and returns the result.", "[functional][transform][arithmetic]")
+TEST_CASE("plus forwards the params to operator + and returns the result.", "[functional][functional::arithmetic]")
 {
 	const auto [lhs, rhs, expectedResult] = GENERATE(
 		(table<int, int, int>)({
@@ -26,7 +26,7 @@ TEST_CASE("plus forwards the params to operator + and returns the result.", "[fu
 	REQUIRE(arithmetic::plus(lhs, rhs) == expectedResult);
 }
 
-TEST_CASE("minus forwards the params to operator - and returns the result.", "[functional][transform][arithmetic]")
+TEST_CASE("minus forwards the params to operator - and returns the result.", "[functional][functional::arithmetic]")
 {
 	const auto [lhs, rhs, expectedResult] = GENERATE(
 		(table<int, int, int>)({
@@ -40,7 +40,7 @@ TEST_CASE("minus forwards the params to operator - and returns the result.", "[f
 	REQUIRE(arithmetic::minus(lhs, rhs) == expectedResult);
 }
 
-TEST_CASE("multiplies forwards the params to operator * and returns the result.", "[functional][transform][arithmetic]")
+TEST_CASE("multiplies forwards the params to operator * and returns the result.", "[functional][functional::arithmetic]")
 {
 	const auto [lhs, rhs, expectedResult] = GENERATE(
 		(table<int, int, int>)({
@@ -55,7 +55,7 @@ TEST_CASE("multiplies forwards the params to operator * and returns the result."
 	REQUIRE(arithmetic::multiplies(lhs, rhs) == expectedResult);
 }
 
-TEST_CASE("divides forwards the params to operator / and returns the result.", "[functional][transform][arithmetic]")
+TEST_CASE("divides forwards the params to operator / and returns the result.", "[functional][functional::arithmetic]")
 {
 	const auto [lhs, rhs, expectedResult] = GENERATE(
 		(table<int, int, int>)({
@@ -69,7 +69,7 @@ TEST_CASE("divides forwards the params to operator / and returns the result.", "
 	REQUIRE(arithmetic::divides(lhs, rhs) == expectedResult);
 }
 
-TEST_CASE("modulus forwards the params to operator % and returns the result.", "[functional][transform][arithmetic]")
+TEST_CASE("modulus forwards the params to operator % and returns the result.", "[functional][functional::arithmetic]")
 {
 	const auto [lhs, rhs, expectedResult] = GENERATE(
 		(table<int, int, int>)({
@@ -83,7 +83,7 @@ TEST_CASE("modulus forwards the params to operator % and returns the result.", "
 	REQUIRE(arithmetic::modulus(lhs, rhs) == expectedResult);
 }
 
-TEST_CASE("negate forwards the params to unary operator - and returns the result.", "[functional][transform][arithmetic]")
+TEST_CASE("negate forwards the params to unary operator - and returns the result.", "[functional][functional::arithmetic]")
 {
 	const auto [value, expectedResult] = GENERATE(
 		(table<int, int>)({
