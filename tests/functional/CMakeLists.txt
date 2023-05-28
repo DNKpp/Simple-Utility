@@ -7,7 +7,7 @@ target_sources(
 	"base.cpp"
 	"predicate.cpp"
 	"transform.cpp"
-	"tuple.cpp"
+	"Tuple.cpp"
 	"Overloaded.cpp"
 	"compare.cpp"
 	"arithmetic.cpp"
