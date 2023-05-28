@@ -17,6 +17,13 @@
 #include "Simple-Utility/functional/operators/negation.hpp"
 #include "Simple-Utility/functional/operators/pipe.hpp"
 
+#include "Simple-Utility/functional/BasicClosure.hpp"
+#include "Simple-Utility/functional/mixins/Conjunction.hpp"
+#include "Simple-Utility/functional/mixins/Disjunction.hpp"
+#include "Simple-Utility/functional/mixins/InvokePolicies.hpp"
+#include "Simple-Utility/functional/mixins/Negation.hpp"
+#include "Simple-Utility/functional/mixins/Pipe.hpp"
+
 namespace sl::functional
 {
 	/**
@@ -108,6 +115,15 @@ namespace sl::functional
 	 */
 	template <class TFunc>
 	predicate_fn(TFunc) -> predicate_fn<TFunc>;
+
+	template <function Fn>
+	using Predicate = BasicClosure<
+		Fn,
+		PredicateInvokePolicy,
+		PipeOperator,
+		ConjunctionOperator,
+		DisjunctionOperator,
+		NegationOperator>;
 
 	/** @} */
 }
