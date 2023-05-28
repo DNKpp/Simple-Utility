@@ -29,7 +29,7 @@ namespace sl::functional::tuple
 	 */
 	template <class T>
 	inline constexpr auto get = envelop<Transform>(
-		[]<class Tuple> requires concepts::tuple<std::remove_cvref_t<Tuple>>(Tuple&& v) -> decltype(auto)
+		[]<class Tuple>(Tuple&& v) -> decltype(auto)requires concepts::tuple<std::remove_cvref_t<Tuple>>
 		{
 			using std::get;
 			return get<T>(std::forward<Tuple>(v));
@@ -41,7 +41,7 @@ namespace sl::functional::tuple
 	 */
 	template <std::size_t index>
 	inline constexpr transform_fn get_at{
-		[]<class Tuple> requires concepts::tuple<std::remove_cvref_t<Tuple>>(Tuple&& v) -> decltype(auto)
+		[]<class Tuple>(Tuple&& v) -> decltype(auto)requires concepts::tuple<std::remove_cvref_t<Tuple>>
 		{
 			using std::get;
 			return get<index>(std::forward<Tuple>(v));
@@ -80,7 +80,8 @@ namespace sl::functional::tuple
 	template <class... Args>
 		requires concepts::unique_types<Args...>
 	inline constexpr auto reduce = envelop<Transform>(
-		[]<class Tuple> requires concepts::tuple<std::remove_cvref_t<Tuple>>(Tuple&& t)
+		[]<class Tuple>(Tuple&& t)
+			requires concepts::tuple<std::remove_cvref_t<Tuple>>
 		{
 			return detail::reduce<Args...>(std::forward<Tuple>(t));
 		});
@@ -89,7 +90,8 @@ namespace sl::functional::tuple
 	 * \brief Combines all elements from each given tuple into one tuple.
 	 */
 	inline constexpr auto concat = envelop<Transform>(
-		[]<class... Tuples> requires (... && concepts::tuple<std::remove_cvref_t<Tuples>>)(Tuples&&... tuples)
+		[]<class... Tuples>(Tuples&&... tuples)
+			requires (... && concepts::tuple<std::remove_cvref_t<Tuples>>)
 		{
 			return detail::concat(std::forward<Tuples>(tuples)...);
 		});
@@ -105,9 +107,8 @@ namespace sl::functional::tuple
 	 */
 	template <class To>
 	inline constexpr auto make_from = envelop<Transform>(
-		[]<class Tuple> requires concepts::tuple<std::remove_cvref_t<Tuple>>(
-		Tuple&& t
-	)noexcept(noexcept(std::make_from_tuple<To>(std::forward<Tuple>(t))))
+		[]<class Tuple>(Tuple&& t) noexcept(noexcept(std::make_from_tuple<To>(std::forward<Tuple>(t))))
+			requires concepts::tuple<std::remove_cvref_t<Tuple>>
 		{
 			static_assert(
 				requires { { std::make_from_tuple<To>(std::forward<Tuple>(t)) } -> std::same_as<To>; },
