@@ -17,7 +17,7 @@
 #include "Simple-Utility/nullables/std_optional.hpp"
 
 #include "Simple-Utility/functional/tuple.hpp"
-#include "Simple-Utility/functional/utility.hpp"
+#include "Simple-Utility/functional/Utility.hpp"
 
 #include <algorithm>
 #include <map>
