@@ -24,56 +24,60 @@ namespace sl::functional
 	template <template <class> class T>
 	concept operator_policy = true;
 
-	template <function Fun, template <class, class> class InvokablePolicy, template <class> class... OperatorPolicies>
+	template <function Fn, template <class> class InvokePolicy, template <class> class... OperatorPolicies>
 		requires (... && operator_policy<OperatorPolicies>)
 	class BasicClosure
-		: public InvokablePolicy<BasicClosure<Fun, InvokablePolicy, OperatorPolicies...>, Fun>,
-		public OperatorPolicies<BasicClosure<Fun, InvokablePolicy, OperatorPolicies...>>...
+		: public InvokePolicy<BasicClosure<Fn, InvokePolicy, OperatorPolicies...>>,
+		public OperatorPolicies<BasicClosure<Fn, InvokePolicy, OperatorPolicies...>>...
 	{
 	public:
 		template <class... Args>
-			requires std::constructible_from<Fun, Args...>
-		explicit constexpr BasicClosure(Args&&... args) noexcept(std::is_nothrow_constructible_v<Fun, Args...>)
-			: m_Fun{std::forward<Args>(args)...}
+			requires std::constructible_from<Fn, Args...>
+		explicit constexpr BasicClosure(Args&&... args) noexcept(std::is_nothrow_constructible_v<Fn, Args...>)
+			: m_Fn{std::forward<Args>(args)...}
 		{
 		}
 
 		BasicClosure(const BasicClosure&)
-			requires std::copy_constructible<Fun> = default;
+			requires std::copy_constructible<Fn> = default;
 
 		BasicClosure& operator =(const BasicClosure&)
-			requires std::is_copy_assignable_v<Fun> = default;
+			requires std::is_copy_assignable_v<Fn> = default;
 
 		BasicClosure(BasicClosure&&)
-			requires std::move_constructible<Fun> = default;
+			requires std::move_constructible<Fn> = default;
 
 		BasicClosure& operator =(BasicClosure&&)
-			requires std::is_move_assignable_v<Fun> = default;
+			requires std::is_move_assignable_v<Fn> = default;
 
 		~BasicClosure() = default;
 
-		explicit constexpr operator const Fun&() const & noexcept
+		[[nodiscard]]
+		explicit constexpr operator const Fn&() const & noexcept
 		{
-			return m_Fun;
+			return m_Fn;
 		}
 
-		explicit constexpr operator Fun&() & noexcept
+		[[nodiscard]]
+		explicit constexpr operator Fn&() & noexcept
 		{
-			return m_Fun;
+			return m_Fn;
 		}
 
-		explicit constexpr operator const Fun&&() const && noexcept
+		[[nodiscard]]
+		explicit constexpr operator const Fn&&() const && noexcept
 		{
-			return std::move(m_Fun);
+			return std::move(m_Fn);
 		}
 
-		explicit constexpr operator Fun&&() && noexcept
+		[[nodiscard]]
+		explicit constexpr operator Fn&&() && noexcept
 		{
-			return std::move(m_Fun);
+			return std::move(m_Fn);
 		}
 
 	private:
-		Fun m_Fun{};
+		Fn m_Fn{};
 	};
 
 	template <class T>
@@ -82,28 +86,34 @@ namespace sl::functional
 		using type = T;
 	};
 
-	template <class Fun, template <class, class> class InvokablePolicy, template <class> class... OperatorPolicies>
-	struct unwrap_functional<const BasicClosure<Fun, InvokablePolicy, OperatorPolicies...>&>
+	template <class Fn, template <class> class InvokePolicy, template <class> class... OperatorPolicies>
+	struct unwrap_functional<BasicClosure<Fn, InvokePolicy, OperatorPolicies...>>;
+
+	template <class Fn, template <class> class InvokePolicy, template <class> class... OperatorPolicies>
+	struct unwrap_functional<const BasicClosure<Fn, InvokePolicy, OperatorPolicies...>>;
+
+	template <class Fn, template <class> class InvokePolicy, template <class> class... OperatorPolicies>
+	struct unwrap_functional<const BasicClosure<Fn, InvokePolicy, OperatorPolicies...>&>
 	{
-		using type = const Fun&;
+		using type = const Fn&;
 	};
 
-	template <class Fun, template <class, class> class InvokablePolicy, template <class> class... OperatorPolicies>
-	struct unwrap_functional<BasicClosure<Fun, InvokablePolicy, OperatorPolicies...>&>
+	template <class Fn, template <class> class InvokePolicy, template <class> class... OperatorPolicies>
+	struct unwrap_functional<BasicClosure<Fn, InvokePolicy, OperatorPolicies...>&>
 	{
-		using type = Fun&;
+		using type = Fn&;
 	};
 
-	template <class Fun, template <class, class> class InvokablePolicy, template <class> class... OperatorPolicies>
-	struct unwrap_functional<const BasicClosure<Fun, InvokablePolicy, OperatorPolicies...>&&>
+	template <class Fn, template <class> class InvokePolicy, template <class> class... OperatorPolicies>
+	struct unwrap_functional<const BasicClosure<Fn, InvokePolicy, OperatorPolicies...>&&>
 	{
-		using type = const Fun&&;
+		using type = const Fn&&;
 	};
 
-	template <class Fun, template <class, class> class InvokablePolicy, template <class> class... OperatorPolicies>
-	struct unwrap_functional<BasicClosure<Fun, InvokablePolicy, OperatorPolicies...>&&>
+	template <class Fn, template <class> class InvokePolicy, template <class> class... OperatorPolicies>
+	struct unwrap_functional<BasicClosure<Fn, InvokePolicy, OperatorPolicies...>&&>
 	{
-		using type = Fun&&;
+		using type = Fn&&;
 	};
 
 	template <class T>
@@ -111,19 +121,19 @@ namespace sl::functional
 
 	template <class Fn>
 	[[nodiscard]]
-	constexpr unwrap_functional_t<Fn>&& forward_unwrapped(std::remove_reference_t<Fn>& fn) noexcept
+	constexpr unwrap_functional_t<Fn&&>&& forward_unwrapped(std::remove_reference_t<Fn>& fn) noexcept
 	{
-		return static_cast<unwrap_functional_t<Fn>&&>(std::forward<Fn>(fn));
+		return static_cast<unwrap_functional_t<Fn&&>&&>(std::forward<Fn>(fn));
 	}
 
 	template <class T>
 	struct closure_template;
 
-	template <class Fn, template <class, class> class InvokablePolicy, template <class> class... OperatorPolicies>
-	struct closure_template<BasicClosure<Fn, InvokablePolicy, OperatorPolicies...>>
+	template <class Fn, template <class> class InvokePolicy, template <class> class... OperatorPolicies>
+	struct closure_template<BasicClosure<Fn, InvokePolicy, OperatorPolicies...>>
 	{
 		template <class NewFn>
-		using type = BasicClosure<NewFn, InvokablePolicy, OperatorPolicies...>;
+		using type = BasicClosure<NewFn, InvokePolicy, OperatorPolicies...>;
 	};
 
 	template <template <class> class Closure, class Fn>
