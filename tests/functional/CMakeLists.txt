@@ -9,7 +9,7 @@ target_sources(
 	"transform.cpp"
 	"Tuple.cpp"
 	"Overloaded.cpp"
-	"compare.cpp"
+	"Compare.cpp"
 	"arithmetic.cpp"
 	"Utility.cpp"
 	"mixins/Disjunction.cpp"
