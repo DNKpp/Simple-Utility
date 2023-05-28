@@ -44,7 +44,7 @@ namespace sl::functional::compare
 	 * \brief Functional object, which compares its two operands less-equal.
 	 * \note If both operands satisfy the ``std::integral`` concept, ``std::cmp_less_equal`` is used instead.
 	 */
-	inline constexpr auto less_equals = envelop<Predicate>(
+	inline constexpr auto less_equal = envelop<Predicate>(
 		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) noexcept(noexcept(std::declval<TLhs>() <= std::declval<TRhs>()))
 		{
 			if constexpr (std::integral<std::remove_cvref_t<TLhs>> && std::integral<std::remove_cvref_t<TRhs>>)
