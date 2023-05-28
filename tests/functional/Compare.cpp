@@ -12,7 +12,7 @@
 
 using namespace sl::functional;
 
-TEMPLATE_TEST_CASE("less compares its two parameters", "[functional][compare]", int, float)
+TEMPLATE_TEST_CASE("less compares its two parameters", "[functional][functional::compare]", int, float)
 {
 	const auto& [value1, value2, expectedResult] = GENERATE(
 		(table<int, int, bool>)({
@@ -26,7 +26,7 @@ TEMPLATE_TEST_CASE("less compares its two parameters", "[functional][compare]", 
 	REQUIRE(result == expectedResult);
 }
 
-TEMPLATE_TEST_CASE("greater compares its two parameters", "[functional][compare]", int, float)
+TEMPLATE_TEST_CASE("greater compares its two parameters", "[functional][functional::compare]", int, float)
 {
 	const auto& [value1, value2, expectedResult] = GENERATE(
 		(table<int, int, bool>)({
@@ -40,7 +40,7 @@ TEMPLATE_TEST_CASE("greater compares its two parameters", "[functional][compare]
 	REQUIRE(result == expectedResult);
 }
 
-TEMPLATE_TEST_CASE("less_equal compares its two parameters", "[functional][compare]", int, float)
+TEMPLATE_TEST_CASE("less_equal compares its two parameters", "[functional][functional::compare]", int, float)
 {
 	const auto& [value1, value2, expectedResult] = GENERATE(
 		(table<int, int, bool>)({
@@ -55,7 +55,7 @@ TEMPLATE_TEST_CASE("less_equal compares its two parameters", "[functional][compa
 	REQUIRE(result == expectedResult);
 }
 
-TEMPLATE_TEST_CASE("greater_equal compares its two parameters", "[functional][compare]", int, float)
+TEMPLATE_TEST_CASE("greater_equal compares its two parameters", "[functional][functional::compare]", int, float)
 {
 	const auto& [value1, value2, expectedResult] = GENERATE(
 		(table<int, int, bool>)({
@@ -70,7 +70,7 @@ TEMPLATE_TEST_CASE("greater_equal compares its two parameters", "[functional][co
 	REQUIRE(result == expectedResult);
 }
 
-TEMPLATE_TEST_CASE("equal compares its two parameters", "[functional][compare]", int, float)
+TEMPLATE_TEST_CASE("equal compares its two parameters", "[functional][functional::compare]", int, float)
 {
 	const auto& [value1, value2, expectedResult] = GENERATE(
 		(table<int, int, bool>)({
@@ -84,7 +84,7 @@ TEMPLATE_TEST_CASE("equal compares its two parameters", "[functional][compare]",
 	REQUIRE(result == expectedResult);
 }
 
-TEMPLATE_TEST_CASE("not_equal compares its two parameters", "[functional][compare]", int, float)
+TEMPLATE_TEST_CASE("not_equal compares its two parameters", "[functional][functional::compare]", int, float)
 {
 	const auto& [value1, value2, expectedResult] = GENERATE(
 		(table<int, int, bool>)({
@@ -98,7 +98,7 @@ TEMPLATE_TEST_CASE("not_equal compares its two parameters", "[functional][compar
 	REQUIRE(result == expectedResult);
 }
 
-TEST_CASE("three_way compares its two parameters", "[functional][compare]")
+TEST_CASE("three_way compares its two parameters", "[functional][functional::compare]")
 {
 	const auto& [value1, value2, expectedResult] = GENERATE(
 		(table<int, int, std::strong_ordering>)({
