@@ -16,7 +16,7 @@
 
 #include "Simple-Utility/functional/compare.hpp"
 #include "Simple-Utility/functional/transform.hpp"
-#include "Simple-Utility/functional/utility.hpp"
+#include "Simple-Utility/functional/Utility.hpp"
 
 #include <stdexcept>
 
