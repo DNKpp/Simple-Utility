@@ -16,34 +16,25 @@ struct CRTPTest
 
 	constexpr decltype(auto) access() const &
 	{
-		return cast();
+		return derived();
 	}
 
 	constexpr decltype(auto) access() &
 	{
-		return cast();
-	}
-
-	constexpr decltype(auto) access() const &&
-	{
-		return std::move(*this).cast();  // NOLINT(performance-move-const-arg)
-	}
-
-	constexpr decltype(auto) access() &&
-	{
-		return std::move(*this).cast();  // NOLINT(performance-move-const-arg)
+		return derived();
 	}
 };
 
-TEMPLATE_LIST_TEST_CASE(
+TEMPLATE_TEST_CASE(
 	"CRTPBase offers cast() functions for all value and reference combination.",
 	"[CRTPBase]",
-	all_ref_mods_list
+	CRTPTest&,
+	const CRTPTest&
 )
 {
 	CRTPTest instance{};
 
-	typename TestType::template type<CRTPTest> ref = TestType::cast(instance).access();
+	TestType ref = static_cast<TestType&>(instance).access();
 
 	REQUIRE(&instance == &ref);
 }
