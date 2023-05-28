@@ -14,7 +14,7 @@
 #include "Simple-Utility/nullables/std_optional.hpp"
 #include "Simple-Utility/nullables/value_or.hpp"
 
-#include "Simple-Utility/functional/compare.hpp"
+#include "Simple-Utility/functional/Compare.hpp"
 #include "Simple-Utility/functional/transform.hpp"
 #include "Simple-Utility/functional/Utility.hpp"
 
@@ -196,7 +196,7 @@ TEMPLATE_LIST_TEST_CASE(
 	const sl::functional::predicate_fn predicate = std::identity{}
 													| or_else_fn([] { throw std::exception{}; })
 													| [](auto t) { return t; }
-													| sl::functional::compare::equal >> nullptr;
+													| sl::functional::bind_back(sl::functional::compare::equal, nullptr);
 
 	if (expectThrow)
 	{

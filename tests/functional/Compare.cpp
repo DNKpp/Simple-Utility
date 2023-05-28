@@ -8,7 +8,7 @@
 
 #include "../helper.hpp"
 
-#include "Simple-Utility/functional/compare.hpp"
+#include "Simple-Utility/functional/Compare.hpp"
 
 using namespace sl::functional;
 
