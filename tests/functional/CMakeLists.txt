@@ -10,7 +10,7 @@ target_sources(
 	"Tuple.cpp"
 	"Overloaded.cpp"
 	"Compare.cpp"
-	"arithmetic.cpp"
+	"Arithmetic.cpp"
 	"Utility.cpp"
 	"mixins/Disjunction.cpp"
 	"mixins/Conjunction.cpp"
