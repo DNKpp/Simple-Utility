@@ -8,7 +8,7 @@
 
 #include "../helper.hpp"
 
-#include "Simple-Utility/functional/arithmetic.hpp"
+#include "Simple-Utility/functional/Arithmetic.hpp"
 
 using namespace sl::functional;
 
