@@ -8,234 +8,173 @@
 
 #pragma once
 
+#include <concepts>
+#include <functional>
+#include <type_traits>
+#include <utility>
+
+#include "Simple-Utility/CRTPBase.hpp"
+#include "Simple-Utility/concepts/stl_extensions.hpp"
+#include "Simple-Utility/functional/BasicClosure.hpp"
+#include "Simple-Utility/tuple/General.hpp"
+
+namespace sl::functional::detail
+{
+	template <concepts::unqualified Derived, class InvokeStrategy>
+	class BasicInvokePolicy
+		: public CRTPBase<Derived>
+	{
+	private:
+		using CRTPBase<Derived>::derived;
+
+	public:
+		template <class... Args>
+			requires std::invocable<InvokeStrategy, const Derived&, Args...>
+		constexpr decltype(auto) operator ()(
+			Args&&... args
+		) const & noexcept(std::is_nothrow_invocable_v<InvokeStrategy, const Derived&, Args...>)
+		{
+			return std::invoke(InvokeStrategy{}, derived(), std::forward<Args>(args)...);
+		}
+
+		template <class... Args>
+			requires std::invocable<InvokeStrategy, Derived&, Args...>
+		constexpr decltype(auto) operator ()(Args&&... args) & noexcept(std::is_nothrow_invocable_v<InvokeStrategy, Derived&, Args...>)
+		{
+			return std::invoke(InvokeStrategy{}, derived(), std::forward<Args>(args)...);
+		}
+
+		template <class... Args>
+			requires std::invocable<InvokeStrategy, const Derived&&, Args...>
+		constexpr decltype(auto) operator ()(
+			Args&&... args
+		) const && noexcept(std::is_nothrow_invocable_v<InvokeStrategy, const Derived&&, Args...>)
+		{
+			return std::invoke(InvokeStrategy{}, std::move(derived()), std::forward<Args>(args)...);
+		}
+
+		template <class... Args>
+			requires std::invocable<InvokeStrategy, Derived&&, Args...>
+		constexpr decltype(auto) operator ()(
+			Args&&... args
+		) && noexcept(std::is_nothrow_invocable_v<InvokeStrategy, Derived&&, Args...>)
+		{
+			return std::invoke(InvokeStrategy{}, std::move(derived()), std::forward<Args>(args)...);
+		}
+	};
+
+	template <concepts::unqualified Derived, class InvokeStrategy>
+	class NodiscardInvokePolicy
+		: public CRTPBase<Derived>
+	{
+	private:
+		using CRTPBase<Derived>::derived;
+
+	public:
+		template <class... Args>
+			requires std::invocable<InvokeStrategy, const Derived&, Args...>
+		[[nodiscard]]
+		constexpr decltype(auto) operator ()(
+			Args&&... args
+		) const & noexcept(std::is_nothrow_invocable_v<InvokeStrategy, const Derived&, Args...>)
+		{
+			return std::invoke(InvokeStrategy{}, derived(), std::forward<Args>(args)...);
+		}
+
+		template <class... Args>
+			requires std::invocable<InvokeStrategy, Derived&, Args...>
+		[[nodiscard]]
+		constexpr decltype(auto) operator ()(Args&&... args) & noexcept(std::is_nothrow_invocable_v<InvokeStrategy, Derived&, Args...>)
+		{
+			return std::invoke(InvokeStrategy{}, derived(), std::forward<Args>(args)...);
+		}
+
+		template <class... Args>
+			requires std::invocable<InvokeStrategy, const Derived&&, Args...>
+		[[nodiscard]]
+		constexpr decltype(auto) operator ()(
+			Args&&... args
+		) const && noexcept(std::is_nothrow_invocable_v<InvokeStrategy, const Derived&&, Args...>)
+		{
+			return std::invoke(InvokeStrategy{}, std::move(derived()), std::forward<Args>(args)...);
+		}
+
+		template <class... Args>
+			requires std::invocable<InvokeStrategy, Derived&&, Args...>
+		[[nodiscard]]
+		constexpr decltype(auto) operator ()(
+			Args&&... args
+		) && noexcept(std::is_nothrow_invocable_v<InvokeStrategy, Derived&&, Args...>)
+		{
+			return std::invoke(InvokeStrategy{}, std::move(derived()), std::forward<Args>(args)...);
+		}
+	};
+
+	struct InvocableStrategy
+	{
+		template <class Fn, class... Args>
+			requires std::invocable<unwrap_functional_t<Fn&&>, Args...>
+		[[nodiscard]]
+		constexpr std::invoke_result_t<unwrap_functional_t<Fn&&>, Args...> operator ()(
+			Fn&& fn,
+			Args&&... args
+		) const noexcept(std::is_nothrow_invocable_v<unwrap_functional_t<Fn&&>, Args...>)
+		{
+			return std::invoke(
+				forward_unwrapped<Fn>(fn),
+				std::forward<Args>(args)...);
+		}
+	};
+
+	struct PredicateStrategy
+	{
+		template <class Fn, class... Args>
+			requires std::predicate<unwrap_functional_t<Fn&&>, Args...>
+		[[nodiscard]]
+		constexpr std::invoke_result_t<unwrap_functional_t<Fn&&>, Args...> operator ()(
+			Fn&& fn,
+			Args&&... args
+		) const noexcept(std::is_nothrow_invocable_v<unwrap_functional_t<Fn&&>, Args...>)
+		{
+			return std::invoke(
+				forward_unwrapped<Fn>(fn),
+				std::forward<Args>(args)...);
+		}
+	};
+
+	struct ApplicableStrategy
+	{
+		template <class Fn, class Tuple>
+			requires concepts::applicable<unwrap_functional_t<Fn&&>, Tuple>
+		[[nodiscard]]
+		constexpr decltype(auto) operator ()(
+			Fn&& fn,
+			Tuple&& t
+		) const noexcept(concepts::nothrow_applicable<unwrap_functional_t<Fn&&>, Tuple>)
+		{
+			return std::apply(
+				forward_unwrapped<Fn>(fn),
+				std::forward<Tuple>(t));
+		}
+	};
+}
+
 namespace sl::functional
 {
-	template <concepts::unqualified Derived, function InnerFun>
-	class BasicInvokePolicy
-	{
-	private:
-		[[nodiscard]]
-		constexpr const Derived& derived() const noexcept
-		{
-			return static_cast<const Derived&>(*this);
-		}
+	template <concepts::unqualified Derived>
+	using BasicInvokePolicy = detail::BasicInvokePolicy<Derived, detail::InvocableStrategy>;
 
-		[[nodiscard]]
-		constexpr Derived& derived() noexcept
-		{
-			return static_cast<Derived&>(*this);
-		}
+	template <concepts::unqualified Derived>
+	using NodiscardInvokePolicy = detail::NodiscardInvokePolicy<Derived, detail::InvocableStrategy>;
 
-		using Fun = InnerFun;
+	template <concepts::unqualified Derived>
+	using PredicateInvokePolicy = detail::NodiscardInvokePolicy<Derived, detail::PredicateStrategy>;
 
-	protected:
-		constexpr BasicInvokePolicy() noexcept
-		{
-			static_assert(std::is_base_of_v<BasicInvokePolicy, Derived>, "Derived doesn't inherit from BasicInvokePolicy.");
-		}
+	template <concepts::unqualified Derived>
+	using BasicApplyPolicy = detail::NodiscardInvokePolicy<Derived, detail::ApplicableStrategy>;
 
-		[[nodiscard]]
-		BasicInvokePolicy(const BasicInvokePolicy&) = default;
-		BasicInvokePolicy& operator =(const BasicInvokePolicy&) = default;
-
-		[[nodiscard]]
-		BasicInvokePolicy(BasicInvokePolicy&&) = default;
-		BasicInvokePolicy& operator =(BasicInvokePolicy&&) = default;
-
-		~BasicInvokePolicy() = default;
-
-	public:
-
-		template <class... Args>
-			requires std::invocable<const Fun&, Args...>
-		constexpr decltype(auto) operator ()(Args&&... args) const & noexcept(std::is_nothrow_invocable_v<const Fun&, Args...>)
-		{
-			return std::invoke(
-				forward_unwrapped<const Derived&>(derived()),
-				std::forward<Args>(args)...);
-		}
-
-		template <class... Args>
-			requires std::invocable<Fun&, Args...>
-		constexpr decltype(auto) operator ()(Args&&... args) & noexcept(std::is_nothrow_invocable_v<Fun&, Args...>)
-		{
-			return std::invoke(
-				forward_unwrapped<Derived&>(derived()),
-				std::forward<Args>(args)...);
-		}
-
-		template <class... Args>
-			requires std::invocable<const Fun&&, Args...>
-		constexpr decltype(auto) operator ()(Args&&... args) const && noexcept(std::is_nothrow_invocable_v<const Fun&&, Args...>)
-		{
-			return std::invoke(
-				forward_unwrapped<const Derived&&>(derived()),
-				std::forward<Args>(args)...);
-		}
-
-		template <class... Args>
-			requires std::invocable<Fun&&, Args...>
-		constexpr decltype(auto) operator ()(Args&&... args) && noexcept(std::is_nothrow_invocable_v<Fun&&, Args...>)
-		{
-			return std::invoke(
-				forward_unwrapped<Derived&&>(derived()),
-				std::forward<Args>(args)...);
-		}
-	};
-
-	template <concepts::unqualified Derived, function InnerFun>
-	class NodiscardInvokePolicy
-	{
-	private:
-		[[nodiscard]]
-		constexpr const Derived& derived() const noexcept
-		{
-			return static_cast<const Derived&>(*this);
-		}
-
-		[[nodiscard]]
-		constexpr Derived& derived() noexcept
-		{
-			return static_cast<Derived&>(*this);
-		}
-
-		using Fun = InnerFun;
-
-	protected:
-		constexpr NodiscardInvokePolicy() noexcept
-		{
-			static_assert(std::is_base_of_v<NodiscardInvokePolicy, Derived>, "Derived doesn't inherit from BasicInvokePolicy.");
-		}
-
-		[[nodiscard]]
-		NodiscardInvokePolicy(const NodiscardInvokePolicy&) = default;
-		NodiscardInvokePolicy& operator =(const NodiscardInvokePolicy&) = default;
-
-		[[nodiscard]]
-		NodiscardInvokePolicy(NodiscardInvokePolicy&&) = default;
-		NodiscardInvokePolicy& operator =(NodiscardInvokePolicy&&) = default;
-
-		~NodiscardInvokePolicy() = default;
-
-	public:
-
-		template <class... Args>
-			requires std::invocable<const Fun&, Args...>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()(Args&&... args) const & noexcept(std::is_nothrow_invocable_v<const Fun&, Args...>)
-		{
-			return std::invoke(
-				forward_unwrapped<const Derived&>(derived()),
-				std::forward<Args>(args)...);
-		}
-
-		template <class... Args>
-			requires std::invocable<Fun&, Args...>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()(Args&&... args) & noexcept(std::is_nothrow_invocable_v<Fun&, Args...>)
-		{
-			return std::invoke(
-				forward_unwrapped<Derived&>(derived()),
-				std::forward<Args>(args)...);
-		}
-
-		template <class... Args>
-			requires std::invocable<const Fun&&, Args...>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()(Args&&... args) const && noexcept(std::is_nothrow_invocable_v<const Fun&&, Args...>)
-		{
-			return std::invoke(
-				forward_unwrapped<const Derived&&>(derived()),
-				std::forward<Args>(args)...);
-		}
-
-		template <class... Args>
-			requires std::invocable<Fun&&, Args...>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()(Args&&... args) && noexcept(std::is_nothrow_invocable_v<Fun&&, Args...>)
-		{
-			return std::invoke(
-				forward_unwrapped<Derived&&>(derived()),
-				std::forward<Args>(args)...);
-		}
-	};
-
-	template <concepts::unqualified Derived, function InnerFun>
-	class PredicateInvokePolicy
-	{
-	private:
-		[[nodiscard]]
-		constexpr const Derived& derived() const noexcept
-		{
-			return static_cast<const Derived&>(*this);
-		}
-
-		[[nodiscard]]
-		constexpr Derived& derived() noexcept
-		{
-			return static_cast<Derived&>(*this);
-		}
-
-		using Fun = InnerFun;
-
-	protected:
-		constexpr PredicateInvokePolicy() noexcept
-		{
-			static_assert(std::is_base_of_v<PredicateInvokePolicy, Derived>, "Derived doesn't inherit from PredicateInvokePolicy.");
-		}
-
-		[[nodiscard]]
-		PredicateInvokePolicy(const PredicateInvokePolicy&) = default;
-		PredicateInvokePolicy& operator =(const PredicateInvokePolicy&) = default;
-
-		[[nodiscard]]
-		PredicateInvokePolicy(PredicateInvokePolicy&&) = default;
-		PredicateInvokePolicy& operator =(PredicateInvokePolicy&&) = default;
-
-		~PredicateInvokePolicy() = default;
-
-	public:
-
-		template <class... Args>
-			requires std::predicate<const Fun&, Args...>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()(Args&&... args) const & noexcept(std::is_nothrow_invocable_v<const Fun&, Args...>)
-		{
-			return std::invoke(
-				forward_unwrapped<const Derived&>(derived()),
-				std::forward<Args>(args)...);
-		}
-
-		template <class... Args>
-			requires std::predicate<Fun&, Args...>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()(Args&&... args) & noexcept(std::is_nothrow_invocable_v<Fun&, Args...>)
-		{
-			return std::invoke(
-				forward_unwrapped<Derived&>(derived()),
-				std::forward<Args>(args)...);
-		}
-
-		template <class... Args>
-			requires std::predicate<const Fun&&, Args...>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()(Args&&... args) const && noexcept(std::is_nothrow_invocable_v<const Fun&&, Args...>)
-		{
-			return std::invoke(
-				forward_unwrapped<const Derived&&>(derived()),
-				std::forward<Args>(args)...);
-		}
-
-		template <class... Args>
-			requires std::predicate<Fun&&, Args...>
-		[[nodiscard]]
-		constexpr decltype(auto) operator ()(Args&&... args) && noexcept(std::is_nothrow_invocable_v<Fun&&, Args...>)
-		{
-			return std::invoke(
-				forward_unwrapped<Derived&&>(derived()),
-				std::forward<Args>(args)...);
-		}
-	};
+	template <concepts::unqualified Derived>
+	using NodiscardApplyPolicy = detail::NodiscardInvokePolicy<Derived, detail::ApplicableStrategy>;
 }
 
 #endif

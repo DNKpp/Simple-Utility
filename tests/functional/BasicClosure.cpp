@@ -12,6 +12,8 @@
 
 #include "Simple-Utility/functional/mixins/InvokePolicies.hpp"
 
+// ReSharper disable CppClangTidyBugproneUseAfterMove
+
 namespace sf = sl::functional;
 
 struct TestFun
@@ -42,7 +44,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
 	"functional::forward_unwrapped unwraps functionals if stored in a BasicClosure and forwards it.",
 	"[functional]",
-	((bool dummy, class Expected, class Fun), dummy, Expected, Fun),
+	((bool dummy, class Expected, class Fn), dummy, Expected, Fn),
 	(true, TestFun&, TestFun&),
 	(true, const TestFun&, const TestFun&),
 	(true, TestFun&&, TestFun&&),
@@ -53,10 +55,10 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, TestFun&&, sf::BasicClosure<TestFun, sf::BasicInvokePolicy>&&)
 )
 {
-	STATIC_REQUIRE(std::same_as<Expected, decltype(sf::forward_unwrapped<Fun>(std::declval<Fun&>()))>);
+	STATIC_REQUIRE(std::same_as<Expected, decltype(sf::forward_unwrapped<Fn>(std::declval<Fn&>()))>);
 }
 
-template <template <class, class> class InvokablePolicy, template <class> class... OperatorPolicies>
+template <template <class> class InvokablePolicy, template <class> class... OperatorPolicies>
 struct TemplatedClosure
 {
 	template <class Fn>
@@ -71,53 +73,56 @@ struct TestPolicy
 TEMPLATE_TEST_CASE_SIG(
 	"functional::BasicClosure is invocable in any qualification, regardless the applied InvokePolicy.",
 	"[functional]",
-	((bool dummy, template <class, class> class InvokePolicy, auto expected, auto arg), dummy, InvokePolicy, expected, arg),
-	(true, sf::BasicInvokePolicy, 1337, 42),
-	(true, sf::NodiscardInvokePolicy, 1337, 42),
-	(true, sf::PredicateInvokePolicy, true, 42)
+	((bool dummy, template <class> class InvokePolicy, auto expected, class ParamAs), dummy, InvokePolicy, expected, ParamAs),
+	(true, sf::BasicInvokePolicy, 1337, int),
+	(true, sf::NodiscardInvokePolicy, 1337, int),
+	(true, sf::PredicateInvokePolicy, true, int),
+	(true, sf::BasicApplyPolicy, true, std::tuple<int>),
+	(true, sf::NodiscardApplyPolicy, true, std::tuple<int>)
 )
 {
-	GenericOperation1Mock<decltype(expected), decltype(arg)> func{};
+	constexpr int param = 42;
+	GenericOperation1Mock<decltype(expected), int> func{};
 	using Closure = TemplatedClosure<InvokePolicy>;
 
 	SECTION("As const lvalue ref.")
 	{
-		REQUIRE_CALL(func, call_const_lvalue_ref(arg))
+		REQUIRE_CALL(func, call_const_lvalue_ref(param))
 			.RETURN(expected);
 
 		sf::BasicClosure closure = sf::envelop<Closure::template type>(std::move(func));
 
-		REQUIRE(expected == std::invoke(std::as_const(closure), arg));
+		REQUIRE(expected == std::invoke(std::as_const(closure), ParamAs(param)));
 	}
 
 	SECTION("As lvalue ref.")
 	{
-		REQUIRE_CALL(func, call_lvalue_ref(arg))
+		REQUIRE_CALL(func, call_lvalue_ref(param))
 			.RETURN(expected);
 
 		sf::BasicClosure closure = sf::envelop<Closure::template type>(std::move(func));
 
-		REQUIRE(expected == std::invoke(closure, arg));
+		REQUIRE(expected == std::invoke(closure, ParamAs(param)));
 	}
 
 	SECTION("As const rvalue ref.")
 	{
-		REQUIRE_CALL(func, call_const_rvalue_ref(arg))
+		REQUIRE_CALL(func, call_const_rvalue_ref(param))
 			.RETURN(expected);
 
 		sf::BasicClosure closure = sf::envelop<Closure::template type>(std::move(func));
 
-		REQUIRE(expected == std::invoke(std::move(std::as_const(closure)), arg));
+		REQUIRE(expected == std::invoke(std::move(std::as_const(closure)), ParamAs(param)));
 	}
 
 	SECTION("As rvalue ref.")
 	{
-		REQUIRE_CALL(func, call_rvalue_ref(arg))
+		REQUIRE_CALL(func, call_rvalue_ref(param))
 			.RETURN(expected);
 
 		sf::BasicClosure closure = sf::envelop<Closure::template type>(std::move(func));
 
-		REQUIRE(expected == std::invoke(std::move(closure), arg));
+		REQUIRE(expected == std::invoke(std::move(closure), ParamAs(param)));
 	}
 }
 
@@ -153,9 +158,8 @@ TEMPLATE_TEST_CASE_SIG(
 
 	SECTION("Move fn.")
 	{
-		auto enclosed = sf::envelop<Closure>(std::move(fn));
+		auto enclosed = sf::envelop<Closure>(std::move(fn));  // NOLINT(performance-move-const-arg)
 
 		STATIC_REQUIRE(std::same_as<Closure<TestFun>, decltype(enclosed)>);
 	}
-
 }
