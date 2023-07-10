@@ -20,6 +20,7 @@
 #include "Simple-Utility/functional/BasicClosure.hpp"
 #include "Simple-Utility/functional/mixins/Conjunction.hpp"
 #include "Simple-Utility/functional/mixins/Disjunction.hpp"
+#include "Simple-Utility/functional/mixins/Equality.hpp"
 #include "Simple-Utility/functional/mixins/InvokePolicies.hpp"
 #include "Simple-Utility/functional/mixins/Negation.hpp"
 #include "Simple-Utility/functional/mixins/Pipe.hpp"
@@ -116,11 +117,17 @@ namespace sl::functional
 	template <class TFunc>
 	predicate_fn(TFunc) -> predicate_fn<TFunc>;
 
+	/**
+	 * \brief Closure template for predicate like types, which accepts a functional type and enables pipe, conjunctive and disjunctive chaining,
+	 * equal, inequality and equivalence comparison, and front and back binding.
+	 * \tparam Fn The functional type.
+	 */
 	template <function Fn>
 	using Predicate = BasicClosure<
 		Fn,
 		PredicateInvokePolicy,
 		PipeOperator,
+		EqualityOperator,
 		ConjunctionOperator,
 		DisjunctionOperator,
 		NegationOperator>;
