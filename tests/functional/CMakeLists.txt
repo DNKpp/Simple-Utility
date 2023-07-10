@@ -13,6 +13,7 @@ target_sources(
 	"Arithmetic.cpp"
 	"Utility.cpp"
 	"mixins/Disjunction.cpp"
+	"mixins/Equality.cpp"
 	"mixins/Conjunction.cpp"
 	"mixins/Negation.cpp"
 	"mixins/Pipe.cpp"
