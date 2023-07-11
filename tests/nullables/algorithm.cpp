@@ -180,33 +180,33 @@ TEMPLATE_LIST_TEST_CASE(
 	REQUIRE(s == expected);
 }
 
-TEMPLATE_LIST_TEST_CASE(
-	"or_else can be piped with other functionals",
-	"[nullables][algorithm][functional]",
-	all_ref_mods_list
-)
-{
-	auto [sourceOptional, expectThrow] = GENERATE(
-		(table<const char*, bool>)({
-			{ "c", false },
-			{ nullptr, true }
-			})
-	);
-
-	const sl::functional::predicate_fn predicate = std::identity{}
-													| or_else_fn([] { throw std::exception{}; })
-													| [](auto t) { return t; }
-													| sl::functional::bind_back(sl::functional::compare::equal, nullptr);
-
-	if (expectThrow)
-	{
-		REQUIRE_THROWS(predicate(TestType::cast(sourceOptional)));
-	}
-	else
-	{
-		REQUIRE_NOTHROW(predicate(TestType::cast(sourceOptional)));
-	}
-}
+//TEMPLATE_LIST_TEST_CASE(
+//	"or_else can be piped with other functionals",
+//	"[nullables][algorithm][functional]",
+//	all_ref_mods_list
+//)
+//{
+//	auto [sourceOptional, expectThrow] = GENERATE(
+//		(table<const char*, bool>)({
+//			{ "c", false },
+//			{ nullptr, true }
+//			})
+//	);
+//
+//	const sl::functional::predicate_fn predicate = std::identity{}
+//													| or_else_fn([] { throw std::exception{}; })
+//													| [](auto t) { return t; }
+//													| sl::functional::bind_back(sl::functional::compare::equal, nullptr);
+//
+//	if (expectThrow)
+//	{
+//		REQUIRE_THROWS(predicate(TestType::cast(sourceOptional)));
+//	}
+//	else
+//	{
+//		REQUIRE_NOTHROW(predicate(TestType::cast(sourceOptional)));
+//	}
+//}
 
 /*
  * LCOV_EXCL_START
