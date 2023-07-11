@@ -9,6 +9,7 @@
 #pragma once
 
 #include <concepts>
+#include <functional>
 #include <tuple>
 
 #include "Simple-Utility/concepts/stl_extensions.hpp"
@@ -30,7 +31,13 @@ namespace sl::functional
 				[&]<class FirstFn, class... OtherFns>(FirstFn&& firstFn, OtherFns&&... otherFns)
 				{
 					const auto& firstResult = std::invoke(std::forward<FirstFn>(firstFn), args...);
-					return ((firstResult == std::invoke(std::forward<OtherFns>(otherFns), args...)) && ...);
+
+					// This workaround is necessary, due to some strange compile errors in the msvc v142 toolset
+					const auto equalResults = [&]<class Fn>(Fn&& fn)
+					{
+						return firstResult == std::invoke(std::forward<Fn>(fn), args...);
+					};
+					return (equalResults(std::forward<OtherFns>(otherFns)) && ...);
 				},
 				std::move(fnPack));
 		}
