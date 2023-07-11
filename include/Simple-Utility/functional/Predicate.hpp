@@ -21,7 +21,6 @@
 #include "Simple-Utility/functional/mixins/Conjunction.hpp"
 #include "Simple-Utility/functional/mixins/Disjunction.hpp"
 #include "Simple-Utility/functional/mixins/Equality.hpp"
-#include "Simple-Utility/functional/mixins/ExclusiveDisjunction.hpp"
 #include "Simple-Utility/functional/mixins/InvokePolicies.hpp"
 #include "Simple-Utility/functional/mixins/Negation.hpp"
 #include "Simple-Utility/functional/mixins/Pipe.hpp"
@@ -62,58 +61,6 @@ namespace sl::functional
 	 * and therefore actually check if all results are equal.
 	 * @{
 	 */
-
-	/**
-	 * \brief Adapter type for predicates, which accepts a functional type and enables pipe, conjunctive and disjunctive chaining,
-	 * equal, inequality and equivalence comparison, and front and back binding.
-	 * \tparam TFunc The functional type.
-	 */
-	template <class TFunc>
-		requires std::same_as<TFunc, std::remove_cvref_t<TFunc>>
-	class predicate_fn final
-		: public closure_base_fn<TFunc>,
-		public enable_operation<predicate_fn,
-								operators::pipe,
-								operators::bind_front,
-								operators::bind_back,
-								operators::disjunction,
-								operators::conjunction,
-								operators::equal,
-								operators::not_equal,
-								operators::equivalent,
-								operators::negate
-		>
-	{
-		using closure_t = closure_base_fn<TFunc>;
-
-	public:
-		/**
-		 * \brief Explicitly created forwarding constructor.
-		 * \tparam TArgs Argument types.
-		 * \param args Arguments, forwarded to the base class constructor.
-		 * \note This is only here, to keep clang <= 11 happy, when creating constexpr functional objects.
-		 */
-		template <class... TArgs>
-			requires std::constructible_from<closure_t, TArgs...>
-		[[nodiscard]]
-		constexpr
-		/**\cond conditional-explicit*/
-		explicit(detail::force_explicit_constructor_v<closure_t, TArgs...>)
-		/**\endcond*/
-		predicate_fn(
-			TArgs&&... args
-		) noexcept(std::is_nothrow_constructible_v<closure_t, TArgs...>)
-			: closure_t{std::forward<TArgs>(args)...}
-		{
-		}
-	};
-
-	/**
-	 * \brief Deduction guide.
-	 * \tparam TFunc Type of the given functional.
-	 */
-	template <class TFunc>
-	predicate_fn(TFunc) -> predicate_fn<TFunc>;
 
 	/**
 	 * \brief Closure template for predicate like types, which accepts a functional type and enables pipe, conjunctive and disjunctive chaining,
