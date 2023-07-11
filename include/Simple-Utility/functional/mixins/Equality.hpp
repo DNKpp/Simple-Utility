@@ -21,6 +21,7 @@ namespace sl::functional
 	{
 		template <class... PackedFns, class... Args>
 			requires (... && std::predicate<PackedFns, Args...>)
+		[[nodiscard]]
 		constexpr bool operator ()(
 			std::tuple<PackedFns...>&& fnPack,
 			Args&&... args
