@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "Simple-Utility/functional/predicate.hpp"
+#include "Simple-Utility/functional/Predicate.hpp"
 #include "Simple-Utility/functional/transform.hpp"
 
 namespace sl::functional::compare

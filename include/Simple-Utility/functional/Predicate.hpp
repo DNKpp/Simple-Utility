@@ -21,6 +21,7 @@
 #include "Simple-Utility/functional/mixins/Conjunction.hpp"
 #include "Simple-Utility/functional/mixins/Disjunction.hpp"
 #include "Simple-Utility/functional/mixins/Equality.hpp"
+#include "Simple-Utility/functional/mixins/ExclusiveDisjunction.hpp"
 #include "Simple-Utility/functional/mixins/InvokePolicies.hpp"
 #include "Simple-Utility/functional/mixins/Negation.hpp"
 #include "Simple-Utility/functional/mixins/Pipe.hpp"
@@ -30,19 +31,16 @@ namespace sl::functional
 	/**
 	 * \defgroup GROUP_FUNCTIONAL_PREDICATE predicate
 	 * \ingroup GROUP_FUNCTIONAL
-	 * \brief Contains the base ``predicate_fn`` and several pre-defined predicate objects.
-	 * \details Predicate types aim to simplify the composition of multiple conditions and are even fully compatible with the transformer
+	 * \brief Contains several pre-defined predicate objects.
+	 * \details Predicate types aim to simplify the composition of multiple conditions and are even fully compatible with the transform
 	 * functions. Predicates are therefore pipe-able with any other functional type (the params and return types still have to match, which can't
 	 * be checked before the actual invocation) and offer many more composing operators.
 	 * Predicates also aim to be flat as possible, which means, if users chain multiple predicates via supported operators, instead of simply
-	 * building a tree like structure, the functional objects will be combined into one ``composition_fn``. This keeps the calling-hierarchy as
+	 * building a tree like structure, the functional objects will be combined into one ``Composition``. This keeps the calling-hierarchy as
 	 * flat as possible and also supports easier debugging. Operations following this strategy are:
 	 * - pipe
 	 * - conjunction
 	 * - disjunction
-	 * - bind_front
-	 * - bind_back
-	 * - equivalent_compare
 	 *
 	 * \note Predicates are also composable via operator ==, != and <=>, but there is one subtle difference between operator == and <=>, which comes into
 	 * play when chaining three or more predicates together. For two predicates the result is equivalent.
