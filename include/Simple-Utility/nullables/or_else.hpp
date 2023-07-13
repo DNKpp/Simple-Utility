@@ -94,20 +94,6 @@ namespace sl::nullables
 		return algorithm_fn{ detail::or_else_caller_fn{} } >> std::forward<TFunc>(func);
 	}
 
-	/**
-	 * \brief Creates a functional object which can be used for composing with other functional objects.
-	 * \tparam TFunc The type of the passed function.
-	 * \param func The given functional object.
-	 * \note For details about the algorithm itself see \ref sl::nullables::or_else "or_else" function.
-	 * \return A \ref sl::nullables::or_else "or_else" algorithm as functional object.
-	 */
-	template <class TFunc>
-	[[nodiscard]]
-	constexpr auto or_else_fn(TFunc&& func)
-	{
-		return functional::transform_fn{ or_else(std::forward<TFunc>(func)) };
-	}
-	
 	/** @} */
 }
 
