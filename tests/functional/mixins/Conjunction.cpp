@@ -6,6 +6,7 @@
 #include "Simple-Utility/functional/mixins/Conjunction.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 
 #include "../Helper.hpp"
 
@@ -155,9 +156,18 @@ TEST_CASE(
 		GenericOperation1Mock<bool, int> secondFn{};
 		GenericOperation1Mock<bool, int> thirdFn{};
 
+		using Expected = sf::BasicClosure<
+					sf::Composition<
+						sf::ConjunctionStrategy,
+						GenericOperation1Mock<bool, int>,
+						GenericOperation1Mock<bool, int>,
+						GenericOperation1Mock<bool, int>>,
+					sf::BasicInvokePolicy,
+					sf::ConjunctionOperator>;
+
 		trompeloeil::sequence seq{};
 		REQUIRE_CALL(firstFn, call_const_lvalue_ref(trompeloeil::_))
-			.RETURN(_1 < 43)
+			.RETURN(_1 < 45)
 			.IN_SEQUENCE(seq);
 
 		REQUIRE_CALL(secondFn, call_const_lvalue_ref(trompeloeil::_))
@@ -165,16 +175,24 @@ TEST_CASE(
 			.IN_SEQUENCE(seq);
 
 		REQUIRE_CALL(thirdFn, call_const_lvalue_ref(trompeloeil::_))
-			.RETURN(42 == _1)
+			.RETURN(44 != _1)
 			.IN_SEQUENCE(seq);
 
-		const sf::BasicClosure composedFun = sf::envelop<TestClosure>(std::move(firstFn))
+		const sf::BasicClosure composedFn = sf::envelop<TestClosure>(std::move(firstFn))
 								&& std::move(secondFn)
 								&& std::move(thirdFn);
 
-		const bool result = std::invoke(composedFun, 42);
+		const auto [expected, input] = GENERATE(
+			(table<bool, int>)({
+				{true, 42},
+				{true, 43},
+				{false, 44}	// third predicate fails
+			}));
 
-		REQUIRE(result);
+		const bool result = std::invoke(composedFn, input);
+
+		REQUIRE(expected == result);
+		STATIC_REQUIRE(std::same_as<std::remove_const_t<decltype(composedFn)>, Expected>);
 	}
 }
 

@@ -6,6 +6,7 @@
 #include "Simple-Utility/functional/mixins/Equality.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 
 #include "../Helper.hpp"
 
@@ -67,7 +68,7 @@ TEST_CASE(
 }
 
 template <class Fn>
-using Closure = sf::BasicClosure<Fn, sf::BasicInvokePolicy, sf::EqualityOperator>;
+using TestClosure = sf::BasicClosure<Fn, sf::BasicInvokePolicy, sf::EqualityOperator>;
 
 TEST_CASE(
 	"functional::EqualityOperator enables == composing for functional::BasicClosure.",
@@ -89,8 +90,8 @@ TEST_CASE(
 			.RETURN(false)
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure fun = sf::envelop<Closure>(std::move(firstFn));
-		const sf::BasicClosure composedFun = std::move(fun) == std::move(secondFn);
+		const sf::BasicClosure composedFun = sf::envelop<TestClosure>(std::move(firstFn))
+											== std::move(secondFn);
 
 		const bool result = std::invoke(composedFun, 42);
 
@@ -107,8 +108,8 @@ TEST_CASE(
 			.RETURN(false)
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure fun = sf::envelop<Closure>(std::move(firstFn));
-		sf::BasicClosure composedFun = std::move(fun) == std::move(secondFn);
+		sf::BasicClosure composedFun = sf::envelop<TestClosure>(std::move(firstFn))
+										== std::move(secondFn);
 
 		const bool result = std::invoke(composedFun, 42);
 
@@ -125,8 +126,8 @@ TEST_CASE(
 			.RETURN(false)
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure fun = sf::envelop<Closure>(std::move(firstFn));
-		const sf::BasicClosure composedFun = std::move(fun) == std::move(secondFn);
+		const sf::BasicClosure composedFun = sf::envelop<TestClosure>(std::move(firstFn))
+											== std::move(secondFn);
 
 		const bool result = std::invoke(std::move(composedFun), 42);
 
@@ -143,12 +144,63 @@ TEST_CASE(
 			.RETURN(false)
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure fun = sf::envelop<Closure>(std::move(firstFn));
-		sf::BasicClosure composedFun = std::move(fun) == std::move(secondFn);
+		sf::BasicClosure composedFun = sf::envelop<TestClosure>(std::move(firstFn))
+										== std::move(secondFn);
 
 		const bool result = std::invoke(std::move(composedFun), 42);
 
 		REQUIRE(!result);
+	}
+}
+
+TEST_CASE(
+	"functional::EqualityOperator enables == composing for functional::BasicClosure in arbitrary depth.",
+	"[functional][functional::Equality]"
+)
+{
+	SECTION("Three functions.")
+	{
+		GenericOperation1Mock<bool, int> firstFn{};
+		GenericOperation1Mock<bool, int> secondFn{};
+		GenericOperation1Mock<bool, int> thirdFn{};
+
+		using Expected = sf::BasicClosure<
+					sf::Composition<
+						sf::EqualityStrategy,
+						GenericOperation1Mock<bool, int>,
+						GenericOperation1Mock<bool, int>,
+						GenericOperation1Mock<bool, int>>,
+					sf::BasicInvokePolicy,
+					sf::EqualityOperator>;
+
+		trompeloeil::sequence seq{};
+		REQUIRE_CALL(firstFn, call_const_lvalue_ref(trompeloeil::_))
+			.RETURN(_1 < 43)
+			.IN_SEQUENCE(seq);
+
+		REQUIRE_CALL(secondFn, call_const_lvalue_ref(trompeloeil::_))
+			.RETURN(_1 != 43)
+			.IN_SEQUENCE(seq);
+
+		REQUIRE_CALL(thirdFn, call_const_lvalue_ref(trompeloeil::_))
+			.RETURN(42 == _1)
+			.IN_SEQUENCE(seq);
+
+		const sf::BasicClosure composedFn = sf::envelop<TestClosure>(std::move(firstFn))
+											== std::move(secondFn)
+											== std::move(thirdFn);
+
+		const auto [expected, input] = GENERATE(
+			(table<bool, int>)({
+				{true, 42},
+				{true, 43}, // each predicate evaluates to false
+				{false, 41}
+			}));
+
+		const bool result = std::invoke(composedFn, input);
+
+		REQUIRE(expected == result);
+		STATIC_REQUIRE(std::same_as<std::remove_const_t<decltype(composedFn)>, Expected>);
 	}
 }
 
@@ -166,7 +218,7 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	using FirstFun = NoThrowConstructible<lhsNothrowCopyable, lhsNothrowMovable>;
 	using SecondFun = NoThrowConstructible<rhsNothrowCopyable, rhsNothrowMovable>;
-	using LhsClosure = Closure<FirstFun>;
+	using LhsClosure = TestClosure<FirstFun>;
 
 	STATIC_REQUIRE(
 		(lhsNothrowCopyable && rhsNothrowCopyable)
