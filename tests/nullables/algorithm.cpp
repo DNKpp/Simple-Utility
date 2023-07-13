@@ -46,26 +46,6 @@ TEMPLATE_LIST_TEST_CASE(
 }
 
 TEMPLATE_LIST_TEST_CASE(
-	"value_or_fn can be piped with other functionals",
-	"[nullables][algorithm][functional]",
-	all_ref_mods_list
-)
-{
-	auto [sourceOptional, expected] = GENERATE(
-		(table<const char*, int>)({
-			{ "c", 'c' },
-			{ nullptr, 'x' }
-			})
-	);
-
-	const sl::functional::transform_fn transform = std::identity{}
-													| value_or_fn('x')
-													| sl::functional::util::as<int>;
-
-	REQUIRE(transform(TestType::cast(sourceOptional)) == expected);
-}
-
-TEMPLATE_LIST_TEST_CASE(
 	"fwd_value forwards the value of the nullable to the functional, when it's not equal to its null.",
 	"[nullables][algorithm]",
 	all_ref_mods_cart2_list
@@ -81,28 +61,6 @@ TEMPLATE_LIST_TEST_CASE(
 	auto algorithm = fwd_value([&invoked](const char) { invoked = true; });
 
 	TestType::cast_lhs(sourceOptional) | TestType::cast_rhs(algorithm);
-
-	REQUIRE(invoked == expectedInvoked);
-}
-
-TEMPLATE_LIST_TEST_CASE(
-	"fwd_value_fn can be piped with other functionals",
-	"[nullables][algorithm][functional]",
-	all_ref_mods_list
-)
-{
-	auto [sourceOptional, expectedInvoked] = GENERATE(
-		(table<const char*, bool>)({
-			{ "c", true },
-			{ nullptr, false }
-			})
-	);
-
-	bool invoked{false};
-	const sl::functional::transform_fn transform = std::identity{}
-													| fwd_value_fn([&invoked](const char) { invoked = true; });
-
-	transform(TestType::cast(sourceOptional));
 
 	REQUIRE(invoked == expectedInvoked);
 }
@@ -124,25 +82,6 @@ TEMPLATE_LIST_TEST_CASE(
 	const std::optional<char> s = TestType::cast_lhs(sourceOptional) | TestType::cast_rhs(algorithm);
 
 	REQUIRE(s == expected);
-}
-
-TEMPLATE_LIST_TEST_CASE(
-	"and_then can be piped with other functionals",
-	"[nullables][algorithm][functional]",
-	all_ref_mods_list
-)
-{
-	auto [sourceOptional, expected] = GENERATE(
-		(table<const char*, bool>)({
-			{ "c", true },
-			{ nullptr, false }
-			})
-	);
-	const sl::functional::transform_fn transform = std::identity{}
-													| and_then_fn(sl::functional::util::as<std::optional<char>>)
-													| &std::optional<char>::has_value;
-
-	REQUIRE(transform(TestType::cast(sourceOptional)) == expected);
 }
 
 TEMPLATE_LIST_TEST_CASE(
@@ -179,34 +118,6 @@ TEMPLATE_LIST_TEST_CASE(
 
 	REQUIRE(s == expected);
 }
-
-//TEMPLATE_LIST_TEST_CASE(
-//	"or_else can be piped with other functionals",
-//	"[nullables][algorithm][functional]",
-//	all_ref_mods_list
-//)
-//{
-//	auto [sourceOptional, expectThrow] = GENERATE(
-//		(table<const char*, bool>)({
-//			{ "c", false },
-//			{ nullptr, true }
-//			})
-//	);
-//
-//	const sl::functional::predicate_fn predicate = std::identity{}
-//													| or_else_fn([] { throw std::exception{}; })
-//													| [](auto t) { return t; }
-//													| sl::functional::bind_back(sl::functional::compare::equal, nullptr);
-//
-//	if (expectThrow)
-//	{
-//		REQUIRE_THROWS(predicate(TestType::cast(sourceOptional)));
-//	}
-//	else
-//	{
-//		REQUIRE_NOTHROW(predicate(TestType::cast(sourceOptional)));
-//	}
-//}
 
 /*
  * LCOV_EXCL_START
@@ -336,8 +247,8 @@ TEST_CASE(
 	//! [algorithm chain functional]
 	namespace fn = sl::functional;
 
-	const fn::transform_fn square{[](const std::integral auto i) { return i * i; }};
-	const fn::transform_fn to_string{[](const std::integral auto i) { return std::to_string(i); }};
+	constexpr auto square = fn::envelop<fn::Transform>([](const std::integral auto i) { return i * i; });
+	constexpr auto to_string= fn::envelop<fn::Transform>([](const std::integral auto i) { return std::to_string(i); });
 
 	const std::string result = std::optional{42}
 								| or_else([] { throw std::runtime_error{"invalid optional."}; })
@@ -350,31 +261,6 @@ TEST_CASE(
 
 	REQUIRE(result == "1764");
 	//! [algorithm chain functional]
-}
-
-TEST_CASE(
-	"example showing that nullable algorithms can be chained arbitrarily with functional composition support.",
-	"[nullables][algorithm][example]"
-)
-{
-	//! [algorithm chain functional composition]
-	namespace fn = sl::functional;
-
-	const fn::transform_fn square{[](const std::integral auto i) { return i * i; }};
-	const fn::transform_fn to_string{[](const std::integral auto i) { return std::to_string(i); }};
-	// note the _fn suffix on all algorithms
-	const auto algorithmChain = or_else_fn([] { throw std::runtime_error{"invalid optional."}; })
-								| and_then_fn(
-									square
-									| to_string
-									| fn::util::as<std::optional<std::string>>
-								)
-								| value_or_fn("not set");
-
-	const std::string result = algorithmChain(std::optional{42});
-
-	REQUIRE(result == "1764");
-	//! [algorithm chain functional composition]
 }
 
 /*
