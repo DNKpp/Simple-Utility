@@ -141,6 +141,9 @@ namespace sl::functional
 namespace sl::functional
 {
 	template <composition_strategy CompositionStrategy, class FirstFn, class SecondFn, class... OtherFns>
+		requires (std::same_as<unwrap_functional_t<FirstFn>, FirstFn>
+				&& std::same_as<unwrap_functional_t<SecondFn>, SecondFn>
+				&& (... && std::same_as<unwrap_functional_t<OtherFns>, OtherFns>))
 	[[nodiscard]]
 	constexpr auto make_composition(
 		FirstFn&& firstFn,
@@ -172,9 +175,6 @@ namespace sl::functional
 	}
 
 	template <composition_strategy CompositionStrategy, class FirstFn, class SecondFn, class... OtherFns>
-		requires (!std::same_as<unwrap_functional_t<FirstFn>, FirstFn>
-				|| !std::same_as<unwrap_functional_t<SecondFn>, SecondFn>
-				|| (... || !std::same_as<unwrap_functional_t<OtherFns>, OtherFns>))
 	[[nodiscard]]
 	constexpr auto make_composition(
 		FirstFn&& firstFn,
