@@ -1,4 +1,4 @@
-CPMAddPackage("gh:catchorg/Catch2@3.3.2")
+CPMAddPackage("gh:catchorg/Catch2@3.4.0")
 include("${Catch2_SOURCE_DIR}/extras/Catch.cmake")
 
 CPMAddPackage("gh:rollbear/trompeloeil@44")
