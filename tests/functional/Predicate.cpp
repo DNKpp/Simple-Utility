@@ -16,7 +16,7 @@ struct PredicateMock
 {
 	static constexpr bool trompeloeil_movable_mock = true;
 
-	bool operator ()(int param) & { return call(param); }
+	bool operator ()(int param) { return call(param); }
 
 	MAKE_MOCK1(call, bool(int));
 };
