@@ -246,25 +246,6 @@ TEST_CASE(
 	REQUIRE(result == "-1");
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"functional::PipeStrategy propagates noexcept specification.",
-	"[functional][functional::Pipe]",
-	((bool expected, class... Funs), expected, Funs...),
-	(true, NoThrowInvokable<true>),
-	(true, NoThrowInvokable<true>, NoThrowInvokable<true>),
-	(true, NoThrowInvokable<true>, NoThrowInvokable<true>, NoThrowInvokable<true>),
-	(false, NoThrowInvokable<false>),
-	(false, NoThrowInvokable<false>, NoThrowInvokable<true>),
-	(false, NoThrowInvokable<true>, NoThrowInvokable<false>),
-	(false, NoThrowInvokable<false>, NoThrowInvokable<false>),
-	(false, NoThrowInvokable<false>, NoThrowInvokable<true>, NoThrowInvokable<true>),
-	(false, NoThrowInvokable<true>, NoThrowInvokable<false>, NoThrowInvokable<true>),
-	(false, NoThrowInvokable<true>, NoThrowInvokable<true>, NoThrowInvokable<false>)
-)
-{
-	STATIC_REQUIRE(expected == std::is_nothrow_invocable_v<sf::PipeStrategy, std::tuple<Funs...>, int>);
-}
-
 struct TestFun
 {
 	constexpr auto operator ()(auto&&...) const noexcept

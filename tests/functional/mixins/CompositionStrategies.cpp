@@ -6,6 +6,7 @@
 #include "Simple-Utility/functional/mixins/Conjunction.hpp"
 #include "Simple-Utility/functional/mixins/Disjunction.hpp"
 #include "Simple-Utility/functional/mixins/Equality.hpp"
+#include "Simple-Utility/functional/mixins/Pipe.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
 
@@ -171,7 +172,8 @@ TEMPLATE_TEST_CASE(
 	"[functional][functional::CompositionStrategy]",
 	sf::ConjunctionStrategy,
 	sf::DisjunctionStrategy,
-	sf::EqualityStrategy
+	sf::EqualityStrategy,
+	sf::PipeStrategy
 )
 {
 	STATIC_REQUIRE(std::is_nothrow_invocable_v<TestType, std::tuple<NoThrowInvokable<true>>, int>);
