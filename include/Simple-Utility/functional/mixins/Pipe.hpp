@@ -90,7 +90,8 @@ namespace sl::functional
 			Other&& other
 		) noexcept(noexcept(make_composition<PipeStrategy>(first, std::declval<Other>())))
 		{
-			return make_composition<PipeStrategy>(first, std::forward<Other>(other));
+			return envelop<closure_template<Derived>::template type>(
+				make_composition<PipeStrategy>(first, std::forward<Other>(other)));
 		}
 
 		template <class Other>
@@ -101,7 +102,8 @@ namespace sl::functional
 			Other&& other
 		) noexcept(noexcept(make_composition<PipeStrategy>(std::move(first), std::declval<Other>())))
 		{
-			return make_composition<PipeStrategy>(std::move(first), std::forward<Other>(other));
+			return envelop<closure_template<Derived>::template type>(
+				make_composition<PipeStrategy>(std::move(first), std::forward<Other>(other)));
 		}
 	};
 }

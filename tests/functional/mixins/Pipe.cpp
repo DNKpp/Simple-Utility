@@ -17,6 +17,8 @@
 
 namespace sf = sl::functional;
 
+// ReSharper disable CppClangTidyBugproneUseAfterMove
+
 TEST_CASE(
 	"functional::PipeStrategy invokes a single function with the input params.",
 	"[functional][functional::Pipe]"
@@ -270,6 +272,9 @@ struct TestFun
 	}
 };
 
+template <class Fn>
+using TestClosure = sf::BasicClosure<Fn, sf::BasicInvokePolicy, sf::PipeOperator>;
+
 TEST_CASE("functional::PipeOperator enables enables pipe composing for functional::BasicClosure.", "[functional][functional::Pipe]")
 {
 	GenericOperation1Mock<std::string, int> firstFn{};
@@ -287,8 +292,8 @@ TEST_CASE("functional::PipeOperator enables enables pipe composing for functiona
 			.RETURN(std::stoi(_1))
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure<decltype(firstFn), sf::BasicInvokePolicy, sf::PipeOperator> fun{std::move(firstFn)};
-		const sf::Composition composedFun = std::move(fun) | std::move(secondFn);
+		const sf::BasicClosure composedFun = sf::envelop<TestClosure>(std::move(firstFn))
+											| std::move(secondFn);
 
 		const int result = std::invoke(composedFun, 42);
 
@@ -305,8 +310,8 @@ TEST_CASE("functional::PipeOperator enables enables pipe composing for functiona
 			.RETURN(std::stoi(_1))
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure<decltype(firstFn), sf::BasicInvokePolicy, sf::PipeOperator> fun{std::move(firstFn)}; // NOLINT(bugprone-use-after-move)
-		sf::Composition composedFun = std::move(fun) | std::move(secondFn);            // NOLINT(bugprone-use-after-move)
+		sf::BasicClosure composedFun = sf::envelop<TestClosure>(std::move(firstFn))
+										| std::move(secondFn);
 
 		const int result = std::invoke(composedFun, 42);
 
@@ -323,8 +328,8 @@ TEST_CASE("functional::PipeOperator enables enables pipe composing for functiona
 			.RETURN(std::stoi(_1))
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure<decltype(firstFn), sf::BasicInvokePolicy, sf::PipeOperator> fun{std::move(firstFn)}; // NOLINT(bugprone-use-after-move)
-		const sf::Composition composedFun = std::move(fun) | std::move(secondFn);      // NOLINT(bugprone-use-after-move)
+		const sf::BasicClosure composedFun = sf::envelop<TestClosure>(std::move(firstFn))
+											| std::move(secondFn);
 
 		const int result = std::invoke(std::move(composedFun), 42);
 
@@ -341,12 +346,46 @@ TEST_CASE("functional::PipeOperator enables enables pipe composing for functiona
 			.RETURN(std::stoi(_1))
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure<decltype(firstFn), sf::BasicInvokePolicy, sf::PipeOperator> fun{std::move(firstFn)}; // NOLINT(bugprone-use-after-move)
-		sf::Composition composedFun = std::move(fun) | std::move(secondFn);            // NOLINT(bugprone-use-after-move)
+		sf::BasicClosure composedFun = sf::envelop<TestClosure>(std::move(firstFn))
+										| std::move(secondFn);
 
 		const int result = std::invoke(std::move(composedFun), 42);
 
 		REQUIRE(result == 42);
+	}
+}
+
+TEST_CASE(
+	"functional::PipeOperator enables pipe composing for functional::BasicClosure in arbitrary depth.",
+	"[functional][functional::Pipe]"
+)
+{
+	SECTION("Three functions.")
+	{
+		GenericOperation1Mock<std::string, int> firstFn{};
+		GenericOperation1Mock<int, const std::string&> secondFn{};
+		GenericOperation1Mock<int, int> thirdFn{};
+
+		trompeloeil::sequence seq{};
+		REQUIRE_CALL(firstFn, call_const_lvalue_ref(trompeloeil::_))
+			.RETURN(std::to_string(_1))
+			.IN_SEQUENCE(seq);
+
+		REQUIRE_CALL(secondFn, call_const_lvalue_ref(trompeloeil::_))
+			.RETURN(std::stoi(_1))
+			.IN_SEQUENCE(seq);
+
+		REQUIRE_CALL(thirdFn, call_const_lvalue_ref(trompeloeil::_))
+			.RETURN(2 * _1)
+			.IN_SEQUENCE(seq);
+
+		const auto composedFun = sf::envelop<TestClosure>(std::move(firstFn))
+								| std::move(secondFn)
+								| std::move(thirdFn);
+
+		const int result = std::invoke(composedFun, 42);
+
+		REQUIRE(result == 84);
 	}
 }
 
@@ -366,8 +405,11 @@ TEMPLATE_TEST_CASE_SIG(
 	using SecondFun = NoThrowConstructible<rhsNothrowCopyable, rhsNothrowMovable>;
 	using LhsClosure = sf::BasicClosure<FirstFun, sf::BasicInvokePolicy, sf::PipeOperator>;
 
-	STATIC_REQUIRE((lhsNothrowCopyable && rhsNothrowCopyable) == noexcept(std::declval<const LhsClosure&>() | std::declval<const SecondFun&>()));
-	STATIC_REQUIRE((lhsNothrowCopyable && rhsNothrowMovable) == noexcept(std::declval<const LhsClosure&>() | std::declval<SecondFun&&>()));
-	STATIC_REQUIRE((lhsNothrowMovable && rhsNothrowCopyable) == noexcept(std::declval<LhsClosure&&>() | std::declval<const SecondFun&>()));
+	STATIC_REQUIRE(
+		(lhsNothrowCopyable && rhsNothrowCopyable) == noexcept(std::declval<const LhsClosure&>() | std::declval<const SecondFun&>()));
+	STATIC_REQUIRE(
+		(lhsNothrowCopyable && rhsNothrowMovable) == noexcept(std::declval<const LhsClosure&>() | std::declval<SecondFun&&>()));
+	STATIC_REQUIRE(
+		(lhsNothrowMovable && rhsNothrowCopyable) == noexcept(std::declval<LhsClosure&&>() | std::declval<const SecondFun&>()));
 	STATIC_REQUIRE((lhsNothrowMovable && rhsNothrowMovable) == noexcept(std::declval<LhsClosure&&>() | std::declval<SecondFun&&>()));
 }
