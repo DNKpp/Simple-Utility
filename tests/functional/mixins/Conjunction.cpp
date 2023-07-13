@@ -15,7 +15,6 @@ namespace sf = sl::functional;
 
 // ReSharper disable CppClangTidyBugproneUseAfterMove
 
-
 TEST_CASE(
 	"functional::ConjunctionStrategy with multiple functions invokes each function until false was returned.",
 	"[functional][functional::Conjunction]"
@@ -60,7 +59,7 @@ TEST_CASE(
 }
 
 template <class Fn>
-using Closure = sf::BasicClosure<Fn, sf::BasicInvokePolicy, sf::ConjunctionOperator>;
+using TestClosure = sf::BasicClosure<Fn, sf::BasicInvokePolicy, sf::ConjunctionOperator>;
 
 TEST_CASE(
 	"functional::ConjunctionOperator enables && composing for functional::BasicClosure.",
@@ -82,8 +81,8 @@ TEST_CASE(
 			.RETURN(false)
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure fun = sf::envelop<Closure>(std::move(firstFn));
-		const sf::BasicClosure composedFun = std::move(fun) && std::move(secondFn);
+		const sf::BasicClosure composedFun = sf::envelop<TestClosure>(std::move(firstFn))
+											&& std::move(secondFn);
 
 		const bool result = std::invoke(composedFun, 42);
 
@@ -100,8 +99,8 @@ TEST_CASE(
 			.RETURN(false)
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure fun = sf::envelop<Closure>(std::move(firstFn));
-		sf::BasicClosure composedFun = std::move(fun) && std::move(secondFn);
+		sf::BasicClosure composedFun = sf::envelop<TestClosure>(std::move(firstFn))
+										&& std::move(secondFn);
 
 		const bool result = std::invoke(composedFun, 42);
 
@@ -118,8 +117,8 @@ TEST_CASE(
 			.RETURN(false)
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure fun = sf::envelop<Closure>(std::move(firstFn));
-		const sf::BasicClosure composedFun = std::move(fun) && std::move(secondFn);
+		const sf::BasicClosure composedFun = sf::envelop<TestClosure>(std::move(firstFn))
+											&& std::move(secondFn);
 
 		const bool result = std::invoke(std::move(composedFun), 42);
 
@@ -136,12 +135,46 @@ TEST_CASE(
 			.RETURN(false)
 			.IN_SEQUENCE(seq);
 
-		sf::BasicClosure fun = sf::envelop<Closure>(std::move(firstFn));
-		sf::BasicClosure composedFun = std::move(fun) && std::move(secondFn);
+		sf::BasicClosure composedFun = sf::envelop<TestClosure>(std::move(firstFn))
+										&& std::move(secondFn);
 
 		const bool result = std::invoke(std::move(composedFun), 42);
 
 		REQUIRE(!result);
+	}
+}
+
+TEST_CASE(
+	"functional::ConjunctionOperator enables && composing for functional::BasicClosure in arbitrary depth.",
+	"[functional][functional::Conjunction]"
+)
+{
+	SECTION("Three functions.")
+	{
+		GenericOperation1Mock<bool, int> firstFn{};
+		GenericOperation1Mock<bool, int> secondFn{};
+		GenericOperation1Mock<bool, int> thirdFn{};
+
+		trompeloeil::sequence seq{};
+		REQUIRE_CALL(firstFn, call_const_lvalue_ref(trompeloeil::_))
+			.RETURN(_1 < 43)
+			.IN_SEQUENCE(seq);
+
+		REQUIRE_CALL(secondFn, call_const_lvalue_ref(trompeloeil::_))
+			.RETURN(41 < _1)
+			.IN_SEQUENCE(seq);
+
+		REQUIRE_CALL(thirdFn, call_const_lvalue_ref(trompeloeil::_))
+			.RETURN(42 == _1)
+			.IN_SEQUENCE(seq);
+
+		const sf::BasicClosure composedFun = sf::envelop<TestClosure>(std::move(firstFn))
+								&& std::move(secondFn)
+								&& std::move(thirdFn);
+
+		const bool result = std::invoke(composedFun, 42);
+
+		REQUIRE(result);
 	}
 }
 
@@ -159,7 +192,7 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	using FirstFun = NoThrowConstructible<lhsNothrowCopyable, lhsNothrowMovable>;
 	using SecondFun = NoThrowConstructible<rhsNothrowCopyable, rhsNothrowMovable>;
-	using LhsClosure = Closure<FirstFun>;
+	using LhsClosure = TestClosure<FirstFun>;
 
 	STATIC_REQUIRE(
 		(lhsNothrowCopyable && rhsNothrowCopyable)
