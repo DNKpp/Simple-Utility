@@ -8,15 +8,6 @@
 
 #pragma once
 
-#include "Simple-Utility/functional/base.hpp"
-#include "Simple-Utility/functional/operators/bind.hpp"
-#include "Simple-Utility/functional/operators/conjunction.hpp"
-#include "Simple-Utility/functional/operators/disjunction.hpp"
-#include "Simple-Utility/functional/operators/equal.hpp"
-#include "Simple-Utility/functional/operators/equivalent.hpp"
-#include "Simple-Utility/functional/operators/negation.hpp"
-#include "Simple-Utility/functional/operators/pipe.hpp"
-
 #include "Simple-Utility/functional/BasicClosure.hpp"
 #include "Simple-Utility/functional/mixins/Conjunction.hpp"
 #include "Simple-Utility/functional/mixins/Disjunction.hpp"
@@ -36,29 +27,7 @@ namespace sl::functional
 	 * be checked before the actual invocation) and offer many more composing operators.
 	 * Predicates also aim to be flat as possible, which means, if users chain multiple predicates via supported operators, instead of simply
 	 * building a tree like structure, the functional objects will be combined into one ``Composition``. This keeps the calling-hierarchy as
-	 * flat as possible and also supports easier debugging. Operations following this strategy are:
-	 * - pipe
-	 * - conjunction
-	 * - disjunction
-	 *
-	 * \note Predicates are also composable via operator ==, != and <=>, but there is one subtle difference between operator == and <=>, which comes into
-	 * play when chaining three or more predicates together. For two predicates the result is equivalent.
-	 * Operator == compares predicates in a nested manner, thus
-	 * \code{.cpp}
-	 * pred1 == pred2 == pred3;
-	 * \endcode
-	 * is in fact
-	 * \code{.cpp}
-	 * (pred1 == pred2) == pred3;
-	 * \endcode
-	 * That results is sometimes unexpected behaviour when ``pred1``, ``pred2`` and ``pred3`` are for example all ``false``. This will result in
-	 * ``(false == false) == false`` which is obviously not true. Operator <=> in contrast takes the result of the first function and compares
-	 * it to all other predicate results. The above example will then result in the following comparison:
-	 * \code{.cpp}
-	 * bool init = pred1();
-	 * bool result = init == pred2() && init == pred3();
-	 * \endcode
-	 * and therefore actually check if all results are equal.
+	 * flat as possible and also supports easier debugging.
 	 * @{
 	 */
 
