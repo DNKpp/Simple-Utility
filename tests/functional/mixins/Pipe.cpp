@@ -6,6 +6,7 @@
 #include "Simple-Utility/functional/mixins/Pipe.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
 
 #include "../Helper.hpp"
 
@@ -347,6 +348,15 @@ TEST_CASE(
 		GenericOperation1Mock<int, const std::string&> secondFn{};
 		GenericOperation1Mock<int, int> thirdFn{};
 
+		using Expected = sf::BasicClosure<
+					sf::Composition<
+						sf::PipeStrategy,
+						GenericOperation1Mock<std::string, int>,
+						GenericOperation1Mock<int, const std::string&>,
+						GenericOperation1Mock<int, int>>,
+					sf::BasicInvokePolicy,
+					sf::PipeOperator>;
+
 		trompeloeil::sequence seq{};
 		REQUIRE_CALL(firstFn, call_const_lvalue_ref(trompeloeil::_))
 			.RETURN(std::to_string(_1))
@@ -360,13 +370,20 @@ TEST_CASE(
 			.RETURN(2 * _1)
 			.IN_SEQUENCE(seq);
 
-		const auto composedFun = sf::envelop<TestClosure>(std::move(firstFn))
+		const auto composedFn = sf::envelop<TestClosure>(std::move(firstFn))
 								| std::move(secondFn)
 								| std::move(thirdFn);
 
-		const int result = std::invoke(composedFun, 42);
+		const auto [expected, input] = GENERATE(
+			(table<int, int>)({
+				{2 * 42, 42},
+				{2 * 1337, 1337}
+			}));
 
-		REQUIRE(result == 84);
+		const int result = std::invoke(composedFn, input);
+
+		REQUIRE(expected == result);
+		STATIC_REQUIRE(std::same_as<std::remove_const_t<decltype(composedFn)>, Expected>);
 	}
 }
 
