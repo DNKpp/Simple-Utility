@@ -103,7 +103,7 @@ TEST_CASE("algorithm_fn can wrap user defined functions.", "[nullables][algorith
 		return std::forward<TNullable>(in);
 	};
 
-	// This factory function isn't requires, but reduces the noise from the calling code.
+	// This factory function isn't required, but reduces the noise from the calling code.
 	const auto lazy_value_or = [&]<std::invocable TFunc>(TFunc&& func)
 	{
 		// operator >> binds the given parameter to the back (like std::bind_back).

@@ -78,20 +78,6 @@ namespace sl::nullables
 		return algorithm_fn{detail::value_or_caller_fn{}} >> std::forward<TValue>(value);
 	}
 
-	/**
-	 * \brief Creates a functional object which can be used for composing with other functional objects.
-	 * \tparam TValue Type of alternative. Must initialize ``nullable_value_t<TNullable>`` objects.
-	 * \param value The provided alternative.
-	 * \note For details about the algorithm itself see \ref sl::nullables::value_or "value_or" function.
-	 * \return A \ref sl::nullables::value_or "value_or" algorithm as functional object.
-	 */
-	template <class TValue>
-	[[nodiscard]]
-	constexpr auto value_or_fn(TValue&& value)
-	{
-		return functional::transform_fn{value_or(std::forward<TValue>(value))};
-	}
-
 	/** @} */
 }
 
