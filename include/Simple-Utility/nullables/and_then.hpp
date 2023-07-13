@@ -8,8 +8,8 @@
 
 #pragma once
 
+#include "Simple-Utility/functional/bind_back.hpp"
 #include "Simple-Utility/nullables/base.hpp"
-#include "Simple-Utility/functional/transform.hpp"
 
 namespace sl::nullables::detail
 {
@@ -24,7 +24,7 @@ namespace sl::nullables::detail
 		{
 			return std::invoke(std::forward<TFunc>(func), unwrap(std::forward<TInputNullable>(inputNullable)));
 		}
-		return result_nullable_t{ null_v<result_nullable_t> };
+		return result_nullable_t{null_v<result_nullable_t>};
 	}
 
 	class and_then_caller_fn
@@ -33,17 +33,15 @@ namespace sl::nullables::detail
 		template <input_nullable TInputNullable, std::invocable<dereference_result_t<TInputNullable>> TFunc>
 			requires nullable<std::invoke_result_t<TFunc, dereference_result_t<TInputNullable>>>
 		[[nodiscard]]
-		constexpr auto operator ()
-		(
+		constexpr auto operator ()(
 			TInputNullable&& inputNullable,
 			TFunc&& func
 		) const
-		noexcept(noexcept(and_then(std::declval<TInputNullable>(), std::declval<TFunc>())))
+			noexcept(noexcept(and_then(std::declval<TInputNullable>(), std::declval<TFunc>())))
 		{
 			return and_then(
 				std::forward<TInputNullable>(inputNullable),
-				std::forward<TFunc>(func)
-			);
+				std::forward<TFunc>(func));
 		}
 	};
 }
@@ -78,12 +76,10 @@ namespace sl::nullables
 	 * Note that the resulting \ref sl::nullables::nullable "nullable" type differs from the starting one.
 	 * \snippet algorithm.cpp and_then invalid
 	 */
-	template <class TFunc>
-	[[nodiscard]]
-	constexpr auto and_then(TFunc&& func)
+	inline constexpr auto and_then = []<class Fn>(Fn&& fn) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Fn>, Fn>)
 	{
-		return algorithm_fn{ detail::and_then_caller_fn{} } >> std::forward<TFunc>(func);
-	}
+		return Algorithm{functional::bind_back(detail::and_then_caller_fn{}, std::forward<Fn>(fn))};
+	};
 
 	/** @} */
 }

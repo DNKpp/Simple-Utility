@@ -8,11 +8,9 @@
 
 #pragma once
 
-#include "Simple-Utility/concepts/stl_extensions.hpp"
+#include "Simple-Utility/Config.hpp"
 #include "Simple-Utility/concepts/operators.hpp"
-#include "Simple-Utility/functional/base.hpp"
-#include "Simple-Utility/functional/operators/bind.hpp"
-#include "Simple-Utility/unified_base.hpp"
+#include "Simple-Utility/concepts/stl_extensions.hpp"
 
 #include <cstddef>
 #include <type_traits>
@@ -113,7 +111,7 @@ namespace sl::nullables
 	 * \tparam T  The type to query
 	 */
 	template <class T>
-	constexpr static auto null_v{ traits<std::remove_cvref_t<T>>::null };
+	constexpr static auto null_v{traits<std::remove_cvref_t<T>>::null};
 
 	/**
 	 * \brief Specialization for raw pointers
@@ -124,7 +122,7 @@ namespace sl::nullables
 	struct traits<T>
 	{
 		using value_type = std::remove_pointer_t<T>;
-		static constexpr std::nullptr_t null{ nullptr };
+		static constexpr std::nullptr_t null{nullptr};
 	};
 
 	/** @} */
@@ -134,11 +132,10 @@ namespace sl::nullables
 		template <class TNullable>
 			requires concepts::dereferencable_r<TNullable, value_t<TNullable>>
 		[[nodiscard]]
-		constexpr decltype(auto) unwrap
-		(
+		constexpr decltype(auto) unwrap(
 			TNullable&& na
 		)
-		noexcept
+			noexcept
 		{
 			return *std::forward<TNullable>(na);
 		}
@@ -197,7 +194,8 @@ namespace sl::nullables
 namespace sl::nullables::detail
 {
 	struct algorithm_tag
-	{ };
+	{
+	};
 }
 
 namespace sl::nullables
@@ -212,53 +210,35 @@ namespace sl::nullables
 	 */
 
 	/**
-	 * \brief The core algorithm helper, which executes the held algorithm when used as the right-hand-side of ``operator |`` expressions,
+	 * \brief The core algorithm helper, which executes the held operation when used as the right-hand-side of ``operator |`` expressions,
 	 * when the left-hand-side is a valid ``nullable`` type.
-	 * \tparam TFunc The function type.
+	 * \tparam Operation The function type.
 	 */
-	template <class TFunc>
-		requires std::same_as<TFunc, std::remove_cvref_t<TFunc>>
-	class algorithm_fn final
-		: private unified_base<detail::algorithm_tag>,
-		public functional::closure_base_fn<TFunc>,
-		public functional::enable_operation<
-			algorithm_fn,
-			functional::operators::bind_back,
-			functional::operators::bind_front
-		>
+	template <concepts::unqualified Operation>
+	class Algorithm
 	{
-		using closure_t = functional::closure_base_fn<TFunc>;
 	public:
-		using closure_t::closure_t;
+		[[nodiscard]]
+		explicit Algorithm(Operation operation) noexcept(std::is_nothrow_move_constructible_v<Operation>)
+			: m_Operation{std::move(operation)}
+		{
+		}
+
+		template <class Nullable>
+			requires input_nullable<Nullable>
+					&& std::regular_invocable<Operation, Nullable>
+		[[nodiscard]]
+		friend constexpr auto operator |(
+			Nullable&& input,
+			const Algorithm& algorithm
+		) noexcept(std::is_nothrow_invocable_v<Operation, Nullable>)
+		{
+			return std::invoke(algorithm.m_Operation, std::forward<Nullable>(input));
+		}
+
+	private:
+		SL_UTILITY_NO_UNIQUE_ADDRESS Operation m_Operation{};
 	};
-
-	/**
-	 * \brief Deduction guide for \ref sl::nullables::algorithm_fn "algorithm_fn" types.
-	 * \tparam TFunc The function type.
-	 */
-	template <class TFunc>
-	algorithm_fn(TFunc) -> algorithm_fn<TFunc>;
-
-	/**
-	 * \brief The operator is used to chain nullables with algorithms.
-	 * \tparam TNullable The nullable type.
-	 * \tparam TAlgorithm The algorithm type. 
-	 * \param nullable The nullable object.
-	 * \param algorithm The algorithm object.
-	 * \return Returns the forwarded result of the algorithm invocation.
-	 */
-	template <input_nullable TNullable, derived_from_unified_base<detail::algorithm_tag> TAlgorithm>
-		requires std::invocable<TAlgorithm, TNullable>
-	[[nodiscard]]
-	constexpr decltype(auto) operator |
-	(
-		TNullable&& nullable,
-		TAlgorithm&& algorithm
-	)
-	noexcept(std::is_nothrow_invocable_v<TAlgorithm, TNullable>)
-	{
-		return std::invoke(std::forward<TAlgorithm>(algorithm), std::forward<TNullable>(nullable));
-	}
 
 	/** @} */
 

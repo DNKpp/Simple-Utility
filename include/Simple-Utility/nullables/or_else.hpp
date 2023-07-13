@@ -8,8 +8,8 @@
 
 #pragma once
 
+#include "Simple-Utility/functional/bind_back.hpp"
 #include "Simple-Utility/nullables/base.hpp"
-#include "Simple-Utility/functional/transform.hpp"
 
 namespace sl::nullables::detail
 {
@@ -87,13 +87,11 @@ namespace sl::nullables
 	 * return anything.
 	 * \snippet algorithm.cpp or_else invalid void return
 	 */
-	template <std::invocable TFunc>
-	[[nodiscard]]
-	constexpr auto or_else(TFunc&& func)
+	inline constexpr auto or_else = []<class Fn>(Fn&& fn) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Fn>, Fn>)
 	{
-		return algorithm_fn{ detail::or_else_caller_fn{} } >> std::forward<TFunc>(func);
-	}
-
+		return Algorithm{functional::bind_back(detail::or_else_caller_fn{}, std::forward<Fn>(fn))};
+	};
+	
 	/** @} */
 }
 
