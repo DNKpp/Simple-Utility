@@ -8,11 +8,6 @@
 
 #pragma once
 
-#include "Simple-Utility/unified_base.hpp"
-#include "Simple-Utility/functional/base.hpp"
-#include "Simple-Utility/functional/operators/bind.hpp"
-#include "Simple-Utility/functional/operators/pipe.hpp"
-
 #include "Simple-Utility/functional/BasicClosure.hpp"
 #include "Simple-Utility/functional/mixins/InvokePolicies.hpp"
 #include "Simple-Utility/functional/mixins/Pipe.hpp"
@@ -26,59 +21,14 @@ namespace sl::functional
 	 * \details Transform types aim to simplify the composition of multiple transformations on objects and are therefore composable via
 	 * pipe operator (operator |). Transforms also aim to be flat as possible, which means, if users chain multiple transforms, instead of simply
 	 * building a tree like structure, the functional objects will be combined into one ``composition_fn``. This keeps the calling-hierarchy as
-	 * flat as possible and also supports easier debugging. Operations following this strategy are:
-	 * - pipe
-	 * - bind_front
-	 * - bind_back
+	 * flat as possible and also supports easier debugging.
 	 * @{
 	 */
 
 	/**
-	 * \brief Adapter type which accepts a functional type and enables pipe chaining and currying.
-	 * \tparam TFunc The functional type.
+	 * \brief Closure template for variadic transform like functional types, which enables piping.
+	 * \tparam Fn The functional type.
 	 */
-	template <class TFunc>
-		requires std::same_as<TFunc, std::remove_cvref_t<TFunc>>
-	class transform_fn final
-		: public closure_base_fn<TFunc>,
-		public enable_operation<transform_fn,
-								operators::pipe,
-								operators::bind_front,
-								operators::bind_back
-		>
-	{
-		using closure_t = closure_base_fn<TFunc>;
-
-	public:
-		/**
-		 * \brief Explicitly created forwarding constructor.
-		 * \tparam TArgs Argument types.
-		 * \param args Arguments, forwarded to the base class constructor.
-		 * \note This is only here, to keep clang <= 11 happy, when creating constexpr functional objects.
-		 */
-		template <class... TArgs>
-			requires std::constructible_from<closure_t, TArgs...>
-		[[nodiscard]]
-		constexpr
-		/**\cond conditional-explicit*/
-		explicit(detail::force_explicit_constructor_v<closure_t, TArgs...>)
-		/**\endcond*/
-		transform_fn
-		(
-			TArgs&&... args
-		)
-			noexcept(std::is_nothrow_constructible_v<closure_t, TArgs...>)
-			: closure_t{ std::forward<TArgs>(args)... }
-		{}
-	};
-
-	/**
-	 * \brief Deduction guide.
-	 * \tparam TFunc Type of the given functional.
-	 */
-	template <class TFunc>
-	transform_fn(TFunc) -> transform_fn<TFunc>;
-
 	template <function Fn>
 	using Transform = BasicClosure<Fn, NodiscardInvokePolicy, PipeOperator>;
 
