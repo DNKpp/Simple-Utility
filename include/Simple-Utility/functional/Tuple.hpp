@@ -40,13 +40,12 @@ namespace sl::functional::tuple
 	 * \tparam index The index of type to be retrieved.
 	 */
 	template <std::size_t index>
-	inline constexpr transform_fn get_at{
+	inline constexpr auto get_at = envelop<Transform>(
 		[]<class Tuple>(Tuple&& v) -> decltype(auto)requires concepts::tuple<std::remove_cvref_t<Tuple>>
 		{
 			using std::get;
 			return get<index>(std::forward<Tuple>(v));
-		}
-	};
+		});
 }
 
 namespace sl::functional::tuple::detail
