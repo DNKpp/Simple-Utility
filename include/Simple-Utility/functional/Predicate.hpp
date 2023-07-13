@@ -33,7 +33,7 @@ namespace sl::functional
 
 	/**
 	 * \brief Closure template for predicate like types, which accepts a functional type and enables pipe, conjunctive and disjunctive chaining,
-	 * equal, inequality and equivalence comparison, and front and back binding.
+	 * equal, inequality and equivalence comparison.
 	 * \tparam Fn The functional type.
 	 */
 	template <function Fn>
