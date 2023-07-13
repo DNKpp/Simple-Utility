@@ -8,8 +8,8 @@
 
 #pragma once
 
+#include "Simple-Utility/functional/bind_back.hpp"
 #include "Simple-Utility/nullables/base.hpp"
-#include "Simple-Utility/functional/transform.hpp"
 
 namespace sl::nullables::detail
 {
@@ -65,13 +65,11 @@ namespace sl::nullables
 	 * This example shows the outcome when an invalid \ref sl::nullables::input_nullable "input_nullable" is used in a ``fwd_value`` expression.
 	 * \snippet algorithm.cpp fwd_value invalid
 	 */
-	template <class TFunc>
-	[[nodiscard]]
-	constexpr auto fwd_value(TFunc&& func)
+	inline constexpr auto fwd_value = []<class Fn>(Fn&& fn) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Fn>, Fn>)
 	{
-		return algorithm_fn{ detail::fwd_value_caller_fn{} } >> std::forward<TFunc>(func);
-	}
-
+		return Algorithm{functional::bind_back(detail::fwd_value_caller_fn{}, std::forward<Fn>(fn))};
+	};
+	
 	/** @} */
 }
 

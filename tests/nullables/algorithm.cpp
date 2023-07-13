@@ -38,7 +38,7 @@ TEMPLATE_LIST_TEST_CASE(
 			{ nullptr, 'x' }
 			})
 	);
-	algorithm_fn algorithm = value_or('x');
+	Algorithm algorithm = value_or('x');
 
 	const char s = TestType::cast_lhs(sourceOptional) | TestType::cast_rhs(algorithm);
 
