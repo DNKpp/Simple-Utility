@@ -5,7 +5,7 @@ target_sources(
 	"bind_back.cpp"
 	"Composition.cpp"
 	"base.cpp"
-	"transform.cpp"
+	"Transform.cpp"
 	"Tuple.cpp"
 	"Overloaded.cpp"
 	"Compare.cpp"
