@@ -6,18 +6,22 @@
 #include <catch2/catch_template_test_macros.hpp>
 
 #include "Simple-Utility/nullables/base.hpp"
-#include "Simple-Utility/nullables/std_optional.hpp"
 #include "Simple-Utility/unique_handle.hpp"
+#include "Simple-Utility/functional/bind_back.hpp"
+#include "Simple-Utility/nullables/std_optional.hpp"
 
 using namespace sl::nullables;
+namespace sf = sl::functional;
 
 namespace
 {
 	struct test_nullable
-	{ };
+	{
+	};
 
 	struct test_nullable_null_t
-	{ };
+	{
+	};
 }
 
 template <>
@@ -83,34 +87,32 @@ TEMPLATE_TEST_CASE_SIG(
  * LCOV_EXCL_START
  */
 
-TEST_CASE("algorithm_fn can wrap user defined functions.", "[nullables][algorithm][example]")
+TEST_CASE("nullables::Algorithm can wrap user defined functions.", "[nullables][nullables::algorithm][example]")
 {
 	//! [algorithm custom]
 	/* That's the actual algorithm implementation. It simply checks whether the given nullable is invalid (equal to its null object)
 	 * and invokes the given function. Otherwise the nullable is simply forwarded as the result of the function.
 	 * In fact this is an alternative implementation of the ``value_or`` algorithm, where the value is retrieved lazily when needed.
 	*/
-	const auto my_lazy_value_or = []<nullable TNullable, std::invocable TFunc>
-	(
-		TNullable&& in,
-		TFunc&& func
-	) -> std::remove_cvref_t<TNullable>
+	constexpr auto my_lazy_value_or = []<nullable Nullable, std::invocable Fn>(
+		Nullable&& input,
+		Fn&& fn
+	) -> std::remove_cvref_t<Nullable>
 	{
-		if (in == null_v<TNullable>)
+		if (input == null_v<Nullable>)
 		{
-			return std::invoke(std::forward<TFunc>(func));
+			return std::invoke(std::forward<Fn>(fn));
 		}
-		return std::forward<TNullable>(in);
+		return std::forward<Nullable>(input);
 	};
 
 	// This factory function isn't required, but reduces the noise from the calling code.
-	const auto lazy_value_or = [&]<std::invocable TFunc>(TFunc&& func)
+	const auto lazy_value_or = [&]<std::invocable Fn>(Fn&& func)
 	{
-		// operator >> binds the given parameter to the back (like std::bind_back).
-		return algorithm_fn{ my_lazy_value_or } >> std::forward<TFunc>(func);
+		return Algorithm{sf::bind_back(my_lazy_value_or, std::forward<Fn>(func))};
 	};
 
-	const std::optional resultOfValid = std::optional{ 42 }
+	const std::optional resultOfValid = std::optional{42}
 										| lazy_value_or([] { return 1337; });
 
 	REQUIRE(resultOfValid == 42);

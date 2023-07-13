@@ -9,7 +9,6 @@
 #pragma once
 
 #include "Simple-Utility/functional/bind_back.hpp"
-#include "Simple-Utility/functional/transform.hpp"
 #include "Simple-Utility/nullables/base.hpp"
 
 namespace sl::nullables::detail
@@ -71,12 +70,12 @@ namespace sl::nullables
 	 * This example shows the outcome  when an invalid \ref sl::nullables::input_nullable "input_nullable" is used in a ``value_or`` expression.
 	 * \snippet algorithm.cpp value_or invalid
 	 */
-	template <class TValue>
-	[[nodiscard]]
-	constexpr auto value_or(TValue&& value)
+	inline constexpr auto value_or = []<class Value>(
+		Value&& value
+	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Value>, Value>)
 	{
-		return algorithm_fn{detail::value_or_caller_fn{}} >> std::forward<TValue>(value);
-	}
+		return Algorithm{functional::bind_back(detail::value_or_caller_fn{}, std::forward<Value>(value))};
+	};
 
 	/** @} */
 }
