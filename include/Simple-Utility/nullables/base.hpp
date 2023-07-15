@@ -13,6 +13,7 @@
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 
 #include <cstddef>
+#include <functional>
 #include <type_traits>
 
 namespace sl::nullables
