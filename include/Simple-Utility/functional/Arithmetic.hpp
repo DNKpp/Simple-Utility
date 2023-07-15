@@ -7,7 +7,7 @@
 #define SL_UTILITY_FUNCTIONAL_ARITHMETIC_HPP
 
 #include "Simple-Utility/concepts/operators.hpp"
-#include "Simple-Utility/functional/transform.hpp"
+#include "Simple-Utility/functional/Transform.hpp"
 
 namespace sl::functional::arithmetic
 {

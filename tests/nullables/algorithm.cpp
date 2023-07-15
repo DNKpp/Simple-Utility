@@ -15,7 +15,7 @@
 #include "Simple-Utility/nullables/value_or.hpp"
 
 #include "Simple-Utility/functional/Compare.hpp"
-#include "Simple-Utility/functional/transform.hpp"
+#include "Simple-Utility/functional/Transform.hpp"
 #include "Simple-Utility/functional/Utility.hpp"
 
 #include <stdexcept>
