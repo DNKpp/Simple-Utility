@@ -12,6 +12,7 @@
 #include <concepts>
 #include <functional>
 #include <optional>
+#include <utility>
 
 #include "Simple-Utility/Config.hpp"
 #include "Simple-Utility/concepts/stl_extensions.hpp"
