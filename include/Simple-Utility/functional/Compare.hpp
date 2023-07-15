@@ -9,7 +9,7 @@
 #pragma once
 
 #include "Simple-Utility/functional/Predicate.hpp"
-#include "Simple-Utility/functional/transform.hpp"
+#include "Simple-Utility/functional/Transform.hpp"
 
 namespace sl::functional::compare
 {
