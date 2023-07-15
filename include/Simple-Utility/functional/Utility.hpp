@@ -10,7 +10,7 @@
 
 #include "Simple-Utility/concepts/operators.hpp"
 #include "Simple-Utility/concepts/stl_extensions.hpp"
-#include "Simple-Utility/functional/transform.hpp"
+#include "Simple-Utility/functional/Transform.hpp"
 
 #include <memory>
 #include <utility>
