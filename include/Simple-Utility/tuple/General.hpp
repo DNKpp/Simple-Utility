@@ -125,6 +125,7 @@ namespace sl::concepts
 	 */
 	template <class Func, class Tuple>
 	concept nothrow_applicable = tuple<std::remove_cvref_t<Tuple>>
+								&& applicable<Func, Tuple>
 								&& detail::nothrow_applicable_v<Func, Tuple>;
 }
 
