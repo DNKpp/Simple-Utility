@@ -20,7 +20,10 @@
 
 namespace sl::functional::detail
 {
-	template <concepts::unqualified Derived, class InvokeStrategy>
+	template <class T>
+	concept invoke_strategy = std::is_empty_v<T>;
+
+	template <concepts::unqualified Derived, invoke_strategy InvokeStrategy>
 	class BasicInvokePolicy
 		: public CRTPBase<Derived>
 	{
@@ -63,7 +66,7 @@ namespace sl::functional::detail
 		}
 	};
 
-	template <concepts::unqualified Derived, class InvokeStrategy>
+	template <concepts::unqualified Derived, invoke_strategy InvokeStrategy>
 	class NodiscardInvokePolicy
 		: public CRTPBase<Derived>
 	{
@@ -161,20 +164,56 @@ namespace sl::functional::detail
 
 namespace sl::functional
 {
+	/**
+	 * \defgroup GROUP_FUNCTIONAL_INVOKE_POLICY invoke policy
+	 * \ingroup GROUP_FUNCTIONAL
+	 * 
+	 * \brief Contains several CRTP types, decorating the behavior of functional types.
+	 * \details During invocation all arguments are simply forwarded to the Derived instance, thus
+	 * these types act as convenient a decorators for for functional types.
+	 * \{
+	 */
+
+	/**
+	 * \brief CRTP type, enabling all four operator () overloads for derived classes.
+	 * \tparam Derived The most derived super type, inheriting from BasicInvokePolicy.
+	 */
 	template <concepts::unqualified Derived>
 	using BasicInvokePolicy = detail::BasicInvokePolicy<Derived, detail::InvocableStrategy>;
 
+	/**
+	 * \brief CRTP type, enabling all four operator () overloads for derived classes, which are all marked with th enodiscard attribute.
+	 * \tparam Derived The most derived super type, inheriting from NodiscardInvokePolicy.
+	 */
 	template <concepts::unqualified Derived>
 	using NodiscardInvokePolicy = detail::NodiscardInvokePolicy<Derived, detail::InvocableStrategy>;
 
+	/**
+	 * \brief CRTP type, enabling all four operator () overloads for derived classes, which are all marked with the nodiscard attribute.
+	 * \tparam Derived The most derived super type, inheriting from PredicateInvokePolicy. Additionally it has to satisfy the ``std::predicate`` concept.
+	 * \see https://en.cppreference.com/w/cpp/concepts/predicate
+	 */
 	template <concepts::unqualified Derived>
 	using PredicateInvokePolicy = detail::NodiscardInvokePolicy<Derived, detail::PredicateStrategy>;
 
+	/**
+	 * \brief CRTP type, enabling all four operator () overloads for derived classes and expects the params to be tied as tuple.
+	 * \tparam Derived The most derived super type, inheriting from BasicInvokePolicy.
+	 */
 	template <concepts::unqualified Derived>
 	using BasicApplyPolicy = detail::NodiscardInvokePolicy<Derived, detail::ApplicableStrategy>;
 
+	/**
+	 * \brief CRTP type, enabling all four operator () overloads for derived classes and expects the params to be tied as tuple. Additionally the
+	 * call operators are marked with the nodiscard attribute.
+	 * \tparam Derived The most derived super type, inheriting from BasicInvokePolicy.
+	 */
 	template <concepts::unqualified Derived>
 	using NodiscardApplyPolicy = detail::NodiscardInvokePolicy<Derived, detail::ApplicableStrategy>;
+
+	/**
+	 * \}
+	 */
 }
 
 #endif
