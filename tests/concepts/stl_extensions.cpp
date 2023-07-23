@@ -229,3 +229,18 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(expected == unqualified<T>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"comparison_category determines whether the provided type denotes a stl comparison category.",
+	"[concepts][stl_ext]",
+	((bool expected, class T), expected, T),
+	(true, std::strong_ordering),
+	(true, std::weak_ordering),
+	(true, std::partial_ordering),
+	(false, const std::strong_ordering),
+	(false, std::strong_ordering&),
+	(false, int)
+)
+{
+	STATIC_REQUIRE(expected == comparison_category<T>);
+}

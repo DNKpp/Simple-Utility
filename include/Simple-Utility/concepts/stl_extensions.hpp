@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <compare>
 #include <concepts>
 
 // ReSharper disable CppClangTidyClangDiagnosticDocumentation
@@ -114,6 +115,14 @@ namespace sl::concepts
 		{ t2 == t1 } noexcept -> std::convertible_to<bool>;
 		{ t2 != t1 } noexcept -> std::convertible_to<bool>;
 	};
+
+	/**
+	 * \brief Checks whether the given type denotes a common stl comparison category.
+	 * \tparam T Type to check.
+	 * \see https://en.cppreference.com/w/cpp/utility/compare/common_comparison_category
+	 */
+	template <class T>
+	concept comparison_category = !std::is_void_v<std::common_comparison_category_t<T>>;
 
 	/**
 	 * \brief Checks whether a type is explicit convertible to another. 
