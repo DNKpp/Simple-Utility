@@ -179,7 +179,60 @@ namespace sl::concepts
 		{ static_cast<TTo>(std::declval<TFrom>()) } noexcept;
 	};
 
-	/** @} */
+	/**
+	* \}
+	*/
+}
+
+namespace sl::concepts::detail
+{
+	template <class Category, class MinimumCategory>
+	concept compares_as = comparison_category<Category>
+						&& comparison_category<MinimumCategory>
+						&& std::same_as<std::common_comparison_category_t<Category, MinimumCategory>, MinimumCategory>;
+}
+
+namespace sl::concepts
+{
+	/**
+	* \addtogroup GROUP_STL_EXTENSION_CONCEPTS
+	* \{
+	*/
+
+	/**
+	 * \brief Checks whether the given type is comparable <=> with the minimal comparison category. This also implies equality comparable.
+	 * \details This is a less restrictive version of the ``std::three_way_comparable`` function.
+	 * \see https://en.cppreference.com/w/cpp/utility/compare/three_way_comparable
+	 * \tparam T The type to check.
+	 * \tparam MinimumCategory The minimum category the comparison has to yield.
+	 */
+	template <class T, class MinimumCategory = std::partial_ordering>
+	concept weakly_three_way_comparable = weakly_equality_comparable<T>
+										&& comparison_category<MinimumCategory>
+										&& requires(const std::remove_reference_t<T>& t)
+										{
+											{ t <=> t } -> detail::compares_as<MinimumCategory>;
+										};
+
+	/**
+	 * \brief Checks whether the given type is comparable <=> with the minimal comparison category and noexcept specifier.
+	 * This also implies equality comparable.
+	 * \details This is a less restrictive version of the ``std::three_way_comparable`` function, but with additional noexcept check.
+	 * \see https://en.cppreference.com/w/cpp/utility/compare/three_way_comparable
+	 * \tparam T The type to check.
+	 * \tparam MinimumCategory The minimum category the comparison has to yield.
+	 */
+	template <class T, class MinimumCategory = std::partial_ordering>
+	concept nothrow_weakly_three_way_comparable = nothrow_weakly_equality_comparable<T>
+												&& comparison_category<MinimumCategory>
+												&& requires(const std::remove_reference_t<T>& t)
+												{
+													{ t <=> t } noexcept -> detail::compares_as<MinimumCategory>;
+												};
+
+	/**
+	* \}
+	*/
 }
 
 #endif

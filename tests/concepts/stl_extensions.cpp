@@ -13,29 +13,39 @@
 
 using namespace sl::concepts;
 
-namespace
+struct target_t
 {
-	struct target_t
+	target_t() = default;
+
+	// ReSharper disable once CppNonExplicitConvertingConstructor
+	target_t(int)
 	{
-		target_t() = default;
+	}
 
-		// ReSharper disable once CppNonExplicitConvertingConstructor
-		target_t(int)
-		{ }
-
-		target_t& operator =(int)
-		{
-			return *this;
-		}
-	};
-
-	template <bool VNoexcept>
-	struct comparable_type
+	target_t& operator =(int)
 	{
-		constexpr bool operator ==(const comparable_type&) const noexcept(VNoexcept) = default;
+		return *this;
+	}
+};
 
-		constexpr bool operator ==(const comparable_type<!VNoexcept>&) const noexcept(false) { return true; }
-	};
+template <bool VNoexcept, comparison_category Category = std::strong_ordering>
+struct comparable_type
+{
+	constexpr bool operator ==(const comparable_type) const noexcept(VNoexcept) { return true; }
+
+	constexpr bool operator ==(const comparable_type<!VNoexcept, Category>) const noexcept(false) { return true; }
+};
+
+template <bool VNoexcept, comparison_category Category>
+constexpr Category operator <=>(const comparable_type<VNoexcept, Category>, const comparable_type<VNoexcept, Category>) noexcept(VNoexcept)
+{
+	return Category::equivalent;
+}
+
+template <comparison_category Category>
+constexpr Category operator <=>(const comparable_type<false, Category>, const comparable_type<true, Category>) noexcept(false)
+{
+	return Category::less;
 }
 
 #pragma warning(disable: 26444)
@@ -115,7 +125,6 @@ TEMPLATE_TEST_CASE_SIG(
 	(target_t, int, false),
 	(int, int, true)
 )
-#pragma warning(default: 26444)
 {
 	STATIC_REQUIRE(weakly_equality_comparable_with<T1, T2> == VExpected);
 	STATIC_REQUIRE(weakly_equality_comparable_with<T2, T1> == VExpected);
@@ -139,14 +148,16 @@ TEMPLATE_TEST_CASE_SIG(
 
 struct unary_constructible
 {
-	explicit unary_constructible([[maybe_unused]] auto&& x) noexcept  // NOLINT(bugprone-forwarding-reference-overload)
-	{}
+	explicit unary_constructible([[maybe_unused]] auto&& x) noexcept // NOLINT(bugprone-forwarding-reference-overload)
+	{
+	}
 };
 
 struct throwing_unary_constructible
 {
-	explicit throwing_unary_constructible([[maybe_unused]] auto&& x)  // NOLINT(bugprone-forwarding-reference-overload)
-	{}
+	explicit throwing_unary_constructible([[maybe_unused]] auto&& x) // NOLINT(bugprone-forwarding-reference-overload)
+	{
+	}
 };
 
 TEMPLATE_TEST_CASE_SIG(
@@ -268,4 +279,34 @@ TEMPLATE_TEST_CASE_SIG(
 )
 {
 	STATIC_REQUIRE(expected == comparison_category<T>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"weakly_three_way_comparable checks whether the given type is comparable via operator <=>.",
+	"[concepts][stl_ext]",
+	((bool expected, class T, comparison_category MinimalCategory), expected, T, MinimalCategory),
+	(true, int, std::strong_ordering),
+	(true, int, std::weak_ordering),
+	(true, comparable_type<true>, std::strong_ordering),
+	(true, comparable_type<false>, std::strong_ordering),
+	(false, target_t, std::strong_ordering),
+	(false, comparable_type<true, std::weak_ordering>, std::strong_ordering)
+)
+{
+	STATIC_REQUIRE(expected == weakly_three_way_comparable<T, MinimalCategory>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"nothrow_weakly_three_way_comparable checks whether the given type is comparable via operator <=>, and does not throw.",
+	"[concepts][stl_ext]",
+	((bool expected, class T, comparison_category MinimalCategory), expected, T, MinimalCategory),
+	(true, int, std::strong_ordering),
+	(true, int, std::weak_ordering),
+	(true, comparable_type<true>, std::strong_ordering),
+	(false, comparable_type<false>, std::strong_ordering),
+	(false, target_t, std::strong_ordering),
+	(false, comparable_type<true, std::weak_ordering>, std::strong_ordering)
+)
+{
+	STATIC_REQUIRE(expected == nothrow_weakly_three_way_comparable<T, MinimalCategory>);
 }
