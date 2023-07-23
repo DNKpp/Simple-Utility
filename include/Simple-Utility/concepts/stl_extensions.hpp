@@ -12,6 +12,8 @@
 #include <concepts>
 
 // ReSharper disable CppClangTidyClangDiagnosticDocumentation
+// ReSharper disable CppIdenticalOperandsInBinaryExpression
+// ReSharper disable CppClangTidyMiscRedundantExpression
 
 namespace sl::concepts
 {
@@ -83,6 +85,33 @@ namespace sl::concepts
 	 */
 	template <class TSource, class TTarget>
 	concept assignable_to = std::assignable_from<TTarget, TSource>;
+
+	/**
+	 * \brief Checks whether the given type is comparable via operator == and !=.
+	 * \details This is a less restrictive version of the ``std::equality_comparable`` function.
+	 * \see https://en.cppreference.com/w/cpp/concepts/equality_comparable
+	 * \tparam T The type to check.
+	 */
+	template <class T>
+	concept weakly_equality_comparable = requires(const std::remove_cvref_t<T>& t)
+	{
+		{ t == t } -> std::convertible_to<bool>;
+		{ t != t } -> std::convertible_to<bool>;
+	};
+
+	/**
+	 * \brief Checks whether the given type is comparable via operator == and != and has noexcept specifier.
+	 * \details This is a less restrictive version of the ``std::equality_comparable`` function, but with additional noexcept check.
+	 * \see https://en.cppreference.com/w/cpp/concepts/equality_comparable
+	 * \tparam T The type to check.
+	 */
+	template <class T>
+	concept nothrow_weakly_equality_comparable = weakly_equality_comparable<T>
+												&& requires(const std::remove_cvref_t<T>& t)
+												{
+													{ t == t } noexcept -> std::convertible_to<bool>;
+													{ t != t } noexcept -> std::convertible_to<bool>;
+												};
 
 	/**
 	 * \brief Checks whether a symmetrical set of operators == and != to compare both types with each other exists. 
