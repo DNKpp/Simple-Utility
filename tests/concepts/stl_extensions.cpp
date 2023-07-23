@@ -82,7 +82,32 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(not_same_as<TSource, TTarget> == VExpected);
 }
 
-#pragma warning(disable: 26444)
+TEMPLATE_TEST_CASE_SIG(
+	"weakly_equality_comparable checks whether the given type is comparable via operator == and !=.",
+	"[concepts][stl_ext]",
+	((bool expected, class T), expected, T),
+	(true, int),
+	(true, comparable_type<true>),
+	(true, comparable_type<false>),
+	(false, target_t)
+)
+{
+	STATIC_REQUIRE(expected == weakly_equality_comparable<T>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"nothrow_weakly_equality_comparable checks whether the given type is comparable via operator == and !=, and does not throw.",
+	"[concepts][stl_ext]",
+	((bool expected, class T), expected, T),
+	(true, int),
+	(true, comparable_type<true>),
+	(false, comparable_type<false>),
+	(false, target_t)
+)
+{
+	STATIC_REQUIRE(expected == nothrow_weakly_equality_comparable<T>);
+}
+
 TEMPLATE_TEST_CASE_SIG(
 	"weakly_equality_comparable_with Checks whether a symmetrical set of operators == and != to compare both types with each other exists.",
 	"[concepts][stl_ext]",
