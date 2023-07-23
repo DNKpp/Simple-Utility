@@ -4,7 +4,7 @@ target_sources(
 	"BasicClosure.cpp"
 	"bind_back.cpp"
 	"Composition.cpp"
-	"base.cpp"
+	
 	"Transform.cpp"
 	"Tuple.cpp"
 	"Overloaded.cpp"
