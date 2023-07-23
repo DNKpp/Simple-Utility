@@ -310,3 +310,37 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(expected == nothrow_weakly_three_way_comparable<T, MinimalCategory>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"weakly_three_way_comparable_with checks whether a symmetrical set of operator <=> to compare both types with each other exists.",
+	"[concepts][stl_ext]",
+	((bool expected, class T1, class T2, comparison_category MinimalCategory), expected, T1, T2, MinimalCategory),
+	(true, int, int, std::strong_ordering),
+	(true, int, float, std::partial_ordering),
+	(true, float, int, std::partial_ordering),
+	(true, comparable_type<true>, comparable_type<true>, std::strong_ordering),
+	(true, comparable_type<false>, comparable_type<false>, std::strong_ordering),
+	(false, comparable_type<true, std::weak_ordering>, comparable_type<true, std::weak_ordering>, std::strong_ordering),
+	(false, int, float, std::strong_ordering),
+	(false, float, int, std::strong_ordering)
+)
+{
+	STATIC_REQUIRE(expected == weakly_three_way_comparable_with<T1, T2, MinimalCategory>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"weakly_three_way_comparable_with checks whether a symmetrical set of operator <=> to compare both types with each other exists, and does not throw",
+	"[concepts][stl_ext]",
+	((bool expected, class T1, class T2, comparison_category MinimalCategory), expected, T1, T2, MinimalCategory),
+	(true, int, int, std::strong_ordering),
+	(true, int, float, std::partial_ordering),
+	(true, float, int, std::partial_ordering),
+	(true, comparable_type<true>, comparable_type<true>, std::strong_ordering),
+	(false, comparable_type<false>, comparable_type<false>, std::strong_ordering),
+	(false, comparable_type<true, std::weak_ordering>, comparable_type<true, std::weak_ordering>, std::strong_ordering),
+	(false, int, float, std::strong_ordering),
+	(false, float, int, std::strong_ordering)
+)
+{
+	STATIC_REQUIRE(expected == nothrow_weakly_three_way_comparable_with<T1, T2, MinimalCategory>);
+}

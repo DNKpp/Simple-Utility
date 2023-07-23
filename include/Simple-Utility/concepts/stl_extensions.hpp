@@ -114,7 +114,7 @@ namespace sl::concepts
 												};
 
 	/**
-	 * \brief Checks whether a symmetrical set of operators == and != to compare both types with each other exists. 
+	 * \brief Checks whether a symmetrical set of operators == and != to compare both types with each other exists.
 	 * \details This is a less restrictive version of the ``std::equality_comparable_with`` function.
 	 * \see https://en.cppreference.com/w/cpp/concepts/equality_comparable
 	 * \tparam T1 The first type to check
@@ -229,6 +229,42 @@ namespace sl::concepts
 												{
 													{ t <=> t } noexcept -> detail::compares_as<MinimumCategory>;
 												};
+
+	/**
+	 * \brief Checks whether a symmetrical set of operator <=> to compare both types with each other exists.
+	 * \details This is a less restrictive version of the ``std::three_way_comparable_with`` function.
+	 * \see https://en.cppreference.com/w/cpp/utility/compare/three_way_comparable
+	 * \tparam T1 The first type to check.
+	 * \tparam T2 The second type to check.
+	 * \tparam MinimumCategory The minimum category the comparison has to yield.
+	 */
+	template <class T1, class T2, class MinimumCategory = std::partial_ordering>
+	concept weakly_three_way_comparable_with =
+		weakly_equality_comparable_with<T1, T2>
+		&& comparison_category<MinimumCategory>
+		&& requires(const std::remove_reference_t<T1>& t1, const std::remove_reference_t<T2>& t2)
+		{
+			{ t1 <=> t2 } -> detail::compares_as<MinimumCategory>;
+			{ t2 <=> t1 } -> detail::compares_as<MinimumCategory>;
+		};
+
+	/**
+	 * \brief Checks whether a symmetrical set of operator <=> to compare both types with each other with noexcept specifier exists.
+	 * \details This is a less restrictive version of the ``std::three_way_comparable_with`` function, but with additional noexcept check.
+	 * \see https://en.cppreference.com/w/cpp/utility/compare/three_way_comparable
+	 * \tparam T1 The first type to check.
+	 * \tparam T2 The second type to check.
+	 * \tparam MinimumCategory The minimum category the comparison has to yield.
+	 */
+	template <class T1, class T2, class MinimumCategory = std::partial_ordering>
+	concept nothrow_weakly_three_way_comparable_with =
+		nothrow_weakly_equality_comparable_with<T1, T2>
+		&& comparison_category<MinimumCategory>
+		&& requires(const std::remove_reference_t<T1>& t1, const std::remove_reference_t<T2>& t2)
+		{
+			{ t1 <=> t2 } noexcept -> detail::compares_as<MinimumCategory>;
+			{ t2 <=> t1 } noexcept -> detail::compares_as<MinimumCategory>;
+		};
 
 	/**
 	* \}
