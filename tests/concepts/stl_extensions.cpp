@@ -284,7 +284,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
 	"weakly_three_way_comparable checks whether the given type is comparable via operator <=>.",
 	"[concepts][stl_ext]",
-	((bool expected, class T, comparison_category MinimalCategory), expected, T, MinimalCategory),
+	((bool expected, class T, class MinimalCategory), expected, T, MinimalCategory),
 	(true, int, std::strong_ordering),
 	(true, int, std::weak_ordering),
 	(true, comparable_type<true>, std::strong_ordering),
@@ -299,7 +299,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
 	"nothrow_weakly_three_way_comparable checks whether the given type is comparable via operator <=>, and does not throw.",
 	"[concepts][stl_ext]",
-	((bool expected, class T, comparison_category MinimalCategory), expected, T, MinimalCategory),
+	((bool expected, class T, class MinimalCategory), expected, T, MinimalCategory),
 	(true, int, std::strong_ordering),
 	(true, int, std::weak_ordering),
 	(true, comparable_type<true>, std::strong_ordering),
@@ -314,7 +314,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
 	"weakly_three_way_comparable_with checks whether a symmetrical set of operator <=> to compare both types with each other exists.",
 	"[concepts][stl_ext]",
-	((bool expected, class T1, class T2, comparison_category MinimalCategory), expected, T1, T2, MinimalCategory),
+	((bool expected, class T1, class T2, class MinimalCategory), expected, T1, T2, MinimalCategory),
 	(true, int, int, std::strong_ordering),
 	(true, int, float, std::partial_ordering),
 	(true, float, int, std::partial_ordering),
@@ -331,7 +331,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
 	"weakly_three_way_comparable_with checks whether a symmetrical set of operator <=> to compare both types with each other exists, and does not throw",
 	"[concepts][stl_ext]",
-	((bool expected, class T1, class T2, comparison_category MinimalCategory), expected, T1, T2, MinimalCategory),
+	((bool expected, class T1, class T2, class MinimalCategory), expected, T1, T2, MinimalCategory),
 	(true, int, int, std::strong_ordering),
 	(true, int, float, std::partial_ordering),
 	(true, float, int, std::partial_ordering),
