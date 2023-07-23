@@ -99,7 +99,7 @@ namespace sl::functional
 		}
 
 		/**
-		 * \copydocs operator ()
+		 * \copydoc operator ()
 		 */
 		template <class... Args>
 			requires std::invocable<CompStrategy, std::tuple<FirstFn&, SecondFn&, OtherFns&...>, Args...>
@@ -114,7 +114,7 @@ namespace sl::functional
 		}
 
 		/**
-		 * \copydocs operator ()
+		 * \copydoc operator ()
 		 */
 		template <class... Args>
 			requires std::invocable<CompStrategy, std::tuple<const FirstFn&&, const SecondFn&&, const OtherFns&&...>, Args...>
@@ -129,7 +129,7 @@ namespace sl::functional
 		}
 
 		/**
-		 * \copydocs operator ()
+		 * \copydoc operator ()
 		 */
 		template <class... Args>
 			requires std::invocable<CompStrategy, std::tuple<FirstFn&&, SecondFn&&, OtherFns&&...>, Args...>
