@@ -84,6 +84,7 @@ namespace sl::functional
 	public:
 		template <class Other>
 			requires function<std::remove_cvref_t<Other>>
+					&& std::same_as<unwrap_functional_t<Other>, Other>
 		[[nodiscard]]
 		friend constexpr auto operator |(
 			const Derived& first,
@@ -98,11 +99,36 @@ namespace sl::functional
 			requires function<std::remove_cvref_t<Other>>
 		[[nodiscard]]
 		friend constexpr auto operator |(
+			const Derived& first,
+			Other&& other
+		) noexcept(noexcept(make_composition<PipeStrategy>(first, std::declval<Other>())))
+		{
+			return envelop<closure_template<std::remove_cvref_t<Other>>::template type>(
+				make_composition<PipeStrategy>(first, std::forward<Other>(other)));
+		}
+
+		template <class Other>
+			requires function<std::remove_cvref_t<Other>>
+					&& std::same_as<unwrap_functional_t<Other>, Other>
+		[[nodiscard]]
+		friend constexpr auto operator |(
 			Derived&& first,
 			Other&& other
 		) noexcept(noexcept(make_composition<PipeStrategy>(std::move(first), std::declval<Other>())))
 		{
 			return envelop<closure_template<Derived>::template type>(
+				make_composition<PipeStrategy>(std::move(first), std::forward<Other>(other)));
+		}
+
+		template <class Other>
+			requires function<std::remove_cvref_t<Other>>
+		[[nodiscard]]
+		friend constexpr auto operator |(
+			Derived&& first,
+			Other&& other
+		) noexcept(noexcept(make_composition<PipeStrategy>(std::move(first), std::declval<Other>())))
+		{
+			return envelop<closure_template<std::remove_cvref_t<Other>>::template type>(
 				make_composition<PipeStrategy>(std::move(first), std::forward<Other>(other)));
 		}
 	};
