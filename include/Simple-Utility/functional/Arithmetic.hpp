@@ -22,7 +22,7 @@ namespace sl::functional::arithmetic
 	 * \brief Functional object which forwards the params to binary operator + and returns the result.
 	 */
 	inline constexpr auto plus = envelop<Transform>(
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) -> decltype(auto)
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) -> decltype(std::forward<TLhs>(lhs) + std::forward<TRhs>(rhs))
 		{
 			static_assert(concepts::plus_with<TLhs, TRhs>, "Arguments are not usable as operands of binary operator +.");
 
@@ -33,7 +33,7 @@ namespace sl::functional::arithmetic
 	 * \brief Functional object which forwards the params to binary operator - and returns the result.
 	 */
 	inline constexpr auto minus = envelop<Transform>(
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) -> decltype(auto)
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) -> decltype(std::forward<TLhs>(lhs) - std::forward<TRhs>(rhs))
 		{
 			static_assert(concepts::minus_with<TLhs, TRhs>, "Arguments are not usable as operands of binary operator -.");
 
@@ -44,7 +44,7 @@ namespace sl::functional::arithmetic
 	 * \brief Functional object which forwards the params to binary operator * and returns the result.
 	 */
 	inline constexpr auto multiplies = envelop<Transform>(
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) -> decltype(auto)
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) -> decltype(std::forward<TLhs>(lhs) * std::forward<TRhs>(rhs))
 		{
 			static_assert(concepts::multiplies_with<TLhs, TRhs>, "Arguments are not usable as operands of binary operator *.");
 
@@ -55,7 +55,7 @@ namespace sl::functional::arithmetic
 	 * \brief Functional object which forwards the params to binary operator / and returns the result.
 	 */
 	inline constexpr auto divides = envelop<Transform>(
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) -> decltype(auto)
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) -> decltype(std::forward<TLhs>(lhs) / std::forward<TRhs>(rhs))
 		{
 			static_assert(concepts::divides_with<TLhs, TRhs>, "Arguments are not usable as operands of binary operator /.");
 
@@ -66,7 +66,7 @@ namespace sl::functional::arithmetic
 	 * \brief Functional object which forwards the params to binary operator % and returns the result.
 	 */
 	inline constexpr auto modulus = envelop<Transform>(
-		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) -> decltype(auto)
+		[]<class TLhs, class TRhs>(TLhs&& lhs, TRhs&& rhs) -> decltype(std::forward<TLhs>(lhs) % std::forward<TRhs>(rhs))
 		{
 			static_assert(concepts::modulus_with<TLhs, TRhs>, "Arguments are not usable as operands of binary operator %.");
 
@@ -77,7 +77,7 @@ namespace sl::functional::arithmetic
 	 * \brief Functional object which forwards the param to unary operator - and returns the result.
 	 */
 	inline constexpr auto negate = envelop<Transform>(
-		[]<class T>(T&& value) -> decltype(auto)
+		[]<class T>(T&& value) -> decltype(-std::forward<T>(value))
 		{
 			static_assert(concepts::negate<T>, "Argument is not usable as operand of unary operator -.");
 
