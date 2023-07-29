@@ -387,6 +387,45 @@ TEST_CASE(
 	}
 }
 
+template <class Fn>
+using TestClosure2 = sf::BasicClosure<Fn, sf::BasicInvokePolicy>;
+TEMPLATE_TEST_CASE_SIG(
+	"functional::PipeOperator propagates different closure types, depending on the operands.",
+	"[functional][functional::Pipe]",
+	((bool dummy, template <class> class ExpectedClosure, class Rhs), dummy, ExpectedClosure, Rhs),
+	(true, TestClosure, std::string(*)(int)),
+	(true, TestClosure, TestClosure<std::string(*)(int)>),
+	(true, TestClosure2, TestClosure2<std::string(*)(int)>)
+)
+{
+	using Expected = ExpectedClosure<sf::Composition<sf::PipeStrategy, int(*)(bool), std::string(*)(int)>>;
+	using Lhs = TestClosure<int(*)(bool)>;
+
+	SECTION("Lhs as const lvalue-reference; Rhs as const lvalue-reference")
+	{
+		using Result = decltype(std::declval<const Lhs&>() | std::declval<const Rhs&>());
+		STATIC_REQUIRE(std::same_as<Expected, Result>);
+	}
+		
+	SECTION("Lhs as rvalue-reference; Rhs as const lvalue-reference")
+	{
+		using Result = decltype(std::declval<Lhs&&>() | std::declval<const Rhs&>());
+		STATIC_REQUIRE(std::same_as<Expected, Result>);
+	}
+
+	SECTION("Lhs as const lvalue-reference; Rhs as rvalue-reference")
+	{
+		using Result = decltype(std::declval<const Lhs&>() | std::declval<Rhs&&>());
+		STATIC_REQUIRE(std::same_as<Expected, Result>);
+	}
+
+	SECTION("Lhs as rvalue-reference; Rhs as rvalue-reference")
+	{
+		using Result = decltype(std::declval<Lhs&&>() | std::declval<Rhs&&>());
+		STATIC_REQUIRE(std::same_as<Expected, Result>);
+	}
+}
+
 TEMPLATE_TEST_CASE_SIG(
 	"functional::PipeOperator propagates noexcept specification during composing.",
 	"[functional][functional::Pipe]",
