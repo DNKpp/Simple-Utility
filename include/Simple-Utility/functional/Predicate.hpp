@@ -27,6 +27,7 @@ namespace sl::functional
 	 * Predicates also aim to be flat as possible, which means, if users chain multiple predicates via supported operators, instead of simply
 	 * building a tree like structure, the functional objects will be combined into one ``Composition``. This keeps the calling-hierarchy as
 	 * flat as possible and also supports easier debugging.
+	 * 
 	 * \{
 	 */
 
