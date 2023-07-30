@@ -167,7 +167,7 @@ TEST_CASE(
 			.IN_SEQUENCE(seq);
 
 		result = strategy(
-			std::forward_as_tuple(
+			std::tie(
 				std::as_const(first),
 				std::as_const(second),
 				std::as_const(third)),
@@ -190,7 +190,7 @@ TEST_CASE(
 			.IN_SEQUENCE(seq);
 
 		result = strategy(
-			std::forward_as_tuple(
+			std::tie(
 				first,
 				second,
 				third),
