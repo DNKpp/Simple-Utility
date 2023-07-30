@@ -22,7 +22,8 @@ namespace sl::functional
 	 * pipe operator (operator |). Transforms also aim to be flat as possible, which means, if users chain multiple transforms, instead of simply
 	 * building a tree like structure, the functional objects will be combined into one ``composition_fn``. This keeps the calling-hierarchy as
 	 * flat as possible and also supports easier debugging.
-	 * @{
+	 * 
+	 * \{
 	 */
 
 	/**
@@ -32,7 +33,9 @@ namespace sl::functional
 	template <function Fn>
 	using Transform = BasicClosure<Fn, NodiscardInvokePolicy, PipeOperator>;
 
-	/** @} */
+	/**
+	 * \}
+	 */
 }
 
 #endif
