@@ -190,10 +190,13 @@ TEST_CASE(
 			.IN_SEQUENCE(seq);
 
 		result = strategy(
+			// This call is always reported as an uncovered statement...
+			/* LCOV_EXCL_START */
 			std::tie(
 				first,
 				second,
 				third),
+			/* LCOV_EXCL_STOP */
 			1337.f,
 			"1337");
 	}
