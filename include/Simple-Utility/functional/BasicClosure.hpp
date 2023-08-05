@@ -312,6 +312,7 @@ namespace sl::functional
 	/**
 	 * \defgroup GROUP_FUNCTIONAL_CLOSURE_TEMPLATE closure_template
 	 * \ingroup GROUP_FUNCTIONAL
+	 * \brief Trait type, exposing the closure template.
 	 * 
 	 * \{
 	 */
