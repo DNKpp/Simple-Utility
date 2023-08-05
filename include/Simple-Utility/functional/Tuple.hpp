@@ -18,9 +18,9 @@
 namespace sl::functional::tuple
 {
 	/**
-	 * \defgroup GROUP_FUNCTIONAL_TUPLE tuple functional
+	 * \defgroup GROUP_FUNCTIONAL_TUPLE tuple
 	 * \ingroup GROUP_FUNCTIONAL GROUP_TUPLE_UTILITY
-	 * @{
+	 * \{
 	 */
 
 	/**
@@ -120,7 +120,9 @@ namespace sl::functional::tuple
 			return std::make_from_tuple<To>(std::forward<Tuple>(t));
 		});
 
-	/** @} */
+	/**
+	 * \}
+	 */
 }
 
 namespace sl::functional
@@ -131,8 +133,6 @@ namespace sl::functional
 	*/
 	template <function Fn>
 	using Apply = BasicClosure<Fn, NodiscardApplyPolicy, PipeOperator>;
-
-	/** @} */
 }
 
 #endif
