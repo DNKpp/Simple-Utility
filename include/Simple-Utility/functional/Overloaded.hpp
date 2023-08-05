@@ -10,7 +10,7 @@ namespace sl::functional
 {
 	/**
 	 * \addtogroup GROUP_FUNCTIONAL
-	 * @{
+	 * \{
 	 */
 
 	/**
@@ -34,7 +34,9 @@ namespace sl::functional
 	template <class... Fns>
 	Overloaded(Fns...) -> Overloaded<Fns...>;
 
-	/** @} */
+	/**
+	 * \}
+	 */
 }
 
 #endif
