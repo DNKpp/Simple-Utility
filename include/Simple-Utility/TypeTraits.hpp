@@ -640,6 +640,34 @@ namespace sl
 	/**
 	 * \}
 	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_TRAITS_QUALIFIED_CATEGORY_AS qualified_category_as
+	 * \ingroup GROUP_TYPE_TRAITS
+	 * \brief This trait either applies any qualification and value-category from the source type on the target type.
+	 * 
+	 * \{
+	 */
+
+	template <class To, class From>
+	struct qualified_category_as
+	{
+		using type = value_category_as_t<
+			type_qualification_as_t<To, From>,
+			From>;
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::qualified_category_as "qualified_category_as" trait.
+	 * \tparam To Value category to be applied to.
+	 * \tparam From Value category to be taken from.
+	 */
+	template <class To, class From>
+	using qualified_category_as_t = typename qualified_category_as<To, From>::type;
+
+	/**
+	 * \}
+	 */
 }
 
 #endif
