@@ -69,13 +69,31 @@ namespace sl::functional
 	 * \{
 	 */
 
+	/**
+	 * \brief Determines whether the given type satisfies the constraints of a function type.
+	 * \tparam T Type to check.
+	 * \details There are not many syntactic constraints, the concept can check for. The important one is rather semantic:
+	 * The given type must be invokable with params which will be determined later.
+	 */
 	template <class T>
 	concept function = concepts::unqualified<T>
 						&& std::is_object_v<T>;
 
+	/**
+	 * \brief Determines whether the given type satisfies the constraints of an invoke-policy.
+	 * \tparam T Type to check.
+	 * \details There are not many syntactic constraints, the concept can check for. The policy enables the invoke operators
+	 * for the closure type and should therefore accept all valid argument combinations.
+	 */
 	template <template <class> class T>
 	concept invoke_policy = true;
 
+	/**
+	 * \brief Determines whether the given type satisfies the constraints of a operator-policy.
+	 * \tparam T Type to check.
+	 * \details There are not many syntactic constraints, the concept can check for. The policy enables the various composing operators
+	 * for the closure type. It should define a binary operator(-set) and return a composition (wrapped in another closure type) of both.
+	 */
 	template <template <class> class T>
 	concept operator_policy = true;
 
