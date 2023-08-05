@@ -17,7 +17,9 @@ namespace sl::functional::compare
 	/**
 	 * \defgroup GROUP_FUNCTIONAL_COMPARE compare
 	 * \ingroup GROUP_FUNCTIONAL
-	 * @{
+	 * \brief Contains various comparision predicates.
+	 * 
+	 * \{
 	 */
 
 	/**
@@ -158,7 +160,9 @@ namespace sl::functional::compare
 			return std::forward<Lhs>(lhs) <=> std::forward<Rhs>(rhs);
 		});
 
-	/** @} */
+	/**
+	 * \}
+	 */
 }
 
 #endif
