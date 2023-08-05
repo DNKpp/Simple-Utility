@@ -50,10 +50,6 @@ namespace sl::nullables
 	 * part of this library, thus the above example can be adjusted like this:
 	 * \snippet algorithm.cpp algorithm chain functional
 	 *
-	 * There is a last step one may walk: Nullable algorithms also support functional composition out of the box, which means that
-	 * they are composable with any functional as a new functional object and can be invoked later on:
-	 * \snippet algorithm.cpp algorithm chain functional composition
-	 *
 	 * At last I would like to quickly present a naive comparison between the usual stl style and the style this library offers.
 	 * In this example I utilize a adapter, which already supports iterator adapting out of the box.
 	 * \snippet adapter.cpp adapter comparison
