@@ -93,14 +93,14 @@ namespace sl::functional::detail
 namespace sl::functional
 {
 	/**
+	 * \ingroup GROUP_FUNCTIONAL
 	 * \brief Helper function, which generates a forwarding call wrapper for the given function and curries
 	 * the params beginning at the back.
 	 */
 	inline constexpr auto bind_back = []<class Fn, class... BoundArgs>(
 		Fn&& func,
 		BoundArgs&&... boundArgs
-	)
-		noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Fn>, Fn>
+	) noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Fn>, Fn>
 				&& (... && std::is_nothrow_constructible_v<std::unwrap_ref_decay_t<BoundArgs>, BoundArgs>))
 	{
 		return detail::BindBack{std::forward<Fn>(func), std::forward<BoundArgs>(boundArgs)...};
