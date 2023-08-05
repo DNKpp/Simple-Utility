@@ -526,3 +526,21 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(std::same_as<Expected* const volatile, typename sl::type_qualification_as<To* const volatile, From>::type>);
 	STATIC_REQUIRE(std::same_as<Expected* const volatile, sl::type_qualification_as_t<To* const volatile, From>>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"value_category_as applies value category from other.",
+	"[type_traits]",
+	((bool dummy, class Expected, class To, class From), dummy, Expected, To, From),
+	(true, int, int, float),
+	(true, int, int, const volatile float),
+	(true, int&, int, const volatile float&),
+	(true, const volatile int, const volatile int&, float),
+	(true, int&&, int, const volatile float&&),
+	(true, const volatile int, const volatile int&&, float),
+	(true, int&&, int&, float&&),
+	(true, int&, int&&, float&)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::value_category_as<To, From>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::value_category_as_t<To, From>>);
+}
