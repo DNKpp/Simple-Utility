@@ -21,6 +21,7 @@ namespace sl::functional
 	/**
 	 * \defgroup GROUP_FUNCTIONAL_PREDICATE predicate
 	 * \ingroup GROUP_FUNCTIONAL
+	 * \brief Contains the ``Predicate`` closure template.
 	 * \details Predicate types aim to simplify the composition of multiple conditions.
 	 * Predicates are therefore pipe-able with any other functional type (the params and return types still have to match, which can't
 	 * be checked before the actual invocation) and offer many more composing operators.
