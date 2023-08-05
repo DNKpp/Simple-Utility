@@ -489,6 +489,60 @@ namespace sl
 	/**
 	 * \}
 	 */
+
+	/**
+	 * \defgroup GROUP_TYPE_TRAITS_VALUE_CATEGORY_AS value_category_as
+	 * \ingroup GROUP_TYPE_TRAITS
+	 * \brief This trait modifies the value category (value, lvalue-reference, rvalue-reference) of the target type appropriately to the source type.
+	 * 
+	 * \{
+	 */
+
+	/**
+	* \brief Primary template, removing any reference category.
+	* \tparam To Value category to be applied to.
+	* \tparam From Value category to be taken from.
+	*/
+	template <class To, class From>
+	struct value_category_as
+	{
+		using type = std::remove_reference_t<To>;
+	};
+
+	/**
+	 * \brief Specialization, applying the lvalue reference category.
+	 * \tparam To Value category to be applied to.
+	 * \tparam From Value category to be taken from.
+	 */
+	template <class To, class From>
+	struct value_category_as<To, From&>
+	{
+		using type = std::add_lvalue_reference_t<To>;
+	};
+
+	/**
+	 * \brief Specialization, applying the rvalue reference category.
+	 * \tparam To Value category to be applied to.
+	 * \tparam From Value category to be taken from.
+	 */
+	template <class To, class From>
+	struct value_category_as<To, From&&>
+	{
+		using type = std::add_rvalue_reference_t<std::remove_reference_t<To>>;
+	};
+
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::value_category_as "value_category_as" trait.
+	 * \tparam To Value category to be applied to.
+	 * \tparam From Value category to be taken from.
+	 */
+	template <class To, class From>
+	using value_category_as_t = typename value_category_as<To, From>::type;
+
+	/**
+	 * \}
+	 */
+
 	/**
 	 * \defgroup GROUP_TYPE_TRAITS_REMOVE_TYPE_CONSTNESS_AS type_constness_as
 	 * \ingroup GROUP_TYPE_TRAITS
