@@ -16,8 +16,8 @@ namespace sl::functional
 {
 	/**
 	 * \defgroup GROUP_FUNCTIONAL_TRANSFORM transform
-	 * \brief Contains the base ``transform_fn`` and several pre-defined transform objects.
 	 * \ingroup GROUP_FUNCTIONAL
+	 * \brief Contains the ``Transform`` closure template.
 	 * \details Transform types aim to simplify the composition of multiple transformations on objects and are therefore composable via
 	 * pipe operator (operator |). Transforms also aim to be flat as possible, which means, if users chain multiple transforms, instead of simply
 	 * building a tree like structure, the functional objects will be combined into one ``composition_fn``. This keeps the calling-hierarchy as
