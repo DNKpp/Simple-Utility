@@ -15,7 +15,8 @@ namespace sl::functional::arithmetic
 	 * \defgroup GROUP_FUNCTIONAL_ARITHMETIC arithmetic
 	 * \brief Contains functional objects, implementing several arithmetically operations.
 	 * \ingroup GROUP_FUNCTIONAL
-	 * @{
+	 * 
+	 * \{
 	 */
 
 	/**
@@ -84,7 +85,9 @@ namespace sl::functional::arithmetic
 			return -std::forward<T>(value);
 		});;
 
-	/** @} */
+	/**
+	 * \}
+	 */
 }
 
 #endif
