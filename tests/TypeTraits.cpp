@@ -544,3 +544,21 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(std::same_as<Expected, typename sl::value_category_as<To, From>::type>);
 	STATIC_REQUIRE(std::same_as<Expected, sl::value_category_as_t<To, From>>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"qualified_category_as applies the qualification and value category from other.",
+	"[type_traits]",
+	((bool dummy, class Expected, class To, class From), dummy, Expected, To, From),
+	(true, int, int, float),
+	(true, const volatile int, int, const volatile float),
+	(true, const volatile int&, int, const volatile float&),
+	(true, int, const volatile int&, float),
+	(true, const volatile int&&, int, const volatile float&&),
+	(true, const volatile int, const volatile int&&, const volatile float),
+	(true, int&&, int&, float&&),
+	(true, int&, int&&, float&)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename sl::qualified_category_as<To, From>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sl::qualified_category_as_t<To, From>>);
+}
