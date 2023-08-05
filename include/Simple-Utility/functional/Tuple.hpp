@@ -20,6 +20,8 @@ namespace sl::functional::tuple
 	/**
 	 * \defgroup GROUP_FUNCTIONAL_TUPLE tuple
 	 * \ingroup GROUP_FUNCTIONAL GROUP_TUPLE_UTILITY
+	 * \brief Contains several tuple related ``Transform`` definitions and the ``Apply`` closure template.
+	 * 
 	 * \{
 	 */
 
