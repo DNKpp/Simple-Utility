@@ -19,9 +19,10 @@ namespace sl::functional::util
 {
 	/**
 	 * \defgroup GROUP_FUNCTIONAL_UTILITY utility
-	 * \brief Contains functional objects, implementing several utility operations.
 	 * \ingroup GROUP_FUNCTIONAL
-	 * @{
+	 * \brief Contains functional objects, implementing several utility operations.
+	 * 
+	 * \{
 	 */
 
 	/**
@@ -55,12 +56,14 @@ namespace sl::functional::util
 	inline constexpr auto addressof = envelop<Transform>(
 		[](auto& arg) constexpr noexcept
 		{
-			static_assert(requires { std::addressof(arg); }, "Argument is not usable for std::addressof.");
+			static_assert(requires { { std::addressof(arg) } -> concepts::pointer; }, "Argument is not usable for std::addressof.");
 
 			return std::addressof(arg);
 		});
 
-	/** @} */
+	/**
+	 * \}
+	 */
 }
 
 #endif
