@@ -221,9 +221,19 @@ namespace sl::nullables
 		{
 		}
 
-		template <class Nullable>
-			requires input_nullable<Nullable>
-					&& std::regular_invocable<Operation, Nullable>
+		template <input_nullable Nullable>
+			requires std::regular_invocable<Operation, Nullable>
+					&& std::is_void_v<std::invoke_result_t<Operation, Nullable>>
+		friend constexpr auto operator |(
+			Nullable&& input,
+			const Algorithm& algorithm
+		) noexcept(std::is_nothrow_invocable_v<Operation, Nullable>)
+		{
+			return std::invoke(algorithm.m_Operation, std::forward<Nullable>(input));
+		}
+
+		template <input_nullable Nullable>
+			requires std::regular_invocable<Operation, Nullable>
 		[[nodiscard]]
 		friend constexpr auto operator |(
 			Nullable&& input,
@@ -234,7 +244,8 @@ namespace sl::nullables
 		}
 
 	private:
-		SL_UTILITY_NO_UNIQUE_ADDRESS Operation m_Operation{};
+		SL_UTILITY_NO_UNIQUE_ADDRESS
+		Operation m_Operation{};
 	};
 
 	/** @} */
