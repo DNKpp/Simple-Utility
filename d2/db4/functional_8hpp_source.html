@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v2.2.2</span>
+   <div id="projectname">Simple-Utility<span id="projectnumber">&#160;v2.3.1</span>
    </div>
   </td>
  </tr>
@@ -103,28 +103,40 @@ $(document).ready(function(){initNavTree('d2/db4/functional_8hpp_source.html','.
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;Simple-Utility/functional/operators/bind.hpp&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;Simple-Utility/functional/operators/conjunction.hpp&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;Simple-Utility/functional/operators/disjunction.hpp&quot;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;Simple-Utility/functional/operators/negation.hpp&quot;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;Simple-Utility/functional/operators/pipe.hpp&quot;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &quot;Simple-Utility/functional/base.hpp&quot;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &quot;<a class="code" href="../../d4/d53/_predicate_8hpp.html">Simple-Utility/functional/predicate.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &quot;<a class="code" href="../../d9/d8c/_transform_8hpp.html">Simple-Utility/functional/transform.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="../../d6/d50/_overloaded_8hpp.html">Simple-Utility/functional/overloaded.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;<a class="code" href="../../d3/dc2/_arithmetic_8hpp.html">Simple-Utility/functional/arithmetic.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/d60/_compare_8hpp.html">Simple-Utility/functional/compare.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#include &quot;<a class="code" href="../../da/dae/functional_2_tuple_8hpp.html">Simple-Utility/functional/tuple.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d61/functional_2_utility_8hpp.html">Simple-Utility/functional/utility.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="../../d7/d0e/_conjunction_8hpp.html">Simple-Utility/functional/mixins/Conjunction.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../d7/ddc/_disjunction_8hpp.html">Simple-Utility/functional/mixins/Disjunction.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d71/_equality_8hpp.html">Simple-Utility/functional/mixins/Equality.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="../../d7/df7/_invoke_policies_8hpp.html">Simple-Utility/functional/mixins/InvokePolicies.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="../../d2/dc2/_negation_8hpp.html">Simple-Utility/functional/mixins/Negation.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &quot;<a class="code" href="../../d2/df5/_pipe_8hpp.html">Simple-Utility/functional/mixins/Pipe.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/d05/_basic_closure_8hpp.html">Simple-Utility/functional/BasicClosure.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &quot;<a class="code" href="../../d3/d48/_composition_8hpp.html">Simple-Utility/functional/Composition.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#include &quot;<a class="code" href="../../d4/d53/_predicate_8hpp.html">Simple-Utility/functional/Predicate.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="preprocessor">#include &quot;<a class="code" href="../../d9/d8c/_transform_8hpp.html">Simple-Utility/functional/Transform.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#include &quot;<a class="code" href="../../d6/d50/_overloaded_8hpp.html">Simple-Utility/functional/Overloaded.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#include &quot;<a class="code" href="../../d2/dc8/bind__back_8hpp.html">Simple-Utility/functional/bind_back.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="preprocessor">#include &quot;<a class="code" href="../../d3/dc2/_arithmetic_8hpp.html">Simple-Utility/functional/Arithmetic.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="preprocessor">#include &quot;<a class="code" href="../../d8/d60/_compare_8hpp.html">Simple-Utility/functional/Compare.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="preprocessor">#include &quot;<a class="code" href="../../da/dae/functional_2_tuple_8hpp.html">Simple-Utility/functional/Tuple.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="preprocessor">#include &quot;<a class="code" href="../../de/d61/functional_2_utility_8hpp.html">Simple-Utility/functional/Utility.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_arithmetic_8hpp_html"><div class="ttname"><a href="../../d3/dc2/_arithmetic_8hpp.html">Arithmetic.hpp</a></div></div>
+<div class="ttc" id="a_basic_closure_8hpp_html"><div class="ttname"><a href="../../d8/d05/_basic_closure_8hpp.html">BasicClosure.hpp</a></div></div>
 <div class="ttc" id="a_compare_8hpp_html"><div class="ttname"><a href="../../d8/d60/_compare_8hpp.html">Compare.hpp</a></div></div>
+<div class="ttc" id="a_composition_8hpp_html"><div class="ttname"><a href="../../d3/d48/_composition_8hpp.html">Composition.hpp</a></div></div>
+<div class="ttc" id="a_conjunction_8hpp_html"><div class="ttname"><a href="../../d7/d0e/_conjunction_8hpp.html">Conjunction.hpp</a></div></div>
+<div class="ttc" id="a_disjunction_8hpp_html"><div class="ttname"><a href="../../d7/ddc/_disjunction_8hpp.html">Disjunction.hpp</a></div></div>
+<div class="ttc" id="a_equality_8hpp_html"><div class="ttname"><a href="../../de/d71/_equality_8hpp.html">Equality.hpp</a></div></div>
+<div class="ttc" id="a_invoke_policies_8hpp_html"><div class="ttname"><a href="../../d7/df7/_invoke_policies_8hpp.html">InvokePolicies.hpp</a></div></div>
+<div class="ttc" id="a_negation_8hpp_html"><div class="ttname"><a href="../../d2/dc2/_negation_8hpp.html">Negation.hpp</a></div></div>
 <div class="ttc" id="a_overloaded_8hpp_html"><div class="ttname"><a href="../../d6/d50/_overloaded_8hpp.html">Overloaded.hpp</a></div></div>
+<div class="ttc" id="a_pipe_8hpp_html"><div class="ttname"><a href="../../d2/df5/_pipe_8hpp.html">Pipe.hpp</a></div></div>
 <div class="ttc" id="a_predicate_8hpp_html"><div class="ttname"><a href="../../d4/d53/_predicate_8hpp.html">Predicate.hpp</a></div></div>
 <div class="ttc" id="a_transform_8hpp_html"><div class="ttname"><a href="../../d9/d8c/_transform_8hpp.html">Transform.hpp</a></div></div>
+<div class="ttc" id="abind__back_8hpp_html"><div class="ttname"><a href="../../d2/dc8/bind__back_8hpp.html">bind_back.hpp</a></div></div>
 <div class="ttc" id="afunctional_2_tuple_8hpp_html"><div class="ttname"><a href="../../da/dae/functional_2_tuple_8hpp.html">Tuple.hpp</a></div></div>
 <div class="ttc" id="afunctional_2_utility_8hpp_html"><div class="ttname"><a href="../../de/d61/functional_2_utility_8hpp.html">Utility.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
