@@ -255,8 +255,7 @@ TEST_CASE(
 								| and_then(
 									square
 									| to_string
-									| fn::util::as<std::optional<std::string>>
-								)
+									| fn::util::as<std::optional<std::string>>)
 								| value_or("not set");
 
 	REQUIRE(result == "1764");
