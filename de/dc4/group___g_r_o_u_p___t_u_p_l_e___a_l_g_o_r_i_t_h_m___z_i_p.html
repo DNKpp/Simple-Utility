@@ -106,37 +106,37 @@ Collaboration diagram for zip:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dea/structsl_1_1tuple_1_1zip__result.html">sl::tuple::zip_result&lt; TTuples &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dea/structsl_1_1tuple_1_1zip__result.html">sl::tuple::zip_result&lt; Tuples &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trait type determining the result of a <code>zip</code> call.  <a href="../../dc/dea/structsl_1_1tuple_1_1zip__result.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga2eadb862afb900fd12a86bceab136452"><td class="memTemplParams" colspan="2">template&lt;class... TTuples&gt; </td></tr>
-<tr class="memitem:ga2eadb862afb900fd12a86bceab136452"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/dc4/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___z_i_p.html#ga2eadb862afb900fd12a86bceab136452">sl::tuple::zip_result_t</a> = typename <a class="el" href="../../dc/dea/structsl_1_1tuple_1_1zip__result.html">zip_result</a>&lt; TTuples... &gt;::type</td></tr>
-<tr class="memdesc:ga2eadb862afb900fd12a86bceab136452"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias type determining the result of a <code>zip</code> call.  <br /></td></tr>
-<tr class="separator:ga2eadb862afb900fd12a86bceab136452"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga07452fa97dcb25808c1b775bbccee350"><td class="memTemplParams" colspan="2">template&lt;class... Tuples&gt; </td></tr>
+<tr class="memitem:ga07452fa97dcb25808c1b775bbccee350"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/dc4/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___z_i_p.html#ga07452fa97dcb25808c1b775bbccee350">sl::tuple::zip_result_t</a> = typename <a class="el" href="../../dc/dea/structsl_1_1tuple_1_1zip__result.html">zip_result</a>&lt; Tuples... &gt;::type</td></tr>
+<tr class="memdesc:ga07452fa97dcb25808c1b775bbccee350"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias type determining the result of a <code>zip</code> call.  <br /></td></tr>
+<tr class="separator:ga07452fa97dcb25808c1b775bbccee350"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gac52b27b9bb71e5574dbbf1c28152fd6c"><td class="memTemplParams" colspan="2">template&lt;class TFirst , class TSecond , class... TOthers&gt; <br />
-requires concepts::tuple_like&lt;std::remove_cvref_t&lt;TFirst&gt;&gt; &amp;&amp; concepts::tuple_like&lt;std::remove_cvref_t&lt;TSecond&gt;&gt; &amp;&amp; (concepts::tuple_like&lt;std::remove_cvref_t&lt;TOthers&gt;&gt; &amp;&amp; ...)</td></tr>
-<tr class="memitem:gac52b27b9bb71e5574dbbf1c28152fd6c"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../de/dc4/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___z_i_p.html#ga2eadb862afb900fd12a86bceab136452">zip_result_t</a>&lt; TFirst, TSecond, TOthers... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/dc4/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___z_i_p.html#gac52b27b9bb71e5574dbbf1c28152fd6c">sl::tuple::zip</a> (TFirst &amp;&amp;first, TSecond &amp;&amp;second, TOthers &amp;&amp;... others)</td></tr>
-<tr class="memdesc:gac52b27b9bb71e5574dbbf1c28152fd6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Zips elements of all provided source tuples and creates a tuple of tuples.  <br /></td></tr>
-<tr class="separator:gac52b27b9bb71e5574dbbf1c28152fd6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0959fb907e176c0ea7ff11e0e669a409"><td class="memTemplParams" colspan="2">template&lt;class First , class Second , class... Others&gt; <br />
+requires concepts::tuple&lt;std::remove_cvref_t&lt;First&gt;&gt; &amp;&amp; concepts::tuple&lt;std::remove_cvref_t&lt;Second&gt;&gt; &amp;&amp; (concepts::tuple&lt;std::remove_cvref_t&lt;Others&gt;&gt; &amp;&amp; ...)</td></tr>
+<tr class="memitem:ga0959fb907e176c0ea7ff11e0e669a409"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../de/dc4/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___z_i_p.html#ga07452fa97dcb25808c1b775bbccee350">zip_result_t</a>&lt; First, Second, Others... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/dc4/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___z_i_p.html#ga0959fb907e176c0ea7ff11e0e669a409">sl::tuple::zip</a> (First &amp;&amp;first, Second &amp;&amp;second, Others &amp;&amp;... others)</td></tr>
+<tr class="memdesc:ga0959fb907e176c0ea7ff11e0e669a409"><td class="mdescLeft">&#160;</td><td class="mdescRight">Zips elements of all provided source tuples and creates a tuple of tuples.  <br /></td></tr>
+<tr class="separator:ga0959fb907e176c0ea7ff11e0e669a409"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="ga2eadb862afb900fd12a86bceab136452" name="ga2eadb862afb900fd12a86bceab136452"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2eadb862afb900fd12a86bceab136452">&#9670;&#160;</a></span>zip_result_t</h2>
+<a id="ga07452fa97dcb25808c1b775bbccee350" name="ga07452fa97dcb25808c1b775bbccee350"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga07452fa97dcb25808c1b775bbccee350">&#9670;&#160;</a></span>zip_result_t</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class... TTuples&gt; </div>
+template&lt;class... Tuples&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="../../de/dc4/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___z_i_p.html#ga2eadb862afb900fd12a86bceab136452">sl::tuple::zip_result_t</a> = typedef typename <a class="el" href="../../dc/dea/structsl_1_1tuple_1_1zip__result.html">zip_result</a>&lt;TTuples...&gt;::type</td>
+          <td class="memname">using <a class="el" href="../../de/dc4/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___z_i_p.html#ga07452fa97dcb25808c1b775bbccee350">sl::tuple::zip_result_t</a> = typedef typename <a class="el" href="../../dc/dea/structsl_1_1tuple_1_1zip__result.html">zip_result</a>&lt;Tuples...&gt;::type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -146,34 +146,34 @@ template&lt;class... TTuples&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="gac52b27b9bb71e5574dbbf1c28152fd6c" name="gac52b27b9bb71e5574dbbf1c28152fd6c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac52b27b9bb71e5574dbbf1c28152fd6c">&#9670;&#160;</a></span>zip()</h2>
+<a id="ga0959fb907e176c0ea7ff11e0e669a409" name="ga0959fb907e176c0ea7ff11e0e669a409"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0959fb907e176c0ea7ff11e0e669a409">&#9670;&#160;</a></span>zip()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class TFirst , class TSecond , class... TOthers&gt; <br />
-requires concepts::tuple_like&lt;std::remove_cvref_t&lt;TFirst&gt;&gt; &amp;&amp; concepts::tuple_like&lt;std::remove_cvref_t&lt;TSecond&gt;&gt; &amp;&amp; (concepts::tuple_like&lt;std::remove_cvref_t&lt;TOthers&gt;&gt; &amp;&amp; ...)</div>
+template&lt;class First , class Second , class... Others&gt; <br />
+requires concepts::tuple&lt;std::remove_cvref_t&lt;First&gt;&gt; &amp;&amp; concepts::tuple&lt;std::remove_cvref_t&lt;Second&gt;&gt; &amp;&amp; (concepts::tuple&lt;std::remove_cvref_t&lt;Others&gt;&gt; &amp;&amp; ...)</div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="../../de/dc4/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___z_i_p.html#ga2eadb862afb900fd12a86bceab136452">zip_result_t</a>&lt; TFirst, TSecond, TOthers... &gt; sl::tuple::zip </td>
+          <td class="memname">constexpr <a class="el" href="../../de/dc4/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___z_i_p.html#ga07452fa97dcb25808c1b775bbccee350">zip_result_t</a>&lt; First, Second, Others... &gt; sl::tuple::zip </td>
           <td>(</td>
-          <td class="paramtype">TFirst &amp;&amp;&#160;</td>
+          <td class="paramtype">First &amp;&amp;&#160;</td>
           <td class="paramname"><em>first</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">TSecond &amp;&amp;&#160;</td>
+          <td class="paramtype">Second &amp;&amp;&#160;</td>
           <td class="paramname"><em>second</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">TOthers &amp;&amp;...&#160;</td>
+          <td class="paramtype">Others &amp;&amp;...&#160;</td>
           <td class="paramname"><em>others</em>&#160;</td>
         </tr>
         <tr>
@@ -192,9 +192,9 @@ requires concepts::tuple_like&lt;std::remove_cvref_t&lt;TFirst&gt;&gt; &amp;&amp
 <p>Zips elements of all provided source tuples and creates a tuple of tuples. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">TFirst</td><td>The first tuple type. </td></tr>
-    <tr><td class="paramname">TSecond</td><td>The second tuple type. </td></tr>
-    <tr><td class="paramname">TOthers</td><td>Other tuple types. </td></tr>
+    <tr><td class="paramname">First</td><td>The first tuple type. </td></tr>
+    <tr><td class="paramname">Second</td><td>The second tuple type. </td></tr>
+    <tr><td class="paramname">Others</td><td>Other tuple types. </td></tr>
   </table>
   </dd>
 </dl>

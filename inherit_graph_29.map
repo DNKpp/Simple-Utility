@@ -1,3 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$d0/dcc/structsl_1_1nullables_1_1traits_3_01std_1_1optional_3_01_t_args_8_8_8_01_4_01_4.html" title="Specialization for std::optional." alt="" coords="5,5,191,50"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,14,132,42"/>
+<area shape="rect" id="node2" href="$d3/de3/structsl_1_1functional_1_1_overloaded.html" title="Helper invocable type which can hold an arbitrary amount of functions, from which the best match will..." alt="" coords="180,5,354,50"/>
 </map>

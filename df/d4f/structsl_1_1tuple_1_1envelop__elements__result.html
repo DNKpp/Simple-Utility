@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Simple-Utility: sl::tuple::envelop_elements_result&lt; TTuple &gt; Struct Template Reference</title>
+<title>Simple-Utility: sl::tuple::envelop_elements_result&lt; Tuple &gt; Struct Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -93,35 +93,35 @@ $(document).ready(function(){initNavTree('df/d4f/structsl_1_1tuple_1_1envelop__e
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="../../dd/d65/structsl_1_1tuple_1_1envelop__elements__result-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">sl::tuple::envelop_elements_result&lt; TTuple &gt; Struct Template Reference<div class="ingroups"><a class="el" href="../../d9/d21/group___g_r_o_u_p___t_u_p_l_e.html">tuple</a> &raquo; <a class="el" href="../../d8/dec/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m.html">algorithm</a> &raquo; <a class="el" href="../../d8/d4d/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___e_n_v_e_l_o_p___e_l_e_m_e_n_t_s.html">envelop elements</a></div></div></div>
+  <div class="headertitle"><div class="title">sl::tuple::envelop_elements_result&lt; Tuple &gt; Struct Template Reference<div class="ingroups"><a class="el" href="../../d9/d21/group___g_r_o_u_p___t_u_p_l_e.html">tuple</a> &raquo; <a class="el" href="../../d8/dec/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m.html">algorithm</a> &raquo; <a class="el" href="../../d8/d4d/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___e_n_v_e_l_o_p___e_l_e_m_e_n_t_s.html">envelop elements</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
 <p>Trait type determining the result of a <code>tuple_envelop_elements</code> call.  
  <a href="../../df/d4f/structsl_1_1tuple_1_1envelop__elements__result.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="../../de/d55/algorithm_8hpp_source.html">algorithm.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="../../dc/d83/_algorithm_8hpp_source.html">Algorithm.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:adf91b33ea4559dce11793a25296c9b1c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d4f/structsl_1_1tuple_1_1envelop__elements__result.html#adf91b33ea4559dce11793a25296c9b1c">type</a> = decltype(detail::envelop_elements(std::declval&lt; TTuple &gt;()))</td></tr>
-<tr class="separator:adf91b33ea4559dce11793a25296c9b1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab43c7748b4a59e84cfbd549d64a13bd3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d4f/structsl_1_1tuple_1_1envelop__elements__result.html#ab43c7748b4a59e84cfbd549d64a13bd3">type</a> = decltype(detail::envelop_elements(std::declval&lt; Tuple &gt;()))</td></tr>
+<tr class="separator:ab43c7748b4a59e84cfbd549d64a13bd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;class TTuple&gt;<br />
-requires concepts::tuple_like&lt;std::remove_cvref_t&lt;TTuple&gt;&gt;<br />
-struct sl::tuple::envelop_elements_result&lt; TTuple &gt;</div><p>Trait type determining the result of a <code>tuple_envelop_elements</code> call. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;class Tuple&gt;<br />
+requires concepts::tuple&lt;std::remove_cvref_t&lt;Tuple&gt;&gt;<br />
+struct sl::tuple::envelop_elements_result&lt; Tuple &gt;</div><p>Trait type determining the result of a <code>tuple_envelop_elements</code> call. </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="adf91b33ea4559dce11793a25296c9b1c" name="adf91b33ea4559dce11793a25296c9b1c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf91b33ea4559dce11793a25296c9b1c">&#9670;&#160;</a></span>type</h2>
+<a id="ab43c7748b4a59e84cfbd549d64a13bd3" name="ab43c7748b4a59e84cfbd549d64a13bd3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab43c7748b4a59e84cfbd549d64a13bd3">&#9670;&#160;</a></span>type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class TTuple &gt; </div>
+template&lt;class Tuple &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="../../df/d4f/structsl_1_1tuple_1_1envelop__elements__result.html">sl::tuple::envelop_elements_result</a>&lt; TTuple &gt;::type =  decltype(detail::envelop_elements(std::declval&lt;TTuple&gt;()))</td>
+          <td class="memname">using <a class="el" href="../../df/d4f/structsl_1_1tuple_1_1envelop__elements__result.html">sl::tuple::envelop_elements_result</a>&lt; Tuple &gt;::type =  decltype(detail::envelop_elements(std::declval&lt;Tuple&gt;()))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -129,7 +129,7 @@ template&lt;class TTuple &gt; </div>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>Simple-Utility/tuple/<a class="el" href="../../de/d55/algorithm_8hpp_source.html">algorithm.hpp</a></li>
+<li>Simple-Utility/tuple/<a class="el" href="../../dc/d83/_algorithm_8hpp_source.html">Algorithm.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

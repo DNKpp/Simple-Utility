@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['transform_5ffn_0',['transform_fn',['../da/dbe/classsl_1_1functional_1_1transform__fn.html#a74063021fa67bd46f16eb65b7f318741',1,'sl::functional::transform_fn::transform_fn()'],['../df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#ga17ee867e55b62fe1afea2654e8f93d8b',1,'sl::functional::transform_fn()']]]
+  ['pipeoperator_0',['PipeOperator',['../d5/de6/classsl_1_1functional_1_1_pipe_operator.html#a9cd2b27cadf31b2525980b8b35186e5b',1,'sl::functional::PipeOperator::PipeOperator() noexcept'],['../d5/de6/classsl_1_1functional_1_1_pipe_operator.html#ae2244c305ea8bdba0fd859b2684496a0',1,'sl::functional::PipeOperator::PipeOperator(const PipeOperator &amp;)=default'],['../d5/de6/classsl_1_1functional_1_1_pipe_operator.html#a86b62f48fddcaffe8913a3cadd981ba9',1,'sl::functional::PipeOperator::PipeOperator(PipeOperator &amp;&amp;)=default']]]
 ];

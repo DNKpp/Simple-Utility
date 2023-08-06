@@ -1,0 +1,5 @@
+<map id="sl::tuple::transform_elements" name="sl::tuple::transform_elements">
+<area shape="rect" id="node1" title="Applies the transform on each element of the given source tuple and returns the results as a new tupl..." alt="" coords="491,5,626,50"/>
+<area shape="rect" id="node2" href="$d8/dfa/classsl_1_1functional_1_1_composition.html#aedd7b7cf1d9b12d351cf8638c439de65" title="Getter to the member functions." alt="" coords="236,14,443,42"/>
+<area shape="rect" id="node3" href="$d8/dfa/classsl_1_1functional_1_1_composition.html#a9224f40a0df6f6e59861b96cdff9aa6b" title="Call operator, providing the member functionals and given arguments to the composition strategy." alt="" coords="5,5,188,50"/>
+</map>

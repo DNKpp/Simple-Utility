@@ -1,0 +1,5 @@
+<map id="sl::functional::Composition::operator()" name="sl::functional::Composition::operator()">
+<area shape="rect" id="node1" title="Call operator, providing the member functionals and given arguments to the composition strategy." alt="" coords="5,5,188,50"/>
+<area shape="rect" id="node2" href="$d8/dfa/classsl_1_1functional_1_1_composition.html#aedd7b7cf1d9b12d351cf8638c439de65" title="Getter to the member functions." alt="" coords="236,14,443,42"/>
+<area shape="rect" id="node3" href="$d3/df4/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___t_r_a_n_s_f_o_r_m___e_l_e_m_e_n_t_s.html#ga305516289bbf817ba68ebb2f3e4adf75" title="Applies the transform on each element of the given source tuple and returns the results as a new tupl..." alt="" coords="491,5,626,50"/>
+</map>

@@ -91,13 +91,12 @@ $(document).ready(function(){initNavTree('df/db2/group___g_r_o_u_p___f_u_n_c_t_i
 
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle"><div class="title">transform<div class="ingroups"><a class="el" href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html">functional</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Contains the base <code><a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html" title="Adapter type which accepts a functional type and enables pipe chaining and currying.">transform_fn</a></code> and several pre-defined transform objects.  
+<p>Contains the <code>Transform</code> closure template.  
 <a href="#details">More...</a></p>
 <div class="dynheader">
 Collaboration diagram for transform:</div>
@@ -106,49 +105,35 @@ Collaboration diagram for transform:</div>
 </div>
 </div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">sl::functional::transform_fn&lt; TFunc &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adapter type which accepts a functional type and enables pipe chaining and currying.  <a href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:ga17ee867e55b62fe1afea2654e8f93d8b"><td class="memTemplParams" colspan="2">template&lt;class TFunc &gt; </td></tr>
-<tr class="memitem:ga17ee867e55b62fe1afea2654e8f93d8b"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#ga17ee867e55b62fe1afea2654e8f93d8b">sl::functional::transform_fn</a> (TFunc) -&gt; <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a>&lt; TFunc &gt;</td></tr>
-<tr class="memdesc:ga17ee867e55b62fe1afea2654e8f93d8b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deduction guide.  <br /></td></tr>
-<tr class="separator:ga17ee867e55b62fe1afea2654e8f93d8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:gad9d2d916314573e5eaef9c198753f0b5"><td class="memTemplParams" colspan="2">template&lt;function Fn&gt; </td></tr>
+<tr class="memitem:gad9d2d916314573e5eaef9c198753f0b5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#gad9d2d916314573e5eaef9c198753f0b5">sl::functional::Transform</a> = <a class="el" href="../../d6/d3b/classsl_1_1functional_1_1_basic_closure.html">BasicClosure</a>&lt; Fn, <a class="el" href="../../d9/d07/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___i_n_v_o_k_e___p_o_l_i_c_y.html#ga92f6a91ea7d4d9c5e26c7992ef183dca">NodiscardInvokePolicy</a>, <a class="el" href="../../d5/de6/classsl_1_1functional_1_1_pipe_operator.html">PipeOperator</a> &gt;</td></tr>
+<tr class="memdesc:gad9d2d916314573e5eaef9c198753f0b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closure template for variadic transform like functional types, which enables piping.  <br /></td></tr>
+<tr class="separator:gad9d2d916314573e5eaef9c198753f0b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<p>Contains the base <code><a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html" title="Adapter type which accepts a functional type and enables pipe chaining and currying.">transform_fn</a></code> and several pre-defined transform objects. </p>
-<p>Transform types aim to simplify the composition of multiple transformations on objects and are therefore composable via pipe operator (operator |). Transforms also aim to be flat as possible, which means, if users chain multiple transforms, instead of simply building a tree like structure, the functional objects will be combined into one <code><a class="el" href="../../d9/d09/classsl_1_1functional_1_1composition__fn.html" title="Functional type, which composes multiple functional objects via the given operation.">composition_fn</a></code>. This keeps the calling-hierarchy as flat as possible and also supports easier debugging. Operations following this strategy are:</p><ul>
-<li>pipe</li>
-<li>bind_front</li>
-<li>bind_back </li>
-</ul>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="ga17ee867e55b62fe1afea2654e8f93d8b" name="ga17ee867e55b62fe1afea2654e8f93d8b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga17ee867e55b62fe1afea2654e8f93d8b">&#9670;&#160;</a></span>transform_fn()</h2>
+<p>Contains the <code>Transform</code> closure template. </p>
+<p>Transform types aim to simplify the composition of multiple transformations on objects and are therefore composable via pipe operator (operator |). Transforms also aim to be flat as possible, which means, if users chain multiple transforms, instead of simply building a tree like structure, the functional objects will be combined into one <code>composition_fn</code>. This keeps the calling-hierarchy as flat as possible and also supports easier debugging. </p>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="gad9d2d916314573e5eaef9c198753f0b5" name="gad9d2d916314573e5eaef9c198753f0b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad9d2d916314573e5eaef9c198753f0b5">&#9670;&#160;</a></span>Transform</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class TFunc &gt; </div>
+template&lt;function Fn&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">sl::functional::transform_fn</a> </td>
-          <td>(</td>
-          <td class="paramtype">TFunc&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td> -&gt;  <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a>&lt; TFunc &gt;</td>
+          <td class="memname">using <a class="el" href="../../df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html#gad9d2d916314573e5eaef9c198753f0b5">sl::functional::Transform</a> = typedef <a class="el" href="../../d6/d3b/classsl_1_1functional_1_1_basic_closure.html">BasicClosure</a>&lt;Fn, <a class="el" href="../../d9/d07/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___i_n_v_o_k_e___p_o_l_i_c_y.html#ga92f6a91ea7d4d9c5e26c7992ef183dca">NodiscardInvokePolicy</a>, <a class="el" href="../../d5/de6/classsl_1_1functional_1_1_pipe_operator.html">PipeOperator</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Deduction guide. </p>
+<p>Closure template for variadic transform like functional types, which enables piping. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">TFunc</td><td>Type of the given functional. </td></tr>
+    <tr><td class="paramname">Fn</td><td>The functional type. </td></tr>
   </table>
   </dd>
 </dl>

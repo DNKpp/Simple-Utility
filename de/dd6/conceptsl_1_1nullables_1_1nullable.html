@@ -97,15 +97,15 @@ $(document).ready(function(){initNavTree('de/dd6/conceptsl_1_1nullables_1_1nulla
 <p>Checks whether a type is <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a>.  
 <a href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="../../d6/dbe/nullables_2base_8hpp_source.html">base.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="../../dd/d3c/base_8hpp_source.html">base.hpp</a>&gt;</code></p>
 <h2 class="groupheader">Concept definition</h2>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">sl::nullables::nullable</a> =  <a class="code hl_concept" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable&lt;T&gt;</a></div>
 <div class="line">                        &amp;&amp; <a class="code hl_concept" href="../../d1/ded/conceptsl_1_1concepts_1_1initializes.html">concepts::initializes</a>&lt;<span class="keyword">decltype</span>(null_v&lt;T&gt;), std::remove_cvref_t&lt;T&gt;&gt;</div>
 <div class="line">                        &amp;&amp; std::is_assignable_v&lt;std::remove_cvref_t&lt;T&gt;&amp;, <span class="keyword">decltype</span>(null_v&lt;T&gt;)&gt;</div>
-<div class="ttc" id="aconceptsl_1_1concepts_1_1initializes_html"><div class="ttname"><a href="../../d1/ded/conceptsl_1_1concepts_1_1initializes.html">sl::concepts::initializes</a></div><div class="ttdoc">Checks whether the target type is constructible from the source type.</div><div class="ttdef"><b>Definition:</b> stl_extensions.hpp:41</div></div>
-<div class="ttc" id="aconceptsl_1_1nullables_1_1input__nullable_html"><div class="ttname"><a href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">sl::nullables::input_nullable</a></div><div class="ttdoc">Checks whether a type is an input_nullable.</div><div class="ttdef"><b>Definition:</b> base.hpp:176</div></div>
-<div class="ttc" id="aconceptsl_1_1nullables_1_1nullable_html"><div class="ttname"><a href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">sl::nullables::nullable</a></div><div class="ttdoc">Checks whether a type is nullable.</div><div class="ttdef"><b>Definition:</b> base.hpp:192</div></div>
+<div class="ttc" id="aconceptsl_1_1concepts_1_1initializes_html"><div class="ttname"><a href="../../d1/ded/conceptsl_1_1concepts_1_1initializes.html">sl::concepts::initializes</a></div><div class="ttdoc">Checks whether the target type is constructible from the source type.</div><div class="ttdef"><b>Definition:</b> stl_extensions.hpp:78</div></div>
+<div class="ttc" id="aconceptsl_1_1nullables_1_1input__nullable_html"><div class="ttname"><a href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">sl::nullables::input_nullable</a></div><div class="ttdoc">Checks whether a type is an input_nullable.</div><div class="ttdef"><b>Definition:</b> base.hpp:170</div></div>
+<div class="ttc" id="aconceptsl_1_1nullables_1_1nullable_html"><div class="ttname"><a href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">sl::nullables::nullable</a></div><div class="ttdoc">Checks whether a type is nullable.</div><div class="ttdef"><b>Definition:</b> base.hpp:186</div></div>
 </div><!-- fragment --><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Checks whether a type is <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a>. </p>
 <p>A type is considered as <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> if:</p><ul>

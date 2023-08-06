@@ -93,8 +93,7 @@ $(document).ready(function(){initNavTree('d4/d5d/group___g_r_o_u_p___t_u_p_l_e__
   <div class="summary">
 <a href="#concepts">Concepts</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle"><div class="title">apply<div class="ingroups"><a class="el" href="../../d9/d21/group___g_r_o_u_p___t_u_p_l_e.html">tuple</a> &raquo; <a class="el" href="../../d4/dd5/group___g_r_o_u_p___t_u_p_l_e___s_t_l___e_x_t.html">stl extension</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -107,119 +106,51 @@ Collaboration diagram for apply:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
 Concepts</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d91/conceptsl_1_1concepts_1_1apply__invocable.html">sl::concepts::apply_invocable</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/da4/conceptsl_1_1concepts_1_1applicable.html">sl::concepts::applicable</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether the function is invocable with the elements of the given tuple. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/df2/conceptsl_1_1concepts_1_1nothrow__apply__invocable.html">sl::concepts::nothrow_apply_invocable</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/db2/conceptsl_1_1concepts_1_1nothrow__applicable.html">sl::concepts::nothrow_applicable</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether the function is invocable with the elements of the given tuple without throwing. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d44/structsl_1_1tuple_1_1is__apply__invocable.html">sl::tuple::is_apply_invocable&lt; TFunc, TTuple &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trait type determining whether the function is invocable with elements of the given tuple.  <a href="../../d5/d44/structsl_1_1tuple_1_1is__apply__invocable.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d11/structsl_1_1tuple_1_1is__nothrow__apply__invocable.html">sl::tuple::is_nothrow_apply_invocable&lt; TFunc, TTuple &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trait type determining whether the function is invocable with elements of the given tuple without throwing.  <a href="../../d6/d11/structsl_1_1tuple_1_1is__nothrow__apply__invocable.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d8a/structsl_1_1tuple_1_1tuple__cat__result.html">sl::tuple::tuple_cat_result&lt; TTuples &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trait type determining the result of a <code>std::tuple_cat</code> call.  <a href="../../d4/d8a/structsl_1_1tuple_1_1tuple__cat__result.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d35/structsl_1_1tuple_1_1apply__invoke__result.html">sl::tuple::apply_invoke_result&lt; TFunc, TTuple &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trait type determining the result of a <code>std::apply</code> call.  <a href="../../da/d35/structsl_1_1tuple_1_1apply__invoke__result.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d47/structsl_1_1tuple_1_1apply__result.html">sl::tuple::apply_result&lt; Func, Tuple &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trait type determining the result of a <code>std::apply</code> call.  <a href="../../d6/d47/structsl_1_1tuple_1_1apply__result.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga7e637240043dfc51fddd832084ec2f69"><td class="memTemplParams" colspan="2">template&lt;class TFunc , class TTuple &gt; </td></tr>
-<tr class="memitem:ga7e637240043dfc51fddd832084ec2f69"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d4/d5d/group___g_r_o_u_p___t_u_p_l_e___s_t_l___e_x_t___a_p_p_l_y.html#ga7e637240043dfc51fddd832084ec2f69">sl::tuple::apply_invoke_result_t</a> = typename <a class="el" href="../../da/d35/structsl_1_1tuple_1_1apply__invoke__result.html">apply_invoke_result</a>&lt; TFunc, TTuple &gt;::type</td></tr>
-<tr class="memdesc:ga7e637240043dfc51fddd832084ec2f69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias type determining the result of a <code>std::apply</code> call.  <br /></td></tr>
-<tr class="separator:ga7e637240043dfc51fddd832084ec2f69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:gab1592deda2ac62f8b21885212d582116"><td class="memTemplParams" colspan="2">template&lt;class TFunc , class TTuple &gt; </td></tr>
-<tr class="memitem:gab1592deda2ac62f8b21885212d582116"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d4/d5d/group___g_r_o_u_p___t_u_p_l_e___s_t_l___e_x_t___a_p_p_l_y.html#gab1592deda2ac62f8b21885212d582116">sl::tuple::is_apply_invocable_v</a> {<a class="el" href="../../d5/d44/structsl_1_1tuple_1_1is__apply__invocable.html">is_apply_invocable</a>&lt;TFunc, TTuple&gt;::value}</td></tr>
-<tr class="memdesc:gab1592deda2ac62f8b21885212d582116"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience constant, which determines whether the function is invocable with elements of the given tuple.  <br /></td></tr>
-<tr class="separator:gab1592deda2ac62f8b21885212d582116"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac3c3de5ac42fab34148fe9573af531a9"><td class="memTemplParams" colspan="2">template&lt;class TFunc , class TTuple &gt; </td></tr>
-<tr class="memitem:gac3c3de5ac42fab34148fe9573af531a9"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d4/d5d/group___g_r_o_u_p___t_u_p_l_e___s_t_l___e_x_t___a_p_p_l_y.html#gac3c3de5ac42fab34148fe9573af531a9">sl::tuple::is_nothrow_apply_invocable_v</a> {<a class="el" href="../../d6/d11/structsl_1_1tuple_1_1is__nothrow__apply__invocable.html">is_nothrow_apply_invocable</a>&lt;TFunc, TTuple&gt;::value}</td></tr>
-<tr class="memdesc:gac3c3de5ac42fab34148fe9573af531a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convenience constant, which determines whether the function is invocable with elements of the given tuple without throwing.  <br /></td></tr>
-<tr class="separator:gac3c3de5ac42fab34148fe9573af531a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2573fdd80c4e2d001937c7cd560af1b4"><td class="memTemplParams" colspan="2">template&lt;class Func , class Tuple &gt; </td></tr>
+<tr class="memitem:ga2573fdd80c4e2d001937c7cd560af1b4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d4/d5d/group___g_r_o_u_p___t_u_p_l_e___s_t_l___e_x_t___a_p_p_l_y.html#ga2573fdd80c4e2d001937c7cd560af1b4">sl::tuple::apply_result_t</a> = typename <a class="el" href="../../d6/d47/structsl_1_1tuple_1_1apply__result.html">apply_result</a>&lt; Func, Tuple &gt;::type</td></tr>
+<tr class="memdesc:ga2573fdd80c4e2d001937c7cd560af1b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias type determining the result of a <code>std::apply</code> call.  <br /></td></tr>
+<tr class="separator:ga2573fdd80c4e2d001937c7cd560af1b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="ga7e637240043dfc51fddd832084ec2f69" name="ga7e637240043dfc51fddd832084ec2f69"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7e637240043dfc51fddd832084ec2f69">&#9670;&#160;</a></span>apply_invoke_result_t</h2>
+<a id="ga2573fdd80c4e2d001937c7cd560af1b4" name="ga2573fdd80c4e2d001937c7cd560af1b4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2573fdd80c4e2d001937c7cd560af1b4">&#9670;&#160;</a></span>apply_result_t</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class TFunc , class TTuple &gt; </div>
+template&lt;class Func , class Tuple &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="../../d4/d5d/group___g_r_o_u_p___t_u_p_l_e___s_t_l___e_x_t___a_p_p_l_y.html#ga7e637240043dfc51fddd832084ec2f69">sl::tuple::apply_invoke_result_t</a> = typedef typename <a class="el" href="../../da/d35/structsl_1_1tuple_1_1apply__invoke__result.html">apply_invoke_result</a>&lt;TFunc, TTuple&gt;::type</td>
+          <td class="memname">using <a class="el" href="../../d4/d5d/group___g_r_o_u_p___t_u_p_l_e___s_t_l___e_x_t___a_p_p_l_y.html#ga2573fdd80c4e2d001937c7cd560af1b4">sl::tuple::apply_result_t</a> = typedef typename <a class="el" href="../../d6/d47/structsl_1_1tuple_1_1apply__result.html">apply_result</a>&lt;Func, Tuple&gt;::type</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Alias type determining the result of a <code>std::apply</code> call. </p>
 <dl class="section see"><dt>See also</dt><dd><a href="https://en.cppreference.com/w/cpp/utility/apply">https://en.cppreference.com/w/cpp/utility/apply</a> </dd></dl>
-
-</div>
-</div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="gab1592deda2ac62f8b21885212d582116" name="gab1592deda2ac62f8b21885212d582116"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab1592deda2ac62f8b21885212d582116">&#9670;&#160;</a></span>is_apply_invocable_v</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TFunc , class TTuple &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sl::tuple::is_apply_invocable_v {<a class="el" href="../../d5/d44/structsl_1_1tuple_1_1is__apply__invocable.html">is_apply_invocable</a>&lt;TFunc, TTuple&gt;::value}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convenience constant, which determines whether the function is invocable with elements of the given tuple. </p>
-<dl class="section see"><dt>See also</dt><dd><a href="https://en.cppreference.com/w/cpp/utility/apply">https://en.cppreference.com/w/cpp/utility/apply</a> </dd></dl>
-
-</div>
-</div>
-<a id="gac3c3de5ac42fab34148fe9573af531a9" name="gac3c3de5ac42fab34148fe9573af531a9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac3c3de5ac42fab34148fe9573af531a9">&#9670;&#160;</a></span>is_nothrow_apply_invocable_v</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TFunc , class TTuple &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr bool sl::tuple::is_nothrow_apply_invocable_v {<a class="el" href="../../d6/d11/structsl_1_1tuple_1_1is__nothrow__apply__invocable.html">is_nothrow_apply_invocable</a>&lt;TFunc, TTuple&gt;::value}</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convenience constant, which determines whether the function is invocable with elements of the given tuple without throwing. </p>
-<dl class="section see"><dt>See also</dt><dd><a href="https://en.cppreference.com/w/cpp/utility/apply">https://en.cppreference.com/w/cpp/utility/apply</a> </dd></dl>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Func</td><td>Type to check. </td></tr>
+    <tr><td class="paramname">Tuple</td><td>Provided tuple argument type. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

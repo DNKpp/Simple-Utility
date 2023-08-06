@@ -1,14 +1,11 @@
 var searchData=
 [
-  ['enable_5foperation_0',['enable_operation',['../d0/d50/structsl_1_1functional_1_1enable__operation.html',1,'sl::functional']]],
-  ['enable_5foperation_3c_20algorithm_5ffn_2c_20functional_3a_3aoperators_3a_3abind_5fback_2c_20functional_3a_3aoperators_3a_3abind_5ffront_20_3e_1',['enable_operation&lt; algorithm_fn, functional::operators::bind_back, functional::operators::bind_front &gt;',['../d0/d50/structsl_1_1functional_1_1enable__operation.html',1,'sl::functional']]],
-  ['enable_5foperation_3c_20predicate_5ffn_2c_20operators_3a_3apipe_2c_20operators_3a_3abind_5ffront_2c_20operators_3a_3abind_5fback_2c_20operators_3a_3adisjunction_2c_20operators_3a_3aconjunction_2c_20operators_3a_3aequal_2c_20operators_3a_3anot_5fequal_2c_20operators_3a_3aequivalent_2c_20operators_3a_3anegate_20_3e_2',['enable_operation&lt; predicate_fn, operators::pipe, operators::bind_front, operators::bind_back, operators::disjunction, operators::conjunction, operators::equal, operators::not_equal, operators::equivalent, operators::negate &gt;',['../d0/d50/structsl_1_1functional_1_1enable__operation.html',1,'sl::functional']]],
-  ['enable_5foperation_3c_20transform_5ffn_2c_20operators_3a_3apipe_2c_20operators_3a_3abind_5ffront_2c_20operators_3a_3abind_5fback_20_3e_3',['enable_operation&lt; transform_fn, operators::pipe, operators::bind_front, operators::bind_back &gt;',['../d0/d50/structsl_1_1functional_1_1enable__operation.html',1,'sl::functional']]],
-  ['envelop_5felements_5fresult_4',['envelop_elements_result',['../df/d4f/structsl_1_1tuple_1_1envelop__elements__result.html',1,'sl::tuple']]],
-  ['equal_5',['equal',['../d5/d26/structsl_1_1functional_1_1operators_1_1equal.html',1,'sl::functional::operators::equal'],['../dd/d9c/structsl_1_1type__list_1_1equal.html',1,'sl::type_list::equal&lt; First, Others &gt;']]],
-  ['equal_3c_20first_20_3e_6',['equal&lt; First &gt;',['../dd/d1b/structsl_1_1type__list_1_1equal_3_01_first_01_4.html',1,'sl::type_list']]],
-  ['equal_3c_20firstcontainer_3c_20elements_2e_2e_2e_20_3e_2c_20others_2e_2e_2e_20_3e_7',['equal&lt; FirstContainer&lt; Elements... &gt;, Others... &gt;',['../dd/d9c/structsl_1_1type__list_1_1equal.html',1,'sl::type_list']]],
-  ['equal_3c_20firstcontainer_3c_20elements_2e_2e_2e_20_3e_2c_20secondcontainer_3c_20elements_2e_2e_2e_20_3e_2c_20others_2e_2e_2e_20_3e_8',['equal&lt; FirstContainer&lt; Elements... &gt;, SecondContainer&lt; Elements... &gt;, Others... &gt;',['../d5/de5/structsl_1_1type__list_1_1equal_3_01_first_container_3_01_elements_8_8_8_01_4_00_01_second_conta6f0f2b64bdcd65e4b0dceb365a3048ce.html',1,'sl::type_list']]],
-  ['equal_3c_20firstcontainer_3c_3e_2c_20otherlists_2e_2e_2e_20_3e_9',['equal&lt; FirstContainer&lt;&gt;, OtherLists... &gt;',['../dd/d9c/structsl_1_1type__list_1_1equal.html',1,'sl::type_list']]],
-  ['equivalent_10',['equivalent',['../df/de6/structsl_1_1functional_1_1operators_1_1equivalent.html',1,'sl::functional::operators']]]
+  ['envelop_5felements_5fresult_0',['envelop_elements_result',['../df/d4f/structsl_1_1tuple_1_1envelop__elements__result.html',1,'sl::tuple']]],
+  ['equal_1',['equal',['../dd/d9c/structsl_1_1type__list_1_1equal.html',1,'sl::type_list']]],
+  ['equal_3c_20first_20_3e_2',['equal&lt; First &gt;',['../dd/d1b/structsl_1_1type__list_1_1equal_3_01_first_01_4.html',1,'sl::type_list']]],
+  ['equal_3c_20firstcontainer_3c_20elements_2e_2e_2e_20_3e_2c_20others_2e_2e_2e_20_3e_3',['equal&lt; FirstContainer&lt; Elements... &gt;, Others... &gt;',['../dd/d9c/structsl_1_1type__list_1_1equal.html',1,'sl::type_list']]],
+  ['equal_3c_20firstcontainer_3c_20elements_2e_2e_2e_20_3e_2c_20secondcontainer_3c_20elements_2e_2e_2e_20_3e_2c_20others_2e_2e_2e_20_3e_4',['equal&lt; FirstContainer&lt; Elements... &gt;, SecondContainer&lt; Elements... &gt;, Others... &gt;',['../d5/de5/structsl_1_1type__list_1_1equal_3_01_first_container_3_01_elements_8_8_8_01_4_00_01_second_conta6f0f2b64bdcd65e4b0dceb365a3048ce.html',1,'sl::type_list']]],
+  ['equal_3c_20firstcontainer_3c_3e_2c_20otherlists_2e_2e_2e_20_3e_5',['equal&lt; FirstContainer&lt;&gt;, OtherLists... &gt;',['../dd/d9c/structsl_1_1type__list_1_1equal.html',1,'sl::type_list']]],
+  ['equalityoperator_6',['EqualityOperator',['../df/d89/classsl_1_1functional_1_1_equality_operator.html',1,'sl::functional']]],
+  ['equalitystrategy_7',['EqualityStrategy',['../db/d99/structsl_1_1functional_1_1_equality_strategy.html',1,'sl::functional']]]
 ];

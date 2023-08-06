@@ -1,4 +1,0 @@
-<map id="sl::nullables::fwd_value_fn" name="sl::nullables::fwd_value_fn">
-<area shape="rect" id="node1" title="Creates a functional object which can be used for composing with other functional objects." alt="" coords="5,5,127,50"/>
-<area shape="rect" id="node2" href="$d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga9148a75e548d317067046fd31a4b8277" title="Passes the value of the input_nullable to the function if it&#39;s not equal to its null&#45;object." alt="" coords="175,5,296,50"/>
-</map>

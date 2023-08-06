@@ -106,36 +106,36 @@ Collaboration diagram for cartesian product:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/df2/structsl_1_1tuple_1_1cartesian__product__result.html">sl::tuple::cartesian_product_result&lt; TTuples &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/df2/structsl_1_1tuple_1_1cartesian__product__result.html">sl::tuple::cartesian_product_result&lt; Tuples &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Trait type determining the result of a <code>cartesian_product</code> call.  <a href="../../db/df2/structsl_1_1tuple_1_1cartesian__product__result.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga7ca3156ccc14a8f3ccfc21f9f714d6e2"><td class="memTemplParams" colspan="2">template&lt;class... TTuples&gt; </td></tr>
-<tr class="memitem:ga7ca3156ccc14a8f3ccfc21f9f714d6e2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/de3/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___c_a_r_t_e_s_i_a_n___p_r_o_d_u_c_t.html#ga7ca3156ccc14a8f3ccfc21f9f714d6e2">sl::tuple::cartesian_product_result_t</a> = typename <a class="el" href="../../db/df2/structsl_1_1tuple_1_1cartesian__product__result.html">cartesian_product_result</a>&lt; TTuples... &gt;::type</td></tr>
-<tr class="memdesc:ga7ca3156ccc14a8f3ccfc21f9f714d6e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias type determining the result of a <code>cartesian_product</code> call.  <br /></td></tr>
-<tr class="separator:ga7ca3156ccc14a8f3ccfc21f9f714d6e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8215f061f677e057380b87c99e8e8f8a"><td class="memTemplParams" colspan="2">template&lt;class... Tuples&gt; </td></tr>
+<tr class="memitem:ga8215f061f677e057380b87c99e8e8f8a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/de3/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___c_a_r_t_e_s_i_a_n___p_r_o_d_u_c_t.html#ga8215f061f677e057380b87c99e8e8f8a">sl::tuple::cartesian_product_result_t</a> = typename <a class="el" href="../../db/df2/structsl_1_1tuple_1_1cartesian__product__result.html">cartesian_product_result</a>&lt; Tuples... &gt;::type</td></tr>
+<tr class="memdesc:ga8215f061f677e057380b87c99e8e8f8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Alias type determining the result of a <code>cartesian_product</code> call.  <br /></td></tr>
+<tr class="separator:ga8215f061f677e057380b87c99e8e8f8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga010ca8019cb655bd3b4226c4fd973492"><td class="memTemplParams" colspan="2">template&lt;concepts::tuple_like TFirst, concepts::tuple_like TSecond, concepts::tuple_like... TOthers&gt; </td></tr>
-<tr class="memitem:ga010ca8019cb655bd3b4226c4fd973492"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../d8/de3/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___c_a_r_t_e_s_i_a_n___p_r_o_d_u_c_t.html#ga7ca3156ccc14a8f3ccfc21f9f714d6e2">cartesian_product_result_t</a>&lt; TFirst, TSecond, TOthers... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/de3/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___c_a_r_t_e_s_i_a_n___p_r_o_d_u_c_t.html#ga010ca8019cb655bd3b4226c4fd973492">sl::tuple::cartesian_product</a> (const TFirst &amp;first, const TSecond &amp;second, const TOthers &amp;... others) noexcept(std::is_nothrow_copy_constructible_v&lt; TFirst &gt; &amp;&amp;std::is_nothrow_copy_constructible_v&lt; TSecond &gt; &amp;&amp;(std::is_nothrow_copy_constructible_v&lt; TOthers &gt; &amp;&amp;...))</td></tr>
-<tr class="memdesc:ga010ca8019cb655bd3b4226c4fd973492"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the cartesian product of the given tuples.  <br /></td></tr>
-<tr class="separator:ga010ca8019cb655bd3b4226c4fd973492"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4f5ba5f97422ce704bb6fa3efb5f42da"><td class="memTemplParams" colspan="2">template&lt;concepts::tuple First, concepts::tuple Second, concepts::tuple... Others&gt; </td></tr>
+<tr class="memitem:ga4f5ba5f97422ce704bb6fa3efb5f42da"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../d8/de3/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___c_a_r_t_e_s_i_a_n___p_r_o_d_u_c_t.html#ga8215f061f677e057380b87c99e8e8f8a">cartesian_product_result_t</a>&lt; First, Second, Others... &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/de3/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___c_a_r_t_e_s_i_a_n___p_r_o_d_u_c_t.html#ga4f5ba5f97422ce704bb6fa3efb5f42da">sl::tuple::cartesian_product</a> (const First &amp;first, const Second &amp;second, const Others &amp;... others) noexcept(std::is_nothrow_copy_constructible_v&lt; First &gt; &amp;&amp;std::is_nothrow_copy_constructible_v&lt; Second &gt; &amp;&amp;(std::is_nothrow_copy_constructible_v&lt; Others &gt; &amp;&amp;...))</td></tr>
+<tr class="memdesc:ga4f5ba5f97422ce704bb6fa3efb5f42da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the cartesian product of the given tuples.  <br /></td></tr>
+<tr class="separator:ga4f5ba5f97422ce704bb6fa3efb5f42da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <h2 class="groupheader">Typedef Documentation</h2>
-<a id="ga7ca3156ccc14a8f3ccfc21f9f714d6e2" name="ga7ca3156ccc14a8f3ccfc21f9f714d6e2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7ca3156ccc14a8f3ccfc21f9f714d6e2">&#9670;&#160;</a></span>cartesian_product_result_t</h2>
+<a id="ga8215f061f677e057380b87c99e8e8f8a" name="ga8215f061f677e057380b87c99e8e8f8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8215f061f677e057380b87c99e8e8f8a">&#9670;&#160;</a></span>cartesian_product_result_t</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class... TTuples&gt; </div>
+template&lt;class... Tuples&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="../../d8/de3/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___c_a_r_t_e_s_i_a_n___p_r_o_d_u_c_t.html#ga7ca3156ccc14a8f3ccfc21f9f714d6e2">sl::tuple::cartesian_product_result_t</a> = typedef typename <a class="el" href="../../db/df2/structsl_1_1tuple_1_1cartesian__product__result.html">cartesian_product_result</a>&lt;TTuples...&gt;::type</td>
+          <td class="memname">using <a class="el" href="../../d8/de3/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___c_a_r_t_e_s_i_a_n___p_r_o_d_u_c_t.html#ga8215f061f677e057380b87c99e8e8f8a">sl::tuple::cartesian_product_result_t</a> = typedef typename <a class="el" href="../../db/df2/structsl_1_1tuple_1_1cartesian__product__result.html">cartesian_product_result</a>&lt;Tuples...&gt;::type</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -145,33 +145,33 @@ template&lt;class... TTuples&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga010ca8019cb655bd3b4226c4fd973492" name="ga010ca8019cb655bd3b4226c4fd973492"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga010ca8019cb655bd3b4226c4fd973492">&#9670;&#160;</a></span>cartesian_product()</h2>
+<a id="ga4f5ba5f97422ce704bb6fa3efb5f42da" name="ga4f5ba5f97422ce704bb6fa3efb5f42da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga4f5ba5f97422ce704bb6fa3efb5f42da">&#9670;&#160;</a></span>cartesian_product()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;concepts::tuple_like TFirst, concepts::tuple_like TSecond, concepts::tuple_like... TOthers&gt; </div>
+template&lt;concepts::tuple First, concepts::tuple Second, concepts::tuple... Others&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="../../d8/de3/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___c_a_r_t_e_s_i_a_n___p_r_o_d_u_c_t.html#ga7ca3156ccc14a8f3ccfc21f9f714d6e2">cartesian_product_result_t</a>&lt; TFirst, TSecond, TOthers... &gt; sl::tuple::cartesian_product </td>
+          <td class="memname">constexpr <a class="el" href="../../d8/de3/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___c_a_r_t_e_s_i_a_n___p_r_o_d_u_c_t.html#ga8215f061f677e057380b87c99e8e8f8a">cartesian_product_result_t</a>&lt; First, Second, Others... &gt; sl::tuple::cartesian_product </td>
           <td>(</td>
-          <td class="paramtype">const TFirst &amp;&#160;</td>
+          <td class="paramtype">const First &amp;&#160;</td>
           <td class="paramname"><em>first</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const TSecond &amp;&#160;</td>
+          <td class="paramtype">const Second &amp;&#160;</td>
           <td class="paramname"><em>second</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const TOthers &amp;...&#160;</td>
+          <td class="paramtype">const Others &amp;...&#160;</td>
           <td class="paramname"><em>others</em>&#160;</td>
         </tr>
         <tr>
@@ -190,9 +190,9 @@ template&lt;concepts::tuple_like TFirst, concepts::tuple_like TSecond, concepts:
 <p>Creates the cartesian product of the given tuples. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">TFirst</td><td>The first tuple type. </td></tr>
-    <tr><td class="paramname">TSecond</td><td>The second tuple type. </td></tr>
-    <tr><td class="paramname">TOthers</td><td>Other tuple types. </td></tr>
+    <tr><td class="paramname">First</td><td>The first tuple type. </td></tr>
+    <tr><td class="paramname">Second</td><td>The second tuple type. </td></tr>
+    <tr><td class="paramname">Others</td><td>Other tuple types. </td></tr>
   </table>
   </dd>
 </dl>

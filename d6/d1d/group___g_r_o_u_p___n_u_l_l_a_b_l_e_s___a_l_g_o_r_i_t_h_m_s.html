@@ -92,7 +92,7 @@ $(document).ready(function(){initNavTree('d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">algorithms<div class="ingroups"><a class="el" href="../../d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html">nullables</a></div></div></div>
 </div><!--header-->
 <div class="contents">
@@ -108,53 +108,24 @@ Collaboration diagram for algorithms:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d3b/classsl_1_1nullables_1_1algorithm__fn.html">sl::nullables::algorithm_fn&lt; TFunc &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core algorithm helper, which executes the held algorithm when used as the right-hand-side of <code>operator |</code> expressions, when the left-hand-side is a valid <code>nullable</code> type.  <a href="../../d6/d3b/classsl_1_1nullables_1_1algorithm__fn.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d2e/classsl_1_1nullables_1_1_algorithm.html">sl::nullables::Algorithm&lt; Operation &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core algorithm helper, which executes the held operation when used as the right-hand-side of <code>operator |</code> expressions, when the left-hand-side is a valid <code>nullable</code> type.  <a href="../../d5/d2e/classsl_1_1nullables_1_1_algorithm.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:gae8e03f82536c7a080e1a50b3051ba083"><td class="memTemplParams" colspan="2">template&lt;class TFunc &gt; </td></tr>
-<tr class="memitem:gae8e03f82536c7a080e1a50b3051ba083"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae8e03f82536c7a080e1a50b3051ba083">sl::nullables::and_then</a> (TFunc &amp;&amp;func)</td></tr>
-<tr class="memdesc:gae8e03f82536c7a080e1a50b3051ba083"><td class="mdescLeft">&#160;</td><td class="mdescRight">Passes the value of the <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> to the function if it's not equal to its <code>null</code>-object. Returns the <code>null</code>-object otherwise.  <br /></td></tr>
-<tr class="separator:gae8e03f82536c7a080e1a50b3051ba083"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabcfa0f19afec2db0f2604399f0474ee4"><td class="memTemplParams" colspan="2">template&lt;class TFunc &gt; </td></tr>
-<tr class="memitem:gabcfa0f19afec2db0f2604399f0474ee4"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gabcfa0f19afec2db0f2604399f0474ee4">sl::nullables::and_then_fn</a> (TFunc &amp;&amp;func)</td></tr>
-<tr class="memdesc:gabcfa0f19afec2db0f2604399f0474ee4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a functional object which can be used for composing with other functional objects.  <br /></td></tr>
-<tr class="separator:gabcfa0f19afec2db0f2604399f0474ee4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga96c2e578582e0a30f11305310ede80ab"><td class="memTemplParams" colspan="2">template&lt;class TFunc &gt; </td></tr>
-<tr class="memitem:ga96c2e578582e0a30f11305310ede80ab"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga96c2e578582e0a30f11305310ede80ab">sl::nullables::algorithm_fn</a> (TFunc) -&gt; <a class="el" href="../../d6/d3b/classsl_1_1nullables_1_1algorithm__fn.html">algorithm_fn</a>&lt; TFunc &gt;</td></tr>
-<tr class="memdesc:ga96c2e578582e0a30f11305310ede80ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Deduction guide for <a class="el" href="../../d6/d3b/classsl_1_1nullables_1_1algorithm__fn.html">algorithm_fn</a> types.  <br /></td></tr>
-<tr class="separator:ga96c2e578582e0a30f11305310ede80ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabb404599f049dcc44fd4093c295b5dff"><td class="memTemplParams" colspan="2">template&lt;input_nullable TNullable, derived_from_unified_base&lt; detail::algorithm_tag &gt; TAlgorithm&gt; <br />
-requires std::invocable&lt;TAlgorithm, TNullable&gt;</td></tr>
-<tr class="memitem:gabb404599f049dcc44fd4093c295b5dff"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gabb404599f049dcc44fd4093c295b5dff">sl::nullables::operator|</a> (TNullable &amp;&amp;nullable, TAlgorithm &amp;&amp;algorithm) noexcept(std::is_nothrow_invocable_v&lt; TAlgorithm, TNullable &gt;)</td></tr>
-<tr class="memdesc:gabb404599f049dcc44fd4093c295b5dff"><td class="mdescLeft">&#160;</td><td class="mdescRight">The operator is used to chain nullables with algorithms.  <br /></td></tr>
-<tr class="separator:gabb404599f049dcc44fd4093c295b5dff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9148a75e548d317067046fd31a4b8277"><td class="memTemplParams" colspan="2">template&lt;class TFunc &gt; </td></tr>
-<tr class="memitem:ga9148a75e548d317067046fd31a4b8277"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga9148a75e548d317067046fd31a4b8277">sl::nullables::fwd_value</a> (TFunc &amp;&amp;func)</td></tr>
-<tr class="memdesc:ga9148a75e548d317067046fd31a4b8277"><td class="mdescLeft">&#160;</td><td class="mdescRight">Passes the value of the <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> to the function if it's not equal to its <code>null</code>-object.  <br /></td></tr>
-<tr class="separator:ga9148a75e548d317067046fd31a4b8277"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0380eab2642f51534fbe943aec12b66d"><td class="memTemplParams" colspan="2">template&lt;class TFunc &gt; </td></tr>
-<tr class="memitem:ga0380eab2642f51534fbe943aec12b66d"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga0380eab2642f51534fbe943aec12b66d">sl::nullables::fwd_value_fn</a> (TFunc &amp;&amp;func)</td></tr>
-<tr class="memdesc:ga0380eab2642f51534fbe943aec12b66d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a functional object which can be used for composing with other functional objects.  <br /></td></tr>
-<tr class="separator:ga0380eab2642f51534fbe943aec12b66d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae5eb9c3a279163f9cbc99547f4c5b06c"><td class="memTemplParams" colspan="2">template&lt;std::invocable TFunc&gt; </td></tr>
-<tr class="memitem:gae5eb9c3a279163f9cbc99547f4c5b06c"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae5eb9c3a279163f9cbc99547f4c5b06c">sl::nullables::or_else</a> (TFunc &amp;&amp;func)</td></tr>
-<tr class="memdesc:gae5eb9c3a279163f9cbc99547f4c5b06c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> if it's not equal to its ''null''-object. Executes the passed function otherwise.  <br /></td></tr>
-<tr class="separator:gae5eb9c3a279163f9cbc99547f4c5b06c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga3ff49a992d0cf2d2d25259364cfa6918"><td class="memTemplParams" colspan="2">template&lt;class TFunc &gt; </td></tr>
-<tr class="memitem:ga3ff49a992d0cf2d2d25259364cfa6918"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga3ff49a992d0cf2d2d25259364cfa6918">sl::nullables::or_else_fn</a> (TFunc &amp;&amp;func)</td></tr>
-<tr class="memdesc:ga3ff49a992d0cf2d2d25259364cfa6918"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a functional object which can be used for composing with other functional objects.  <br /></td></tr>
-<tr class="separator:ga3ff49a992d0cf2d2d25259364cfa6918"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gada2065021a243befb8498c8299d4b94c"><td class="memTemplParams" colspan="2">template&lt;class TValue &gt; </td></tr>
-<tr class="memitem:gada2065021a243befb8498c8299d4b94c"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gada2065021a243befb8498c8299d4b94c">sl::nullables::value_or</a> (TValue &amp;&amp;value)</td></tr>
-<tr class="memdesc:gada2065021a243befb8498c8299d4b94c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the value of a <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> if it's not equal to its ''null''-object. Returns the alternative otherwise.  <br /></td></tr>
-<tr class="separator:gada2065021a243befb8498c8299d4b94c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2b06ed31f7e399119fb62b958f20e6ec"><td class="memTemplParams" colspan="2">template&lt;class TValue &gt; </td></tr>
-<tr class="memitem:ga2b06ed31f7e399119fb62b958f20e6ec"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga2b06ed31f7e399119fb62b958f20e6ec">sl::nullables::value_or_fn</a> (TValue &amp;&amp;value)</td></tr>
-<tr class="memdesc:ga2b06ed31f7e399119fb62b958f20e6ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a functional object which can be used for composing with other functional objects.  <br /></td></tr>
-<tr class="separator:ga2b06ed31f7e399119fb62b958f20e6ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga405026999e94e6daeab19a0327a3779e"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga405026999e94e6daeab19a0327a3779e">sl::nullables::and_then</a></td></tr>
+<tr class="memdesc:ga405026999e94e6daeab19a0327a3779e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Passes the value of the <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> to the function if it's not equal to its <code>null</code>-object. Returns the <code>null</code>-object otherwise.  <br /></td></tr>
+<tr class="separator:ga405026999e94e6daeab19a0327a3779e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga51392e2d61b33585d728efbbf32b4f26"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga51392e2d61b33585d728efbbf32b4f26">sl::nullables::fwd_value</a></td></tr>
+<tr class="memdesc:ga51392e2d61b33585d728efbbf32b4f26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Passes the value of the <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> to the function if it's not equal to its <code>null</code>-object.  <br /></td></tr>
+<tr class="separator:ga51392e2d61b33585d728efbbf32b4f26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaae1a179ae42bf4201989653557976479"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479">sl::nullables::or_else</a></td></tr>
+<tr class="memdesc:gaae1a179ae42bf4201989653557976479"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> if it's not equal to its ''null''-object. Executes the passed function otherwise.  <br /></td></tr>
+<tr class="separator:gaae1a179ae42bf4201989653557976479"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga74afba8ed89e9dc1171b5868cf525027"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga74afba8ed89e9dc1171b5868cf525027">sl::nullables::value_or</a></td></tr>
+<tr class="memdesc:ga74afba8ed89e9dc1171b5868cf525027"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the value of a <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> if it's not equal to its ''null''-object. Returns the alternative otherwise.  <br /></td></tr>
+<tr class="separator:ga74afba8ed89e9dc1171b5868cf525027"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Contains nullable algorithm related symbols. </p>
@@ -162,27 +133,25 @@ requires std::invocable&lt;TAlgorithm, TNullable&gt;</td></tr>
 <div class="line"><span class="comment">     * and invokes the given function. Otherwise the nullable is simply forwarded as the result of the function.</span></div>
 <div class="line"><span class="comment">     * In fact this is an alternative implementation of the ``value_or`` algorithm, where the value is retrieved lazily when needed.</span></div>
 <div class="line"><span class="comment">    */</span></div>
-<div class="line">    <span class="keyword">const</span> <span class="keyword">auto</span> my_lazy_value_or = []&lt;nullable TNullable, std::invocable TFunc&gt;</div>
-<div class="line">    (</div>
-<div class="line">        TNullable&amp;&amp; in,</div>
-<div class="line">        TFunc&amp;&amp; func</div>
-<div class="line">    ) -&gt; std::remove_cvref_t&lt;TNullable&gt;</div>
+<div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> my_lazy_value_or = []&lt;nullable Nullable, std::invocable Fn&gt;(</div>
+<div class="line">        Nullable&amp;&amp; input,</div>
+<div class="line">        Fn&amp;&amp; fn</div>
+<div class="line">    ) -&gt; std::remove_cvref_t&lt;Nullable&gt;</div>
 <div class="line">    {</div>
-<div class="line">        <span class="keywordflow">if</span> (in == null_v&lt;TNullable&gt;)</div>
+<div class="line">        <span class="keywordflow">if</span> (input == null_v&lt;Nullable&gt;)</div>
 <div class="line">        {</div>
-<div class="line">            <span class="keywordflow">return</span> std::invoke(std::forward&lt;TFunc&gt;(func));</div>
+<div class="line">            <span class="keywordflow">return</span> std::invoke(std::forward&lt;Fn&gt;(fn));</div>
 <div class="line">        }</div>
-<div class="line">        <span class="keywordflow">return</span> std::forward&lt;TNullable&gt;(in);</div>
+<div class="line">        <span class="keywordflow">return</span> std::forward&lt;Nullable&gt;(input);</div>
 <div class="line">    };</div>
 <div class="line"> </div>
-<div class="line">    <span class="comment">// This factory function isn&#39;t requires, but reduces the noise from the calling code.</span></div>
-<div class="line">    <span class="keyword">const</span> <span class="keyword">auto</span> lazy_value_or = [&amp;]&lt;std::invocable TFunc&gt;(TFunc&amp;&amp; func)</div>
+<div class="line">    <span class="comment">// This factory function isn&#39;t required, but reduces the noise from the calling code.</span></div>
+<div class="line">    <span class="keyword">const</span> <span class="keyword">auto</span> lazy_value_or = [&amp;]&lt;std::invocable Fn&gt;(Fn&amp;&amp; func)</div>
 <div class="line">    {</div>
-<div class="line">        <span class="comment">// operator &gt;&gt; binds the given parameter to the back (like std::bind_back).</span></div>
-<div class="line">        <span class="keywordflow">return</span> <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga96c2e578582e0a30f11305310ede80ab">algorithm_fn</a>{ my_lazy_value_or } &gt;&gt; std::forward&lt;TFunc&gt;(func);</div>
+<div class="line">        <span class="keywordflow">return</span> Algorithm{sf::bind_back(my_lazy_value_or, std::forward&lt;Fn&gt;(func))};</div>
 <div class="line">    };</div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">const</span> std::optional resultOfValid = std::optional{ 42 }</div>
+<div class="line">    <span class="keyword">const</span> std::optional resultOfValid = std::optional{42}</div>
 <div class="line">                                        | lazy_value_or([] { <span class="keywordflow">return</span> 1337; });</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(resultOfValid == 42);</div>
@@ -191,62 +160,31 @@ requires std::invocable&lt;TAlgorithm, TNullable&gt;</td></tr>
 <div class="line">                                        | lazy_value_or([] { <span class="keywordflow">return</span> 1337; });</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(resultOfInvalid == 1337);</div>
-<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_ga96c2e578582e0a30f11305310ede80ab"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga96c2e578582e0a30f11305310ede80ab">sl::nullables::algorithm_fn</a></div><div class="ttdeci">algorithm_fn(TFunc) -&gt; algorithm_fn&lt; TFunc &gt;</div><div class="ttdoc">Deduction guide for algorithm_fn types.</div></div>
-</div><!-- fragment --> <h2 class="groupheader">Function Documentation</h2>
-<a id="ga96c2e578582e0a30f11305310ede80ab" name="ga96c2e578582e0a30f11305310ede80ab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga96c2e578582e0a30f11305310ede80ab">&#9670;&#160;</a></span>algorithm_fn()</h2>
+</div><!-- fragment --> <h2 class="groupheader">Variable Documentation</h2>
+<a id="ga405026999e94e6daeab19a0327a3779e" name="ga405026999e94e6daeab19a0327a3779e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga405026999e94e6daeab19a0327a3779e">&#9670;&#160;</a></span>and_then</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;class TFunc &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d6/d3b/classsl_1_1nullables_1_1algorithm__fn.html">sl::nullables::algorithm_fn</a> </td>
-          <td>(</td>
-          <td class="paramtype">TFunc&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td> -&gt;  <a class="el" href="../../d6/d3b/classsl_1_1nullables_1_1algorithm__fn.html">algorithm_fn</a>&lt; TFunc &gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Deduction guide for <a class="el" href="../../d6/d3b/classsl_1_1nullables_1_1algorithm__fn.html">algorithm_fn</a> types. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">TFunc</td><td>The function type. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="gae8e03f82536c7a080e1a50b3051ba083" name="gae8e03f82536c7a080e1a50b3051ba083"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae8e03f82536c7a080e1a50b3051ba083">&#9670;&#160;</a></span>and_then()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TFunc &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr auto sl::nullables::and_then </td>
-          <td>(</td>
-          <td class="paramtype">TFunc &amp;&amp;&#160;</td>
-          <td class="paramname"><em>func</em></td><td>)</td>
-          <td></td>
+          <td class="memname">constexpr auto sl::nullables::and_then</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-
+<b>Initial value:</b><div class="fragment"><div class="line">= []&lt;<span class="keyword">class </span>Fn&gt;(Fn&amp;&amp; fn) <span class="keyword">noexcept</span>(std::is_nothrow_constructible_v&lt;std::remove_cvref_t&lt;Fn&gt;, Fn&gt;)</div>
+<div class="line">    {</div>
+<div class="line">        <span class="keywordflow">return</span> Algorithm{functional::bind_back(detail::and_then_caller_fn{}, std::forward&lt;Fn&gt;(fn))};</div>
+<div class="line">    }</div>
+</div><!-- fragment -->
 <p>Passes the value of the <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> to the function if it's not equal to its <code>null</code>-object. Returns the <code>null</code>-object otherwise. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -263,100 +201,42 @@ template&lt;class TFunc &gt; </div>
 <p>This algorithm uses the actual value of a <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> and passes it to the given functional. The functional should then return <b>any</b> <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> <b>compatible</b> <b>type</b> as desired. Otherwise, if the <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> compares equal to its <code>null</code>-object, the <code>null</code>-object is returned instead.</p>
 <dl class="section note"><dt>Note</dt><dd>In the following examples the outcome is always presented within the <code>REQUIRE()</code> statement.</dd></dl>
 <p>This example shows the outcome when a valid <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> is used in a <code>and_then</code> expression. Note that the resulting <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> type differs from the starting one. </p><div class="fragment"><div class="line">    <span class="keyword">const</span> std::optional result = std::optional{42}</div>
-<div class="line">                                | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae8e03f82536c7a080e1a50b3051ba083">and_then</a>([](<span class="keyword">const</span> <span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> std::optional{std::to_string(i)}; });</div>
+<div class="line">                                | <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga405026999e94e6daeab19a0327a3779e">and_then</a>([](<span class="keyword">const</span> <span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> std::optional{std::to_string(i)}; });</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(result == <span class="stringliteral">&quot;42&quot;</span>);</div>
-<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_gae8e03f82536c7a080e1a50b3051ba083"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae8e03f82536c7a080e1a50b3051ba083">sl::nullables::and_then</a></div><div class="ttdeci">constexpr auto and_then(TFunc &amp;&amp;func)</div><div class="ttdoc">Passes the value of the input_nullable to the function if it's not equal to its null-object....</div><div class="ttdef"><b>Definition:</b> and_then.hpp:83</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_ga405026999e94e6daeab19a0327a3779e"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga405026999e94e6daeab19a0327a3779e">sl::nullables::and_then</a></div><div class="ttdeci">constexpr auto and_then</div><div class="ttdoc">Passes the value of the input_nullable to the function if it's not equal to its null-object....</div><div class="ttdef"><b>Definition:</b> and_then.hpp:79</div></div>
 </div><!-- fragment --><p> ---</p>
 <p>This example shows the outcome when an invalid <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> is used in a <code>and_then</code> expression. Note that the resulting <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> type differs from the starting one. </p><div class="fragment"><div class="line">    <span class="keyword">const</span> std::optional result = std::optional&lt;int&gt;{}</div>
-<div class="line">                                | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae8e03f82536c7a080e1a50b3051ba083">and_then</a>([](<span class="keyword">const</span> <span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> std::optional{std::to_string(i)}; });</div>
+<div class="line">                                | <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga405026999e94e6daeab19a0327a3779e">and_then</a>([](<span class="keyword">const</span> <span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> std::optional{std::to_string(i)}; });</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(result == std::nullopt);</div>
-</div><!-- fragment --> <div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_gae8e03f82536c7a080e1a50b3051ba083_icgraph.svg" width="336" height="56"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div><!-- fragment --> 
 </div>
 </div>
-
-</div>
-</div>
-<a id="gabcfa0f19afec2db0f2604399f0474ee4" name="gabcfa0f19afec2db0f2604399f0474ee4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabcfa0f19afec2db0f2604399f0474ee4">&#9670;&#160;</a></span>and_then_fn()</h2>
+<a id="ga51392e2d61b33585d728efbbf32b4f26" name="ga51392e2d61b33585d728efbbf32b4f26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga51392e2d61b33585d728efbbf32b4f26">&#9670;&#160;</a></span>fwd_value</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;class TFunc &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr auto sl::nullables::and_then_fn </td>
-          <td>(</td>
-          <td class="paramtype">TFunc &amp;&amp;&#160;</td>
-          <td class="paramname"><em>func</em></td><td>)</td>
-          <td></td>
+          <td class="memname">constexpr auto sl::nullables::fwd_value</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Creates a functional object which can be used for composing with other functional objects. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">TFunc</td><td>The type of the passed function. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">func</td><td>The given functional object. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section note"><dt>Note</dt><dd>For details about the algorithm itself see <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae8e03f82536c7a080e1a50b3051ba083">and_then</a> function. </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae8e03f82536c7a080e1a50b3051ba083">and_then</a> algorithm as functional object. </dd></dl>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_gabcfa0f19afec2db0f2604399f0474ee4_cgraph.svg" width="336" height="56"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-
-</div>
-</div>
-<a id="ga9148a75e548d317067046fd31a4b8277" name="ga9148a75e548d317067046fd31a4b8277"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9148a75e548d317067046fd31a4b8277">&#9670;&#160;</a></span>fwd_value()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TFunc &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr auto sl::nullables::fwd_value </td>
-          <td>(</td>
-          <td class="paramtype">TFunc &amp;&amp;&#160;</td>
-          <td class="paramname"><em>func</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
+<b>Initial value:</b><div class="fragment"><div class="line">= []&lt;<span class="keyword">class </span>Fn&gt;(Fn&amp;&amp; fn) <span class="keyword">noexcept</span>(std::is_nothrow_constructible_v&lt;std::remove_cvref_t&lt;Fn&gt;, Fn&gt;)</div>
+<div class="line">    {</div>
+<div class="line">        <span class="keywordflow">return</span> Algorithm{functional::bind_back(detail::fwd_value_caller_fn{}, std::forward&lt;Fn&gt;(fn))};</div>
+<div class="line">    }</div>
+</div><!-- fragment -->
 <p>Passes the value of the <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> to the function if it's not equal to its <code>null</code>-object. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -369,158 +249,44 @@ template&lt;class TFunc &gt; </div>
 <p>This example shows the outcome when a valid <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> is used in a <code>fwd_value</code> expression. </p><div class="fragment"><div class="line">    std::optional&lt;int&gt; target{};</div>
 <div class="line"> </div>
 <div class="line">    std::optional{42}</div>
-<div class="line">        | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga9148a75e548d317067046fd31a4b8277">fwd_value</a>([&amp;target](<span class="keyword">const</span> <span class="keywordtype">int</span> i) { target = i; });</div>
+<div class="line">        | <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga51392e2d61b33585d728efbbf32b4f26">fwd_value</a>([&amp;target](<span class="keyword">const</span> <span class="keywordtype">int</span> i) { target = i; });</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(target == 42);</div>
-<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_ga9148a75e548d317067046fd31a4b8277"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga9148a75e548d317067046fd31a4b8277">sl::nullables::fwd_value</a></div><div class="ttdeci">constexpr auto fwd_value(TFunc &amp;&amp;func)</div><div class="ttdoc">Passes the value of the input_nullable to the function if it's not equal to its null-object.</div><div class="ttdef"><b>Definition:</b> fwd_value.hpp:70</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_ga51392e2d61b33585d728efbbf32b4f26"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga51392e2d61b33585d728efbbf32b4f26">sl::nullables::fwd_value</a></div><div class="ttdeci">constexpr auto fwd_value</div><div class="ttdoc">Passes the value of the input_nullable to the function if it's not equal to its null-object.</div><div class="ttdef"><b>Definition:</b> fwd_value.hpp:68</div></div>
 </div><!-- fragment --><p> ---</p>
 <p>This example shows the outcome when an invalid <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> is used in a <code>fwd_value</code> expression. </p><div class="fragment"><div class="line">    std::optional&lt;int&gt; target{};</div>
 <div class="line"> </div>
 <div class="line">    std::optional&lt;int&gt;{}</div>
-<div class="line">        | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga9148a75e548d317067046fd31a4b8277">fwd_value</a>([&amp;target](<span class="keyword">const</span> <span class="keywordtype">int</span> i) { target = i; });</div>
+<div class="line">        | <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga51392e2d61b33585d728efbbf32b4f26">fwd_value</a>([&amp;target](<span class="keyword">const</span> <span class="keywordtype">int</span> i) { target = i; });</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(target == std::nullopt);</div>
-</div><!-- fragment --> <div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_ga9148a75e548d317067046fd31a4b8277_icgraph.svg" width="302" height="56"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div><!-- fragment --> 
 </div>
 </div>
-
-</div>
-</div>
-<a id="ga0380eab2642f51534fbe943aec12b66d" name="ga0380eab2642f51534fbe943aec12b66d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga0380eab2642f51534fbe943aec12b66d">&#9670;&#160;</a></span>fwd_value_fn()</h2>
+<a id="gaae1a179ae42bf4201989653557976479" name="gaae1a179ae42bf4201989653557976479"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaae1a179ae42bf4201989653557976479">&#9670;&#160;</a></span>or_else</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;class TFunc &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr auto sl::nullables::fwd_value_fn </td>
-          <td>(</td>
-          <td class="paramtype">TFunc &amp;&amp;&#160;</td>
-          <td class="paramname"><em>func</em></td><td>)</td>
-          <td></td>
+          <td class="memname">constexpr auto sl::nullables::or_else</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Creates a functional object which can be used for composing with other functional objects. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">TFunc</td><td>The type of the passed function. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">func</td><td>The given functional object. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section note"><dt>Note</dt><dd>For details about the algorithm itself see <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga9148a75e548d317067046fd31a4b8277">fwd_value</a> function. </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga9148a75e548d317067046fd31a4b8277">fwd_value</a> algorithm as functional object. </dd></dl>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_ga0380eab2642f51534fbe943aec12b66d_cgraph.svg" width="302" height="56"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-
-</div>
-</div>
-<a id="gabb404599f049dcc44fd4093c295b5dff" name="gabb404599f049dcc44fd4093c295b5dff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabb404599f049dcc44fd4093c295b5dff">&#9670;&#160;</a></span>operator|()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;input_nullable TNullable, derived_from_unified_base&lt; detail::algorithm_tag &gt; TAlgorithm&gt; <br />
-requires std::invocable&lt;TAlgorithm, TNullable&gt;</div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr decltype(auto) sl::nullables::operator| </td>
-          <td>(</td>
-          <td class="paramtype">TNullable &amp;&amp;&#160;</td>
-          <td class="paramname"><em>nullable</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">TAlgorithm &amp;&amp;&#160;</td>
-          <td class="paramname"><em>algorithm</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>The operator is used to chain nullables with algorithms. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">TNullable</td><td>The nullable type. </td></tr>
-    <tr><td class="paramname">TAlgorithm</td><td>The algorithm type. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">nullable</td><td>The nullable object. </td></tr>
-    <tr><td class="paramname">algorithm</td><td>The algorithm object. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Returns the forwarded result of the algorithm invocation. </dd></dl>
-
-</div>
-</div>
-<a id="gae5eb9c3a279163f9cbc99547f4c5b06c" name="gae5eb9c3a279163f9cbc99547f4c5b06c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae5eb9c3a279163f9cbc99547f4c5b06c">&#9670;&#160;</a></span>or_else()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;std::invocable TFunc&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr auto sl::nullables::or_else </td>
-          <td>(</td>
-          <td class="paramtype">TFunc &amp;&amp;&#160;</td>
-          <td class="paramname"><em>func</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
+<b>Initial value:</b><div class="fragment"><div class="line">= []&lt;<span class="keyword">class </span>Fn&gt;(Fn&amp;&amp; fn) <span class="keyword">noexcept</span>(std::is_nothrow_constructible_v&lt;std::remove_cvref_t&lt;Fn&gt;, Fn&gt;)</div>
+<div class="line">    {</div>
+<div class="line">        <span class="keywordflow">return</span> Algorithm{functional::bind_back(detail::or_else_caller_fn{}, std::forward&lt;Fn&gt;(fn))};</div>
+<div class="line">    }</div>
+</div><!-- fragment -->
 <p>Returns the <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> if it's not equal to its ''null''-object. Executes the passed function otherwise. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -531,105 +297,50 @@ template&lt;std::invocable TFunc&gt; </div>
 <p>This algorithm simply forwards the <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> if it compares unequal to its <code>null</code>-object. Otherwise the passed function will be called and the returned value initializes a new <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a>-object of the same type. If the functions return type is <code>void</code>, the <code>null</code>-object of that <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a>-type will be returned instead.</p>
 <dl class="section note"><dt>Note</dt><dd>In the following examples the outcome is always presented within the <code>REQUIRE()</code> statement.</dd></dl>
 <p>This example shows the outcome when a valid <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> is used in a <code>or_else</code> expression. </p><div class="fragment"><div class="line">    <span class="keyword">const</span> std::optional result = std::optional&lt;int&gt;{42}</div>
-<div class="line">                                | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae5eb9c3a279163f9cbc99547f4c5b06c">or_else</a>([] { <span class="keywordflow">return</span> 1337; });</div>
+<div class="line">                                | <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479">or_else</a>([] { <span class="keywordflow">return</span> 1337; });</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(result == 42);</div>
-<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_gae5eb9c3a279163f9cbc99547f4c5b06c"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae5eb9c3a279163f9cbc99547f4c5b06c">sl::nullables::or_else</a></div><div class="ttdeci">constexpr auto or_else(TFunc &amp;&amp;func)</div><div class="ttdoc">Returns the nullable if it's not equal to its ''null''-object. Executes the passed function otherwise...</div><div class="ttdef"><b>Definition:</b> or_else.hpp:92</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_gaae1a179ae42bf4201989653557976479"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479">sl::nullables::or_else</a></div><div class="ttdeci">constexpr auto or_else</div><div class="ttdoc">Returns the nullable if it's not equal to its ''null''-object. Executes the passed function otherwise...</div><div class="ttdef"><b>Definition:</b> or_else.hpp:90</div></div>
 </div><!-- fragment --><p> ---</p>
 <p>This example shows the outcome when an invalid <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> is used in a <code>or_else</code> expression and the functional has a return type other than <code>void</code>. </p><div class="fragment"><div class="line">    <span class="keyword">const</span> std::optional result = std::optional&lt;int&gt;{}</div>
-<div class="line">                                | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae5eb9c3a279163f9cbc99547f4c5b06c">or_else</a>([] { <span class="keywordflow">return</span> 1337; });</div>
+<div class="line">                                | <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479">or_else</a>([] { <span class="keywordflow">return</span> 1337; });</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(result == 1337);</div>
 </div><!-- fragment --><p> ---</p>
 <p>This example shows the outcome when an invalid <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> is used in a <code>or_else</code> expression and the functional does not return anything. </p><div class="fragment"><div class="line">    <span class="keyword">const</span> std::optional result = std::optional&lt;int&gt;{}</div>
-<div class="line">                                | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae5eb9c3a279163f9cbc99547f4c5b06c">or_else</a>([] { <span class="comment">/* print error message for example */</span> });</div>
+<div class="line">                                | <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479">or_else</a>([] { <span class="comment">/* print error message for example */</span> });</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(result == std::nullopt);</div>
-</div><!-- fragment --> <div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_gae5eb9c3a279163f9cbc99547f4c5b06c_icgraph.svg" width="364" height="39"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+</div><!-- fragment --> 
 </div>
 </div>
-
-</div>
-</div>
-<a id="ga3ff49a992d0cf2d2d25259364cfa6918" name="ga3ff49a992d0cf2d2d25259364cfa6918"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3ff49a992d0cf2d2d25259364cfa6918">&#9670;&#160;</a></span>or_else_fn()</h2>
+<a id="ga74afba8ed89e9dc1171b5868cf525027" name="ga74afba8ed89e9dc1171b5868cf525027"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga74afba8ed89e9dc1171b5868cf525027">&#9670;&#160;</a></span>value_or</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;class TFunc &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr auto sl::nullables::or_else_fn </td>
-          <td>(</td>
-          <td class="paramtype">TFunc &amp;&amp;&#160;</td>
-          <td class="paramname"><em>func</em></td><td>)</td>
-          <td></td>
+          <td class="memname">constexpr auto sl::nullables::value_or</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Creates a functional object which can be used for composing with other functional objects. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">TFunc</td><td>The type of the passed function. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">func</td><td>The given functional object. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section note"><dt>Note</dt><dd>For details about the algorithm itself see <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae5eb9c3a279163f9cbc99547f4c5b06c">or_else</a> function. </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae5eb9c3a279163f9cbc99547f4c5b06c">or_else</a> algorithm as functional object. </dd></dl>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_ga3ff49a992d0cf2d2d25259364cfa6918_cgraph.svg" width="364" height="39"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-
-</div>
-</div>
-<a id="gada2065021a243befb8498c8299d4b94c" name="gada2065021a243befb8498c8299d4b94c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gada2065021a243befb8498c8299d4b94c">&#9670;&#160;</a></span>value_or()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TValue &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr auto sl::nullables::value_or </td>
-          <td>(</td>
-          <td class="paramtype">TValue &amp;&amp;&#160;</td>
-          <td class="paramname"><em>value</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
+<b>Initial value:</b><div class="fragment"><div class="line">= []&lt;<span class="keyword">class </span>Value&gt;(</div>
+<div class="line">        Value&amp;&amp; <a class="code hl_concept" href="../../d6/d66/conceptsl_1_1value.html">value</a></div>
+<div class="line">    ) <span class="keyword">noexcept</span>(std::is_nothrow_constructible_v&lt;std::remove_cvref_t&lt;Value&gt;, Value&gt;)</div>
+<div class="line">    {</div>
+<div class="line">        <span class="keywordflow">return</span> Algorithm{functional::bind_back(detail::value_or_caller_fn{}, std::forward&lt;Value&gt;(<a class="code hl_concept" href="../../d6/d66/conceptsl_1_1value.html">value</a>))};</div>
+<div class="line">    }</div>
+<div class="ttc" id="aconceptsl_1_1value_html"><div class="ttname"><a href="../../d6/d66/conceptsl_1_1value.html">sl::value</a></div><div class="ttdoc">Checks whether the given template type is usable as value type for unique_handle types.</div><div class="ttdef"><b>Definition:</b> unique_handle.hpp:161</div></div>
+</div><!-- fragment -->
 <p>Retrieves the value of a <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> if it's not equal to its ''null''-object. Returns the alternative otherwise. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -644,75 +355,19 @@ template&lt;class TValue &gt; </div>
   </dd>
 </dl>
 <p>This algorithm returns the alternative if the <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> compares equal to its <code>null</code>-object. Otherwise the value of the <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> is returned.</p>
-<p>The provided values will be stored in a <a class="el" href="../../da/d72/classsl_1_1functional_1_1value__fn.html">value_fn</a> object.</p>
+<p>The provided values will be stored in a value_fn object.</p>
 <dl class="section note"><dt>Note</dt><dd>In the following examples the outcome is always presented within the <code>REQUIRE()</code> statement.</dd></dl>
 <p>This example shows the outcome when a valid <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> is used in a <code>value_or</code> expression. </p><div class="fragment"><div class="line">    <span class="keyword">const</span> std::optional result = std::optional{42}</div>
-<div class="line">                                | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gada2065021a243befb8498c8299d4b94c">value_or</a>(1337);</div>
+<div class="line">                                | <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga74afba8ed89e9dc1171b5868cf525027">value_or</a>(1337);</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(result == 42);</div>
-<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_gada2065021a243befb8498c8299d4b94c"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gada2065021a243befb8498c8299d4b94c">sl::nullables::value_or</a></div><div class="ttdeci">constexpr auto value_or(TValue &amp;&amp;value)</div><div class="ttdoc">Retrieves the value of a input_nullable if it's not equal to its ''null''-object. Returns the alterna...</div><div class="ttdef"><b>Definition:</b> value_or.hpp:78</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_ga74afba8ed89e9dc1171b5868cf525027"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga74afba8ed89e9dc1171b5868cf525027">sl::nullables::value_or</a></div><div class="ttdeci">constexpr auto value_or</div><div class="ttdoc">Retrieves the value of a input_nullable if it's not equal to its ''null''-object. Returns the alterna...</div><div class="ttdef"><b>Definition:</b> value_or.hpp:73</div></div>
 </div><!-- fragment --><p> ---</p>
 <p>This example shows the outcome when an invalid <a class="el" href="../../d1/d54/conceptsl_1_1nullables_1_1input__nullable.html">input_nullable</a> is used in a <code>value_or</code> expression. </p><div class="fragment"><div class="line">    <span class="keyword">const</span> std::optional result = std::optional&lt;int&gt;{}</div>
-<div class="line">                                | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gada2065021a243befb8498c8299d4b94c">value_or</a>(1337);</div>
+<div class="line">                                | <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga74afba8ed89e9dc1171b5868cf525027">value_or</a>(1337);</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(result == 1337);</div>
-</div><!-- fragment --> <div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_gada2065021a243befb8498c8299d4b94c_icgraph.svg" width="338" height="56"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-
-</div>
-</div>
-<a id="ga2b06ed31f7e399119fb62b958f20e6ec" name="ga2b06ed31f7e399119fb62b958f20e6ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2b06ed31f7e399119fb62b958f20e6ec">&#9670;&#160;</a></span>value_or_fn()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TValue &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr auto sl::nullables::value_or_fn </td>
-          <td>(</td>
-          <td class="paramtype">TValue &amp;&amp;&#160;</td>
-          <td class="paramname"><em>value</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Creates a functional object which can be used for composing with other functional objects. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">TValue</td><td>Type of alternative. Must initialize <code>nullable_value_t&lt;TNullable&gt;</code> objects. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">value</td><td>The provided alternative. </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section note"><dt>Note</dt><dd>For details about the algorithm itself see <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gada2065021a243befb8498c8299d4b94c">value_or</a> function. </dd></dl>
-<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gada2065021a243befb8498c8299d4b94c">value_or</a> algorithm as functional object. </dd></dl>
-<div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_ga2b06ed31f7e399119fb62b958f20e6ec_cgraph.svg" width="338" height="56"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-</div>
-
+</div><!-- fragment --> 
 </div>
 </div>
 </div><!-- contents -->

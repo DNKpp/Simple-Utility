@@ -1,12 +1,14 @@
 var dir_5a25afb40b3d758b0316c6da520c93e2 =
 [
-    [ "operators", "dir_832a1b35f88904c31b3e4d83b249abb5.html", "dir_832a1b35f88904c31b3e4d83b249abb5" ],
-    [ "arithmetic.hpp", "d3/d23/arithmetic_8hpp.html", "d3/d23/arithmetic_8hpp" ],
-    [ "base.hpp", "d1/d76/functional_2base_8hpp.html", "d1/d76/functional_2base_8hpp" ],
-    [ "compare.hpp", "dd/d3f/compare_8hpp.html", "dd/d3f/compare_8hpp" ],
-    [ "overloaded.hpp", "da/df1/overloaded_8hpp.html", "da/df1/overloaded_8hpp" ],
-    [ "predicate.hpp", "d2/d7e/predicate_8hpp.html", "d2/d7e/predicate_8hpp" ],
-    [ "transform.hpp", "d6/deb/transform_8hpp.html", "d6/deb/transform_8hpp" ],
-    [ "tuple.hpp", "d9/d5f/functional_2tuple_8hpp.html", "d9/d5f/functional_2tuple_8hpp" ],
-    [ "utility.hpp", "df/d4e/functional_2utility_8hpp.html", "df/d4e/functional_2utility_8hpp" ]
+    [ "mixins", "dir_0ca50cae7959843ba71c63802f7e24c3.html", "dir_0ca50cae7959843ba71c63802f7e24c3" ],
+    [ "Arithmetic.hpp", "d3/dc2/_arithmetic_8hpp.html", "d3/dc2/_arithmetic_8hpp" ],
+    [ "BasicClosure.hpp", "d8/d05/_basic_closure_8hpp.html", "d8/d05/_basic_closure_8hpp" ],
+    [ "bind_back.hpp", "d2/dc8/bind__back_8hpp.html", "d2/dc8/bind__back_8hpp" ],
+    [ "Compare.hpp", "d8/d60/_compare_8hpp.html", "d8/d60/_compare_8hpp" ],
+    [ "Composition.hpp", "d3/d48/_composition_8hpp.html", "d3/d48/_composition_8hpp" ],
+    [ "Overloaded.hpp", "d6/d50/_overloaded_8hpp.html", "d6/d50/_overloaded_8hpp" ],
+    [ "Predicate.hpp", "d4/d53/_predicate_8hpp.html", "d4/d53/_predicate_8hpp" ],
+    [ "Transform.hpp", "d9/d8c/_transform_8hpp.html", "d9/d8c/_transform_8hpp" ],
+    [ "Tuple.hpp", "da/dae/functional_2_tuple_8hpp.html", "da/dae/functional_2_tuple_8hpp" ],
+    [ "Utility.hpp", "de/d61/functional_2_utility_8hpp.html", "de/d61/functional_2_utility_8hpp" ]
 ];

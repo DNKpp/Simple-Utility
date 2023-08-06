@@ -103,8 +103,8 @@ $(document).ready(function(){initNavTree('d2/d0e/or__else_8hpp_source.html','../
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="../../d6/dbe/nullables_2base_8hpp.html">Simple-Utility/nullables/base.hpp</a>&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../d6/deb/transform_8hpp.html">Simple-Utility/functional/transform.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="../../d2/dc8/bind__back_8hpp.html">Simple-Utility/functional/bind_back.hpp</a>&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="../../dd/d3c/base_8hpp.html">Simple-Utility/nullables/base.hpp</a>&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span>sl::nullables::detail</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>{</div>
@@ -112,7 +112,7 @@ $(document).ready(function(){initNavTree('d2/d0e/or__else_8hpp_source.html','../
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>        <span class="keyword">requires</span> std::is_void_v&lt;std::invoke_result_t&lt;TFunc&gt;&gt;</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>                || std::constructible_from&lt;std::remove_cvref_t&lt;TNullable&gt;, std::invoke_result_t&lt;TFunc&gt;&gt;</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">constexpr</span> std::remove_cvref_t&lt;TNullable&gt; or_else(TNullable&amp;&amp; nullableObj, TFunc&amp;&amp; func)</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">constexpr</span> std::remove_cvref_t&lt;TNullable&gt; <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479">or_else</a>(TNullable&amp;&amp; nullableObj, TFunc&amp;&amp; func)</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    {</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>        <span class="keyword">using </span>result_t = std::remove_cvref_t&lt;TNullable&gt;;</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
@@ -141,9 +141,9 @@ $(document).ready(function(){initNavTree('d2/d0e/or__else_8hpp_source.html','../
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>            TNullable&amp;&amp; nullableObj,</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>            TFunc&amp;&amp; func</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>        ) <span class="keyword">const</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(or_else(std::declval&lt;TNullable&gt;(), std::declval&lt;TFunc&gt;())))</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>        <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(<a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479">or_else</a>(std::declval&lt;TNullable&gt;(), std::declval&lt;TFunc&gt;())))</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>        {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keywordflow">return</span> or_else(</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>            <span class="keywordflow">return</span> <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479">or_else</a>(</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>                std::forward&lt;TNullable&gt;(nullableObj),</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>                std::forward&lt;TFunc&gt;(func)</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>            );</div>
@@ -153,30 +153,20 @@ $(document).ready(function(){initNavTree('d2/d0e/or__else_8hpp_source.html','../
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d0/de0/namespacesl_1_1nullables.html">sl::nullables</a></div>
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>{</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    <span class="keyword">template</span> &lt;std::invocable TFunc&gt;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae5eb9c3a279163f9cbc99547f4c5b06c">   92</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae5eb9c3a279163f9cbc99547f4c5b06c">or_else</a>(TFunc&amp;&amp; func)</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    {</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../d6/d3b/classsl_1_1nullables_1_1algorithm__fn.html">algorithm_fn</a>{ detail::or_else_caller_fn{} } &gt;&gt; std::forward&lt;TFunc&gt;(func);</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    }</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>    <span class="keyword">template</span> &lt;<span class="keyword">class</span> TFunc&gt;</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    [[nodiscard]]</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga3ff49a992d0cf2d2d25259364cfa6918">  106</a></span>    <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga3ff49a992d0cf2d2d25259364cfa6918">or_else_fn</a>(TFunc&amp;&amp; func)</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>    {</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">functional::transform_fn</a>{ <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae5eb9c3a279163f9cbc99547f4c5b06c">or_else</a>(std::forward&lt;TFunc&gt;(func)) };</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    }</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>    </div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>}</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="preprocessor">#endif</span></div>
-<div class="ttc" id="aclasssl_1_1functional_1_1transform__fn_html"><div class="ttname"><a href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">sl::functional::transform_fn</a></div><div class="ttdoc">Adapter type which accepts a functional type and enables pipe chaining and currying.</div><div class="ttdef"><b>Definition:</b> transform.hpp:45</div></div>
-<div class="ttc" id="aclasssl_1_1nullables_1_1algorithm__fn_html"><div class="ttname"><a href="../../d6/d3b/classsl_1_1nullables_1_1algorithm__fn.html">sl::nullables::algorithm_fn</a></div><div class="ttdoc">The core algorithm helper, which executes the held algorithm when used as the right-hand-side of oper...</div><div class="ttdef"><b>Definition:</b> base.hpp:229</div></div>
-<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_ga3ff49a992d0cf2d2d25259364cfa6918"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga3ff49a992d0cf2d2d25259364cfa6918">sl::nullables::or_else_fn</a></div><div class="ttdeci">constexpr auto or_else_fn(TFunc &amp;&amp;func)</div><div class="ttdoc">Creates a functional object which can be used for composing with other functional objects.</div><div class="ttdef"><b>Definition:</b> or_else.hpp:106</div></div>
-<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_gae5eb9c3a279163f9cbc99547f4c5b06c"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae5eb9c3a279163f9cbc99547f4c5b06c">sl::nullables::or_else</a></div><div class="ttdeci">constexpr auto or_else(TFunc &amp;&amp;func)</div><div class="ttdoc">Returns the nullable if it's not equal to its ''null''-object. Executes the passed function otherwise...</div><div class="ttdef"><b>Definition:</b> or_else.hpp:92</div></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479">   90</a></span>    <span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keyword">auto</span> <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479">or_else</a> = []&lt;<span class="keyword">class </span>Fn&gt;(Fn&amp;&amp; fn) <span class="keyword">noexcept</span>(std::is_nothrow_constructible_v&lt;std::remove_cvref_t&lt;Fn&gt;, Fn&gt;)</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    {</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>        <span class="keywordflow">return</span> <a class="code hl_class" href="../../d5/d2e/classsl_1_1nullables_1_1_algorithm.html">Algorithm</a>{<a class="code hl_variable" href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga2ad6b2671ab9248c51cfaee25af347e8">functional::bind_back</a>(detail::or_else_caller_fn{}, std::forward&lt;Fn&gt;(fn))};</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    };</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>}</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span><span class="preprocessor">#endif</span></div>
+<div class="ttc" id="abase_8hpp_html"><div class="ttname"><a href="../../dd/d3c/base_8hpp.html">base.hpp</a></div></div>
+<div class="ttc" id="abind__back_8hpp_html"><div class="ttname"><a href="../../d2/dc8/bind__back_8hpp.html">bind_back.hpp</a></div></div>
+<div class="ttc" id="aclasssl_1_1nullables_1_1_algorithm_html"><div class="ttname"><a href="../../d5/d2e/classsl_1_1nullables_1_1_algorithm.html">sl::nullables::Algorithm</a></div><div class="ttdoc">The core algorithm helper, which executes the held operation when used as the right-hand-side of oper...</div><div class="ttdef"><b>Definition:</b> base.hpp:216</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l_html_ga2ad6b2671ab9248c51cfaee25af347e8"><div class="ttname"><a href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html#ga2ad6b2671ab9248c51cfaee25af347e8">sl::functional::bind_back</a></div><div class="ttdeci">constexpr auto bind_back</div><div class="ttdoc">Helper function, which generates a forwarding call wrapper for the given function and curries the par...</div><div class="ttdef"><b>Definition:</b> bind_back.hpp:100</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_gaae1a179ae42bf4201989653557976479"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479">sl::nullables::or_else</a></div><div class="ttdeci">constexpr auto or_else</div><div class="ttdoc">Returns the nullable if it's not equal to its ''null''-object. Executes the passed function otherwise...</div><div class="ttdef"><b>Definition:</b> or_else.hpp:90</div></div>
 <div class="ttc" id="anamespacesl_1_1nullables_html"><div class="ttname"><a href="../../d0/de0/namespacesl_1_1nullables.html">sl::nullables</a></div><div class="ttdef"><b>Definition:</b> adapter.hpp:19</div></div>
-<div class="ttc" id="anullables_2base_8hpp_html"><div class="ttname"><a href="../../d6/dbe/nullables_2base_8hpp.html">base.hpp</a></div></div>
-<div class="ttc" id="atransform_8hpp_html"><div class="ttname"><a href="../../d6/deb/transform_8hpp.html">transform.hpp</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

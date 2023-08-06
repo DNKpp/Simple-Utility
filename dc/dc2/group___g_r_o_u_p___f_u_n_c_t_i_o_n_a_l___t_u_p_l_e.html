@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Simple-Utility: tuple functional</title>
+<title>Simple-Utility: tuple</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -92,44 +92,49 @@ $(document).ready(function(){initNavTree('dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i
 <div class="header">
   <div class="summary">
 <a href="#var-members">Variables</a>  </div>
-  <div class="headertitle"><div class="title">tuple functional<div class="ingroups"><a class="el" href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html">functional</a></div></div></div>
+  <div class="headertitle"><div class="title">tuple<div class="ingroups"><a class="el" href="../../d2/db1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l.html">functional</a></div></div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Contains several tuple related <code>Transform</code> definitions and the <code>Apply</code> closure template.  
+<a href="#details">More...</a></p>
 <div class="dynheader">
-Collaboration diagram for tuple functional:</div>
+Collaboration diagram for tuple:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="../../dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.svg" width="258" height="39"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.svg" width="194" height="39"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
 </div>
 </div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga15180ba02f9d99ba22b8e0ca9925f99e"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
-<tr class="memitem:ga15180ba02f9d99ba22b8e0ca9925f99e"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#ga15180ba02f9d99ba22b8e0ca9925f99e">sl::functional::tuple::get</a></td></tr>
-<tr class="memdesc:ga15180ba02f9d99ba22b8e0ca9925f99e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional object which retrieves an object of a specific type from a tuple-like argument.  <br /></td></tr>
-<tr class="separator:ga15180ba02f9d99ba22b8e0ca9925f99e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga61d6a6745f2d9681a912801081507c00"><td class="memTemplParams" colspan="2">template&lt;std::size_t VIndex&gt; </td></tr>
-<tr class="memitem:ga61d6a6745f2d9681a912801081507c00"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#ga61d6a6745f2d9681a912801081507c00">sl::functional::tuple::get_at</a></td></tr>
-<tr class="memdesc:ga61d6a6745f2d9681a912801081507c00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional object which retrieves an object at a specific index from a tuple-like argument.  <br /></td></tr>
-<tr class="separator:ga61d6a6745f2d9681a912801081507c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga9dcac9a14968a567d95b42179b5ae8b1"><td class="memTemplParams" colspan="2">template&lt;class... TArgs&gt; </td></tr>
-<tr class="memitem:ga9dcac9a14968a567d95b42179b5ae8b1"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#ga9dcac9a14968a567d95b42179b5ae8b1">sl::functional::tuple::reduce</a></td></tr>
-<tr class="memdesc:ga9dcac9a14968a567d95b42179b5ae8b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reduces (or permutes) the components of a tuple and returns a them as new tuple.  <br /></td></tr>
-<tr class="separator:ga9dcac9a14968a567d95b42179b5ae8b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad31effe07166660489fd0060a0d5a66f"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#gad31effe07166660489fd0060a0d5a66f">sl::functional::tuple::concat</a></td></tr>
-<tr class="memdesc:gad31effe07166660489fd0060a0d5a66f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Combines all elements from each given tuple into one tuple.  <br /></td></tr>
-<tr class="separator:gad31effe07166660489fd0060a0d5a66f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2e1fa2f321d83afea5a9953146371790"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#ga2e1fa2f321d83afea5a9953146371790">sl::functional::tuple::tie</a></td></tr>
-<tr class="memdesc:ga2e1fa2f321d83afea5a9953146371790"><td class="mdescLeft">&#160;</td><td class="mdescRight">Combines all given lvalue references into one tuple.  <br /></td></tr>
-<tr class="separator:ga2e1fa2f321d83afea5a9953146371790"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga175e806e80ae7deb22230eaa0db2f90c"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#ga175e806e80ae7deb22230eaa0db2f90c">sl::functional::tuple::apply</a> { detail::make_apply }</td></tr>
-<tr class="memdesc:ga175e806e80ae7deb22230eaa0db2f90c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Forwards and applies the tuple arguments to the provided function.  <br /></td></tr>
-<tr class="separator:ga175e806e80ae7deb22230eaa0db2f90c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga52938ce15e54485c0cbfb0dfc6b24cab"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ga52938ce15e54485c0cbfb0dfc6b24cab"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#ga52938ce15e54485c0cbfb0dfc6b24cab">sl::functional::tuple::get</a></td></tr>
+<tr class="memdesc:ga52938ce15e54485c0cbfb0dfc6b24cab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional object which retrieves an object of a specific type from a tuple-like argument.  <br /></td></tr>
+<tr class="separator:ga52938ce15e54485c0cbfb0dfc6b24cab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga71d316844aa7c6cf7e1a71a8e685daea"><td class="memTemplParams" colspan="2">template&lt;std::size_t index&gt; </td></tr>
+<tr class="memitem:ga71d316844aa7c6cf7e1a71a8e685daea"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#ga71d316844aa7c6cf7e1a71a8e685daea">sl::functional::tuple::get_at</a></td></tr>
+<tr class="memdesc:ga71d316844aa7c6cf7e1a71a8e685daea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Functional object which retrieves an object at a specific index from a tuple-like argument.  <br /></td></tr>
+<tr class="separator:ga71d316844aa7c6cf7e1a71a8e685daea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7bc74d80d6954a47cd8010b132b125b2"><td class="memTemplParams" colspan="2">template&lt;class... Args&gt; </td></tr>
+<tr class="memitem:ga7bc74d80d6954a47cd8010b132b125b2"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#ga7bc74d80d6954a47cd8010b132b125b2">sl::functional::tuple::reduce</a></td></tr>
+<tr class="memdesc:ga7bc74d80d6954a47cd8010b132b125b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reduces (or permutes) the components of a tuple and returns a them as new tuple.  <br /></td></tr>
+<tr class="separator:ga7bc74d80d6954a47cd8010b132b125b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga5c258879d6e98c92dbf51115d0a52de9"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#ga5c258879d6e98c92dbf51115d0a52de9">sl::functional::tuple::concat</a></td></tr>
+<tr class="memdesc:ga5c258879d6e98c92dbf51115d0a52de9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Combines all elements from each given tuple into one tuple.  <br /></td></tr>
+<tr class="separator:ga5c258879d6e98c92dbf51115d0a52de9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae7f8dfc540e8d4bc16ed85ac431264c0"><td class="memItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#gae7f8dfc540e8d4bc16ed85ac431264c0">sl::functional::tuple::tie</a></td></tr>
+<tr class="memdesc:gae7f8dfc540e8d4bc16ed85ac431264c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Combines all given lvalue references into one tuple.  <br /></td></tr>
+<tr class="separator:gae7f8dfc540e8d4bc16ed85ac431264c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3319fe3501e9921e620a5a4aa9272437"><td class="memTemplParams" colspan="2">template&lt;class To &gt; </td></tr>
+<tr class="memitem:ga3319fe3501e9921e620a5a4aa9272437"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html#ga3319fe3501e9921e620a5a4aa9272437">sl::functional::tuple::make_from</a></td></tr>
+<tr class="memdesc:ga3319fe3501e9921e620a5a4aa9272437"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs an object with elements from the source tuple as constructor arguments.  <br /></td></tr>
+<tr class="separator:ga3319fe3501e9921e620a5a4aa9272437"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p>Contains several tuple related <code>Transform</code> definitions and the <code>Apply</code> closure template. </p>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="ga175e806e80ae7deb22230eaa0db2f90c" name="ga175e806e80ae7deb22230eaa0db2f90c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga175e806e80ae7deb22230eaa0db2f90c">&#9670;&#160;</a></span>apply</h2>
+<a id="ga5c258879d6e98c92dbf51115d0a52de9" name="ga5c258879d6e98c92dbf51115d0a52de9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5c258879d6e98c92dbf51115d0a52de9">&#9670;&#160;</a></span>concat</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -138,7 +143,7 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a> sl::functional::tuple::apply { detail::make_apply }</td>
+          <td class="memname">constexpr auto sl::functional::tuple::concat</td>
         </tr>
       </table>
   </td>
@@ -147,40 +152,20 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-
-<p>Forwards and applies the tuple arguments to the provided function. </p>
-
-</div>
-</div>
-<a id="gad31effe07166660489fd0060a0d5a66f" name="gad31effe07166660489fd0060a0d5a66f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad31effe07166660489fd0060a0d5a66f">&#9670;&#160;</a></span>concat</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a> sl::functional::tuple::concat</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">        []&lt;<span class="keyword">class</span>... TTuples&gt;(TTuples&amp;&amp;... tuples) { <span class="keywordflow">return</span> detail::concat(std::forward&lt;TTuples&gt;(tuples)...); }</div>
-<div class="line">    }</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= envelop&lt;Transform&gt;(</div>
+<div class="line">        []&lt;<span class="keyword">class</span>... Tuples&gt;(Tuples&amp;&amp;... tuples)</div>
+<div class="line">            <span class="keyword">requires</span> (... &amp;&amp; <a class="code hl_concept" href="../../dc/d40/conceptsl_1_1concepts_1_1tuple.html">concepts::tuple</a>&lt;std::remove_cvref_t&lt;Tuples&gt;&gt;)</div>
+<div class="line">        {</div>
+<div class="line">            <span class="keywordflow">return</span> detail::concat(std::forward&lt;Tuples&gt;(tuples)...);</div>
+<div class="line">        })</div>
+<div class="ttc" id="aconceptsl_1_1concepts_1_1tuple_html"><div class="ttname"><a href="../../dc/d40/conceptsl_1_1concepts_1_1tuple.html">sl::concepts::tuple</a></div><div class="ttdoc">Determines whether a type can be used as a tuple-like.</div><div class="ttdef"><b>Definition:</b> General.hpp:105</div></div>
 </div><!-- fragment -->
 <p>Combines all elements from each given tuple into one tuple. </p>
 
 </div>
 </div>
-<a id="ga15180ba02f9d99ba22b8e0ca9925f99e" name="ga15180ba02f9d99ba22b8e0ca9925f99e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga15180ba02f9d99ba22b8e0ca9925f99e">&#9670;&#160;</a></span>get</h2>
+<a id="ga52938ce15e54485c0cbfb0dfc6b24cab" name="ga52938ce15e54485c0cbfb0dfc6b24cab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga52938ce15e54485c0cbfb0dfc6b24cab">&#9670;&#160;</a></span>get</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -191,7 +176,7 @@ template&lt;class T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a> sl::functional::tuple::get</td>
+          <td class="memname">constexpr auto sl::functional::tuple::get</td>
         </tr>
       </table>
   </td>
@@ -200,13 +185,12 @@ template&lt;class T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">        []&lt;<span class="keyword">class </span>TTuple&gt;(TTuple&amp;&amp; v) -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>)</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= envelop&lt;Transform&gt;(</div>
+<div class="line">        []&lt;<span class="keyword">class</span> Tuple&gt;(Tuple&amp;&amp; v) -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>)<span class="keyword">requires</span> <a class="code hl_concept" href="../../dc/d40/conceptsl_1_1concepts_1_1tuple.html">concepts::tuple</a>&lt;std::remove_cvref_t&lt;Tuple&gt;&gt;</div>
 <div class="line">        {</div>
 <div class="line">            <span class="keyword">using </span>std::get;</div>
-<div class="line">            <span class="keywordflow">return</span> get&lt;T&gt;(std::forward&lt;TTuple&gt;(v));</div>
-<div class="line">        }</div>
-<div class="line">    }</div>
+<div class="line">            <span class="keywordflow">return</span> get&lt;T&gt;(std::forward&lt;Tuple&gt;(v));</div>
+<div class="line">        })</div>
 </div><!-- fragment -->
 <p>Functional object which retrieves an object of a specific type from a tuple-like argument. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
@@ -218,19 +202,19 @@ template&lt;class T &gt; </div>
 
 </div>
 </div>
-<a id="ga61d6a6745f2d9681a912801081507c00" name="ga61d6a6745f2d9681a912801081507c00"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga61d6a6745f2d9681a912801081507c00">&#9670;&#160;</a></span>get_at</h2>
+<a id="ga71d316844aa7c6cf7e1a71a8e685daea" name="ga71d316844aa7c6cf7e1a71a8e685daea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga71d316844aa7c6cf7e1a71a8e685daea">&#9670;&#160;</a></span>get_at</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;std::size_t VIndex&gt; </div>
+template&lt;std::size_t index&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a> sl::functional::tuple::get_at</td>
+          <td class="memname">constexpr auto sl::functional::tuple::get_at</td>
         </tr>
       </table>
   </td>
@@ -239,37 +223,36 @@ template&lt;std::size_t VIndex&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">        []&lt;<span class="keyword">class </span>TTuple&gt;(TTuple&amp;&amp; v) -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>)</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= envelop&lt;Transform&gt;(</div>
+<div class="line">        []&lt;<span class="keyword">class</span> Tuple&gt;(Tuple&amp;&amp; v) -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>)<span class="keyword">requires</span> <a class="code hl_concept" href="../../dc/d40/conceptsl_1_1concepts_1_1tuple.html">concepts::tuple</a>&lt;std::remove_cvref_t&lt;Tuple&gt;&gt;</div>
 <div class="line">        {</div>
 <div class="line">            <span class="keyword">using </span>std::get;</div>
-<div class="line">            <span class="keywordflow">return</span> get&lt;VIndex&gt;(std::forward&lt;TTuple&gt;(v));</div>
-<div class="line">        }</div>
-<div class="line">    }</div>
+<div class="line">            <span class="keywordflow">return</span> get&lt;index&gt;(std::forward&lt;Tuple&gt;(v));</div>
+<div class="line">        })</div>
 </div><!-- fragment -->
 <p>Functional object which retrieves an object at a specific index from a tuple-like argument. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">VIndex</td><td>The index of type to be retrieved. </td></tr>
+    <tr><td class="paramname">index</td><td>The index of type to be retrieved. </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="ga9dcac9a14968a567d95b42179b5ae8b1" name="ga9dcac9a14968a567d95b42179b5ae8b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga9dcac9a14968a567d95b42179b5ae8b1">&#9670;&#160;</a></span>reduce</h2>
+<a id="ga3319fe3501e9921e620a5a4aa9272437" name="ga3319fe3501e9921e620a5a4aa9272437"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3319fe3501e9921e620a5a4aa9272437">&#9670;&#160;</a></span>make_from</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class... TArgs&gt; </div>
+template&lt;class To &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a> sl::functional::tuple::reduce</td>
+          <td class="memname">constexpr auto sl::functional::tuple::make_from</td>
         </tr>
       </table>
   </td>
@@ -278,23 +261,66 @@ template&lt;class... TArgs&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">        []&lt;<span class="keyword">class </span>T&gt;(T&amp;&amp; t) { <span class="keywordflow">return</span> detail::reduce&lt;TArgs...&gt;(std::forward&lt;T&gt;(t)); }</div>
-<div class="line">    }</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= envelop&lt;Transform&gt;(</div>
+<div class="line">        []&lt;<span class="keyword">class</span> Tuple&gt;(Tuple&amp;&amp; t) <span class="keyword">noexcept</span>(<span class="keyword">noexcept</span>(std::make_from_tuple&lt;To&gt;(std::forward&lt;Tuple&gt;(t))))</div>
+<div class="line">            <span class="keyword">requires</span> <a class="code hl_concept" href="../../dc/d40/conceptsl_1_1concepts_1_1tuple.html">concepts::tuple</a>&lt;std::remove_cvref_t&lt;Tuple&gt;&gt;</div>
+<div class="line">        {</div>
+<div class="line">            </div>
+<div class="line">            <span class="keyword">static_assert</span>(</div>
+<div class="line">                <span class="keyword">requires</span> { { std::make_from_tuple&lt;To&gt;(std::forward&lt;Tuple&gt;(t)) }; },</div>
+<div class="line">                <span class="stringliteral">&quot;The object is not constructible with the elements of the given tuple.&quot;</span>);</div>
+<div class="line">            <span class="keyword">static_assert</span>(</div>
+<div class="line">                std::same_as&lt;To, decltype(std::make_from_tuple&lt;To&gt;(std::declval&lt;Tuple&gt;()))&gt;,</div>
+<div class="line">                <span class="stringliteral">&quot;The object is not constructible with the elements of the given tuple.&quot;</span>);</div>
+<div class="line"> </div>
+<div class="line">            <span class="keywordflow">return</span> std::make_from_tuple&lt;To&gt;(std::forward&lt;Tuple&gt;(t));</div>
+<div class="line">        })</div>
+</div><!-- fragment -->
+<p>Constructs an object with elements from the source tuple as constructor arguments. </p>
+
+</div>
+</div>
+<a id="ga7bc74d80d6954a47cd8010b132b125b2" name="ga7bc74d80d6954a47cd8010b132b125b2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7bc74d80d6954a47cd8010b132b125b2">&#9670;&#160;</a></span>reduce</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto sl::functional::tuple::reduce</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= envelop&lt;Transform&gt;(</div>
+<div class="line">        []&lt;<span class="keyword">class</span> Tuple&gt;(Tuple&amp;&amp; t)</div>
+<div class="line">            <span class="keyword">requires</span> <a class="code hl_concept" href="../../dc/d40/conceptsl_1_1concepts_1_1tuple.html">concepts::tuple</a>&lt;std::remove_cvref_t&lt;Tuple&gt;&gt;</div>
+<div class="line">        {</div>
+<div class="line">            <span class="keywordflow">return</span> detail::reduce&lt;Args...&gt;(std::forward&lt;Tuple&gt;(t));</div>
+<div class="line">        })</div>
 </div><!-- fragment -->
 <p>Reduces (or permutes) the components of a tuple and returns a them as new tuple. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">TArgs</td><td>The component types of the returned tuple. </td></tr>
+    <tr><td class="paramname">Args</td><td>The component types of the returned tuple. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section remark"><dt>Remarks</dt><dd>The source and target tuple must consist of unique types. </dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>The source and target tuples must consist of unique types. </dd></dl>
 
 </div>
 </div>
-<a id="ga2e1fa2f321d83afea5a9953146371790" name="ga2e1fa2f321d83afea5a9953146371790"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2e1fa2f321d83afea5a9953146371790">&#9670;&#160;</a></span>tie</h2>
+<a id="gae7f8dfc540e8d4bc16ed85ac431264c0" name="gae7f8dfc540e8d4bc16ed85ac431264c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae7f8dfc540e8d4bc16ed85ac431264c0">&#9670;&#160;</a></span>tie</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -303,7 +329,7 @@ template&lt;class... TArgs&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr <a class="el" href="../../da/dbe/classsl_1_1functional_1_1transform__fn.html">transform_fn</a> sl::functional::tuple::tie</td>
+          <td class="memname">constexpr auto sl::functional::tuple::tie</td>
         </tr>
       </table>
   </td>
@@ -312,9 +338,8 @@ template&lt;class... TArgs&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">        [](<span class="keyword">auto</span>&amp;... args) { <span class="keywordflow">return</span> std::tie(args...); }</div>
-<div class="line">    }</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= envelop&lt;Transform&gt;(</div>
+<div class="line">        [](<span class="keyword">auto</span>&amp;... args) { <span class="keywordflow">return</span> std::tie(args...); })</div>
 </div><!-- fragment -->
 <p>Combines all given lvalue references into one tuple. </p>
 

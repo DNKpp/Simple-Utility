@@ -6,5 +6,6 @@ var modules =
     [ "nullables", "d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html", "d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s" ],
     [ "tuple", "d9/d21/group___g_r_o_u_p___t_u_p_l_e.html", "d9/d21/group___g_r_o_u_p___t_u_p_l_e" ],
     [ "type-list", "d2/d50/group___g_r_o_u_p___t_y_p_e___l_i_s_t.html", "d2/d50/group___g_r_o_u_p___t_y_p_e___l_i_s_t" ],
+    [ "type-traits", "de/da7/group___g_r_o_u_p___t_y_p_e___t_r_a_i_t_s.html", "de/da7/group___g_r_o_u_p___t_y_p_e___t_r_a_i_t_s" ],
     [ "unique_handle", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e.html", "d3/dc7/group___g_r_o_u_p___u_n_i_q_u_e___h_a_n_d_l_e" ]
 ];

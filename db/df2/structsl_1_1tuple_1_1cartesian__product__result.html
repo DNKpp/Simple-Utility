@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.6"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Simple-Utility: sl::tuple::cartesian_product_result&lt; TTuples &gt; Struct Template Reference</title>
+<title>Simple-Utility: sl::tuple::cartesian_product_result&lt; Tuples &gt; Struct Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -93,35 +93,35 @@ $(document).ready(function(){initNavTree('db/df2/structsl_1_1tuple_1_1cartesian_
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="../../df/dc4/structsl_1_1tuple_1_1cartesian__product__result-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">sl::tuple::cartesian_product_result&lt; TTuples &gt; Struct Template Reference<div class="ingroups"><a class="el" href="../../d9/d21/group___g_r_o_u_p___t_u_p_l_e.html">tuple</a> &raquo; <a class="el" href="../../d8/dec/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m.html">algorithm</a> &raquo; <a class="el" href="../../d8/de3/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___c_a_r_t_e_s_i_a_n___p_r_o_d_u_c_t.html">cartesian product</a></div></div></div>
+  <div class="headertitle"><div class="title">sl::tuple::cartesian_product_result&lt; Tuples &gt; Struct Template Reference<div class="ingroups"><a class="el" href="../../d9/d21/group___g_r_o_u_p___t_u_p_l_e.html">tuple</a> &raquo; <a class="el" href="../../d8/dec/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m.html">algorithm</a> &raquo; <a class="el" href="../../d8/de3/group___g_r_o_u_p___t_u_p_l_e___a_l_g_o_r_i_t_h_m___c_a_r_t_e_s_i_a_n___p_r_o_d_u_c_t.html">cartesian product</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
 <p>Trait type determining the result of a <code>cartesian_product</code> call.  
  <a href="../../db/df2/structsl_1_1tuple_1_1cartesian__product__result.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="../../de/d55/algorithm_8hpp_source.html">algorithm.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="../../dc/d83/_algorithm_8hpp_source.html">Algorithm.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ac11d0d39b0424985e57e51ccc3a7d6f2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/df2/structsl_1_1tuple_1_1cartesian__product__result.html#ac11d0d39b0424985e57e51ccc3a7d6f2">type</a> = decltype(detail::cartesian_product(std::declval&lt; TTuples &gt;()...))</td></tr>
-<tr class="separator:ac11d0d39b0424985e57e51ccc3a7d6f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0fa2823a5b5a83258a814fe5989b1498"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/df2/structsl_1_1tuple_1_1cartesian__product__result.html#a0fa2823a5b5a83258a814fe5989b1498">type</a> = decltype(detail::cartesian_product(std::declval&lt; Tuples &gt;()...))</td></tr>
+<tr class="separator:a0fa2823a5b5a83258a814fe5989b1498"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;class... TTuples&gt;<br />
-requires (2 &lt;= sizeof...(TTuples)) &amp;&amp; (concepts::tuple_like&lt;std::remove_cvref_t&lt;TTuples&gt;&gt; &amp;&amp; ...)<br />
-struct sl::tuple::cartesian_product_result&lt; TTuples &gt;</div><p>Trait type determining the result of a <code>cartesian_product</code> call. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;class... Tuples&gt;<br />
+requires (2 &lt;= sizeof...(Tuples)) &amp;&amp; (concepts::tuple&lt;std::remove_cvref_t&lt;Tuples&gt;&gt; &amp;&amp; ...)<br />
+struct sl::tuple::cartesian_product_result&lt; Tuples &gt;</div><p>Trait type determining the result of a <code>cartesian_product</code> call. </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="ac11d0d39b0424985e57e51ccc3a7d6f2" name="ac11d0d39b0424985e57e51ccc3a7d6f2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac11d0d39b0424985e57e51ccc3a7d6f2">&#9670;&#160;</a></span>type</h2>
+<a id="a0fa2823a5b5a83258a814fe5989b1498" name="a0fa2823a5b5a83258a814fe5989b1498"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fa2823a5b5a83258a814fe5989b1498">&#9670;&#160;</a></span>type</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;class... TTuples&gt; </div>
+template&lt;class... Tuples&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="../../db/df2/structsl_1_1tuple_1_1cartesian__product__result.html">sl::tuple::cartesian_product_result</a>&lt; TTuples &gt;::type =  decltype(detail::cartesian_product(std::declval&lt;TTuples&gt;()...))</td>
+          <td class="memname">using <a class="el" href="../../db/df2/structsl_1_1tuple_1_1cartesian__product__result.html">sl::tuple::cartesian_product_result</a>&lt; Tuples &gt;::type =  decltype(detail::cartesian_product(std::declval&lt;Tuples&gt;()...))</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -129,7 +129,7 @@ template&lt;class... TTuples&gt; </div>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>Simple-Utility/tuple/<a class="el" href="../../de/d55/algorithm_8hpp_source.html">algorithm.hpp</a></li>
+<li>Simple-Utility/tuple/<a class="el" href="../../dc/d83/_algorithm_8hpp_source.html">Algorithm.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

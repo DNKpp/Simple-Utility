@@ -130,24 +130,36 @@ var concepts =
         [ "fully_arithmetical_with_r", "dc/d9c/conceptsl_1_1concepts_1_1fully__arithmetical__with__r.html", null ],
         [ "fully_arithmetical", "da/d8b/conceptsl_1_1concepts_1_1fully__arithmetical.html", null ],
         [ "fully_arithmetical_r", "dd/de4/conceptsl_1_1concepts_1_1fully__arithmetical__r.html", null ],
+        [ "pointer", "d4/df2/conceptsl_1_1concepts_1_1pointer.html", null ],
+        [ "reference", "dc/d70/conceptsl_1_1concepts_1_1reference.html", null ],
+        [ "decayed", "d0/de2/conceptsl_1_1concepts_1_1decayed.html", null ],
+        [ "unqualified", "da/dc3/conceptsl_1_1concepts_1_1unqualified.html", null ],
         [ "not_same_as", "d4/d40/conceptsl_1_1concepts_1_1not__same__as.html", null ],
         [ "initializes", "d1/ded/conceptsl_1_1concepts_1_1initializes.html", null ],
         [ "assignable_to", "dd/d00/conceptsl_1_1concepts_1_1assignable__to.html", null ],
+        [ "weakly_equality_comparable", "dc/d6c/conceptsl_1_1concepts_1_1weakly__equality__comparable.html", null ],
+        [ "nothrow_weakly_equality_comparable", "dc/d4b/conceptsl_1_1concepts_1_1nothrow__weakly__equality__comparable.html", null ],
         [ "weakly_equality_comparable_with", "d3/da6/conceptsl_1_1concepts_1_1weakly__equality__comparable__with.html", null ],
         [ "nothrow_weakly_equality_comparable_with", "d2/d84/conceptsl_1_1concepts_1_1nothrow__weakly__equality__comparable__with.html", null ],
+        [ "comparison_category", "d7/da7/conceptsl_1_1concepts_1_1comparison__category.html", null ],
         [ "explicitly_convertible_to", "db/d27/conceptsl_1_1concepts_1_1explicitly__convertible__to.html", null ],
         [ "nothrow_explicitly_convertible_to", "d6/deb/conceptsl_1_1concepts_1_1nothrow__explicitly__convertible__to.html", null ],
+        [ "weakly_three_way_comparable", "dd/dde/conceptsl_1_1concepts_1_1weakly__three__way__comparable.html", null ],
+        [ "nothrow_weakly_three_way_comparable", "dd/dfb/conceptsl_1_1concepts_1_1nothrow__weakly__three__way__comparable.html", null ],
+        [ "weakly_three_way_comparable_with", "de/d12/conceptsl_1_1concepts_1_1weakly__three__way__comparable__with.html", null ],
+        [ "nothrow_weakly_three_way_comparable_with", "dd/de6/conceptsl_1_1concepts_1_1nothrow__weakly__three__way__comparable__with.html", null ],
         [ "unique_types", "d8/d76/conceptsl_1_1concepts_1_1unique__types.html", null ],
-        [ "tuple_like", "d9/dad/conceptsl_1_1concepts_1_1tuple__like.html", null ],
-        [ "apply_invocable", "d2/d91/conceptsl_1_1concepts_1_1apply__invocable.html", null ],
-        [ "nothrow_apply_invocable", "d1/df2/conceptsl_1_1concepts_1_1nothrow__apply__invocable.html", null ],
+        [ "tuple", "dc/d40/conceptsl_1_1concepts_1_1tuple.html", null ],
+        [ "applicable", "d1/da4/conceptsl_1_1concepts_1_1applicable.html", null ],
+        [ "nothrow_applicable", "da/db2/conceptsl_1_1concepts_1_1nothrow__applicable.html", null ],
         [ "type_list", "d4/dfd/conceptsl_1_1concepts_1_1type__list.html", null ],
         [ "populated_type_list", "d7/dfa/conceptsl_1_1concepts_1_1populated__type__list.html", null ]
       ] ],
       [ "functional", "d9/da2/namespacesl_1_1functional.html", [
-        [ "operators", "d9/df8/namespacesl_1_1functional_1_1operators.html", [
-          [ "tag", "db/d47/conceptsl_1_1functional_1_1operators_1_1tag.html", null ]
-        ] ]
+        [ "function", "d8/de3/conceptsl_1_1functional_1_1function.html", null ],
+        [ "invoke_policy", "d1/d2f/conceptsl_1_1functional_1_1invoke__policy.html", null ],
+        [ "operator_policy", "d2/d67/conceptsl_1_1functional_1_1operator__policy.html", null ],
+        [ "composition_strategy", "df/da1/conceptsl_1_1functional_1_1composition__strategy.html", null ]
       ] ],
       [ "nullables", "d0/de0/namespacesl_1_1nullables.html", [
         [ "adaptable_with", "d7/d84/conceptsl_1_1nullables_1_1adaptable__with.html", null ],

@@ -138,12 +138,12 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga3ab185587ab100161d29d1079bf00e5d"><td class="memItemLeft" align="right" valign="top">static constexpr std::nullptr_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html#ga3ab185587ab100161d29d1079bf00e5d">sl::nullables::traits&lt; T &gt;::null</a> { nullptr }</td></tr>
+<tr class="memitem:ga3ab185587ab100161d29d1079bf00e5d"><td class="memItemLeft" align="right" valign="top">static constexpr std::nullptr_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d3d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s.html#ga3ab185587ab100161d29d1079bf00e5d">sl::nullables::traits&lt; T &gt;::null</a> {nullptr}</td></tr>
 <tr class="separator:ga3ab185587ab100161d29d1079bf00e5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>This library offers some simple algorithms for convenient working with <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> types. </p>
-<h2><a class="anchor" id="autotoc_md3"></a>
+<h2><a class="anchor" id="autotoc_md2"></a>
 General</h2>
 <p>The algorithms may be chained in arbitrary combination and deepness, as long as it makes sense to the compiler. Such a chain may involve multiple different <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> types. Of this library explicitly supported types are:</p><ul>
 <li><a class="el" href="../../da/da9/classsl_1_1unique__handle.html">sl::unique_handle</a> ("Simple-Utility/unique_handle.hpp" header must be included)</li>
@@ -153,58 +153,38 @@ General</h2>
 <li>and <code>raw pointers</code></li>
 </ul>
 <p>The general idea is making the handling with types e.g. <code>std::optional</code> less verbose and more enjoyable. The syntax is inspired by the <code>std::ranges</code> library and <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2021/p0798r8.html">this proposal</a>. If you would like to learn more about an algorithm, just visit the specific sub-page:</p><ul>
-<li><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae5eb9c3a279163f9cbc99547f4c5b06c">or_else</a></li>
-<li><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae8e03f82536c7a080e1a50b3051ba083">and_then</a></li>
-<li><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gada2065021a243befb8498c8299d4b94c">value_or</a></li>
-<li><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga9148a75e548d317067046fd31a4b8277">fwd_value</a></li>
+<li><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479">or_else</a></li>
+<li><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga405026999e94e6daeab19a0327a3779e">and_then</a></li>
+<li><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga74afba8ed89e9dc1171b5868cf525027">value_or</a></li>
+<li><a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga51392e2d61b33585d728efbbf32b4f26">fwd_value</a></li>
 </ul>
-<h3><a class="anchor" id="autotoc_md4"></a>
+<h3><a class="anchor" id="autotoc_md3"></a>
 Quick algorithm example</h3>
-<p>This example demonstrates that <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae8e03f82536c7a080e1a50b3051ba083">and_then</a> and <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae5eb9c3a279163f9cbc99547f4c5b06c">or_else</a> algorithms can be chained in arbitrarily length. <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gada2065021a243befb8498c8299d4b94c">value_or</a> and <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga9148a75e548d317067046fd31a4b8277">fwd_value</a> on the other side act as a terminator (as they usually do not return a <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> objects). </p><div class="fragment"><div class="line">    <span class="keyword">const</span> std::string result = std::optional{42}</div>
-<div class="line">                                | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae5eb9c3a279163f9cbc99547f4c5b06c">or_else</a>([] { <span class="keywordflow">throw</span> std::runtime_error{<span class="stringliteral">&quot;invalid optional.&quot;</span>}; })</div>
-<div class="line">                                | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae8e03f82536c7a080e1a50b3051ba083">and_then</a>([](<span class="keyword">const</span> <span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> std::optional{i * i}; })</div>
-<div class="line">                                | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae8e03f82536c7a080e1a50b3051ba083">and_then</a>([](<span class="keyword">const</span> <span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> std::optional{std::to_string(i)}; })</div>
-<div class="line">                                | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gada2065021a243befb8498c8299d4b94c">value_or</a>(<span class="stringliteral">&quot;not set&quot;</span>);</div>
+<p>This example demonstrates that <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga405026999e94e6daeab19a0327a3779e">and_then</a> and <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479">or_else</a> algorithms can be chained in arbitrarily length. <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga74afba8ed89e9dc1171b5868cf525027">value_or</a> and <a class="el" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga51392e2d61b33585d728efbbf32b4f26">fwd_value</a> on the other side act as a terminator (as they usually do not return a <a class="el" href="../../de/dd6/conceptsl_1_1nullables_1_1nullable.html">nullable</a> objects). </p><div class="fragment"><div class="line">    <span class="keyword">const</span> std::string result = std::optional{42}</div>
+<div class="line">                                | <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479">or_else</a>([] { <span class="keywordflow">throw</span> std::runtime_error{<span class="stringliteral">&quot;invalid optional.&quot;</span>}; })</div>
+<div class="line">                                | <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga405026999e94e6daeab19a0327a3779e">and_then</a>([](<span class="keyword">const</span> <span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> std::optional{i * i}; })</div>
+<div class="line">                                | <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga405026999e94e6daeab19a0327a3779e">and_then</a>([](<span class="keyword">const</span> <span class="keywordtype">int</span> i) { <span class="keywordflow">return</span> std::optional{std::to_string(i)}; })</div>
+<div class="line">                                | <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga74afba8ed89e9dc1171b5868cf525027">value_or</a>(<span class="stringliteral">&quot;not set&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(result == <span class="stringliteral">&quot;1764&quot;</span>);</div>
-<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_gada2065021a243befb8498c8299d4b94c"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gada2065021a243befb8498c8299d4b94c">sl::nullables::value_or</a></div><div class="ttdeci">constexpr auto value_or(TValue &amp;&amp;value)</div><div class="ttdoc">Retrieves the value of a input_nullable if it's not equal to its ''null''-object. Returns the alterna...</div><div class="ttdef"><b>Definition:</b> value_or.hpp:78</div></div>
-<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_gae5eb9c3a279163f9cbc99547f4c5b06c"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae5eb9c3a279163f9cbc99547f4c5b06c">sl::nullables::or_else</a></div><div class="ttdeci">constexpr auto or_else(TFunc &amp;&amp;func)</div><div class="ttdoc">Returns the nullable if it's not equal to its ''null''-object. Executes the passed function otherwise...</div><div class="ttdef"><b>Definition:</b> or_else.hpp:92</div></div>
-<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_gae8e03f82536c7a080e1a50b3051ba083"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae8e03f82536c7a080e1a50b3051ba083">sl::nullables::and_then</a></div><div class="ttdeci">constexpr auto and_then(TFunc &amp;&amp;func)</div><div class="ttdoc">Passes the value of the input_nullable to the function if it's not equal to its null-object....</div><div class="ttdef"><b>Definition:</b> and_then.hpp:83</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_ga405026999e94e6daeab19a0327a3779e"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga405026999e94e6daeab19a0327a3779e">sl::nullables::and_then</a></div><div class="ttdeci">constexpr auto and_then</div><div class="ttdoc">Passes the value of the input_nullable to the function if it's not equal to its null-object....</div><div class="ttdef"><b>Definition:</b> and_then.hpp:79</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_ga74afba8ed89e9dc1171b5868cf525027"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga74afba8ed89e9dc1171b5868cf525027">sl::nullables::value_or</a></div><div class="ttdeci">constexpr auto value_or</div><div class="ttdoc">Retrieves the value of a input_nullable if it's not equal to its ''null''-object. Returns the alterna...</div><div class="ttdef"><b>Definition:</b> value_or.hpp:73</div></div>
+<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_gaae1a179ae42bf4201989653557976479"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479">sl::nullables::or_else</a></div><div class="ttdeci">constexpr auto or_else</div><div class="ttdoc">Returns the nullable if it's not equal to its ''null''-object. Executes the passed function otherwise...</div><div class="ttdef"><b>Definition:</b> or_else.hpp:90</div></div>
 </div><!-- fragment --><p>This can be quite useful, but the library can even better than this. All nullable algorithms are designed to work properly with the functional part of this library, thus the above example can be adjusted like this: </p><div class="fragment"><div class="line">    <span class="keyword">namespace </span>fn = <a class="code hl_namespace" href="../../d9/da2/namespacesl_1_1functional.html">sl::functional</a>;</div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">const</span> fn::transform_fn square{[](<span class="keyword">const</span> std::integral <span class="keyword">auto</span> i) { <span class="keywordflow">return</span> i * i; }};</div>
-<div class="line">    <span class="keyword">const</span> fn::transform_fn to_string{[](<span class="keyword">const</span> std::integral <span class="keyword">auto</span> i) { <span class="keywordflow">return</span> std::to_string(i); }};</div>
+<div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> square = fn::envelop&lt;fn::Transform&gt;([](<span class="keyword">const</span> std::integral <span class="keyword">auto</span> i) { <span class="keywordflow">return</span> i * i; });</div>
+<div class="line">    <span class="keyword">constexpr</span> <span class="keyword">auto</span> to_string= fn::envelop&lt;fn::Transform&gt;([](<span class="keyword">const</span> std::integral <span class="keyword">auto</span> i) { <span class="keywordflow">return</span> std::to_string(i); });</div>
 <div class="line"> </div>
 <div class="line">    <span class="keyword">const</span> std::string result = std::optional{42}</div>
-<div class="line">                                | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae5eb9c3a279163f9cbc99547f4c5b06c">or_else</a>([] { <span class="keywordflow">throw</span> std::runtime_error{<span class="stringliteral">&quot;invalid optional.&quot;</span>}; })</div>
-<div class="line">                                | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gae8e03f82536c7a080e1a50b3051ba083">and_then</a>(</div>
+<div class="line">                                | <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479">or_else</a>([] { <span class="keywordflow">throw</span> std::runtime_error{<span class="stringliteral">&quot;invalid optional.&quot;</span>}; })</div>
+<div class="line">                                | <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga405026999e94e6daeab19a0327a3779e">and_then</a>(</div>
 <div class="line">                                    square</div>
 <div class="line">                                    | to_string</div>
-<div class="line">                                    | fn::util::as&lt;std::optional&lt;std::string&gt;&gt;</div>
-<div class="line">                                )</div>
-<div class="line">                                | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gada2065021a243befb8498c8299d4b94c">value_or</a>(<span class="stringliteral">&quot;not set&quot;</span>);</div>
+<div class="line">                                    | fn::util::as&lt;std::optional&lt;std::string&gt;&gt;)</div>
+<div class="line">                                | <a class="code hl_variable" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga74afba8ed89e9dc1171b5868cf525027">value_or</a>(<span class="stringliteral">&quot;not set&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line">    REQUIRE(result == <span class="stringliteral">&quot;1764&quot;</span>);</div>
-<div class="ttc" id="anamespacesl_1_1functional_html"><div class="ttname"><a href="../../d9/da2/namespacesl_1_1functional.html">sl::functional</a></div><div class="ttdef"><b>Definition:</b> arithmetic.hpp:13</div></div>
-</div><!-- fragment --><p>There is a last step one may walk: Nullable algorithms also support functional composition out of the box, which means that they are composable with any functional as a new functional object and can be invoked later on: </p><div class="fragment"><div class="line">    <span class="keyword">namespace </span>fn = <a class="code hl_namespace" href="../../d9/da2/namespacesl_1_1functional.html">sl::functional</a>;</div>
-<div class="line"> </div>
-<div class="line">    <span class="keyword">const</span> fn::transform_fn square{[](<span class="keyword">const</span> std::integral <span class="keyword">auto</span> i) { <span class="keywordflow">return</span> i * i; }};</div>
-<div class="line">    <span class="keyword">const</span> fn::transform_fn to_string{[](<span class="keyword">const</span> std::integral <span class="keyword">auto</span> i) { <span class="keywordflow">return</span> std::to_string(i); }};</div>
-<div class="line">    <span class="comment">// note the _fn suffix on all algorithms</span></div>
-<div class="line">    <span class="keyword">const</span> <span class="keyword">auto</span> algorithmChain = <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga3ff49a992d0cf2d2d25259364cfa6918">or_else_fn</a>([] { <span class="keywordflow">throw</span> std::runtime_error{<span class="stringliteral">&quot;invalid optional.&quot;</span>}; })</div>
-<div class="line">                                | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gabcfa0f19afec2db0f2604399f0474ee4">and_then_fn</a>(</div>
-<div class="line">                                    square</div>
-<div class="line">                                    | to_string</div>
-<div class="line">                                    | fn::util::as&lt;std::optional&lt;std::string&gt;&gt;</div>
-<div class="line">                                )</div>
-<div class="line">                                | <a class="code hl_function" href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga2b06ed31f7e399119fb62b958f20e6ec">value_or_fn</a>(<span class="stringliteral">&quot;not set&quot;</span>);</div>
-<div class="line"> </div>
-<div class="line">    <span class="keyword">const</span> std::string result = algorithmChain(std::optional{42});</div>
-<div class="line"> </div>
-<div class="line">    REQUIRE(result == <span class="stringliteral">&quot;1764&quot;</span>);</div>
-<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_ga2b06ed31f7e399119fb62b958f20e6ec"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga2b06ed31f7e399119fb62b958f20e6ec">sl::nullables::value_or_fn</a></div><div class="ttdeci">constexpr auto value_or_fn(TValue &amp;&amp;value)</div><div class="ttdoc">Creates a functional object which can be used for composing with other functional objects.</div><div class="ttdef"><b>Definition:</b> value_or.hpp:92</div></div>
-<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_ga3ff49a992d0cf2d2d25259364cfa6918"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#ga3ff49a992d0cf2d2d25259364cfa6918">sl::nullables::or_else_fn</a></div><div class="ttdeci">constexpr auto or_else_fn(TFunc &amp;&amp;func)</div><div class="ttdoc">Creates a functional object which can be used for composing with other functional objects.</div><div class="ttdef"><b>Definition:</b> or_else.hpp:106</div></div>
-<div class="ttc" id="agroup___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s_html_gabcfa0f19afec2db0f2604399f0474ee4"><div class="ttname"><a href="../../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gabcfa0f19afec2db0f2604399f0474ee4">sl::nullables::and_then_fn</a></div><div class="ttdeci">constexpr auto and_then_fn(TFunc &amp;&amp;func)</div><div class="ttdoc">Creates a functional object which can be used for composing with other functional objects.</div><div class="ttdef"><b>Definition:</b> and_then.hpp:97</div></div>
+<div class="ttc" id="anamespacesl_1_1functional_html"><div class="ttname"><a href="../../d9/da2/namespacesl_1_1functional.html">sl::functional</a></div><div class="ttdef"><b>Definition:</b> Arithmetic.hpp:13</div></div>
 </div><!-- fragment --><p>At last I would like to quickly present a naive comparison between the usual stl style and the style this library offers. In this example I utilize a adapter, which already supports iterator adapting out of the box. </p><div class="fragment"><div class="line">    <span class="keyword">namespace </span>fn = <a class="code hl_namespace" href="../../d9/da2/namespacesl_1_1functional.html">sl::functional</a>;</div>
 <div class="line">    <span class="keyword">namespace </span>na = <a class="code hl_namespace" href="../../d0/de0/namespacesl_1_1nullables.html">sl::nullables</a>;</div>
 <div class="line"> </div>
@@ -228,13 +208,13 @@ Quick algorithm example</h3>
 <div class="line">                | na::and_then(fn::tuple::get_at&lt;1&gt; | fn::util::as&lt;std::optional&lt;std::string_view&gt;&gt;);</div>
 <div class="line">    };</div>
 <div class="ttc" id="anamespacesl_1_1nullables_html"><div class="ttname"><a href="../../d0/de0/namespacesl_1_1nullables.html">sl::nullables</a></div><div class="ttdef"><b>Definition:</b> adapter.hpp:19</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md5"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md4"></a>
 Using custom types</h2>
 <p>Well, that depends which interface your type offers. If it's already dereferencable via <code>operator *</code> and it has an explicit <code>null</code>-object, which it can equality compared to, than you are in a good position.</p>
-<h3><a class="anchor" id="autotoc_md6"></a>
+<h3><a class="anchor" id="autotoc_md5"></a>
 There exists a dedicated type or constexpr null object</h3>
 <p>Just specialize <a class="el" href="../../d7/db1/structsl_1_1nullables_1_1traits.html">nullable traits</a>. If your type then doesn't offer a <code>operator *</code> access or it doesn't follow the semantics, you can hook the <code>unwrap</code> customization point and simply create an overload in the types namespace.</p>
-<h3><a class="anchor" id="autotoc_md7"></a>
+<h3><a class="anchor" id="autotoc_md6"></a>
 No dedicated type or constexpr null object exists</h3>
 <p>If your type doesn't have a dedicated null object or it is simply not constexpr constructible, you can wrap your type and a null object into <a class="el" href="../../d1/dc6/classsl_1_1nullables_1_1adapter.html">adapter</a> object. Depending how your type behaves with the null object, this adapter will be either a <code>input_nullable</code> or even a <code>nullable</code>.</p>
 <p>If your type doesn't offer a <code>operator *</code> access or it doesn't follow the semantics, you can hook the <code>unwrap_adapted</code> customization point and simply create an overload in the types namespace. </p>
@@ -268,7 +248,7 @@ template&lt;class T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr std::nullptr_t <a class="el" href="../../d7/db1/structsl_1_1nullables_1_1traits.html">sl::nullables::traits</a>&lt; T &gt;::null { nullptr }</td>
+          <td class="memname">constexpr std::nullptr_t <a class="el" href="../../d7/db1/structsl_1_1nullables_1_1traits.html">sl::nullables::traits</a>&lt; T &gt;::null {nullptr}</td>
         </tr>
       </table>
   </td>

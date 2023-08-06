@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['raw_0',['raw',['../da/da9/classsl_1_1unique__handle.html#af3c7aa45869b18a3c4d39337cd3e30c2',1,'sl::unique_handle']]],
-  ['remquo_5fresult_1',['remquo_result',['../d4/db0/group___g_r_o_u_p___m_a_t_h.html#gaa44192860fe8742c23fab486566bacb9',1,'sl::math']]],
-  ['reset_2',['reset',['../da/da9/classsl_1_1unique__handle.html#a0bdbde166e33fd405167b17b97953e8f',1,'sl::unique_handle']]]
+  ['negationoperator_0',['NegationOperator',['../d5/d7d/classsl_1_1functional_1_1_negation_operator.html#a69841b9c71e475937765a04474c2e9a5',1,'sl::functional::NegationOperator::NegationOperator() noexcept'],['../d5/d7d/classsl_1_1functional_1_1_negation_operator.html#a27bf2c5752ec6657fe26d44bb98b0e58',1,'sl::functional::NegationOperator::NegationOperator(const NegationOperator &amp;)=default'],['../d5/d7d/classsl_1_1functional_1_1_negation_operator.html#a020aa7d67fe09cfdcfc50341c4f6155a',1,'sl::functional::NegationOperator::NegationOperator(NegationOperator &amp;&amp;)=default']]]
 ];

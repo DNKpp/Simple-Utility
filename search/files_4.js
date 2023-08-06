@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['equal_2ehpp_0',['equal.hpp',['../dc/d0a/equal_8hpp.html',1,'']]],
-  ['equivalent_2ehpp_1',['equivalent.hpp',['../d7/dd0/equivalent_8hpp.html',1,'']]]
+  ['equality_2ehpp_0',['Equality.hpp',['../de/d71/_equality_8hpp.html',1,'']]]
 ];

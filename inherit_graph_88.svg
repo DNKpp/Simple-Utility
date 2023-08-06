@@ -11,10 +11,10 @@
 <!-- Node0 -->
 <g id="node1" class="node">
 <title>Node0</title>
-<g id="a_node1"><a xlink:href="da/da9/classsl_1_1unique__handle.html" target="_top" xlink:title="This type models some kind of std::optional behaviour but resets itself on move operations.">
+<g id="a_node1"><a xlink:href="d0/d0b/structsl_1_1type__list_1_1concat_3_01_list_01_4.html" target="_top" xlink:title="Unary specialization, simply using the given type&#45;list as result.">
 <polygon fill="white" stroke="#666666" points="100.75,-33.5 0,-33.5 0,0 100.75,0 100.75,-33.5"/>
-<text text-anchor="start" x="8" y="-20" font-family="Helvetica,sans-Serif" font-size="10.00">sl::unique_handle&lt;</text>
-<text text-anchor="middle" x="50.38" y="-7.25" font-family="Helvetica,sans-Serif" font-size="10.00"> T, TDeleteAction &gt;</text>
+<text text-anchor="start" x="8" y="-20" font-family="Helvetica,sans-Serif" font-size="10.00">sl::type_list::concat</text>
+<text text-anchor="middle" x="50.38" y="-7.25" font-family="Helvetica,sans-Serif" font-size="10.00">&lt; List &gt;</text>
 </a>
 </g>
 </g>

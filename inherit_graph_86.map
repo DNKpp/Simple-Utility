@@ -1,4 +1,4 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$d6/d62/structsl_1_1unified__base.html" title=" " alt="" coords="5,5,181,50"/>
-<area shape="rect" id="node2" href="$d9/d09/classsl_1_1functional_1_1composition__fn.html" title="Functional type, which composes multiple functional objects via the given operation." alt="" coords="229,5,434,50"/>
+<area shape="rect" id="node1" href="$da/de2/structsl_1_1type__list_1_1concat.html" title=" " alt="" coords="5,5,245,101"/>
+<area shape="rect" id="node2" href="$df/d55/structsl_1_1type__list_1_1symmetric__difference__as.html" title="Determines which elements are in either of the source type&#45;lists, but not in both...." alt="" coords="293,22,516,84"/>
 </map>

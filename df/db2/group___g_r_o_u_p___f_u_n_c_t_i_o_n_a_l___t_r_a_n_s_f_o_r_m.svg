@@ -20,7 +20,7 @@
 <!-- Node1 -->
 <g id="node2" class="node">
 <title>Node1</title>
-<g id="a_node2"><a xlink:title="Contains the base transform_fn and several pre&#45;defined transform objects.">
+<g id="a_node2"><a xlink:title="Contains the Transform closure template.">
 <polygon fill="#999999" stroke="#666666" points="159.5,-20.75 97.75,-20.75 97.75,0 159.5,0 159.5,-20.75"/>
 <text text-anchor="middle" x="128.62" y="-7.25" font-family="Helvetica,sans-Serif" font-size="10.00">transform</text>
 </a>

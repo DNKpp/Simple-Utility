@@ -33,8 +33,7 @@ var NAVTREE =
         [ "All", "namespacemembers.html", null ],
         [ "Functions", "namespacemembers_func.html", null ],
         [ "Variables", "namespacemembers_vars.html", null ],
-        [ "Typedefs", "namespacemembers_type.html", null ],
-        [ "Enumerations", "namespacemembers_enum.html", null ]
+        [ "Typedefs", "namespacemembers_type.html", null ]
       ] ]
     ] ],
     [ "Concepts", "concepts.html", "concepts" ],
@@ -43,7 +42,7 @@ var NAVTREE =
       [ "Class Index", "classes.html", null ],
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
-        [ "All", "functions.html", null ],
+        [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", null ],
         [ "Typedefs", "functions_type.html", null ],
@@ -63,9 +62,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d4/dfe/group___g_r_o_u_p___t_y_p_e___l_i_s_t___a_p_p_e_n_d.html#ga326d9d4e8e328b1861eade7b8f35ce1d",
-"da/da9/classsl_1_1unique__handle.html#a39e9e858df64e3a8764b72a1f5e988c0",
-"index.html#autotoc_md15"
+"d4/d79/structsl_1_1functional_1_1unwrap__functional_3_01_basic_closure_3_01_fn_00_01_invoke_policy_00_06e740e0a0bb7456684b0c8b4de0be8f0.html",
+"d8/d2f/classsl_1_1_c_r_t_p_base.html#ade6615264bc51e362e37341379c6f581",
+"dd/d3c/base_8hpp.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

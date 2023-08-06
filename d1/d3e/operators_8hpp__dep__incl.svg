@@ -67,10 +67,10 @@ var sectionId = 'dynsection-1';
 <!-- Node2 -->
 <g id="node2" class="node">
 <title>Node2</title>
-<g id="a_node2"><a xlink:href="../../d3/d23/arithmetic_8hpp.html" target="_top" xlink:title=" ">
+<g id="a_node2"><a xlink:href="../../d3/dc2/_arithmetic_8hpp.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="137.12,-159.75 10.12,-159.75 10.12,-126.25 137.12,-126.25 137.12,-159.75"/>
 <text text-anchor="start" x="18.12" y="-146.25" font-family="Helvetica,sans-Serif" font-size="10.00">Simple&#45;Utility/functional</text>
-<text text-anchor="middle" x="73.62" y="-133.5" font-family="Helvetica,sans-Serif" font-size="10.00">/arithmetic.hpp</text>
+<text text-anchor="middle" x="73.62" y="-133.5" font-family="Helvetica,sans-Serif" font-size="10.00">/Arithmetic.hpp</text>
 </a>
 </g>
 </g>
@@ -83,10 +83,10 @@ var sectionId = 'dynsection-1';
 <!-- Node4 -->
 <g id="node4" class="node">
 <title>Node4</title>
-<g id="a_node4"><a xlink:href="../../df/d4e/functional_2utility_8hpp.html" target="_top" xlink:title=" ">
+<g id="a_node4"><a xlink:href="../../de/d61/functional_2_utility_8hpp.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="282.12,-159.75 155.12,-159.75 155.12,-126.25 282.12,-126.25 282.12,-159.75"/>
 <text text-anchor="start" x="163.12" y="-146.25" font-family="Helvetica,sans-Serif" font-size="10.00">Simple&#45;Utility/functional</text>
-<text text-anchor="middle" x="218.62" y="-133.5" font-family="Helvetica,sans-Serif" font-size="10.00">/utility.hpp</text>
+<text text-anchor="middle" x="218.62" y="-133.5" font-family="Helvetica,sans-Serif" font-size="10.00">/Utility.hpp</text>
 </a>
 </g>
 </g>
@@ -99,7 +99,7 @@ var sectionId = 'dynsection-1';
 <!-- Node5 -->
 <g id="node5" class="node">
 <title>Node5</title>
-<g id="a_node5"><a xlink:href="../../d6/dbe/nullables_2base_8hpp.html" target="_top" xlink:title=" ">
+<g id="a_node5"><a xlink:href="../../dd/d3c/base_8hpp.html" target="_top" xlink:title=" ">
 <polygon fill="white" stroke="#666666" points="677.88,-159.75 555.38,-159.75 555.38,-126.25 677.88,-126.25 677.88,-159.75"/>
 <text text-anchor="start" x="563.38" y="-146.25" font-family="Helvetica,sans-Serif" font-size="10.00">Simple&#45;Utility/nullables</text>
 <text text-anchor="middle" x="616.62" y="-133.5" font-family="Helvetica,sans-Serif" font-size="10.00">/base.hpp</text>

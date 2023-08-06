@@ -1,10 +1,13 @@
 <map id="functional" name="functional">
-<area shape="rect" id="node1" title="This namespace contains helper types for complex functional chaining and concrete functional objects." alt="" coords="5,161,88,189"/>
-<area shape="rect" id="node2" href="$d5/dc1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___a_r_i_t_h_m_e_t_i_c.html" title="Contains functional objects, implementing several arithmetically operations." alt="" coords="153,5,235,33"/>
-<area shape="rect" id="node3" href="$de/d23/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___c_o_m_p_a_r_e.html" title=" " alt="" coords="157,57,231,85"/>
-<area shape="rect" id="node4" href="$d1/d53/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___o_p_e_r_a_t_o_r_s.html" title=" " alt="" coords="154,109,234,137"/>
-<area shape="rect" id="node5" href="$dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html" title="Contains the base predicate_fn and several pre&#45;defined predicate objects." alt="" coords="155,161,233,189"/>
-<area shape="rect" id="node6" href="$df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html" title="Contains the base transform_fn and several pre&#45;defined transform objects." alt="" coords="153,213,235,241"/>
-<area shape="rect" id="node7" href="$dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html" title=" " alt="" coords="136,265,252,293"/>
-<area shape="rect" id="node8" href="$de/d1c/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___u_t_i_l_i_t_y.html" title="Contains functional objects, implementing several utility operations." alt="" coords="167,317,221,345"/>
+<area shape="rect" id="node1" title="This namespace contains helper types for complex functional chaining and concrete functional objects." alt="" coords="5,240,88,268"/>
+<area shape="rect" id="node2" href="$d5/dc1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___a_r_i_t_h_m_e_t_i_c.html" title="Contains functional objects, implementing several arithmetically operations." alt="" coords="162,5,244,33"/>
+<area shape="rect" id="node3" href="$d0/d96/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___c_l_o_s_u_r_e___t_e_m_p_l_a_t_e.html" title="Trait type, exposing the closure template." alt="" coords="140,57,266,85"/>
+<area shape="rect" id="node4" href="$de/d23/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___c_o_m_p_a_r_e.html" title="Contains various comparision predicates." alt="" coords="166,109,240,137"/>
+<area shape="rect" id="node5" href="$d9/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___c_o_m_p_o_s_i_t_i_o_n.html" title=" " alt="" coords="155,161,251,189"/>
+<area shape="rect" id="node6" href="$d9/d07/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___i_n_v_o_k_e___p_o_l_i_c_y.html" title="Contains several CRTP types, decorating the behavior of functional types." alt="" coords="154,213,252,241"/>
+<area shape="rect" id="node7" href="$dc/d1e/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___p_r_e_d_i_c_a_t_e.html" title="Contains the Predicate closure template." alt="" coords="164,265,242,293"/>
+<area shape="rect" id="node8" href="$df/db2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_r_a_n_s_f_o_r_m.html" title="Contains the Transform closure template." alt="" coords="162,317,244,345"/>
+<area shape="rect" id="node9" href="$dc/dc2/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___t_u_p_l_e.html" title="Contains several tuple related Transform definitions and the Apply closure template." alt="" coords="177,369,229,397"/>
+<area shape="rect" id="node10" href="$de/d3a/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___u_n_w_r_a_p___f_u_n_c_t_i_o_n_a_l.html" title="Trait, unwrapping the functional type if a closure type is given, otherwise the given type." alt="" coords="136,421,270,449"/>
+<area shape="rect" id="node11" href="$de/d1c/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___u_t_i_l_i_t_y.html" title="Contains functional objects, implementing several utility operations." alt="" coords="176,473,230,501"/>
 </map>

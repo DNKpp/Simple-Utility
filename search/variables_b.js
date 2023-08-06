@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['plus_0',['plus',['../d5/dc1/group___g_r_o_u_p___f_u_n_c_t_i_o_n_a_l___a_r_i_t_h_m_e_t_i_c.html#ga48c9ba68e8bb64d8c8b172cbe30cff91',1,'sl::functional::arithmetic']]]
+  ['or_5felse_0',['or_else',['../d6/d1d/group___g_r_o_u_p___n_u_l_l_a_b_l_e_s___a_l_g_o_r_i_t_h_m_s.html#gaae1a179ae42bf4201989653557976479',1,'sl::nullables']]]
 ];

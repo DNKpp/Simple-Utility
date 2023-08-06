@@ -1,0 +1,4 @@
+var structsl_1_1functional_1_1unwrap__functional_3_01_basic_closure_3_01_fn_00_01_invoke_policy_00_06e740e0a0bb7456684b0c8b4de0be8f0 =
+[
+    [ "type", "d4/d79/structsl_1_1functional_1_1unwrap__functional_3_01_basic_closure_3_01_fn_00_01_invoke_policy_00_06e740e0a0bb7456684b0c8b4de0be8f0.html#ad92b2608b8249ad006c3ba85607486e1", null ]
+];

@@ -1,5 +1,8 @@
-<map id="Simple&#45;Utility/bind_back.hpp" name="Simple&#45;Utility/bind_back.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="33,5,168,50"/>
-<area shape="rect" id="node2" href="$d0/d48/value__or_8hpp.html" title=" " alt="" coords="19,98,182,143"/>
-<area shape="rect" id="node3" href="$d3/ddc/nullables_8hpp.html" title=" " alt="" coords="5,191,196,218"/>
+<map id="Simple&#45;Utility/functional/bind_back.hpp" name="Simple&#45;Utility/functional/bind_back.hpp">
+<area shape="rect" id="node1" title=" " alt="" coords="284,5,453,50"/>
+<area shape="rect" id="node2" href="$d4/dc9/and__then_8hpp.html" title=" " alt="" coords="5,98,169,143"/>
+<area shape="rect" id="node4" href="$d7/d5f/fwd__value_8hpp.html" title=" " alt="" coords="193,98,357,143"/>
+<area shape="rect" id="node5" href="$d2/d0e/or__else_8hpp.html" title=" " alt="" coords="381,98,545,143"/>
+<area shape="rect" id="node6" href="$d0/d48/value__or_8hpp.html" title=" " alt="" coords="569,98,733,143"/>
+<area shape="rect" id="node3" href="$d3/ddc/nullables_8hpp.html" title=" " alt="" coords="273,191,464,218"/>
 </map>
