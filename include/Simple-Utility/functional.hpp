@@ -8,20 +8,23 @@
 
 #pragma once
 
-#include "Simple-Utility/functional/operators/bind.hpp"
-#include "Simple-Utility/functional/operators/conjunction.hpp"
-#include "Simple-Utility/functional/operators/disjunction.hpp"
-#include "Simple-Utility/functional/operators/negation.hpp"
-#include "Simple-Utility/functional/operators/pipe.hpp"
+#include "Simple-Utility/functional/mixins/Conjunction.hpp"
+#include "Simple-Utility/functional/mixins/Disjunction.hpp"
+#include "Simple-Utility/functional/mixins/Equality.hpp"
+#include "Simple-Utility/functional/mixins/InvokePolicies.hpp"
+#include "Simple-Utility/functional/mixins/Negation.hpp"
+#include "Simple-Utility/functional/mixins/Pipe.hpp"
 
-#include "Simple-Utility/functional/base.hpp"
-#include "Simple-Utility/functional/predicate.hpp"
-#include "Simple-Utility/functional/transform.hpp"
-#include "Simple-Utility/functional/overloaded.hpp"
+#include "Simple-Utility/functional/BasicClosure.hpp"
+#include "Simple-Utility/functional/Composition.hpp"
+#include "Simple-Utility/functional/Predicate.hpp"
+#include "Simple-Utility/functional/Transform.hpp"
+#include "Simple-Utility/functional/Overloaded.hpp"
+#include "Simple-Utility/functional/bind_back.hpp"
 
-#include "Simple-Utility/functional/arithmetic.hpp"
-#include "Simple-Utility/functional/compare.hpp"
-#include "Simple-Utility/functional/tuple.hpp"
-#include "Simple-Utility/functional/utility.hpp"
+#include "Simple-Utility/functional/Arithmetic.hpp"
+#include "Simple-Utility/functional/Compare.hpp"
+#include "Simple-Utility/functional/Tuple.hpp"
+#include "Simple-Utility/functional/Utility.hpp"
 
 #endif
