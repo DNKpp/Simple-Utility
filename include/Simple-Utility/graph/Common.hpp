@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include "Simple-Utility/concepts/operators.hpp"
+
 #include <concepts>
 #include <ranges>
 
@@ -17,6 +19,15 @@ namespace sl::graph::concepts
 	concept vertex = std::same_as<T, std::remove_cvref_t<T>>
 					&& std::equality_comparable<T>
 					&& std::copyable<T>;
+
+	template <class T>
+	concept rank = std::same_as<T, std::remove_cvref_t<T>>
+					&& std::totally_ordered<T>
+					&& std::regular<T>
+					&& sl::concepts::plus<T>
+					&& sl::concepts::minus<T>
+					&& sl::concepts::plus_assign<T>
+					&& sl::concepts::minus_assign<T>;
 }
 	
 #endif

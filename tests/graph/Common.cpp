@@ -9,6 +9,9 @@
 
 #include "Simple-Utility/graph/Common.hpp"
 
+// ReSharper disable CppClangTidyClangDiagnosticUnusedMemberFunction
+// ReSharper disable CppClangTidyClangDiagnosticUnneededMemberFunction
+
 namespace
 {
 	struct non_equality_comparable
@@ -26,7 +29,47 @@ namespace
 
 	struct valid_vertex
 	{
-		friend bool operator==(const valid_vertex&, const valid_vertex&) = default;
+		friend bool operator==(const valid_vertex&, const valid_vertex&) = default;  // NOLINT(clang-diagnostic-unneeded-internal-declaration)
+	};
+
+	struct non_totally_ordered
+	{
+		bool operator ==(const non_totally_ordered&) const = default;
+	};
+
+	struct non_mutable_plus_rank
+	{
+		auto operator <=>(const non_mutable_plus_rank&) const = default;
+		non_mutable_plus_rank operator +([[maybe_unused]] const non_mutable_plus_rank&) const;
+	};
+
+	struct non_immutable_plus_rank
+	{
+		auto operator <=>(const non_immutable_plus_rank&) const = default;
+
+		non_immutable_plus_rank& operator +=([[maybe_unused]] const non_immutable_plus_rank&);
+	};
+
+	struct non_mutable_minus_rank
+	{
+		auto operator <=>(const non_mutable_minus_rank&) const = default;
+
+		non_mutable_minus_rank operator +([[maybe_unused]] const non_mutable_minus_rank&) const;
+	};
+
+	struct non_immutable_minus_rank
+	{
+		auto operator <=>(const non_immutable_minus_rank&) const = default;
+		non_immutable_minus_rank& operator +=([[maybe_unused]] const non_immutable_minus_rank&);
+	};
+
+	struct valid_rank
+	{
+		auto operator <=>(const valid_rank&) const = default;
+		valid_rank& operator +=([[maybe_unused]] const valid_rank&);
+		valid_rank operator +([[maybe_unused]] const valid_rank&) const;
+		valid_rank& operator -=([[maybe_unused]] const valid_rank&);
+		valid_rank operator -([[maybe_unused]] const valid_rank&) const;
 	};
 }
 
@@ -46,3 +89,23 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(expected == sg::concepts::vertex<T>);
 }
 
+TEMPLATE_TEST_CASE_SIG(
+	"graph::concepts::rank determines whether the given type can be used as rank type.",
+	"[graph][graph::concepts]",
+	((bool expected, class T), expected, T),
+	(true, int),
+	(true, float),
+	(true, valid_rank),
+	(false, const int),
+	(false, int&),
+	(false, non_equality_comparable),
+	(false, non_copyable),
+	(false, non_totally_ordered),
+	(false, non_mutable_plus_rank),
+	(false, non_immutable_plus_rank),
+	(false, non_mutable_minus_rank),
+	(false, non_immutable_minus_rank)
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::rank<T>);
+}
