@@ -9,6 +9,8 @@
 
 #include "Simple-Utility/graph/Common.hpp"
 
+// ReSharper disable CppDeclaratorNeverUsed
+// ReSharper disable CppTypeAliasNeverUsed
 // ReSharper disable CppClangTidyClangDiagnosticUnusedMemberFunction
 // ReSharper disable CppClangTidyClangDiagnosticUnneededMemberFunction
 
@@ -20,7 +22,7 @@ namespace
 		auto operator <=>(const non_equality_comparable&) const = default;
 	};
 
-	struct non_copyable
+	struct non_copyable  // NOLINT(cppcoreguidelines-special-member-functions)
 	{
 		non_copyable(const non_copyable&) = delete;
 		non_copyable& operator =(const non_copyable&) = delete;
@@ -29,7 +31,8 @@ namespace
 
 	struct valid_vertex
 	{
-		friend bool operator==(const valid_vertex&, const valid_vertex&) = default;  // NOLINT(clang-diagnostic-unneeded-internal-declaration)
+		friend bool operator==(const valid_vertex&, const valid_vertex&) = default;
+		// NOLINT(clang-diagnostic-unneeded-internal-declaration)
 	};
 
 	struct non_totally_ordered
@@ -134,4 +137,33 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(std::same_as<Expected, typename sg::common_feature_category<Ts...>::type>);
 	STATIC_REQUIRE(std::same_as<Expected, sg::common_feature_category_t<Ts...>>);
+}
+
+namespace
+{
+	struct non_readable_vertex_type
+	{
+	};
+
+	struct readable_but_unsatisfied_vertex_type
+	{
+		using vertex_type = non_equality_comparable;
+	};
+
+	struct readable_vertex_type
+	{
+		using vertex_type = valid_vertex;
+	};
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"graph::concepts::readable_vertex_type determines whether T contains a \"vertex_type\" member alias.",
+	"[graph][graph::concepts]",
+	((bool expected, class T), expected, T),
+	(false, non_readable_vertex_type),
+	(false, readable_but_unsatisfied_vertex_type),
+	(true, readable_vertex_type)
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::readable_vertex_type<T>);
 }

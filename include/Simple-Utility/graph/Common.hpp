@@ -48,6 +48,10 @@ namespace sl::graph::concepts
 					&& sl::concepts::minus<T>
 					&& sl::concepts::plus_assign<T>
 					&& sl::concepts::minus_assign<T>;
+
+	template <class T>
+	concept readable_vertex_type = requires { typename T::vertex_type; }
+									&& vertex<typename T::vertex_type>;
 }
 
 namespace sl::graph
