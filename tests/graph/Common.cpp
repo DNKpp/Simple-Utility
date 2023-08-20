@@ -128,15 +128,15 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
 	"graph::common_feature_category trait yields the strictest category.",
 	"[graph][graph::traits]",
-	((bool dummy, class Expected, class... Ts), dummy, Expected, Ts...),
+	((bool dummy, class Expected, class T, class... Others), dummy, Expected, T, Others...),
 	(true, sg::basic_feature_category, sg::basic_feature_category),
 	(true, sg::ranked_feature_category, sg::ranked_feature_category),
 	(true, sg::basic_feature_category, sg::ranked_feature_category, sg::basic_feature_category),
 	(true, sg::basic_feature_category, sg::ranked_feature_category, sg::basic_feature_category, sg::ranked_feature_category)
 )
 {
-	STATIC_REQUIRE(std::same_as<Expected, typename sg::common_feature_category<Ts...>::type>);
-	STATIC_REQUIRE(std::same_as<Expected, sg::common_feature_category_t<Ts...>>);
+	STATIC_REQUIRE(std::same_as<Expected, typename sg::common_feature_category<T, Others...>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sg::common_feature_category_t<T, Others...>>);
 }
 
 namespace
