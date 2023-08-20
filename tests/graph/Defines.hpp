@@ -27,3 +27,24 @@ struct BasicTestNode
 		return mock.vertex(node);
 	}
 };
+
+template <sg::concepts::node Node>
+class QueueMock
+{
+public:
+	inline static constexpr bool trompeloeil_movable_mock = true;
+
+	MAKE_CONST_MOCK0(empty, bool());
+	// Can't expect a template here, so just expect a std::vector
+	MAKE_MOCK1(insert, void(std::vector<Node>));
+	MAKE_MOCK0(next, Node());
+
+	template <std::ranges::input_range Range>
+		requires std::convertible_to<std::ranges::range_value_t<Range>, Node>
+	friend constexpr void insert(QueueMock& queue, Range&& range)
+	{
+		std::vector<std::ranges::range_value_t<Range>> vector{};
+		std::ranges::copy(range, std::back_inserter(vector));
+		queue.insert(std::move(vector));
+	}
+};

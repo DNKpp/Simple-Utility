@@ -117,7 +117,7 @@ TEST_CASE("graph::queue::insert serves as a customization point, inserting the r
 
 TEST_CASE("graph::queue::next serves as a customization point, retrieving the next node.", "[graph][graph::queue]")
 {
-	const auto expected = GENERATE(as<TestNode>{}, 42, 1337);
+	const auto expected = GENERATE(TestNode{42}, TestNode{1337});
 
 	SECTION("Access via the member function.")
 	{

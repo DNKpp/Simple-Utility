@@ -71,7 +71,19 @@ namespace sl::graph::queue::detail
 			return next(queue);
 		}
 	};
+}
 
+namespace sl::graph::queue
+{
+	inline constexpr detail::empty_fn empty{};
+	inline constexpr detail::insert_fn insert{};
+	inline constexpr detail::next_fn next{};
+}
+
+#if __cpp_lib_ranges >= 201911L
+
+namespace sl::graph::queue::detail
+{
 	/* This defines a dummy input_iterator, which we need to declare a input_range, which is then used
 	 * to validate the graph::insert conformity in the queue_for concept.
 	 */
@@ -102,14 +114,29 @@ namespace sl::graph::queue::detail
 
 	template <class T>
 	using dummy_input_range = typename input_range_maker<T>::type;
+
+	template <class T, class Node>
+	concept has_insert = requires(T& queue)
+	{
+		queue::insert(queue, std::declval<const queue::detail::dummy_input_range<Node>&>());
+	};
+
 }
 
-namespace sl::graph::queue
+#else
+
+#include <forward_list>
+
+namespace sl::graph::queue::detail
 {
-	inline constexpr detail::empty_fn empty{};
-	inline constexpr detail::insert_fn insert{};
-	inline constexpr detail::next_fn next{};
+	template <class T, class Node>
+	concept has_insert = requires(T& queue)
+	{
+		queue::insert(queue, std::declval<const std::forward_list<Node&>>());
+	};
 }
+
+#endif
 
 namespace sl::graph::concepts
 {
@@ -119,7 +146,7 @@ namespace sl::graph::concepts
 						&& requires(T& queue)
 						{
 							{ queue::empty(std::as_const(queue)) } -> std::convertible_to<bool>;
-							queue::insert(queue, std::declval<const queue::detail::dummy_input_range<Node>&>());
+							requires queue::detail::has_insert<T, Node>;
 							{ queue::next(queue) } -> std::convertible_to<Node>;
 						};
 }
