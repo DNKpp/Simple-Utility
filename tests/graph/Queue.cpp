@@ -49,10 +49,23 @@ namespace
 		friend void insert(free_fun_insert& obj, std::vector<TestNode> input)
 		{
 			obj.do_insert(std::move(input));
-}
+		}
 	};
 
-}
+	struct member_fun_next
+	{
+		MAKE_MOCK0(next, TestNode());
+	};
+
+	struct free_fun_next
+	{
+		MAKE_MOCK0(get_next, TestNode());
+
+		friend TestNode next(free_fun_next& obj)
+		{
+			return obj.get_next();
+		}
+	};
 }
 
 TEST_CASE("graph::queue::empty serves as a customization point, detmerining whether the queue is empty.", "[graph][graph::queue]")
@@ -96,5 +109,28 @@ TEST_CASE("graph::queue::insert serves as a customization point, inserting the r
 		REQUIRE_CALL(mock, do_insert(expected));
 
 		sg::queue::insert(mock, expected);
+	}
+}
+
+TEST_CASE("graph::queue::next serves as a customization point, retrieving the next node.", "[graph][graph::queue]")
+{
+	const auto expected = GENERATE(as<TestNode>{}, 42, 1337);
+
+	SECTION("Access via the member function.")
+	{
+		member_fun_next mock{};
+		REQUIRE_CALL(mock, next())
+			.RETURN(expected);
+
+		REQUIRE(expected == sg::queue::next(mock));
+	}
+
+	SECTION("Access via the free function.")
+	{
+		free_fun_next mock{};
+		REQUIRE_CALL(mock, get_next())
+			.RETURN(expected);
+
+		REQUIRE(expected == sg::queue::next(mock));
 	}
 }

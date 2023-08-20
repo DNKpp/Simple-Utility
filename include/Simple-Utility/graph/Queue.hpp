@@ -9,6 +9,8 @@
 #include "Simple-Utility/graph/Common.hpp"
 #include "Simple-Utility/graph/Node.hpp"
 
+#include <ranges>
+
 namespace sl::graph::queue::detail
 {
 	struct empty_fn
@@ -53,12 +55,29 @@ namespace sl::graph::queue::detail
 		}
 	};
 
+	struct next_fn
+	{
+		template <class Queue>
+			requires concepts::node<std::remove_cvref_t<decltype(std::declval<Queue&>().next())>>
+		constexpr decltype(auto) operator ()(Queue& queue) const noexcept(noexcept(queue.next()))
+		{
+			return queue.next();
+		}
+
+		template <class Queue>
+			requires concepts::node<std::remove_cvref_t<decltype(next(std::declval<Queue&>()))>>
+		constexpr decltype(auto) operator ()(Queue& queue) const noexcept(noexcept(next(queue)))
+		{
+			return next(queue);
+		}
+	};
 }
 
 namespace sl::graph::queue
 {
 	inline constexpr detail::empty_fn empty{};
 	inline constexpr detail::insert_fn insert{};
+	inline constexpr detail::next_fn next{};
 }
 
 #endif
