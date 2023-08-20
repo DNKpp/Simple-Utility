@@ -77,6 +77,11 @@
 					"name": "CATCH_BUILD_TESTING",
 					"value": "False",
 					"type": "BOOL"
+				},
+				{
+					"name": "CMAKE_C_COMPILER_WORKS",
+					"value": "True",
+					"type": "BOOL"
 				}
 			],
 			"remoteMachineName": "${defaultRemoteMachineName}",

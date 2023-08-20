@@ -64,7 +64,7 @@ namespace sl::graph
 	struct common_feature_category
 	{
 		using type = std::tuple_element_t<
-			std::ranges::min(
+			std::min(	// clang seems to have issues with std::ranges::min
 				{
 					type_list::index_of_v<detail::feature_category_list, T>,
 					type_list::index_of_v<detail::feature_category_list, Others>...
