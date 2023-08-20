@@ -84,8 +84,9 @@ namespace sl::graph::queue::detail
 			using element_type = T;
 			using difference_type = std::ptrdiff_t;
 
+			T* dummy{};
 			// ReSharper disable once CppFunctionIsNotImplemented
-			T& operator *() const;
+			T& operator *() const { return *dummy; }
 			// ReSharper disable once CppFunctionIsNotImplemented
 			input_iterator& operator ++();
 			// ReSharper disable once CppFunctionIsNotImplemented
