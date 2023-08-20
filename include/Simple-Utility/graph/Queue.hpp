@@ -71,6 +71,36 @@ namespace sl::graph::queue::detail
 			return next(queue);
 		}
 	};
+
+	/* This defines a dummy input_iterator, which we need to declare a input_range, which is then used
+	 * to validate the graph::insert conformity in the queue_for concept.
+	 */
+	template <class T>
+	struct input_range_maker
+	{
+		struct input_iterator
+		{
+			using iterator_concept = std::input_iterator_tag;
+			using element_type = T;
+			using difference_type = std::ptrdiff_t;
+
+			// ReSharper disable once CppFunctionIsNotImplemented
+			T& operator *() const;
+			// ReSharper disable once CppFunctionIsNotImplemented
+			input_iterator& operator ++();
+			// ReSharper disable once CppFunctionIsNotImplemented
+			void operator ++(int);
+			bool operator==(const input_iterator&) const = default;
+		};
+
+		static_assert(std::input_iterator<input_iterator>);
+		static_assert(!std::forward_iterator<input_iterator>);
+
+		using type = std::ranges::subrange<input_iterator>;
+	};
+
+	template <class T>
+	using dummy_input_range = typename input_range_maker<T>::type;
 }
 
 namespace sl::graph::queue
@@ -78,6 +108,19 @@ namespace sl::graph::queue
 	inline constexpr detail::empty_fn empty{};
 	inline constexpr detail::insert_fn insert{};
 	inline constexpr detail::next_fn next{};
+}
+
+namespace sl::graph::concepts
+{
+	template <class T, class Node>
+	concept queue_for = sl::concepts::unqualified<T>
+						&& node<Node>
+						&& requires(T& queue)
+						{
+							{ queue::empty(std::as_const(queue)) } -> std::convertible_to<bool>;
+							queue::insert(queue, std::declval<const queue::detail::dummy_input_range<Node>&>());
+							{ queue::next(queue) } -> std::convertible_to<Node>;
+						};
 }
 
 #endif

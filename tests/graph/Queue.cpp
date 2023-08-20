@@ -137,3 +137,20 @@ TEST_CASE("graph::queue::next serves as a customization point, retrieving the ne
 		REQUIRE(expected == sg::queue::next(mock));
 	}
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"concepts::queue_for determines, whether the given type satisfies the requirements of a queue for the specified node type.",
+	"[graph][graph::concepts]",
+	((bool expected, class T), expected, T),
+	(false, member_fun_empty),
+	(false, free_fun_empty),
+	(false, member_fun_insert),
+	(false, free_fun_insert),
+	(false, member_fun_next),
+	(false, free_fun_next),
+	(false, QueueMock<BasicTestNode<int>>),
+	(true, QueueMock<TestNode>)
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::queue_for<T, TestNode>);
+}
