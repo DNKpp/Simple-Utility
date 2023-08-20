@@ -12,6 +12,8 @@
 
 #include "Defines.hpp"
 
+// ReSharper disable CppDeclaratorNeverUsed
+
 namespace
 {
 	struct member_fun_empty
@@ -31,6 +33,7 @@ namespace
 
 	struct TestNode
 	{
+		// ReSharper disable once CppTypeAliasNeverUsed
 		using vertex_type = int;
 		int vertex{};
 

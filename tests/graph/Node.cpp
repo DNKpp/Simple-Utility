@@ -16,6 +16,7 @@ namespace
 {
 	struct member_vertex
 	{
+		// ReSharper disable once CppDeclaratorNeverUsed
 		int vertex;
 	};
 
@@ -28,6 +29,7 @@ namespace
 	{
 		MAKE_CONST_MOCK0(my_vertex, int());
 
+		// ReSharper disable once CppDeclaratorNeverUsed
 		friend int vertex(const free_fun_vertex& v)
 		{
 			return v.my_vertex();
