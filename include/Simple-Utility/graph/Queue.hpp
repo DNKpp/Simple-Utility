@@ -27,11 +27,38 @@ namespace sl::graph::queue::detail
 			return empty(queue);
 		}
 	};
+
+	struct insert_fn
+	{
+		template <class Queue, std::ranges::input_range Range>
+			requires concepts::node<std::ranges::range_value_t<Range>>
+					&& requires(Queue& queue) { queue.insert(std::declval<Range&&>()); }
+		constexpr void operator ()(
+			Queue& container,
+			Range&& elements
+		) const noexcept(noexcept(container.insert(std::forward<Range>(elements))))
+		{
+			container.insert(std::forward<Range>(elements));
+		}
+
+		template <class Queue, std::ranges::input_range Range>
+			requires concepts::node<std::ranges::range_value_t<Range>>
+					&& requires(Queue& queue) { insert(queue, std::declval<Range&&>()); }
+		constexpr void operator ()(
+			Queue& container,
+			Range&& elements
+		) const noexcept(noexcept(insert(container, std::forward<Range>(elements))))
+		{
+			insert(container, std::forward<Range>(elements));
+		}
+	};
+
 }
 
 namespace sl::graph::queue
 {
 	inline constexpr detail::empty_fn empty{};
+	inline constexpr detail::insert_fn insert{};
 }
 
 #endif
