@@ -154,6 +154,20 @@ namespace
 	{
 		using vertex_type = valid_vertex;
 	};
+
+	struct non_readable_rank_type
+	{
+	};
+
+	struct readable_but_unsatisfied_rank_type
+	{
+		using vertex_type = non_totally_ordered;
+	};
+
+	struct readable_rank_type
+	{
+		using rank_type = valid_rank;
+	};
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -166,4 +180,16 @@ TEMPLATE_TEST_CASE_SIG(
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::readable_vertex_type<T>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"graph::concepts::readable_rank_type determines whether T contains a \"rank_type\" member alias.",
+	"[graph][graph::concepts]",
+	((bool expected, class T), expected, T),
+	(false, non_readable_rank_type),
+	(false, readable_but_unsatisfied_rank_type),
+	(true, readable_rank_type)
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::readable_rank_type<T>);
 }

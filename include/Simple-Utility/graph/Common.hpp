@@ -52,6 +52,10 @@ namespace sl::graph::concepts
 	template <class T>
 	concept readable_vertex_type = requires { typename T::vertex_type; }
 									&& vertex<typename T::vertex_type>;
+
+	template <class T>
+	concept readable_rank_type = requires { typename T::rank_type; }
+								&& vertex<typename T::rank_type>;
 }
 
 namespace sl::graph
