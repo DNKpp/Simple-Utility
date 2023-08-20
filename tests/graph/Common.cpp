@@ -168,7 +168,25 @@ namespace
 	{
 		using rank_type = valid_rank;
 	};
+
+	struct ranked_feature_category_type
+	{
+		using vertex_type = valid_vertex;
+		using rank_type = valid_rank;
+	};
+
+	struct type_with_custom_trait
+	{
+	};
 }
+
+template <>
+struct sg::feature_traits<type_with_custom_trait>
+{
+	using category_type = ranked_feature_category;
+	using vertex_type = int;
+	using rank_type = float;
+};
 
 TEMPLATE_TEST_CASE_SIG(
 	"graph::concepts::readable_vertex_type determines whether T contains a \"vertex_type\" member alias.",
@@ -192,4 +210,52 @@ TEMPLATE_TEST_CASE_SIG(
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::readable_rank_type<T>);
+}
+
+TEST_CASE(
+	"graph::feature_traits categorizes T as basic_feature_category, if just vertex_type is readable.",
+	"[graph][graph::traits]"
+)
+{
+	using TestType = readable_vertex_type;
+
+	STATIC_REQUIRE(std::same_as<sg::basic_feature_category, sg::feature_traits<TestType>::category_type>);
+	STATIC_REQUIRE(std::same_as<sg::basic_feature_category, sg::feature_category_t<TestType>>);
+
+	STATIC_REQUIRE(std::same_as<valid_vertex, sg::feature_traits<TestType>::vertex_type>);
+	STATIC_REQUIRE(std::same_as<valid_vertex, sg::feature_vertex_t<TestType>>);
+}
+
+TEST_CASE(
+	"graph::feature_traits categorizes T as ranked_feature_category, if vertex_type and rank_type are readable.",
+	"[graph][graph::traits]"
+)
+{
+	using TestType = ranked_feature_category_type;
+
+	STATIC_REQUIRE(std::same_as<sg::ranked_feature_category, sg::feature_traits<TestType>::category_type>);
+	STATIC_REQUIRE(std::same_as<sg::ranked_feature_category, sg::feature_category_t<TestType>>);
+
+	STATIC_REQUIRE(std::same_as<valid_vertex, sg::feature_traits<TestType>::vertex_type>);
+	STATIC_REQUIRE(std::same_as<valid_vertex, sg::feature_vertex_t<TestType>>);
+
+	STATIC_REQUIRE(std::same_as<valid_rank, sg::feature_traits<TestType>::rank_type>);
+	STATIC_REQUIRE(std::same_as<valid_rank, sg::feature_rank_t<TestType>>);
+}
+
+TEST_CASE(
+	"graph::feature_traits can be specialized.",
+	"[graph][graph::traits]"
+)
+{
+	using TestType = type_with_custom_trait;
+
+	STATIC_REQUIRE(std::same_as<sg::ranked_feature_category, sg::feature_traits<TestType>::category_type>);
+	STATIC_REQUIRE(std::same_as<sg::ranked_feature_category, sg::feature_category_t<TestType>>);
+
+	STATIC_REQUIRE(std::same_as<int, sg::feature_traits<TestType>::vertex_type>);
+	STATIC_REQUIRE(std::same_as<int, sg::feature_vertex_t<TestType>>);
+
+	STATIC_REQUIRE(std::same_as<float, sg::feature_traits<TestType>::rank_type>);
+	STATIC_REQUIRE(std::same_as<float, sg::feature_rank_t<TestType>>);
 }

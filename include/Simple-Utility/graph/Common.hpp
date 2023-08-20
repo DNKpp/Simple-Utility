@@ -74,6 +74,36 @@ namespace sl::graph
 
 	template <class T, class... Others>
 	using common_feature_category_t = typename common_feature_category<T, Others...>::type;
+
+	template <class T>
+	struct feature_traits;
+
+	template <class T>
+	using feature_category_t = typename feature_traits<T>::category_type;
+
+	template <class T>
+	using feature_vertex_t = typename feature_traits<T>::vertex_type;
+
+	template <class T>
+	using feature_rank_t = typename feature_traits<T>::rank_type;
+
+	template <class T>
+		requires concepts::readable_vertex_type<T>
+	struct feature_traits<T>
+	{
+		using category_type = basic_feature_category;
+		using vertex_type = typename T::vertex_type;
+	};
+
+	template <class T>
+		requires concepts::readable_vertex_type<T>
+				&& concepts::readable_rank_type<T>
+	struct feature_traits<T>
+	{
+		using category_type = ranked_feature_category;
+		using vertex_type = typename T::vertex_type;
+		using rank_type = typename T::rank_type;
+	};
 }
 
 #endif
