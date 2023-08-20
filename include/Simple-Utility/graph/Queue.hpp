@@ -118,7 +118,7 @@ namespace sl::graph::queue::detail
 	template <class T, class Node>
 	concept has_insert = requires(T& queue)
 	{
-		queue::insert(queue, std::declval<const queue::detail::dummy_input_range<Node>&>());
+		queue::insert(queue, std::declval<const dummy_input_range<Node>&>());
 	};
 
 }
@@ -143,10 +143,10 @@ namespace sl::graph::concepts
 	template <class T, class Node>
 	concept queue_for = sl::concepts::unqualified<T>
 						&& node<Node>
+						&& queue::detail::has_insert<T, Node>
 						&& requires(T& queue)
 						{
 							{ queue::empty(std::as_const(queue)) } -> std::convertible_to<bool>;
-							requires queue::detail::has_insert<T, Node>;
 							{ queue::next(queue) } -> std::convertible_to<Node>;
 						};
 }
