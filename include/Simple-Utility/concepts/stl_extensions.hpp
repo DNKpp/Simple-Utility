@@ -69,6 +69,15 @@ namespace sl::concepts
 	concept not_same_as = !std::same_as<TLhs, TRhs>;
 
 	/**
+	 * \brief Checks whether T is not ``void``.
+	 * \details This is the inverted counterpart of ``std::is_void_v`` trait.
+	 * \see https://en.cppreference.com/w/cpp/types/is_void
+	 * \tparam T Type to check.
+	 */
+	template <class T>
+	concept not_void = !std::is_void_v<T>;
+
+	/**
 	 * \brief Checks whether the target type is constructible from the source type.
 	 * \details This is the symmetrical counterpart of ``std::constructible_from`` concept with a single constructor argument.
 	 * \tparam TSource The source type handed over to the constructor of the target

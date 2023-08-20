@@ -93,6 +93,19 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+	"not_void should behave as the inverted counterpart of std::is_void(_v).",
+	"[concepts][stl_ext]",
+	((bool expected, class T), expected, T),
+	(false, void),
+	(false, const void),
+	(true, int),
+	(true, int&)
+)
+{
+	STATIC_REQUIRE(expected == not_void<T>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
 	"weakly_equality_comparable checks whether the given type is comparable via operator == and !=.",
 	"[concepts][stl_ext]",
 	((bool expected, class T), expected, T),
