@@ -3,4 +3,5 @@ target_sources(
 	PRIVATE
 	"Common.cpp"
 	"Node.cpp"
+	"Queue.cpp"
 )
