@@ -5,8 +5,25 @@
 
 #pragma once
 
+#include <catch2/catch_test_macros.hpp>
 #include <catch2/trompeloeil.hpp>
 
 #include <Simple-Utility/graph/Common.hpp>
 
 namespace sg = sl::graph;
+
+template <sg::concepts::vertex Vertex>
+struct BasicTestNode
+{
+	using vertex_type = Vertex;
+
+	struct Mock
+	{
+		MAKE_CONST_MOCK1(vertex, vertex_type(const BasicTestNode&));
+	} inline static mock{};
+
+	friend constexpr vertex_type vertex(const BasicTestNode& node)
+	{
+		return mock.vertex(node);
+	}
+};

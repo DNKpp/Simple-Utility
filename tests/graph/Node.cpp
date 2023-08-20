@@ -5,6 +5,7 @@
 
 #include "Simple-Utility/graph/Node.hpp"
 
+#include <catch2/catch_template_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/generators/catch_generators_adapters.hpp>
 #include <catch2/generators/catch_generators_random.hpp>
@@ -58,4 +59,17 @@ TEST_CASE("graph::node::vertex serves as a customization point accessing the nod
 			.RETURN(expected);
 		REQUIRE(expected == sg::node::vertex(std::as_const(mock)));
 	}
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"concepts::node determines, whether the given type satisfies the node requirements.",
+	"[graph][graph::concepts]",
+	((bool expected, class T), expected, T),
+	(false, member_vertex),
+	(false, member_fun_vertex),
+	(false, free_fun_vertex),
+	(true, BasicTestNode<int>)
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::node<T>);
 }

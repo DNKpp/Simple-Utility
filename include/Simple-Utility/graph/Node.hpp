@@ -38,4 +38,17 @@ namespace sl::graph::node
 	inline constexpr detail::vertex_fn vertex{};
 }
 
+namespace sl::graph::concepts
+{
+	template <class T>
+	concept node = sl::concepts::unqualified<T>
+					&& std::copyable<T>
+					&& std::destructible<T>
+					&& feature_category<typename feature_traits<T>::category_type>
+					&& vertex<typename feature_traits<T>::vertex_type>
+					&& requires(const T& node)
+					{
+						requires concepts::vertex<std::remove_cvref_t<decltype(node::vertex(node))>>;
+					};
+}
 #endif
