@@ -109,3 +109,29 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(expected == sg::concepts::rank<T>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"graph::concepts::feature_category determines whether the given type denotes a feature category.",
+	"[graph][graph::concepts]",
+	((bool expected, class T), expected, T),
+	(false, int),
+	(true, sg::basic_feature_category),
+	(true, sg::ranked_feature_category)
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::feature_category<T>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"graph::common_feature_category trait yields the strictest category.",
+	"[graph][graph::traits]",
+	((bool dummy, class Expected, class... Ts), dummy, Expected, Ts...),
+	(true, sg::basic_feature_category, sg::basic_feature_category),
+	(true, sg::ranked_feature_category, sg::ranked_feature_category),
+	(true, sg::basic_feature_category, sg::ranked_feature_category, sg::basic_feature_category),
+	(true, sg::basic_feature_category, sg::ranked_feature_category, sg::basic_feature_category, sg::ranked_feature_category)
+)
+{
+	STATIC_REQUIRE(std::same_as<Expected, typename sg::common_feature_category<Ts...>::type>);
+	STATIC_REQUIRE(std::same_as<Expected, sg::common_feature_category_t<Ts...>>);
+}
