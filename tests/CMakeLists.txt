@@ -18,6 +18,7 @@ add_executable(
 add_subdirectory("nullables")
 add_subdirectory("concepts")
 add_subdirectory("functional")
+add_subdirectory("graph")
 
 target_link_libraries(
 	Simple-Utility-Tests
