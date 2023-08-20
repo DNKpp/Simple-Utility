@@ -9,6 +9,7 @@
 #include <catch2/trompeloeil.hpp>
 
 #include <Simple-Utility/graph/Common.hpp>
+#include <Simple-Utility/graph/Node.hpp>
 
 namespace sg = sl::graph;
 
