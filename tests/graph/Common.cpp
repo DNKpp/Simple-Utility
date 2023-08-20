@@ -13,6 +13,7 @@
 // ReSharper disable CppTypeAliasNeverUsed
 // ReSharper disable CppClangTidyClangDiagnosticUnusedMemberFunction
 // ReSharper disable CppClangTidyClangDiagnosticUnneededMemberFunction
+// ReSharper disable CppClangTidyClangDiagnosticUnneededInternalDeclaration
 
 namespace
 {
@@ -32,7 +33,6 @@ namespace
 	struct valid_vertex
 	{
 		friend bool operator==(const valid_vertex&, const valid_vertex&) = default;
-		// NOLINT(clang-diagnostic-unneeded-internal-declaration)
 	};
 
 	struct non_totally_ordered
