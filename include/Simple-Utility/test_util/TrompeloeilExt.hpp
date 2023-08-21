@@ -23,7 +23,8 @@ namespace trompeloeil_ext
 	struct matches_matcher_fn;
 
 	template <class Matcher>
-		requires std::derived_from<std::remove_cvref_t<Matcher>, Catch::Matchers::MatcherGenericBase>
+		requires std::derived_from<std::remove_cvref_t<Matcher>, Catch::Matchers::MatcherGenericBase>   // new style
+				|| std::derived_from<std::remove_cvref_t<Matcher>, Catch::Matchers::MatcherUntypedBase> // old style
 	struct matches_matcher_fn<Matcher>
 	{
 		constexpr auto operator ()(Matcher&& matcher) const

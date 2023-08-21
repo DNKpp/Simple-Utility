@@ -7,13 +7,19 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_range_equals.hpp>
+#include <catch2/matchers/catch_matchers_vector.hpp>
 
 TEST_CASE("Catch2 matchers can be used as argument for the trompeloeil_ext::matches matcher", "[test_util][test_util::trompeloeil]")
 {
-	constexpr std::array data{42, 43, 47};
+	const std::vector data{42, 43, 47};
 
-	REQUIRE(!trompeloeil_ext::matches(Catch::Matchers::RangeEquals(std::vector{42, 47})).matches(data));
-	REQUIRE(trompeloeil_ext::matches(Catch::Matchers::RangeEquals(std::vector{42, 43, 47})).matches(data));
+	// new style
+	REQUIRE(!trompeloeil_ext::matches(Catch::Matchers::RangeEquals(std::array{42, 47})).matches(data));
+	REQUIRE(trompeloeil_ext::matches(Catch::Matchers::RangeEquals(std::array{42, 43, 47})).matches(data));
+
+	// old style
+	REQUIRE(trompeloeil_ext::matches(Catch::Matchers::VectorContains(43)).matches(data));
+	REQUIRE(!trompeloeil_ext::matches(Catch::Matchers::VectorContains(1337)).matches(data));
 }
 
 TEST_CASE("trompeloeil_ext::matches can be used to print something to an ostream.", "[test_util][test_util::trompeloeil]")
