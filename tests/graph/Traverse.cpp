@@ -3,19 +3,18 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
+#include "Simple-Utility/graph/Traverse.hpp"
+
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/generators/catch_generators_adapters.hpp>
 #include <catch2/generators/catch_generators_random.hpp>
+#include <catch2/matchers/catch_matchers_range_equals.hpp>
 
 #include "Defines.hpp"
 
-#include "Simple-Utility/graph/Traverse.hpp"
-
-#include <array>
-#include <iterator>
-#include <numeric>
-#include <vector>
+#include "Simple-Utility/test_util/Catch2Ext.hpp"
+#include "Simple-Utility/test_util/TrompeloeilExt.hpp"
 
 // ReSharper disable CppDeclaratorNeverUsed
 // ReSharper disable CppTypeAliasNeverUsed
@@ -29,7 +28,7 @@ namespace
 
 		int vertex{};
 
-		friend bool operator==(const VertexMemberNode&, const VertexMemberNode&) = default;
+		friend bool operator==(const VertexMemberNode& lhs, const VertexMemberNode& rhs) { return lhs.vertex == rhs.vertex; };
 	};
 
 	struct DefaultConstructibleQueue
@@ -87,10 +86,12 @@ TEST_CASE("BasicState is constructible from origin node.", "[graph][graph::trave
 TEST_CASE("BasicState::next accepts current neighbors and returns the next node, if present.", "[graph][graph::traverse][graph::detail]")
 {
 	using trompeloeil::_;
+	using namespace  trompeloeil_ext;
+	using namespace Catch::Matchers;
+	using namespace catch_ext;
 
 	DefaultQueue queueMock{};
-	REQUIRE_CALL(queueMock, do_insert(_))
-		.WITH(std::ranges::equal(std::array{DefaultNode{42}}, _1));
+	REQUIRE_CALL(queueMock, do_insert(matches(RangeEquals(std::array{DefaultNode{42}}))));
 	DefaultState state{{42}, std::move(queueMock)};
 
 	SECTION("Providing neighbor infos on next call.")
@@ -99,8 +100,7 @@ TEST_CASE("BasicState::next accepts current neighbors and returns the next node,
 		auto& queueMember = const_cast<DefaultQueue&>(state.queue());
 
 		trompeloeil::sequence seq{};
-		REQUIRE_CALL(queueMember, do_insert(_))
-			.WITH(std::ranges::is_permutation(neighbors, _1))
+		REQUIRE_CALL(queueMember, do_insert(matches(UnorderedRangeEquals(neighbors))))
 			.IN_SEQUENCE(seq);
 
 		REQUIRE_CALL(queueMember, empty())
@@ -115,8 +115,7 @@ TEST_CASE("BasicState::next accepts current neighbors and returns the next node,
 
 		SECTION("And when the internal queue depletes.")
 		{
-			REQUIRE_CALL(queueMember, do_insert(_))
-				.WITH(std::ranges::empty(_1))
+			REQUIRE_CALL(queueMember, do_insert(matches(RangesEmpty{})))
 				.IN_SEQUENCE(seq);
 
 			REQUIRE_CALL(queueMember, empty())
