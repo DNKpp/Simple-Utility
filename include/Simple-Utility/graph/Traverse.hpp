@@ -16,6 +16,7 @@
 #include "Simple-Utility/graph/Queue.hpp"
 #include "Simple-Utility/graph/Tracker.hpp"
 
+#include <array>
 #include <concepts>
 #include <ranges>
 #include <type_traits>
@@ -30,16 +31,16 @@ namespace sl::graph::detail
 		using queue_type = QueuingStrategy;
 
 		[[nodiscard]]
-		constexpr explicit BasicState(const node_type& origin)
+		constexpr explicit BasicState(node_type origin)
 			: BasicState{std::move(origin), {}}
 		{
 		}
 
 		[[nodiscard]]
-		constexpr explicit BasicState(const node_type& origin, queue_type queue)
+		constexpr explicit BasicState(node_type origin, queue_type queue)
 			: m_Queue{std::move(queue)}
 		{
-			queue::insert(m_Queue, std::views::single(origin));
+			queue::insert(m_Queue, std::array{std::move(origin)});
 		}
 
 		[[nodiscard]]
