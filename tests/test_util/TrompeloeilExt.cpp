@@ -21,5 +21,5 @@ TEST_CASE("trompeloeil_ext::matches can be used to print something to an ostream
 	std::ostringstream ss{};
 	ss << trompeloeil_ext::matches(Catch::Matchers::RangeEquals(std::vector{42, 43, 47}));
 
-	REQUIRE(!std::ranges::empty(ss.view()));
+	REQUIRE(!std::ranges::empty(ss.str()));
 }
