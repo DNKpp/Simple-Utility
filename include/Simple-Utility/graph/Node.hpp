@@ -6,6 +6,8 @@
 #ifndef SIMPLE_UTILITY_GRAPH_NODE_HPP
 #define SIMPLE_UTILITY_GRAPH_NODE_HPP
 
+#pragma once
+
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/graph/Common.hpp"
 

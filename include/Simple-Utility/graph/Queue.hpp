@@ -6,6 +6,8 @@
 #ifndef SIMPLE_UTILITY_GRAPH_QUEUE_HPP
 #define SIMPLE_UTILITY_GRAPH_QUEUE_HPP
 
+#pragma once
+
 #include "Simple-Utility/graph/Common.hpp"
 #include "Simple-Utility/graph/Node.hpp"
 
