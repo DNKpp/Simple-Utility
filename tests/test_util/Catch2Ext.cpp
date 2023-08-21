@@ -13,3 +13,8 @@ TEST_CASE("catch_ext::RangesEmpty matches empty ranges.", "[test_util][test_util
 	REQUIRE_THAT(std::vector<int>{}, catch_ext::RangesEmpty{});
 	REQUIRE_THAT(std::vector{42}, !catch_ext::RangesEmpty{});
 }
+
+TEST_CASE("catch_ext::RangesEmpty::describe prints a description.", "[test_util][test_util::catch2]")
+{
+	REQUIRE_THAT(catch_ext::RangesEmpty{}.describe(), !catch_ext::RangesEmpty{});
+}
