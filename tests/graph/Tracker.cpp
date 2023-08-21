@@ -5,11 +5,14 @@
 
 #include "Simple-Utility/graph/Tracker.hpp"
 
+#include <catch2/catch_template_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/generators/catch_generators_adapters.hpp>
 #include <catch2/generators/catch_generators_random.hpp>
 
 #include "Defines.hpp"
+
+#include <string>
 
 // ReSharper disable CppDeclaratorNeverUsed
 
@@ -87,4 +90,19 @@ TEST_CASE("graph::queue::set_visited serves as a customization point, modifing t
 
 		sg::tracker::set_visited(mock, vertex);
 	}
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"concepts::tracker_for determines, whether the given type can be used to track the visitation state of the specified vertex.",
+	"[graph][graph::concepts][graph::tracker]",
+	((bool expected, class T, class Vertex), expected, T, Vertex),
+	(false, member_fun_set_discovered, int),
+	(false, free_fun_set_discovered, int),
+	(false, member_fun_set_visited, int),
+	(false, free_fun_set_visited, int),
+	(false, TrackerMock<int>, std::string),
+	(true, TrackerMock<int>, int)
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::tracker_for<T, Vertex>);
 }

@@ -8,8 +8,9 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/trompeloeil.hpp>
 
-#include <Simple-Utility/graph/Common.hpp>
-#include <Simple-Utility/graph/Node.hpp>
+#include "Simple-Utility/graph/Common.hpp"
+#include "Simple-Utility/graph/Node.hpp"
+#include "Simple-Utility/graph/Tracker.hpp"
 
 namespace sg = sl::graph;
 
@@ -48,4 +49,14 @@ public:
 		std::ranges::copy(range, std::back_inserter(vector));
 		queue.do_insert(std::move(vector));
 	}
+};
+
+template <sg::concepts::vertex Vertex>
+class TrackerMock
+{
+public:
+	inline static constexpr bool trompeloeil_movable_mock = true;
+
+	MAKE_MOCK1(set_discovered, bool(const Vertex&));
+	MAKE_MOCK1(set_visited, void(const Vertex&));
 };

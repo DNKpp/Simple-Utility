@@ -12,6 +12,8 @@
 
 #include <concepts>
 
+#include "Simple-Utility/concepts/stl_extensions.hpp"
+
 namespace sl::graph::tracker::detail
 {
 	struct set_discovered_fn
@@ -53,6 +55,18 @@ namespace sl::graph::tracker
 {
 	inline constexpr detail::set_discovered_fn set_discovered{};
 	inline constexpr detail::set_visited_fn set_visited{};
+}
+
+namespace sl::graph::concepts
+{
+	template <class T, class Vertex>
+	concept tracker_for = sl::concepts::unqualified<T>
+						&& vertex<Vertex>
+						&& requires(T& tracker, const Vertex& v)
+						{
+							{ tracker::set_discovered(tracker, v) } -> std::convertible_to<bool>;
+							tracker::set_visited(tracker, v);
+						};
 }
 
 #endif
