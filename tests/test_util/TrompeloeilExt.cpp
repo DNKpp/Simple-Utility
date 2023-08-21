@@ -15,3 +15,11 @@ TEST_CASE("Catch2 matchers can be used as argument for the trompeloeil_ext::matc
 	REQUIRE(!trompeloeil_ext::matches(Catch::Matchers::RangeEquals(std::vector{42, 47})).matches(data));
 	REQUIRE(trompeloeil_ext::matches(Catch::Matchers::RangeEquals(std::vector{42, 43, 47})).matches(data));
 }
+
+TEST_CASE("trompeloeil_ext::matches can be used to print something to an ostream.", "[test_util][test_util::trompeloeil]")
+{
+	std::ostringstream ss{};
+	ss << trompeloeil_ext::matches(Catch::Matchers::RangeEquals(std::vector{42, 43, 47}));
+
+	REQUIRE(!std::ranges::empty(ss.view()));
+}
