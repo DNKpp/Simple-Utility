@@ -5,4 +5,5 @@ target_sources(
 	"Node.cpp"
 	"Queue.cpp"
 	"Tracker.cpp"
+	"Traverse.cpp"
 )
