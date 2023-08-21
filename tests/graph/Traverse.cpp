@@ -12,8 +12,10 @@
 
 #include "Simple-Utility/graph/Traverse.hpp"
 
+#include <array>
 #include <iterator>
 #include <numeric>
+#include <vector>
 
 // ReSharper disable CppDeclaratorNeverUsed
 // ReSharper disable CppTypeAliasNeverUsed
