@@ -29,9 +29,24 @@ namespace
 			return obj.do_set_discovered(vertex);
 		}
 	};
+
+	struct member_fun_set_visited
+	{
+		MAKE_MOCK1(set_visited, void(int));
+	};
+
+	struct free_fun_set_visited
+	{
+		MAKE_MOCK1(do_set_visited, void(int));
+
+		friend void set_visited(free_fun_set_visited& obj, const int vertex)
+		{
+			return obj.do_set_visited(vertex);
+		}
+	};
 }
 
-TEST_CASE("graph::queue::set_discovered serves as a customization point, modifing the tracker state.", "[graph][graph::queue]")
+TEST_CASE("graph::queue::set_discovered serves as a customization point, modifing the tracker state.", "[graph][graph::tracker]")
 {
 	const int vertex = GENERATE(take(5, random(0, std::numeric_limits<int>::max())));
 	const bool expected = GENERATE(true, false);
@@ -50,5 +65,26 @@ TEST_CASE("graph::queue::set_discovered serves as a customization point, modifin
 		REQUIRE_CALL(mock, do_set_discovered(vertex))
 			.RETURN(expected);
 		REQUIRE(expected == sg::tracker::set_discovered(mock, vertex));
+	}
+}
+
+TEST_CASE("graph::queue::set_visited serves as a customization point, modifing the tracker state.", "[graph][graph::tracker]")
+{
+	const int vertex = GENERATE(take(5, random(0, std::numeric_limits<int>::max())));
+
+	SECTION("Access via the member function.")
+	{
+		member_fun_set_visited mock{};
+		REQUIRE_CALL(mock, set_visited(vertex));
+
+		sg::tracker::set_visited(mock, vertex);
+	}
+
+	SECTION("Access via the free function.")
+	{
+		free_fun_set_visited mock{};
+		REQUIRE_CALL(mock, do_set_visited(vertex));
+
+		sg::tracker::set_visited(mock, vertex);
 	}
 }

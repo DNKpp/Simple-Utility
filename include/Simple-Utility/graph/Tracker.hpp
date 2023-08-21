@@ -30,11 +30,29 @@ namespace sl::graph::tracker::detail
 			return set_discovered(tracker, v);
 		}
 	};
+
+	struct set_visited_fn
+	{
+		template <class T, concepts::vertex Vertex>
+			requires requires(T& t, const Vertex& v) { t.set_visited(v); }
+		constexpr void operator ()(T& tracker, const Vertex& v) const noexcept(noexcept(tracker.set_visited(v)))
+		{
+			tracker.set_visited(v);
+		}
+
+		template <class T, concepts::vertex Vertex>
+			requires requires(T& t, const Vertex& v) { set_visited(t, v); }
+		constexpr void operator ()(T& tracker, const Vertex& v) const noexcept(noexcept(set_visited(tracker, v)))
+		{
+			set_visited(tracker, v);
+		}
+	};
 }
 
 namespace sl::graph::tracker
 {
 	inline constexpr detail::set_discovered_fn set_discovered{};
+	inline constexpr detail::set_visited_fn set_visited{};
 }
 
 #endif
