@@ -107,8 +107,10 @@ namespace sl::graph::queue::detail
 			using difference_type = std::ptrdiff_t;
 
 			T* dummy{};
+
 			// ReSharper disable once CppFunctionIsNotImplemented
 			T& operator *() const { return *dummy; }
+
 			// ReSharper disable once CppFunctionIsNotImplemented
 			input_iterator& operator ++();
 			// ReSharper disable once CppFunctionIsNotImplemented
@@ -133,7 +135,8 @@ namespace sl::graph::concepts
 	template <class T, class Node>
 	concept queue_for = sl::concepts::unqualified<T>
 						&& node<Node>
-						&& requires(T& queue, queue::detail::dummy_input_range<Node> inputRange)
+						// ReSharper disable once CppRedundantTemplateKeyword
+						&& requires(T& queue, queue::detail::template dummy_input_range<Node> inputRange)
 						{
 							{ queue::empty(std::as_const(queue)) } -> std::convertible_to<bool>;
 							queue::insert(queue, inputRange);
