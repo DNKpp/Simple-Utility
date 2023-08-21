@@ -35,6 +35,29 @@ namespace
 			return v.my_vertex();
 		}
 	};
+
+	struct minimal_node
+	{
+		using vertex_type = int;
+
+		vertex_type vertex;
+	};
+
+	struct minimal_node_factory
+	{
+		using node_type = minimal_node;
+		using vertex_type = sg::feature_vertex_t<node_type>;
+
+		static node_type make_init_node(const vertex_type& v)
+		{
+			return {.vertex = v};
+		}
+
+		static node_type make_init_node([[maybe_unused]] const node_type& predecessor, const vertex_type& v)
+		{
+			return {.vertex = v};
+		}
+	};
 }
 
 TEST_CASE("graph::node::vertex serves as a customization point accessing the node vertex.", "[graph][graph::node]")
@@ -74,4 +97,15 @@ TEMPLATE_TEST_CASE_SIG(
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::node<T>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"concepts::node_factory_for determines, whether the given type satisfies the requirements of a node_factory for the specified node type.",
+	"[graph][graph::concepts]",
+	((bool expected, class Factory, class Node), expected, Factory, Node),
+	(false, minimal_node_factory, BasicTestNode<int>),
+	(true, minimal_node_factory, minimal_node)
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::node_factory_for<Factory, Node>);
 }

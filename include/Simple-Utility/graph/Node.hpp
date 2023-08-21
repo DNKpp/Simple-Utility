@@ -52,5 +52,15 @@ namespace sl::graph::concepts
 					{
 						requires concepts::vertex<std::remove_cvref_t<decltype(node::vertex(node))>>;
 					};
+
+	template <class T, class Node>
+	concept node_factory_for = sl::concepts::unqualified<T>
+							&& node<Node>
+							&& std::destructible<T>
+							&& requires(T& factory, const Node& node)
+							{
+								{ factory.make_init_node(node::vertex(node)) } -> std::convertible_to<Node>;
+								{ factory.make_successor_node(node, node::vertex(node)) } -> std::convertible_to<Node>;
+							};
 }
 #endif
