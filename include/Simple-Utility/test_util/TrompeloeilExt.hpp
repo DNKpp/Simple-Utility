@@ -37,7 +37,7 @@ namespace trompeloeil_ext
 				},
 				[](std::ostream& os, const matcher_type& matcher)
 				{
-					os << "matching matcher: " << matcher.describe();
+					os << " matching matcher: " << matcher.describe();
 				},
 				std::forward<Matcher>(matcher));
 		}
