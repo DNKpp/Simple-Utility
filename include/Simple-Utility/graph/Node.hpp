@@ -62,5 +62,11 @@ namespace sl::graph::concepts
 								{ factory.make_init_node(node::vertex(node)) } -> std::convertible_to<Node>;
 								{ factory.make_successor_node(node, node::vertex(node)) } -> std::convertible_to<Node>;
 							};
+
+	template <class T, class Other>
+	concept compatible_with = std::same_as<
+								feature_category_t<T>,
+								common_feature_category_t<feature_category_t<T>, feature_category_t<Other>>>
+							&& std::convertible_to<feature_vertex_t<Other>, feature_vertex_t<T>>;
 }
 #endif

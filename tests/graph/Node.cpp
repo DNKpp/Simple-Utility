@@ -109,3 +109,14 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(expected == sg::concepts::node_factory_for<Factory, Node>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"concepts::compatible_with determines, whether the other type is compatible with T.",
+	"[graph][graph::concepts]",
+	((bool expected, class T, class Other), expected, T, Other),
+	(false, minimal_node, BasicTestNode<std::string>),
+	(true, minimal_node, BasicTestNode<int>)
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::compatible_with<T, Other>);
+}
