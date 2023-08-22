@@ -64,7 +64,9 @@ namespace sl::graph::concepts
 							};
 
 	template <class T, class Other>
-	concept compatible_with = std::same_as<
+	concept compatible_with = node<T>
+							&& node<Other>
+							&& std::same_as<
 								feature_category_t<T>,
 								common_feature_category_t<feature_category_t<T>, feature_category_t<Other>>>
 							&& std::convertible_to<feature_vertex_t<Other>, feature_vertex_t<T>>;
