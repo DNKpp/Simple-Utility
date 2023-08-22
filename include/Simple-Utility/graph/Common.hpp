@@ -10,6 +10,7 @@
 
 #include "Simple-Utility/TypeList.hpp"
 #include "Simple-Utility/concepts/operators.hpp"
+#include "Simple-Utility/concepts/stl_extensions.hpp"
 
 #include <algorithm>
 #include <concepts>
@@ -36,12 +37,12 @@ namespace sl::graph::concepts
 	concept feature_category = type_list::contains_v<detail::feature_category_list, T>;
 
 	template <class T>
-	concept vertex = std::same_as<T, std::remove_cvref_t<T>>
+	concept vertex = sl::concepts::unqualified<T>
 					&& std::equality_comparable<T>
 					&& std::copyable<T>;
 
 	template <class T>
-	concept rank = std::same_as<T, std::remove_cvref_t<T>>
+	concept rank = sl::concepts::unqualified<T>
 					&& std::totally_ordered<T>
 					&& std::regular<T>
 					&& sl::concepts::plus<T>
