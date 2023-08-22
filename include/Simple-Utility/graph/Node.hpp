@@ -60,7 +60,7 @@ namespace sl::graph::concepts
 							&& requires(T& factory, const Node& node)
 							{
 								{ factory.make_init_node(node::vertex(node)) } -> std::convertible_to<Node>;
-								{ factory.make_successor_node(node, node::vertex(node)) } -> std::convertible_to<Node>;
+								{ factory.make_successor_node(node, {}) } -> std::convertible_to<Node>;
 							};
 
 	template <class T, class Other>
