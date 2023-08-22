@@ -60,3 +60,17 @@ public:
 	MAKE_MOCK1(set_discovered, bool(const Vertex&));
 	MAKE_MOCK1(set_visited, void(const Vertex&));
 };
+
+template <sg::concepts::node Node>
+class BasicNodeFactoryMock
+{
+public:
+	inline static constexpr bool trompeloeil_movable_mock = true;
+
+	using vertex_type = sg::feature_vertex_t<Node>;
+
+	using info_layout = std::tuple<vertex_type>;
+
+	MAKE_MOCK1(make_init_node, Node(const vertex_type&));
+	MAKE_MOCK2(make_successor_node, Node(const Node&, const info_layout&));
+};
