@@ -93,6 +93,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, member_vertex),
 	(false, member_fun_vertex),
 	(false, free_fun_vertex),
+	(true, minimal_node),
 	(true, BasicTestNode<int>)
 )
 {
@@ -103,8 +104,9 @@ TEMPLATE_TEST_CASE_SIG(
 	"concepts::node_factory_for determines, whether the given type satisfies the requirements of a node_factory for the specified node type.",
 	"[graph][graph::concepts]",
 	((bool expected, class Factory, class Node), expected, Factory, Node),
-	//(false, minimal_node_factory, BasicTestNode<int>),
-	(true, minimal_node_factory, minimal_node)
+	(false, minimal_node_factory, BasicTestNode<int>),
+	(true, minimal_node_factory, minimal_node),
+	(true, BasicNodeFactoryMock<minimal_node>, minimal_node)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::node_factory_for<Factory, Node>);
