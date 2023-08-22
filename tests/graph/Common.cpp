@@ -259,3 +259,27 @@ TEST_CASE(
 	STATIC_REQUIRE(std::same_as<float, sg::feature_traits<TestType>::rank_type>);
 	STATIC_REQUIRE(std::same_as<float, sg::feature_rank_t<TestType>>);
 }
+
+TEMPLATE_TEST_CASE(
+	"Listed types yield at least basic_feature_category.",
+	"[graph][graph::traits]",
+	BasicTestNode<std::string>,
+	(RankedTestNode<std::string, int>),
+	(BasicGraph<BasicTestNode<std::string>>::info)
+)
+{
+	STATIC_REQUIRE(std::same_as<
+		sg::basic_feature_category,
+		sg::common_feature_category_t<sg::basic_feature_category, sg::feature_category_t<TestType>>>);
+}
+
+TEMPLATE_TEST_CASE(
+	"Listed types yield at least ranked_feature_category.",
+	"[graph][graph::traits]",
+	(RankedTestNode<std::string, int>)
+)
+{
+	STATIC_REQUIRE(std::same_as<
+		sg::ranked_feature_category,
+		sg::common_feature_category_t<sg::ranked_feature_category, sg::feature_category_t<TestType>>>);
+}
