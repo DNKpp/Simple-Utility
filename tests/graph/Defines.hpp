@@ -30,6 +30,29 @@ struct BasicTestNode
 	}
 };
 
+template <sg::concepts::vertex Vertex, sg::concepts::rank Rank>
+struct RankedTestNode
+{
+	using vertex_type = Vertex;
+	using rank_type = Rank;
+
+	struct Mock
+	{
+		MAKE_CONST_MOCK1(vertex, vertex_type(const RankedTestNode&));
+		MAKE_CONST_MOCK1(rank, rank_type(const RankedTestNode&));
+	} inline static mock{};
+
+	friend constexpr vertex_type vertex(const RankedTestNode& node)
+	{
+		return mock.vertex(node);
+	}
+
+	friend constexpr rank_type rank(const RankedTestNode& node)
+	{
+		return mock.rank(node);
+	}
+};
+
 template <sg::concepts::node Node>
 class QueueMock
 {
