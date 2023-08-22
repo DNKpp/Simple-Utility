@@ -70,5 +70,16 @@ namespace sl::graph::concepts
 								feature_category_t<T>,
 								common_feature_category_t<feature_category_t<T>, feature_category_t<Other>>>
 							&& std::convertible_to<feature_vertex_t<Other>, feature_vertex_t<T>>;
+
+	template <class T, class Node>
+	concept graph_for = sl::concepts::unqualified<T>
+						&& node<Node>
+						&& requires(const T& graph, const Node& node)
+						{
+							{ graph.neighbor_infos(node) } -> std::ranges::input_range;
+							requires compatible_with<
+								Node,
+								std::ranges::range_value_t<decltype(graph.neighbor_infos(node))>>;
+						};
 }
 #endif

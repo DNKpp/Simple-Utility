@@ -144,3 +144,18 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(expected == sg::concepts::compatible_with<T, Other>);
 }
+
+TEMPLATE_TEST_CASE_SIG(
+	"concepts::graph_for determines, whether the graph type satisfies the minimal requirements of the specified node.",
+	"[graph][graph::concepts]",
+	((bool expected, class Graph, class Node), expected, Graph, Node),
+	(true, generic_basic_graph, minimal_node),
+	(true, generic_basic_graph, BasicTestNode<int>),
+	(false, generic_basic_graph, BasicTestNode<std::string>),
+	(true, BasicGraph<minimal_node>, minimal_node),
+	(false, BasicGraph<minimal_node>, BasicTestNode<int>),
+	(false, BasicGraph<minimal_node>, BasicTestNode<std::string>)
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::graph_for<Graph, Node>);
+}

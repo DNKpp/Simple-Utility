@@ -74,7 +74,18 @@ public:
 	MAKE_MOCK2(make_successor_node, Node(const Node&, const VertexInfo&));
 };
 
+template <sg::concepts::node Node>
+class BasicGraph
+{
+public:
+	struct info
+	{
+		using vertex_type = sg::feature_vertex_t<Node>;
 
-	MAKE_MOCK1(make_init_node, Node(const vertex_type&));
-	MAKE_MOCK2(make_successor_node, Node(const Node&, const info_layout&));
+		vertex_type vertex;
+
+		friend bool operator ==(const info&, const info&) = default; 
+	};
+
+	MAKE_CONST_MOCK1(neighbor_infos, std::vector<info>(const Node&));
 };
