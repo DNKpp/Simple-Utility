@@ -58,6 +58,20 @@ namespace
 			return {.vertex = v};
 		}
 	};
+
+	struct generic_basic_graph
+	{
+		struct info
+		{
+			using vertex_type = int;
+			vertex_type vertex;
+		};
+
+		std::vector<info> neighbor_infos(const sg::concepts::node auto&) const
+		{
+			return {};
+}
+	};
 }
 
 TEST_CASE("graph::node::vertex serves as a customization point accessing the node vertex.", "[graph][graph::node]")
@@ -94,7 +108,9 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, member_fun_vertex),
 	(false, free_fun_vertex),
 	(true, minimal_node),
-	(true, BasicTestNode<int>)
+	(true, BasicTestNode<int>),
+	(true, generic_basic_graph::info),
+	(true, BasicGraph<minimal_node>::info)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::node<T>);
@@ -106,7 +122,7 @@ TEMPLATE_TEST_CASE_SIG(
 	((bool expected, class Factory, class Node), expected, Factory, Node),
 	(false, minimal_node_factory, BasicTestNode<int>),
 	(true, minimal_node_factory, minimal_node),
-	(true, BasicNodeFactoryMock<minimal_node>, minimal_node)
+	(true, BasicNodeFactoryMock<minimal_node, generic_basic_graph::info>, minimal_node)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::node_factory_for<Factory, Node>);
@@ -117,7 +133,13 @@ TEMPLATE_TEST_CASE_SIG(
 	"[graph][graph::concepts]",
 	((bool expected, class T, class Other), expected, T, Other),
 	(false, minimal_node, BasicTestNode<std::string>),
-	(true, minimal_node, BasicTestNode<int>)
+	(true, minimal_node, BasicTestNode<int>),
+	(true, minimal_node, BasicGraph<minimal_node>::info),
+	(true, BasicTestNode<int>, BasicGraph<minimal_node>::info),
+	(false, BasicTestNode<std::string>, BasicGraph<minimal_node>::info),
+	(true, minimal_node, generic_basic_graph::info),
+	(true, BasicTestNode<int>, generic_basic_graph::info),
+	(false, BasicTestNode<std::string>, generic_basic_graph::info)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::compatible_with<T, Other>);
