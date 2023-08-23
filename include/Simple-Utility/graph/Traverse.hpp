@@ -40,7 +40,7 @@ namespace sl::graph::detail
 		constexpr explicit BasicState(queue_type queue) noexcept(std::is_nothrow_move_constructible_v<queue_type>)
 			: m_Queue{std::move(queue)}
 		{
-			assert(queue::empty(m_Queue) && "Queue contains already elements.");
+			assert(queue::empty(m_Queue) && "Queue already contains elements.");
 		}
 
 		[[nodiscard]]
