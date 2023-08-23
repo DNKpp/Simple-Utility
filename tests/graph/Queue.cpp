@@ -4,6 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "Simple-Utility/graph/Queue.hpp"
+#include "Simple-Utility/graph/mixins/queue/Stack.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
@@ -102,7 +103,7 @@ struct sl::graph::customize::insert_fn<customized_fun_insert>
 	void operator ()(customized_fun_insert& e, std::vector<TestNode> v) const
 	{
 		e.do_insert(std::move(v));
-}
+	}
 };
 
 template <>
@@ -141,7 +142,7 @@ TEST_CASE("graph::queue::empty serves as a customization point, detmerining whet
 		REQUIRE_CALL(mock, is_empty())
 			.RETURN(expected);
 		REQUIRE(expected == sg::queue::empty(std::as_const(mock)));
-}
+	}
 }
 
 TEST_CASE("graph::queue::insert serves as a customization point, inserting the range elements.", "[graph][graph::queue]")
@@ -204,7 +205,7 @@ TEST_CASE("graph::queue::next serves as a customization point, retrieving the ne
 			.RETURN(expected);
 
 		REQUIRE(expected == sg::queue::next(mock));
-}
+	}
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -218,7 +219,8 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, member_fun_next),
 	(false, free_fun_next),
 	(false, QueueMock<BasicTestNode<int>>),
-	(true, QueueMock<TestNode>)
+	(true, QueueMock<TestNode>),
+	(true, std::stack<TestNode>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::queue_for<T, TestNode>);
