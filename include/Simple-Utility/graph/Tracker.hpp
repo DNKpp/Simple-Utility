@@ -8,45 +8,100 @@
 
 #pragma once
 
+#include "Simple-Utility/Utility.hpp"
+#include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/graph/Common.hpp"
 
+// ReSharper disable once CppUnusedIncludeDirective
 #include <concepts>
 
-#include "Simple-Utility/concepts/stl_extensions.hpp"
+namespace sl::graph::customize
+{
+	template <class>
+	struct set_discovered_fn;
+
+	template <class>
+	struct set_visited_fn;
+}
 
 namespace sl::graph::tracker::detail
 {
+	template <class T, concepts::vertex Vertex>
+		requires requires(T& t, const Vertex& v) { { customize::set_discovered_fn<T>{}(t, v) } -> std::convertible_to<bool>; }
+	constexpr bool set_discovered(
+		T& tracker,
+		const Vertex& v,
+		const priority_tag<2>
+	) noexcept(noexcept(customize::set_discovered_fn<T>{}(tracker, v)))
+	{
+		return customize::set_discovered_fn<T>{}(tracker, v);
+	}
+
+	template <class T, concepts::vertex Vertex>
+		requires requires(T& t, const Vertex& v) { { t.set_discovered(v) } -> std::convertible_to<bool>; }
+	constexpr bool set_discovered(T& tracker, const Vertex& v, const priority_tag<1>) noexcept(noexcept(tracker.set_discovered(v)))
+	{
+		return tracker.set_discovered(v);
+	}
+
+	template <class T, concepts::vertex Vertex>
+		requires requires(T& t, const Vertex& v) { { set_discovered(t, v) } -> std::convertible_to<bool>; }
+	constexpr bool set_discovered(T& tracker, const Vertex& v, const priority_tag<0>) noexcept(noexcept(set_discovered(tracker, v)))
+	{
+		return set_discovered(tracker, v);
+	}
+
 	struct set_discovered_fn
 	{
 		template <class T, concepts::vertex Vertex>
-			requires requires(T& t, const Vertex& v) { { t.set_discovered(v) } -> std::convertible_to<bool>; }
-		constexpr bool operator ()(T& tracker, const Vertex& v) const noexcept(noexcept(tracker.set_discovered(v)))
+			requires requires(T& t, const Vertex& v)
+			{
+				{ detail::set_discovered(t, v, priority_tag<2>{}) } -> std::convertible_to<bool>;
+			}
+		constexpr bool operator ()(
+			T& tracker,
+			const Vertex& v
+		) const noexcept(noexcept(detail::set_discovered(tracker, v, priority_tag<2>{})))
 		{
-			return tracker.set_discovered(v);
-		}
-
-		template <class T, concepts::vertex Vertex>
-			requires requires(T& t, const Vertex& v) { { set_discovered(t, v) } -> std::convertible_to<bool>; }
-		constexpr bool operator ()(T& tracker, const Vertex& v) const noexcept(noexcept(set_discovered(tracker, v)))
-		{
-			return set_discovered(tracker, v);
+			return detail::set_discovered(tracker, v, priority_tag<2>{});
 		}
 	};
+
+	template <class T, concepts::vertex Vertex>
+		requires requires(T& t, const Vertex& v) { customize::set_visited_fn<T>{}(t, v); }
+	constexpr void set_visited(
+		T& tracker,
+		const Vertex& v,
+		const priority_tag<2>
+	) noexcept(noexcept(customize::set_visited_fn<T>{}(tracker, v)))
+	{
+		customize::set_visited_fn<T>{}(tracker, v);
+	}
+
+	template <class T, concepts::vertex Vertex>
+		requires requires(T& t, const Vertex& v) { t.set_visited(v); }
+	constexpr void set_visited(T& tracker, const Vertex& v, const priority_tag<1>) noexcept(noexcept(tracker.set_visited(v)))
+	{
+		tracker.set_visited(v);
+	}
+
+	template <class T, concepts::vertex Vertex>
+		requires requires(T& t, const Vertex& v) { set_visited(t, v); }
+	constexpr void set_visited(T& tracker, const Vertex& v, const priority_tag<0>) noexcept(noexcept(set_visited(tracker, v)))
+	{
+		set_visited(tracker, v);
+	}
 
 	struct set_visited_fn
 	{
 		template <class T, concepts::vertex Vertex>
-			requires requires(T& t, const Vertex& v) { t.set_visited(v); }
-		constexpr void operator ()(T& tracker, const Vertex& v) const noexcept(noexcept(tracker.set_visited(v)))
+			requires requires(T& t, const Vertex& v) { detail::set_visited(t, v, priority_tag<2>{}); }
+		constexpr void operator ()(
+			T& tracker,
+			const Vertex& v
+		) const noexcept(noexcept(detail::set_visited(tracker, v, priority_tag<2>{})))
 		{
-			tracker.set_visited(v);
-		}
-
-		template <class T, concepts::vertex Vertex>
-			requires requires(T& t, const Vertex& v) { set_visited(t, v); }
-		constexpr void operator ()(T& tracker, const Vertex& v) const noexcept(noexcept(set_visited(tracker, v)))
-		{
-			set_visited(tracker, v);
+			detail::set_visited(tracker, v, priority_tag<2>{});
 		}
 	};
 }
