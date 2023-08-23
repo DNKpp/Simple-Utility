@@ -155,17 +155,16 @@ TEST_CASE("BasicTraverseDriver::next returns the current node, or std::nullopt."
 
 	SECTION("Next returns a node.")
 	{
+		// vertex 43 will be skipped on purpose
 		REQUIRE_CALL(graphMock, neighbor_infos(originNode))
 			.RETURN(std::vector<VertexInfo>{{41}, {43}, {44}});
 
 		REQUIRE_CALL(nodeFactoryMock, make_successor_node(originNode, VertexInfo{41}))
 			.RETURN(DefaultNode{.vertex = 41});
-		REQUIRE_CALL(nodeFactoryMock, make_successor_node(originNode, VertexInfo{43}))
-			.RETURN(DefaultNode{.vertex = 43});
 		REQUIRE_CALL(nodeFactoryMock, make_successor_node(originNode, VertexInfo{44}))
 			.RETURN(DefaultNode{.vertex = 44});
 
-		REQUIRE_CALL(queueMock, do_insert(matches(RangeEquals(std::vector<DefaultNode>{{41}, {43}, {44}}))));
+		REQUIRE_CALL(queueMock, do_insert(matches(RangeEquals(std::vector<DefaultNode>{{41}, {44}}))));
 		REQUIRE_CALL(queueMock, empty())
 			.RETURN(false);
 		REQUIRE_CALL(queueMock, next())
@@ -174,7 +173,7 @@ TEST_CASE("BasicTraverseDriver::next returns the current node, or std::nullopt."
 		REQUIRE_CALL(trackerMock, set_discovered(41))
 			.RETURN(true);
 		REQUIRE_CALL(trackerMock, set_discovered(43))
-			.RETURN(true);
+			.RETURN(false);
 		REQUIRE_CALL(trackerMock, set_discovered(44))
 			.RETURN(true);
 		REQUIRE_CALL(trackerMock, set_visited(41))
