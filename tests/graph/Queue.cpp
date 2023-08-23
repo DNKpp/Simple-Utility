@@ -31,6 +31,11 @@ namespace
 		}
 	};
 
+	struct customized_fun_empty
+	{
+		MAKE_CONST_MOCK0(is_empty, bool());
+	};
+
 	struct TestNode
 	{
 		// ReSharper disable once CppTypeAliasNeverUsed
@@ -55,6 +60,11 @@ namespace
 		}
 	};
 
+	struct customized_fun_insert
+	{
+		MAKE_MOCK1(do_insert, void(std::vector<TestNode>));
+	};
+
 	struct member_fun_next
 	{
 		MAKE_MOCK0(next, TestNode());
@@ -69,7 +79,41 @@ namespace
 			return obj.get_next();
 		}
 	};
+
+	struct customized_fun_next
+	{
+		MAKE_MOCK0(get_next, TestNode());
+	};
 }
+
+template <>
+struct sl::graph::customize::empty_fn<customized_fun_empty>
+{
+	[[nodiscard]]
+	bool operator ()(const customized_fun_empty& e) const
+	{
+		return e.is_empty();
+	}
+};
+
+template <>
+struct sl::graph::customize::insert_fn<customized_fun_insert>
+{
+	void operator ()(customized_fun_insert& e, std::vector<TestNode> v) const
+	{
+		e.do_insert(std::move(v));
+}
+};
+
+template <>
+struct sl::graph::customize::next_fn<customized_fun_next>
+{
+	[[nodiscard]]
+	decltype(auto) operator ()(customized_fun_next& e) const
+	{
+		return e.get_next();
+	}
+};
 
 TEST_CASE("graph::queue::empty serves as a customization point, detmerining whether the queue is empty.", "[graph][graph::queue]")
 {
@@ -90,6 +134,14 @@ TEST_CASE("graph::queue::empty serves as a customization point, detmerining whet
 			.RETURN(expected);
 		REQUIRE(expected == sg::queue::empty(std::as_const(mock)));
 	}
+
+	SECTION("Access via the customizization point.")
+	{
+		customized_fun_empty mock{};
+		REQUIRE_CALL(mock, is_empty())
+			.RETURN(expected);
+		REQUIRE(expected == sg::queue::empty(std::as_const(mock)));
+}
 }
 
 TEST_CASE("graph::queue::insert serves as a customization point, inserting the range elements.", "[graph][graph::queue]")
@@ -109,6 +161,14 @@ TEST_CASE("graph::queue::insert serves as a customization point, inserting the r
 	SECTION("Access via the free function.")
 	{
 		free_fun_insert mock{};
+		REQUIRE_CALL(mock, do_insert(expected));
+
+		sg::queue::insert(mock, expected);
+	}
+
+	SECTION("Access via the customization point.")
+	{
+		customized_fun_insert mock{};
 		REQUIRE_CALL(mock, do_insert(expected));
 
 		sg::queue::insert(mock, expected);
@@ -136,6 +196,15 @@ TEST_CASE("graph::queue::next serves as a customization point, retrieving the ne
 
 		REQUIRE(expected == sg::queue::next(mock));
 	}
+
+	SECTION("Access via the customization point.")
+	{
+		customized_fun_next mock{};
+		REQUIRE_CALL(mock, get_next())
+			.RETURN(expected);
+
+		REQUIRE(expected == sg::queue::next(mock));
+}
 }
 
 TEMPLATE_TEST_CASE_SIG(

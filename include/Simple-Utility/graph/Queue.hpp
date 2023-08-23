@@ -13,64 +13,148 @@
 
 #include <ranges>
 
+namespace sl::graph::customize
+{
+	template <class>
+	struct empty_fn;
+
+	template <class>
+	struct insert_fn;
+
+	template <class>
+	struct next_fn;
+}
+
 namespace sl::graph::queue::detail
 {
+	template <std::size_t rank>
+	struct priority_tag
+		: public priority_tag<rank - 1>
+	{
+	};
+
+	template <>
+	struct priority_tag<0>
+	{
+	};
+
+	template <class T>
+		requires requires(const T& t) { { customize::empty_fn<T>{}(t) } -> std::convertible_to<bool>; }
+	constexpr bool empty(const T& queue, const priority_tag<2>) noexcept(noexcept(customize::empty_fn<T>{}(queue)))
+	{
+		return customize::empty_fn<T>{}(queue);
+	}
+
+	template <class T>
+		requires requires(const T& t) { { t.empty() } -> std::convertible_to<bool>; }
+	constexpr bool empty(const T& queue, const priority_tag<1>) noexcept(noexcept(queue.empty()))
+	{
+		return queue.empty();
+	}
+
+	template <class T>
+		requires requires(const T& t) { { empty(t) } -> std::convertible_to<bool>; }
+	constexpr decltype(auto) empty(const T& queue, const priority_tag<0>) noexcept(noexcept(empty(queue)))
+	{
+		return empty(queue);
+	}
+
 	struct empty_fn
 	{
 		template <class T>
-			requires requires(const T& t) { { t.empty() } -> std::convertible_to<bool>; }
-		constexpr bool operator ()(const T& queue) const noexcept(noexcept(queue.empty()))
+			requires requires(const T& t) { { detail::empty(t, priority_tag<2>{}) } -> std::convertible_to<bool>; }
+		constexpr bool operator ()(const T& queue) const noexcept(noexcept(detail::empty(queue, priority_tag<2>{})))
 		{
-			return queue.empty();
-		}
-
-		template <class T>
-			requires requires(const T& t) { { empty(t) } -> std::convertible_to<bool>; }
-		constexpr decltype(auto) operator ()(const T& queue) const noexcept(noexcept(empty(queue)))
-		{
-			return empty(queue);
+			return detail::empty(queue, priority_tag<2>{});
 		}
 	};
+
+	template <class Queue, std::ranges::input_range Range>
+		requires requires(Queue& queue) { customize::insert_fn<Queue>{}(queue, std::declval<Range&&>()); }
+	constexpr void insert(
+		Queue& queue,
+		Range&& elements,
+		const priority_tag<2>
+	) noexcept(noexcept(customize::insert_fn<Queue>{}(queue, std::forward<Range>(elements))))
+	{
+		customize::insert_fn<Queue>{}(queue, std::forward<Range>(elements));
+	}
+
+	template <class Queue, std::ranges::input_range Range>
+		requires requires(Queue& queue) { queue.insert(std::declval<Range&&>()); }
+	constexpr void insert(
+		Queue& container,
+		Range&& elements,
+		const priority_tag<1>
+	) noexcept(noexcept(container.insert(std::forward<Range>(elements))))
+	{
+		container.insert(std::forward<Range>(elements));
+	}
+
+	template <class Queue, std::ranges::input_range Range>
+		requires requires(Queue& queue) { insert(queue, std::declval<Range&&>()); }
+	constexpr void insert(
+		Queue& container,
+		Range&& elements,
+		const priority_tag<0>
+	) noexcept(noexcept(insert(container, std::forward<Range>(elements))))
+	{
+		insert(container, std::forward<Range>(elements));
+	}
 
 	struct insert_fn
 	{
 		template <class Queue, std::ranges::input_range Range>
-			requires concepts::node<std::ranges::range_value_t<Range>>
-					&& requires(Queue& queue) { queue.insert(std::declval<Range&&>()); }
+			requires requires(Queue& queue) { detail::insert(queue, std::declval<Range&&>(), priority_tag<2>{}); }
 		constexpr void operator ()(
-			Queue& container,
+			Queue& queue,
 			Range&& elements
-		) const noexcept(noexcept(container.insert(std::forward<Range>(elements))))
+		) const noexcept(noexcept(detail::insert(queue, std::forward<Range>(elements), priority_tag<2>{})))
 		{
-			container.insert(std::forward<Range>(elements));
-		}
-
-		template <class Queue, std::ranges::input_range Range>
-			requires concepts::node<std::ranges::range_value_t<Range>>
-					&& requires(Queue& queue) { insert(queue, std::declval<Range&&>()); }
-		constexpr void operator ()(
-			Queue& container,
-			Range&& elements
-		) const noexcept(noexcept(insert(container, std::forward<Range>(elements))))
-		{
-			insert(container, std::forward<Range>(elements));
+			detail::insert(queue, std::forward<Range>(elements), priority_tag<2>{});
 		}
 	};
+
+	template <class Queue>
+		requires requires(Queue& queue)
+		{
+			requires concepts::node<std::remove_cvref_t<decltype(customize::next_fn<Queue>{}(queue))>>;
+		}
+	constexpr decltype(auto) next(Queue& queue, const priority_tag<2>) noexcept(noexcept(customize::next_fn<Queue>{}(queue)))
+	{
+		return customize::next_fn<Queue>{}(queue);
+	}
+
+	template <class Queue>
+		requires requires(Queue& queue)
+		{
+			requires concepts::node<std::remove_cvref_t<decltype(queue.next())>>;
+		}
+	constexpr decltype(auto) next(Queue& queue, const priority_tag<1>) noexcept(noexcept(queue.next()))
+	{
+		return queue.next();
+	}
+
+	template <class Queue>
+		requires requires(Queue& queue)
+		{
+			requires concepts::node<std::remove_cvref_t<decltype(next(queue))>>;
+		}
+	constexpr decltype(auto) next(Queue& queue, const priority_tag<0>) noexcept(noexcept(next(queue)))
+	{
+		return next(queue);
+	}
 
 	struct next_fn
 	{
 		template <class Queue>
-			requires concepts::node<std::remove_cvref_t<decltype(std::declval<Queue&>().next())>>
-		constexpr decltype(auto) operator ()(Queue& queue) const noexcept(noexcept(queue.next()))
+			requires requires(Queue& queue)
+			{
+				requires concepts::node<std::remove_cvref_t<decltype(detail::next(queue, priority_tag<2>{}))>>;
+			}
+		constexpr decltype(auto) operator ()(Queue& queue) const noexcept(noexcept(detail::next(queue, priority_tag<2>{})))
 		{
-			return queue.next();
-		}
-
-		template <class Queue>
-			requires concepts::node<std::remove_cvref_t<decltype(next(std::declval<Queue&>()))>>
-		constexpr decltype(auto) operator ()(Queue& queue) const noexcept(noexcept(next(queue)))
-		{
-			return next(queue);
+			return detail::next(queue, priority_tag<2>{});
 		}
 	};
 }
