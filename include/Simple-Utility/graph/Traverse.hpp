@@ -107,10 +107,11 @@ namespace sl::graph::detail
 			assert(result && "Tracker returned false (already visited) the origin node.");
 		}
 
+		template <concepts::graph_for<node_type> Graph> // let the concept here, because otherwise it results in an ICE on msvc v142
 		[[nodiscard]]
-		constexpr std::optional<node_type> next(const concepts::graph_for<Node> auto& graph)
+		constexpr std::optional<node_type> next(const Graph& graph)
 		{
-			auto result = m_State.next(
+			std::optional result = m_State.next(
 				graph.neighbor_infos(m_Current)
 				| std::views::filter(
 					[&](const auto& info) { return tracker::set_discovered(m_Tracker, node::vertex(info)); })
