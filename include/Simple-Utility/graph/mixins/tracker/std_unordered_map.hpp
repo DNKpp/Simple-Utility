@@ -17,21 +17,21 @@ template <sl::graph::concepts::vertex Key, class Hash, class KeyEqual, class All
 struct sl::graph::customize::set_discovered_fn<std::unordered_map<Key, bool, Hash, KeyEqual, Allocator>>
 {
 	template <std::convertible_to<Key> K>
-	bool operator ()(std::unordered_map<Key, bool, Hash, KeyEqual, Allocator>& container, K&& vertex)
+	bool operator ()(std::unordered_map<Key, bool, Hash, KeyEqual, Allocator>& container, K&& vertex) const
 	{
-		const auto [_, inserted] = container.try_emplace(std::forward<K>(vertex), false);
-		return !inserted;
+		const auto [iter, inserted] = container.try_emplace(std::forward<K>(vertex), false);
+		return inserted || !iter->second;
 	}
 };
 
 template <sl::graph::concepts::vertex Key, class Hash, class KeyEqual, class Allocator>
 struct sl::graph::customize::set_visited_fn<std::unordered_map<Key, bool, Hash, KeyEqual, Allocator>>
 {
-	template <std::convertible_to<Key> K>
-	constexpr void operator ()(std::unordered_map<Key, bool, Hash, KeyEqual, Allocator>& container, K&& vertex) const
+	bool operator ()(std::unordered_map<Key, bool, Hash, KeyEqual, Allocator>& container, const Key& vertex) const
 	{
-		const auto [iter, inserted] = container.insert_or_assign(std::forward<K>(vertex), true);
-		assert(!inserted && "Visited a vertex which hasn't been discovered yet.");
+		const auto iter = container.find(vertex);
+		assert(iter != std::cend(container) && "Visited a vertex which hasn't been discovered yet.");
+		return !std::exchange(iter->second, true);
 	}
 };
 

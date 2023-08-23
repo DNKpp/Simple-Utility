@@ -70,7 +70,7 @@ namespace
 		std::vector<info> neighbor_infos(const sg::concepts::node auto&) const
 		{
 			return {};
-}
+		}
 	};
 }
 

@@ -81,7 +81,7 @@ public:
 	inline static constexpr bool trompeloeil_movable_mock = true;
 
 	MAKE_MOCK1(set_discovered, bool(const Vertex&));
-	MAKE_MOCK1(set_visited, void(const Vertex&));
+	MAKE_MOCK1(set_visited, bool(const Vertex&));
 };
 
 template <sg::concepts::node Node, sg::concepts::node VertexInfo>

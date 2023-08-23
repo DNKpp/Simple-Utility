@@ -58,6 +58,7 @@ namespace sl::graph::tracker::detail
 			{
 				{ detail::set_discovered(t, v, priority_tag<2>{}) } -> std::convertible_to<bool>;
 			}
+		[[nodiscard]]
 		constexpr bool operator ()(
 			T& tracker,
 			const Vertex& v
@@ -68,40 +69,41 @@ namespace sl::graph::tracker::detail
 	};
 
 	template <class T, concepts::vertex Vertex>
-		requires requires(T& t, const Vertex& v) { customize::set_visited_fn<T>{}(t, v); }
-	constexpr void set_visited(
+		requires requires(T& t, const Vertex& v) { { customize::set_visited_fn<T>{}(t, v) } -> std::convertible_to<bool>; }
+	constexpr bool set_visited(
 		T& tracker,
 		const Vertex& v,
 		const priority_tag<2>
 	) noexcept(noexcept(customize::set_visited_fn<T>{}(tracker, v)))
 	{
-		customize::set_visited_fn<T>{}(tracker, v);
+		return customize::set_visited_fn<T>{}(tracker, v);
 	}
 
 	template <class T, concepts::vertex Vertex>
-		requires requires(T& t, const Vertex& v) { t.set_visited(v); }
-	constexpr void set_visited(T& tracker, const Vertex& v, const priority_tag<1>) noexcept(noexcept(tracker.set_visited(v)))
+		requires requires(T& t, const Vertex& v) { { t.set_visited(v) } -> std::convertible_to<bool>; }
+	constexpr bool set_visited(T& tracker, const Vertex& v, const priority_tag<1>) noexcept(noexcept(tracker.set_visited(v)))
 	{
-		tracker.set_visited(v);
+		return tracker.set_visited(v);
 	}
 
 	template <class T, concepts::vertex Vertex>
-		requires requires(T& t, const Vertex& v) { set_visited(t, v); }
-	constexpr void set_visited(T& tracker, const Vertex& v, const priority_tag<0>) noexcept(noexcept(set_visited(tracker, v)))
+		requires requires(T& t, const Vertex& v) { { set_visited(t, v) } -> std::convertible_to<bool>; }
+	constexpr bool set_visited(T& tracker, const Vertex& v, const priority_tag<0>) noexcept(noexcept(set_visited(tracker, v)))
 	{
-		set_visited(tracker, v);
+		return set_visited(tracker, v);
 	}
 
 	struct set_visited_fn
 	{
 		template <class T, concepts::vertex Vertex>
-			requires requires(T& t, const Vertex& v) { detail::set_visited(t, v, priority_tag<2>{}); }
-		constexpr void operator ()(
+			requires requires(T& t, const Vertex& v) { { detail::set_visited(t, v, priority_tag<2>{}) } -> std::convertible_to<bool>; }
+		[[nodiscard]]
+		constexpr bool operator ()(
 			T& tracker,
 			const Vertex& v
 		) const noexcept(noexcept(detail::set_visited(tracker, v, priority_tag<2>{})))
 		{
-			detail::set_visited(tracker, v, priority_tag<2>{});
+			return detail::set_visited(tracker, v, priority_tag<2>{});
 		}
 	};
 }
@@ -120,7 +122,7 @@ namespace sl::graph::concepts
 						&& requires(T& tracker, const Vertex& v)
 						{
 							{ tracker::set_discovered(tracker, v) } -> std::convertible_to<bool>;
-							tracker::set_visited(tracker, v);
+							{ tracker::set_visited(tracker, v) } -> std::convertible_to<bool>;
 						};
 }
 
