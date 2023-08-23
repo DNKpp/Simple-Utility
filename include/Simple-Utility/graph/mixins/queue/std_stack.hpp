@@ -3,8 +3,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef SIMPLE_UTILITY_GRAPH_MIXINS_QUEUE_STACK_HPP
-#define SIMPLE_UTILITY_GRAPH_MIXINS_QUEUE_STACK_HPP
+#ifndef SIMPLE_UTILITY_GRAPH_MIXINS_QUEUE_STD_STACK_HPP
+#define SIMPLE_UTILITY_GRAPH_MIXINS_QUEUE_STD_STACK_HPP
 
 #pragma once
 

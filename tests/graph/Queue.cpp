@@ -4,7 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "Simple-Utility/graph/Queue.hpp"
-#include "Simple-Utility/graph/mixins/queue/Stack.hpp"
+#include "Simple-Utility/graph/mixins/queue/std_stack.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
