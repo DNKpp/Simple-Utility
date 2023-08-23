@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "Simple-Utility/Utility.hpp"
 #include "Simple-Utility/graph/Common.hpp"
 #include "Simple-Utility/graph/Node.hpp"
 
@@ -27,17 +28,6 @@ namespace sl::graph::customize
 
 namespace sl::graph::queue::detail
 {
-	template <std::size_t rank>
-	struct priority_tag
-		: public priority_tag<rank - 1>
-	{
-	};
-
-	template <>
-	struct priority_tag<0>
-	{
-	};
-
 	template <class T>
 		requires requires(const T& t) { { customize::empty_fn<T>{}(t) } -> std::convertible_to<bool>; }
 	constexpr bool empty(const T& queue, const priority_tag<2>) noexcept(noexcept(customize::empty_fn<T>{}(queue)))
