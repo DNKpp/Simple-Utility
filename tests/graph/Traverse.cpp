@@ -28,7 +28,7 @@ namespace
 
 		int vertex{};
 
-		friend bool operator==(const VertexMemberNode& lhs, const VertexMemberNode& rhs) { return lhs.vertex == rhs.vertex; };
+		friend bool operator==(const VertexMemberNode& lhs, const VertexMemberNode& rhs) { return lhs.vertex == rhs.vertex; }
 	};
 
 	struct DefaultConstructibleQueue
@@ -59,40 +59,44 @@ namespace
 using DefaultNode = VertexMemberNode;
 using DefaultQueue = QueueMock<DefaultNode>;
 using DefaultState = sg::detail::BasicState<DefaultNode, DefaultQueue>;
+using DefaultTracker = TrackerMock<sg::feature_vertex_t<DefaultNode>>;
+using DefaultGraph = BasicGraph<DefaultNode>;
+using DefaultNodeFactory = BasicNodeFactoryMock<DefaultNode, DefaultGraph::info>;
+using DefaultDriver = sg::detail::BasicTraverseDriver<
+		DefaultNode,
+		DefaultState,
+		DefaultTracker,
+		DefaultNodeFactory>;
 
-TEST_CASE("BasicState is constructible from origin node and queue argument.", "[graph][graph::traverse][graph::detail]")
+TEST_CASE("BasicState is constructible.", "[graph][graph::traverse][graph::detail]")
 {
-	using trompeloeil::_;
+	SECTION("Default constructible.")
+	{
+		const DefaultState state{};
+	}
 
-	const int originVertex = GENERATE(take(5, random(std::numeric_limits<int>::min(), std::numeric_limits<int>::max())));
-
-	DefaultQueue queueMock{};
-	REQUIRE_CALL(queueMock, do_insert(_))
-		.WITH(std::ssize(_1) == 1)
-		.WITH(sg::node::vertex(_1[0]) == originVertex);
-
-	const DefaultState state{{originVertex}, std::move(queueMock)};
+	SECTION("Constructible with queue object as argument.")
+	{
+		DefaultQueue queue{};
+		ALLOW_CALL(queue, empty()) // allow debug assertion
+			.RETURN(true);
+		const DefaultState state{std::move(queue)};
+	}
 }
 
-TEST_CASE("BasicState is constructible from origin node.", "[graph][graph::traverse][graph::detail]")
-{
-	const int originVertex = GENERATE(take(5, random(std::numeric_limits<int>::min(), std::numeric_limits<int>::max())));
-
-	const sg::detail::BasicState<VertexMemberNode, DefaultConstructibleQueue> state{{originVertex}};
-
-	REQUIRE(originVertex == sg::node::vertex(state.queue().queue.front()));
-}
-
-TEST_CASE("BasicState::next accepts current neighbors and returns the next node, if present.", "[graph][graph::traverse][graph::detail]")
+TEST_CASE(
+	"BasicState::next accepts current neighbors and returns the next node, if present.",
+	"[graph][graph::traverse][graph::detail]")
 {
 	using trompeloeil::_;
-	using namespace  trompeloeil_ext;
+	using namespace trompeloeil_ext;
 	using namespace Catch::Matchers;
 	using namespace catch_ext;
 
-	DefaultQueue queueMock{};
-	REQUIRE_CALL(queueMock, do_insert(matches(RangeEquals(std::array{DefaultNode{42}}))));
-	DefaultState state{{42}, std::move(queueMock)};
+	DefaultQueue queue{};
+	ALLOW_CALL(queue, empty()) // allow debug assertion
+		.RETURN(true);
+	DefaultState state{std::move(queue)};
 
 	SECTION("Providing neighbor infos on next call.")
 	{
@@ -108,10 +112,10 @@ TEST_CASE("BasicState::next accepts current neighbors and returns the next node,
 			.IN_SEQUENCE(seq);
 
 		REQUIRE_CALL(queueMember, next())
-			.RETURN(DefaultNode{42})
+			.RETURN(DefaultNode{44})
 			.IN_SEQUENCE(seq);
 
-		REQUIRE(DefaultNode{42} == state.next(neighbors));
+		REQUIRE(DefaultNode{44} == state.next(neighbors));
 
 		SECTION("And when the internal queue depletes.")
 		{
@@ -124,5 +128,94 @@ TEST_CASE("BasicState::next accepts current neighbors and returns the next node,
 
 			REQUIRE(std::nullopt == state.next(std::array<DefaultNode, 0>{}));
 		}
+	}
+}
+
+TEST_CASE("BasicTraverseDriver can be constructed with an origin.", "[graph][graph::traverse][graph::detail]")
+{
+	using namespace trompeloeil_ext;
+	using namespace Catch::Matchers;
+
+	const auto origin = GENERATE(take(5, random(std::numeric_limits<int>::min(), std::numeric_limits<int>::max())));
+
+	DefaultNodeFactory nodeFactoryMock{};
+	REQUIRE_CALL(nodeFactoryMock, make_init_node(origin))
+		.RETURN(DefaultNode{.vertex = origin});
+
+	DefaultTracker trackerMock{};
+	REQUIRE_CALL(trackerMock, set_visited(origin))
+		.RETURN(true);
+
+	const DefaultDriver driver{origin, std::move(trackerMock), std::move(nodeFactoryMock)};
+
+	REQUIRE(DefaultNode{.vertex = origin} == driver.current_node());
+}
+
+TEST_CASE("BasicTraverseDriver::next returns the current node, or std::nullopt.", "[graph][graph::traverse][graph::detail]")
+{
+	using namespace trompeloeil_ext;
+	using namespace catch_ext;
+	using namespace Catch::Matchers;
+
+	constexpr DefaultNode originNode{.vertex = 42};
+	auto driver = [&]
+	{
+		DefaultNodeFactory nodeFactoryMock{};
+		REQUIRE_CALL(nodeFactoryMock, make_init_node(42))
+			.RETURN(originNode);
+
+		DefaultTracker trackerMock{};
+		REQUIRE_CALL(trackerMock, set_visited(42))
+			.RETURN(true);
+
+		return DefaultDriver{42, std::move(trackerMock), std::move(nodeFactoryMock)};
+	}();
+
+	using VertexInfo = DefaultGraph::info;
+	DefaultGraph graphMock{};
+	auto& nodeFactoryMock = const_cast<DefaultNodeFactory&>(driver.node_factory());
+	auto& queueMock = const_cast<DefaultQueue&>(driver.state().queue());
+	auto& trackerMock = const_cast<DefaultTracker&>(driver.tracker());
+
+	SECTION("Next returns a node.")
+	{
+		REQUIRE_CALL(graphMock, neighbor_infos(originNode))
+			.RETURN(std::vector<VertexInfo>{{41}, {43}, {44}});
+
+		REQUIRE_CALL(nodeFactoryMock, make_successor_node(originNode, VertexInfo{41}))
+			.RETURN(DefaultNode{.vertex = 41});
+		REQUIRE_CALL(nodeFactoryMock, make_successor_node(originNode, VertexInfo{43}))
+			.RETURN(DefaultNode{.vertex = 43});
+		REQUIRE_CALL(nodeFactoryMock, make_successor_node(originNode, VertexInfo{44}))
+			.RETURN(DefaultNode{.vertex = 44});
+
+		REQUIRE_CALL(queueMock, do_insert(matches(RangeEquals(std::vector<DefaultNode>{{41}, {43}, {44}}))));
+		REQUIRE_CALL(queueMock, empty())
+			.RETURN(false);
+		REQUIRE_CALL(queueMock, next())
+			.RETURN(DefaultNode{.vertex = 41});
+
+		REQUIRE_CALL(trackerMock, set_discovered(41))
+			.RETURN(true);
+		REQUIRE_CALL(trackerMock, set_discovered(43))
+			.RETURN(true);
+		REQUIRE_CALL(trackerMock, set_discovered(44))
+			.RETURN(true);
+		REQUIRE_CALL(trackerMock, set_visited(41))
+			.RETURN(true);
+
+		REQUIRE(DefaultNode{.vertex = 41} == driver.next(std::as_const(graphMock)));
+	}
+
+	SECTION("Next returns std::nullopt.")
+	{
+		REQUIRE_CALL(graphMock, neighbor_infos(originNode))
+			.RETURN(std::vector<DefaultGraph::info>{});
+
+		REQUIRE_CALL(queueMock, do_insert(matches(RangesEmpty{})));
+		REQUIRE_CALL(queueMock, empty())
+			.RETURN(true);
+
+		REQUIRE(std::nullopt == driver.next(std::as_const(graphMock)));
 	}
 }

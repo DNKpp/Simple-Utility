@@ -17,7 +17,9 @@
 #include "Simple-Utility/graph/Tracker.hpp"
 
 #include <array>
+#include <cassert>
 #include <concepts>
+#include <forward_list>
 #include <optional>
 #include <ranges>
 #include <type_traits>
@@ -32,16 +34,13 @@ namespace sl::graph::detail
 		using queue_type = QueuingStrategy;
 
 		[[nodiscard]]
-		constexpr explicit BasicState(node_type origin)
-			: BasicState{std::move(origin), {}}
-		{
-		}
+		constexpr explicit BasicState() = default;
 
 		[[nodiscard]]
-		constexpr explicit BasicState(node_type origin, queue_type queue)
+		constexpr explicit BasicState(queue_type queue) noexcept(std::is_nothrow_move_constructible_v<queue_type>)
 			: m_Queue{std::move(queue)}
 		{
-			queue::insert(m_Queue, std::array{std::move(origin)});
+			assert(queue::empty(m_Queue) && "Queue contains already elements.");
 		}
 
 		[[nodiscard]]
@@ -68,44 +67,66 @@ namespace sl::graph::detail
 		QueuingStrategy m_Queue{};
 	};
 
+	template <class T, class Node>
+	concept state_for = sl::concepts::unqualified<T>
+						&& std::destructible<T>
+						&& concepts::node<Node>
+						&& requires(T& state, const std::forward_list<Node>& inputRange)
+						{
+							{ !state.next(inputRange) } -> std::convertible_to<bool>;
+							{ *state.next(inputRange) } -> std::convertible_to<Node>;
+						};
+
 	template <
 		concepts::node Node,
-		class StateStrategy,
-		concepts::tracker_for<Node> TrackingStrategy,
-		concepts::node_factory_for<Node> NodeFactoryStrategy
-	>
+		state_for<Node> StateStrategy,
+		concepts::tracker_for<feature_vertex_t<Node>> TrackingStrategy,
+		concepts::node_factory_for<Node> NodeFactoryStrategy>
 	class BasicTraverseDriver
 	{
 	public:
 		using node_type = Node;
 		using vertex_type = feature_vertex_t<Node>;
+		using state_type = StateStrategy;
+		using tracker_type = TrackingStrategy;
+		using node_factory_type = NodeFactoryStrategy;
 
-		template <class... OtherArgs>
 		[[nodiscard]]
-		explicit BasicTraverseDriver(vertex_type origin, OtherArgs&&... otherArgs)
-			: m_Current{m_NodeFactory.make_init_node(std::move(origin), std::forward<OtherArgs>(otherArgs)...)},
-			m_State{m_Current}
+		explicit BasicTraverseDriver(
+			const vertex_type& origin,
+			tracker_type tracker = tracker_type{},
+			node_factory_type nodeFactory = node_factory_type{},
+			state_type state = state_type{}
+		)
+			: m_Tracker{std::move(tracker)},
+			m_NodeFactory{std::move(nodeFactory)},
+			m_Current{m_NodeFactory.make_init_node(std::move(origin))},
+			m_State{std::move(state)}
 		{
-			tracker::set_discovered(m_Tracker, node::vertex(m_Current));
+			const bool result = tracker::set_visited(m_Tracker, node::vertex(m_Current));
+			assert(result && "Tracker returned false (already visited) the origin node.");
 		}
 
-		template <class Graph>
 		[[nodiscard]]
-		constexpr std::optional<node_type> next(const Graph& graph)
+		constexpr std::optional<node_type> next(const concepts::graph_for<Node> auto& graph)
 		{
-			if (auto result = m_State.next(
+			auto result = m_State.next(
 				graph.neighbor_infos(m_Current)
-				| std::views::filter([&](const auto& info) { return !tracker::set_discovered(m_Tracker, info.vertex); })
+				| std::views::filter(
+					[&](const auto& info) { return tracker::set_discovered(m_Tracker, node::vertex(info)); })
 				| std::views::transform(
-					functional::envelop<functional::Apply>(
-						[&]<class... Ts>(Ts&&... infos)
-						{
-							return m_NodeFactory.make_successor_node(m_Current, std::forward<Ts>(infos)...);
-						}))))
+					[&](const auto& info)
+					{
+						return m_NodeFactory.make_successor_node(m_Current, info);
+					}));
+
+			for (; result; result = m_State.next(std::array<node_type, 0>{}))
 			{
-				m_Current = *result;
-				tracker::set_visited(m_Tracker, node::vertex(m_Current));
-				return result;
+				if (tracker::set_visited(m_Tracker, node::vertex(*result)))
+				{
+					m_Current = *result;
+					return result;
+				}
 			}
 
 			return std::nullopt;
@@ -117,11 +138,29 @@ namespace sl::graph::detail
 			return m_Current;
 		}
 
+		[[nodiscard]]
+		constexpr const TrackingStrategy& tracker() const noexcept
+		{
+			return m_Tracker;
+		}
+
+		[[nodiscard]]
+		constexpr const NodeFactoryStrategy& node_factory() const noexcept
+		{
+			return m_NodeFactory;
+		}
+
+		[[nodiscard]]
+		constexpr const StateStrategy& state() const noexcept
+		{
+			return m_State;
+		}
+
 	private:
-		Node m_Current{};
-		StateStrategy m_State{};
 		SL_UTILITY_NO_UNIQUE_ADDRESS TrackingStrategy m_Tracker{};
 		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactoryStrategy m_NodeFactory{};
+		Node m_Current{};
+		StateStrategy m_State{};
 	};
 }
 
