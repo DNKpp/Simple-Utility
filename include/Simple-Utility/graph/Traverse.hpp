@@ -99,7 +99,9 @@ namespace sl::graph::detail
 		}
 
 		return nodes;
+	/* LCOV_EXCL_START */
 	};
+	/* LCOV_EXCL_STOP */
 
 #else
 
