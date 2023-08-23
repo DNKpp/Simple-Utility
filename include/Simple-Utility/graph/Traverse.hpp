@@ -77,6 +77,49 @@ namespace sl::graph::detail
 							{ *state.next(inputRange) } -> std::convertible_to<Node>;
 						};
 
+#if (defined(__clang__) && __clang_major__ < 16) \
+	|| (defined(__GNUG__) && __GNUG__ < 12)
+
+	constexpr auto filterTransform = []<class Source, class Node>(
+		const Source& neighbors,
+		auto& tracker,
+		auto& nodeFactory,
+		const Node& currentNode
+	)
+	{
+		std::vector<Node> nodes{};
+		if constexpr (std::ranges::sized_range<Source>)
+		{
+			nodes.reserve(std::ranges::size(neighbors));
+		}
+
+		for (const auto& info : neighbors)
+		{
+			if (tracker::set_discovered(tracker, node::vertex(info)))
+			{
+				nodes.emplace_back(nodeFactory.make_successor_node(currentNode, info));
+			}
+		}
+
+		return nodes;
+	};
+
+#else
+
+	constexpr auto filterTransform = []<class Source>(
+		Source&& neighbors,
+		auto& tracker,
+		auto& nodeFactory,
+		const auto& currentNode
+	)
+	{
+		return std::forward<Source>(neighbors)
+				| std::views::filter([&](const auto& info) { return tracker::set_discovered(tracker, node::vertex(info)); })
+				| std::views::transform([&](const auto& info) { return nodeFactory.make_successor_node(currentNode, info); });
+	};
+
+#endif
+
 	template <
 		concepts::node Node,
 		state_for<Node> StateStrategy,
@@ -111,16 +154,7 @@ namespace sl::graph::detail
 		[[nodiscard]]
 		constexpr std::optional<node_type> next(const Graph& graph)
 		{
-			std::optional result = m_State.next(
-				graph.neighbor_infos(m_Current)
-				| std::views::filter(
-					[&](const auto& info) { return tracker::set_discovered(m_Tracker, node::vertex(info)); })
-				| std::views::transform(
-					[&](const auto& info)
-					{
-						return m_NodeFactory.make_successor_node(m_Current, info);
-					}));
-
+			std::optional result = m_State.next(filterTransform(graph.neighbor_infos(m_Current), m_Tracker, m_NodeFactory, m_Current));
 			for (; result; result = m_State.next(std::array<node_type, 0>{}))
 			{
 				if (tracker::set_visited(m_Tracker, node::vertex(*result)))
