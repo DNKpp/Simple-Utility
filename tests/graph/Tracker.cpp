@@ -12,6 +12,9 @@
 
 #include "Defines.hpp"
 
+#include "Simple-Utility/graph/mixins/tracker/std_map.hpp"
+#include "Simple-Utility/graph/mixins/tracker/std_unordered_map.hpp"
+
 #include <string>
 
 // ReSharper disable CppDeclaratorNeverUsed
@@ -146,8 +149,47 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, member_fun_set_visited, int),
 	(false, free_fun_set_visited, int),
 	(false, TrackerMock<int>, std::string),
-	(true, TrackerMock<int>, int)
+	(true, TrackerMock<int>, int),
+	(true, std::unordered_map<int, bool>, int),
+	(true, std::map<int, bool>, int)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::tracker_for<T, Vertex>);
+}
+
+TEMPLATE_TEST_CASE(
+	"Concrete tracker types behave as expected.",
+	"[graph][graph::concepts][graph::tracker]",
+	(std::unordered_map<int, bool>),
+	(std::map<int, bool>)
+)
+{
+	TestType tracker{};
+
+	SECTION("Discovering a new vertex yields false.")
+	{
+		const int vertex = GENERATE(take(5, random(std::numeric_limits<int>::min() + 1, std::numeric_limits<int>::max())));
+
+		REQUIRE(!sg::tracker::set_discovered(tracker, vertex));
+
+		SECTION("Discovering the same vertex again, yields true.")
+		{
+			REQUIRE(sg::tracker::set_discovered(tracker, vertex));
+		}
+
+		SECTION("Discovering another vertex yields false.")
+		{
+			REQUIRE(!sg::tracker::set_discovered(tracker, -vertex));
+		}
+
+		SECTION("Visiting a discovered vertex is expected.")
+		{
+			sg::tracker::set_visited(tracker, vertex);
+
+			SECTION("Discovering an already visited vertex yields true.")
+			{
+				REQUIRE(sg::tracker::set_discovered(tracker, vertex));
+			}
+		}
+	}
 }
