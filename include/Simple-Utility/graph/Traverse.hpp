@@ -80,12 +80,9 @@ namespace sl::graph::detail
 #if (defined(__clang__) && __clang_major__ < 16) \
 	|| (defined(__GNUG__) && __GNUG__ < 12)
 
-	constexpr auto filterTransform = []<class Source, class Node>(
-		const Source& neighbors,
-		auto& tracker,
-		auto& nodeFactory,
-		const Node& currentNode
-	)
+	template <class Source, class Node>
+	[[nodiscard]]
+	constexpr std::vector<Node> filter_transform(const Source& neighbors, auto& tracker, auto& nodeFactory, const Node& currentNode)
 	{
 		std::vector<Node> nodes{};
 		if constexpr (std::ranges::sized_range<Source>)
@@ -106,12 +103,9 @@ namespace sl::graph::detail
 
 #else
 
-	constexpr auto filterTransform = []<class Source>(
-		Source&& neighbors,
-		auto& tracker,
-		auto& nodeFactory,
-		const auto& currentNode
-	)
+	template <class Source, class Node>
+	[[nodiscard]]
+	constexpr auto filter_transform(Source&& neighbors, auto& tracker, auto& nodeFactory, const Node& currentNode)
 	{
 		return std::forward<Source>(neighbors)
 				| std::views::filter([&](const auto& info) { return tracker::set_discovered(tracker, node::vertex(info)); })
@@ -154,7 +148,8 @@ namespace sl::graph::detail
 		[[nodiscard]]
 		constexpr std::optional<node_type> next(const Graph& graph)
 		{
-			std::optional result = m_State.next(filterTransform(graph.neighbor_infos(m_Current), m_Tracker, m_NodeFactory, m_Current));
+			std::optional result = m_State.next(
+				filter_transform(graph.neighbor_infos(m_Current), m_Tracker, m_NodeFactory, m_Current));
 			for (; result; result = m_State.next(std::array<node_type, 0>{}))
 			{
 				if (tracker::set_visited(m_Tracker, node::vertex(*result)))
