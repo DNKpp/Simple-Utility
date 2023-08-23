@@ -28,31 +28,7 @@ namespace
 
 		int vertex{};
 
-		friend bool operator==(const VertexMemberNode& lhs, const VertexMemberNode& rhs) { return lhs.vertex == rhs.vertex; }
-	};
-
-	struct DefaultConstructibleQueue
-	{
-		std::vector<VertexMemberNode> queue{};
-
-		[[nodiscard]]
-		bool empty() const noexcept
-		{
-			return queue.empty();
-		}
-
-		void insert(const auto& elements)
-		{
-			queue.insert(std::end(queue), std::ranges::begin(elements), std::ranges::end(elements));
-		}
-
-		[[nodiscard]]
-		VertexMemberNode next()
-		{
-			const VertexMemberNode front = queue.front();
-			queue.erase(std::begin(queue));
-			return front;
-		}
+		friend bool operator==(const VertexMemberNode&, const VertexMemberNode&) = default;
 	};
 }
 
