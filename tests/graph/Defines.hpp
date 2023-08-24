@@ -74,6 +74,22 @@ public:
 	}
 };
 
+template <sg::concepts::node Node>
+struct EmptyQueueStub
+{
+	[[nodiscard]]
+	static constexpr bool empty() noexcept { return true; }
+
+	static constexpr void insert(auto&&) noexcept
+	{
+	}
+
+	static constexpr Node next()
+	{
+		return {};
+	}
+};
+
 template <sg::concepts::vertex Vertex>
 class TrackerMock
 {
