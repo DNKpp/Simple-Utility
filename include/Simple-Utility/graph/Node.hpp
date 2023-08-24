@@ -16,10 +16,17 @@ namespace sl::graph::customize
 {
 	template <class>
 	struct vertex_fn;
+
+	template <class>
+	struct rank_fn;
 }
 
 namespace sl::graph::node::detail
 {
+	/*
+	 * vertex extraction
+	 */
+
 	template <class Node>
 		requires requires(const Node& node, customize::vertex_fn<Node> fn)
 		{
@@ -72,11 +79,68 @@ namespace sl::graph::node::detail
 			return detail::vertex(node, priority_tag<3>{});
 		}
 	};
+
+	/*
+	 * rank extraction
+	 */
+	template <class Node>
+		requires requires(const Node& node, customize::rank_fn<Node> fn)
+		{
+			requires concepts::rank<std::remove_cvref_t<decltype(fn(node))>>;
+		}
+	constexpr decltype(auto) rank(const Node& node, const priority_tag<3>) noexcept(noexcept(customize::rank_fn<Node>{}(node)))
+	{
+		return customize::rank_fn<Node>{}(node);
+	}
+
+	template <class Node>
+		requires requires(const Node& node)
+		{
+			requires concepts::rank<std::remove_cvref_t<decltype(node.rank)>>;
+		}
+	constexpr auto& rank(const Node& node, const priority_tag<2>) noexcept
+	{
+		return node.rank;
+	}
+
+	template <class Node>
+		requires requires(const Node& node)
+		{
+			requires concepts::rank<std::remove_cvref_t<decltype(node.rank())>>;
+		}
+	constexpr decltype(auto) rank(const Node& node, const priority_tag<1>) noexcept(noexcept(node.rank()))
+	{
+		return node.rank();
+	}
+
+	template <class Node>
+		requires requires(const Node& node)
+		{
+			requires concepts::rank<std::remove_cvref_t<decltype(rank(node))>>;
+		}
+	constexpr decltype(auto) rank(const Node& node, const priority_tag<0>) noexcept(noexcept(rank(node)))
+	{
+		return rank(node);
+	}
+
+	struct rank_fn
+	{
+		template <class Node>
+			requires requires(const Node& node, const priority_tag<3> tag)
+			{
+				requires concepts::rank<std::remove_cvref_t<decltype(detail::rank(node, tag))>>;
+			}
+		constexpr decltype(auto) operator ()(const Node& node) const noexcept(noexcept(detail::rank(node, priority_tag<3>{})))
+		{
+			return detail::rank(node, priority_tag<3>{});
+		}
+	};
 }
 
 namespace sl::graph::node
 {
 	inline constexpr detail::vertex_fn vertex{};
+	inline constexpr detail::rank_fn rank{};
 }
 
 namespace sl::graph::concepts

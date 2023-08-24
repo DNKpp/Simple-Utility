@@ -41,6 +41,33 @@ namespace
 		MAKE_CONST_MOCK0(my_vertex, int());
 	};
 
+	struct member_rank
+	{
+		// ReSharper disable once CppDeclaratorNeverUsed
+		int rank;
+	};
+
+	struct member_fun_rank
+	{
+		MAKE_CONST_MOCK0(rank, int());
+	};
+
+	struct free_fun_rank
+	{
+		MAKE_CONST_MOCK0(my_rank, int());
+
+		// ReSharper disable once CppDeclaratorNeverUsed
+		friend int rank(const free_fun_rank& v)
+		{
+			return v.my_rank();
+		}
+	};
+
+	struct custom_fun_rank
+	{
+		MAKE_CONST_MOCK0(my_rank, int());
+	};
+
 	struct minimal_node
 	{
 		using vertex_type = int;
@@ -90,6 +117,16 @@ struct sg::customize::vertex_fn<custom_fun_vertex>
 	}
 };
 
+template <>
+struct sg::customize::rank_fn<custom_fun_rank>
+{
+	[[nodiscard]]
+	decltype(auto) operator ()(const custom_fun_rank& e) const
+	{
+		return e.my_rank();
+	}
+};
+
 TEST_CASE("graph::node::vertex serves as a customization point accessing the node vertex.", "[graph][graph::node]")
 {
 	const int expected = GENERATE(take(5, random(0, std::numeric_limits<int>::max())));
@@ -121,6 +158,40 @@ TEST_CASE("graph::node::vertex serves as a customization point accessing the nod
 		REQUIRE_CALL(mock, my_vertex())
 			.RETURN(expected);
 		REQUIRE(expected == sg::node::vertex(std::as_const(mock)));
+	}
+}
+
+TEST_CASE("graph::node::rank serves as a customization point accessing the node rank.", "[graph][graph::node]")
+{
+	const int expected = GENERATE(take(5, random(0, std::numeric_limits<int>::max())));
+
+	SECTION("Access via member.")
+	{
+		REQUIRE(expected == sg::node::rank(member_rank{expected}));
+	}
+
+	SECTION("Access via member function.")
+	{
+		member_fun_rank mock{};
+		REQUIRE_CALL(mock, rank())
+			.RETURN(expected);
+		REQUIRE(expected == sg::node::rank(std::as_const(mock)));
+	}
+
+	SECTION("Access via free function.")
+	{
+		free_fun_rank mock{};
+		REQUIRE_CALL(mock, my_rank())
+			.RETURN(expected);
+		REQUIRE(expected == sg::node::rank(std::as_const(mock)));
+	}
+
+	SECTION("Access via custom function.")
+	{
+		custom_fun_rank mock{};
+		REQUIRE_CALL(mock, my_rank())
+			.RETURN(expected);
+		REQUIRE(expected == sg::node::rank(std::as_const(mock)));
 	}
 }
 
