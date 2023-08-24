@@ -55,8 +55,7 @@ TEST_CASE("BasicState is constructible.", "[graph][graph::traverse][graph::detai
 
 	SECTION("Constructible with queue object as argument.")
 	{
-		EmptyQueueStub<DefaultNode> queue{};
-		const State state{std::move(queue)};
+		constexpr State state{EmptyQueueStub<DefaultNode>{}};
 	}
 }
 
