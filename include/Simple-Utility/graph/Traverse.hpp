@@ -142,8 +142,9 @@ namespace sl::graph::detail
 			m_NodeFactory{std::move(nodeFactory)},
 			m_Current{m_NodeFactory.make_init_node(std::move(origin))}
 		{
-			const bool result = tracker::set_visited(m_Tracker, node::vertex(m_Current));
-			assert(result && "Tracker returned false (already visited) the origin node.");
+			const bool result = tracker::set_discovered(m_Tracker, node::vertex(m_Current))
+								&& tracker::set_visited(m_Tracker, node::vertex(m_Current));
+			assert(result && "Tracker returned false (already visited) for the origin node.");
 		}
 
 		template <concepts::graph_for<node_type> Graph> // let the concept here, because otherwise it results in an ICE on msvc v142
@@ -193,6 +194,94 @@ namespace sl::graph::detail
 		SL_UTILITY_NO_UNIQUE_ADDRESS TrackingStrategy m_Tracker{};
 		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactoryStrategy m_NodeFactory{};
 		Node m_Current{};
+	};
+}
+
+namespace sl::graph
+{
+	template <class Graph, class Driver>
+	class Traverser final
+	{
+	public:
+		using node_type = typename Driver::node_type;
+		using vertex_type = feature_vertex_t<node_type>;
+
+		[[nodiscard]]
+		constexpr explicit Traverser(Graph graph, const vertex_type& origin)
+			: m_Graph{std::move(graph)},
+			m_Driver{origin}
+		{
+		}
+
+		std::optional<node_type> next()
+		{
+			return m_Driver.next(m_Graph);
+		}
+
+		struct Sentinel final
+		{
+		};
+
+		struct Iterator final
+		{
+			friend Traverser;
+
+		public:
+			using iterator_concept = std::input_iterator_tag;
+			using element_type = node_type;
+			using difference_type = std::ptrdiff_t;
+
+			[[nodiscard]]
+			constexpr const node_type& operator *() const noexcept
+			{
+				return *m_Value;
+			}
+
+			constexpr Iterator& operator ++()
+			{
+				m_Value = m_Source->next();
+
+				return *this;
+			}
+
+			constexpr void operator ++(int)
+			{
+				operator++();
+			}
+
+			[[nodiscard]]
+			constexpr bool operator==(const Iterator&) const = default;
+
+			[[nodiscard]]
+			constexpr bool operator==([[maybe_unused]] const Sentinel) const
+			{
+				return !m_Value;
+			}
+
+		private:
+			Traverser* m_Source{};
+			std::optional<node_type> m_Value{};
+
+			constexpr explicit Iterator(Traverser& source)
+				: m_Source{std::addressof(source)},
+				m_Value{source.next()}
+			{
+			}
+		};
+
+		constexpr Iterator begin() noexcept
+		{
+			return Iterator{*this};
+		}
+
+		constexpr Sentinel end() const noexcept
+		{
+			return Sentinel{};
+		}
+
+	private:
+		Graph m_Graph{};
+		Driver m_Driver{};
 	};
 }
 

@@ -119,6 +119,8 @@ TEST_CASE("BasicTraverseDriver can be constructed with an origin.", "[graph][gra
 		.RETURN(DefaultNode{.vertex = origin});
 
 	DefaultTracker trackerMock{};
+	REQUIRE_CALL(trackerMock, set_discovered(origin))
+		.RETURN(true);
 	REQUIRE_CALL(trackerMock, set_visited(origin))
 		.RETURN(true);
 
@@ -141,6 +143,8 @@ TEST_CASE("BasicTraverseDriver::next returns the current node, or std::nullopt."
 			.RETURN(originNode);
 
 		DefaultTracker trackerMock{};
+		REQUIRE_CALL(trackerMock, set_discovered(42))
+			.RETURN(true);
 		REQUIRE_CALL(trackerMock, set_visited(42))
 			.RETURN(true);
 
