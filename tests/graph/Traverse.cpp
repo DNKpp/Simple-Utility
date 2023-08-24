@@ -39,24 +39,24 @@ using DefaultTracker = TrackerMock<sg::feature_vertex_t<DefaultNode>>;
 using DefaultGraph = BasicGraph<DefaultNode>;
 using DefaultNodeFactory = BasicNodeFactoryMock<DefaultNode, DefaultGraph::info>;
 using DefaultDriver = sg::detail::BasicTraverseDriver<
-		DefaultNode,
-		DefaultState,
-		DefaultTracker,
-		DefaultNodeFactory>;
+	DefaultNode,
+	DefaultState,
+	DefaultTracker,
+	DefaultNodeFactory>;
 
 TEST_CASE("BasicState is constructible.", "[graph][graph::traverse][graph::detail]")
 {
+	using State = sg::detail::BasicState<DefaultNode, EmptyQueueStub<DefaultNode>>;
+
 	SECTION("Default constructible.")
 	{
-		const DefaultState state{};
+		constexpr State state{};
 	}
 
 	SECTION("Constructible with queue object as argument.")
 	{
-		DefaultQueue queue{};
-		ALLOW_CALL(queue, empty()) // allow debug assertion
-			.RETURN(true);
-		const DefaultState state{std::move(queue)};
+		EmptyQueueStub<DefaultNode> queue{};
+		const State state{std::move(queue)};
 	}
 }
 
@@ -124,7 +124,16 @@ TEST_CASE("BasicTraverseDriver can be constructed with an origin.", "[graph][gra
 	REQUIRE_CALL(trackerMock, set_visited(origin))
 		.RETURN(true);
 
-	const DefaultDriver driver{origin, std::move(trackerMock), std::move(nodeFactoryMock)};
+	const sg::detail::BasicTraverseDriver<
+		DefaultNode,
+		sg::detail::BasicState<DefaultNode, EmptyQueueStub<DefaultNode>>,
+		DefaultTracker,
+		DefaultNodeFactory> driver{
+		origin,
+		std::forward_as_tuple(std::move(trackerMock)),
+		std::forward_as_tuple(std::move(nodeFactoryMock)),
+		std::tuple{}
+	};
 
 	REQUIRE(DefaultNode{.vertex = origin} == driver.current_node());
 }
@@ -148,7 +157,16 @@ TEST_CASE("BasicTraverseDriver::next returns the current node, or std::nullopt."
 		REQUIRE_CALL(trackerMock, set_visited(42))
 			.RETURN(true);
 
-		return DefaultDriver{42, std::move(trackerMock), std::move(nodeFactoryMock)};
+		DefaultQueue queue{};
+		ALLOW_CALL(queue, empty())
+			.RETURN(true);
+
+		return DefaultDriver{
+			42,
+			std::forward_as_tuple(std::move(trackerMock)),
+			std::forward_as_tuple(std::move(nodeFactoryMock)),
+			std::forward_as_tuple(std::move(queue))
+		};
 	}();
 
 	using VertexInfo = DefaultGraph::info;

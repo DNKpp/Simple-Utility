@@ -33,12 +33,17 @@ namespace sl::graph::detail
 		using node_type = Node;
 		using queue_type = QueuingStrategy;
 
-		[[nodiscard]]
-		constexpr explicit BasicState() = default;
+		~BasicState() = default;
+		BasicState(const BasicState&) = delete;
+		BasicState& operator =(const BasicState&) = delete;
+		BasicState(BasicState&&) = default;
+		BasicState& operator =(BasicState&&) = default;
 
+		template <class... QueueArgs>
+			requires std::constructible_from<queue_type, QueueArgs...>
 		[[nodiscard]]
-		constexpr explicit BasicState(queue_type queue) noexcept(std::is_nothrow_move_constructible_v<queue_type>)
-			: m_Queue{std::move(queue)}
+		constexpr explicit BasicState(QueueArgs&&... queueArgs) noexcept(std::is_nothrow_constructible_v<queue_type, QueueArgs...>)
+			: m_Queue{std::forward<QueueArgs>(queueArgs)...}
 		{
 			assert(queue::empty(m_Queue) && "Queue already contains elements.");
 		}
@@ -64,7 +69,7 @@ namespace sl::graph::detail
 		}
 
 	private:
-		QueuingStrategy m_Queue{};
+		QueuingStrategy m_Queue;
 	};
 
 	template <class T, class Node>
@@ -130,17 +135,22 @@ namespace sl::graph::detail
 		using tracker_type = TrackingStrategy;
 		using node_factory_type = NodeFactoryStrategy;
 
+		template <class Origin, class... TrackerArgs, class... NodeFactoryArgs, class... StateArgs>
+			requires std::constructible_from<vertex_type, Origin>
+					&& std::constructible_from<tracker_type, TrackerArgs...>
+					&& std::constructible_from<node_factory_type, NodeFactoryArgs...>
+					&& std::constructible_from<state_type, StateArgs...>
 		[[nodiscard]]
 		explicit BasicTraverseDriver(
-			const vertex_type& origin,
-			tracker_type tracker = tracker_type{},
-			node_factory_type nodeFactory = node_factory_type{},
-			state_type state = state_type{}
+			Origin&& origin,
+			std::tuple<TrackerArgs...> trackerArgs,
+			std::tuple<NodeFactoryArgs...> nodeFactoryArgs,
+			std::tuple<StateArgs...> stateArgs
 		)
-			: m_State{std::move(state)},
-			m_Tracker{std::move(tracker)},
-			m_NodeFactory{std::move(nodeFactory)},
-			m_Current{m_NodeFactory.make_init_node(std::move(origin))}
+			: m_Tracker{std::make_from_tuple<tracker_type>(std::move(trackerArgs))},
+			m_NodeFactory{std::make_from_tuple<node_factory_type>(std::move(nodeFactoryArgs))},
+			m_State{std::make_from_tuple<state_type>(std::move(stateArgs))},
+			m_Current{m_NodeFactory.make_init_node(std::forward<Origin>(origin))}
 		{
 			const bool result = tracker::set_discovered(m_Tracker, node::vertex(m_Current))
 								&& tracker::set_visited(m_Tracker, node::vertex(m_Current));
@@ -190,10 +200,11 @@ namespace sl::graph::detail
 		}
 
 	private:
-		StateStrategy m_State{};
-		SL_UTILITY_NO_UNIQUE_ADDRESS TrackingStrategy m_Tracker{};
-		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactoryStrategy m_NodeFactory{};
-		Node m_Current{};
+		// do not reorder. Seems to somehow cause segment faults, when ordered differently
+		SL_UTILITY_NO_UNIQUE_ADDRESS TrackingStrategy m_Tracker;
+		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactoryStrategy m_NodeFactory;
+		StateStrategy m_State;
+		Node m_Current;
 	};
 }
 
@@ -207,12 +218,13 @@ namespace sl::graph
 		using vertex_type = feature_vertex_t<node_type>;
 
 		[[nodiscard]]
-		constexpr explicit Traverser(Graph graph, const vertex_type& origin)
+		constexpr explicit Traverser(Graph graph, vertex_type origin)
 			: m_Graph{std::move(graph)},
-			m_Driver{origin}
+			m_Driver{std::move(origin), std::tuple{}, std::tuple{}, std::tuple{}}
 		{
 		}
 
+		[[nodiscard]]
 		std::optional<node_type> next()
 		{
 			return m_Driver.next(m_Graph);
@@ -240,7 +252,6 @@ namespace sl::graph
 			constexpr Iterator& operator ++()
 			{
 				m_Value = m_Source->next();
-
 				return *this;
 			}
 
@@ -262,6 +273,7 @@ namespace sl::graph
 			Traverser* m_Source{};
 			std::optional<node_type> m_Value{};
 
+			[[nodiscard]]
 			constexpr explicit Iterator(Traverser& source)
 				: m_Source{std::addressof(source)},
 				m_Value{source.next()}
@@ -269,11 +281,13 @@ namespace sl::graph
 			}
 		};
 
-		constexpr Iterator begin() noexcept
+		[[nodiscard]]
+		constexpr Iterator begin() &
 		{
 			return Iterator{*this};
 		}
 
+		[[nodiscard]]
 		constexpr Sentinel end() const noexcept
 		{
 			return Sentinel{};
