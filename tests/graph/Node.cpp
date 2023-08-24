@@ -36,6 +36,11 @@ namespace
 		}
 	};
 
+	struct custom_fun_vertex
+	{
+		MAKE_CONST_MOCK0(my_vertex, int());
+	};
+
 	struct minimal_node
 	{
 		using vertex_type = int;
@@ -67,12 +72,23 @@ namespace
 			vertex_type vertex;
 		};
 
-		std::vector<info> neighbor_infos(const sg::concepts::node auto&) const
+		[[nodiscard]]
+		static std::vector<info> neighbor_infos(const sg::concepts::node auto&)
 		{
 			return {};
 		}
 	};
 }
+
+template <>
+struct sg::customize::vertex_fn<custom_fun_vertex>
+{
+	[[nodiscard]]
+	decltype(auto) operator ()(const custom_fun_vertex& e) const
+	{
+		return e.my_vertex();
+	}
+};
 
 TEST_CASE("graph::node::vertex serves as a customization point accessing the node vertex.", "[graph][graph::node]")
 {
@@ -94,6 +110,14 @@ TEST_CASE("graph::node::vertex serves as a customization point accessing the nod
 	SECTION("Access via the vertex free function.")
 	{
 		free_fun_vertex mock{};
+		REQUIRE_CALL(mock, my_vertex())
+			.RETURN(expected);
+		REQUIRE(expected == sg::node::vertex(std::as_const(mock)));
+	}
+
+	SECTION("Access via custom function.")
+	{
+		custom_fun_vertex mock{};
 		REQUIRE_CALL(mock, my_vertex())
 			.RETURN(expected);
 		REQUIRE(expected == sg::node::vertex(std::as_const(mock)));

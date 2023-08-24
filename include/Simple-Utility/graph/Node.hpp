@@ -8,29 +8,68 @@
 
 #pragma once
 
+#include "Simple-Utility/Utility.hpp"
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/graph/Common.hpp"
 
+namespace sl::graph::customize
+{
+	template <class>
+	struct vertex_fn;
+}
+
 namespace sl::graph::node::detail
 {
+	template <class Node>
+		requires requires(const Node& node, customize::vertex_fn<Node> fn)
+		{
+			requires concepts::vertex<std::remove_cvref_t<decltype(fn(node))>>;
+		}
+	constexpr decltype(auto) vertex(const Node& node, const priority_tag<3>) noexcept(noexcept(customize::vertex_fn<Node>{}(node)))
+	{
+		return customize::vertex_fn<Node>{}(node);
+	}
+
+	template <class Node>
+		requires requires(const Node& node)
+		{
+			requires concepts::vertex<std::remove_cvref_t<decltype(node.vertex)>>;
+		}
+	constexpr auto& vertex(const Node& node, const priority_tag<2>) noexcept
+	{
+		return node.vertex;
+	}
+
+	template <class Node>
+		requires requires(const Node& node)
+		{
+			requires concepts::vertex<std::remove_cvref_t<decltype(node.vertex())>>;
+		}
+	constexpr decltype(auto) vertex(const Node& node, const priority_tag<1>) noexcept(noexcept(node.vertex()))
+	{
+		return node.vertex();
+	}
+
+	template <class Node>
+		requires requires(const Node& node)
+		{
+			requires concepts::vertex<std::remove_cvref_t<decltype(vertex(node))>>;
+		}
+	constexpr decltype(auto) vertex(const Node& node, const priority_tag<0>) noexcept(noexcept(vertex(node)))
+	{
+		return vertex(node);
+	}
+
 	struct vertex_fn
 	{
-		constexpr auto& operator ()(const auto& node) const noexcept
-			requires concepts::vertex<std::remove_cvref_t<decltype(node.vertex)>>
+		template <class Node>
+			requires requires(const Node& node, const priority_tag<3> tag)
+			{
+				requires concepts::vertex<std::remove_cvref_t<decltype(detail::vertex(node, tag))>>;
+			}
+		constexpr decltype(auto) operator ()(const Node& node) const noexcept(noexcept(detail::vertex(node, priority_tag<3>{})))
 		{
-			return node.vertex;
-		}
-
-		constexpr decltype(auto) operator ()(const auto& node) const noexcept
-			requires concepts::vertex<std::remove_cvref_t<decltype(node.vertex())>>
-		{
-			return node.vertex();
-		}
-
-		constexpr decltype(auto) operator ()(const auto& node) const noexcept
-			requires concepts::vertex<std::remove_cvref_t<decltype(vertex(node))>>
-		{
-			return vertex(node);
+			return detail::vertex(node, priority_tag<3>{});
 		}
 	};
 }
@@ -55,13 +94,13 @@ namespace sl::graph::concepts
 
 	template <class T, class Node>
 	concept node_factory_for = sl::concepts::unqualified<T>
-							&& node<Node>
-							&& std::destructible<T>
-							&& requires(T& factory, const Node& node)
-							{
-								{ factory.make_init_node(node::vertex(node)) } -> std::convertible_to<Node>;
-								{ factory.make_successor_node(node, {}) } -> std::convertible_to<Node>;
-							};
+								&& node<Node>
+								&& std::destructible<T>
+								&& requires(T& factory, const Node& node)
+								{
+									{ factory.make_init_node(node::vertex(node)) } -> std::convertible_to<Node>;
+									{ factory.make_successor_node(node, {}) } -> std::convertible_to<Node>;
+								};
 
 	template <class T, class Other>
 	concept compatible_with = node<T>
