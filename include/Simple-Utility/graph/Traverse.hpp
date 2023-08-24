@@ -137,10 +137,10 @@ namespace sl::graph::detail
 			node_factory_type nodeFactory = node_factory_type{},
 			state_type state = state_type{}
 		)
-			: m_Tracker{std::move(tracker)},
+			: m_State{std::move(state)},
+			m_Tracker{std::move(tracker)},
 			m_NodeFactory{std::move(nodeFactory)},
-			m_Current{m_NodeFactory.make_init_node(std::move(origin))},
-			m_State{std::move(state)}
+			m_Current{m_NodeFactory.make_init_node(std::move(origin))}
 		{
 			const bool result = tracker::set_visited(m_Tracker, node::vertex(m_Current));
 			assert(result && "Tracker returned false (already visited) the origin node.");
@@ -189,10 +189,10 @@ namespace sl::graph::detail
 		}
 
 	private:
+		StateStrategy m_State{};
 		SL_UTILITY_NO_UNIQUE_ADDRESS TrackingStrategy m_Tracker{};
 		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactoryStrategy m_NodeFactory{};
 		Node m_Current{};
-		StateStrategy m_State{};
 	};
 }
 
