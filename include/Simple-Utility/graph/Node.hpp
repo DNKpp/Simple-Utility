@@ -23,66 +23,6 @@ namespace sl::graph::customize
 
 namespace sl::graph::node::detail
 {
-	/*
-	 * vertex extraction
-	 */
-
-	template <class Node>
-		requires requires(const Node& node, customize::vertex_fn<Node> fn)
-		{
-			requires concepts::vertex<std::remove_cvref_t<decltype(fn(node))>>;
-		}
-	constexpr decltype(auto) vertex(const Node& node, const priority_tag<3>) noexcept(noexcept(customize::vertex_fn<Node>{}(node)))
-	{
-		return customize::vertex_fn<Node>{}(node);
-	}
-
-	template <class Node>
-		requires requires(const Node& node)
-		{
-			requires concepts::vertex<std::remove_cvref_t<decltype(node.vertex)>>;
-		}
-	constexpr auto& vertex(const Node& node, const priority_tag<2>) noexcept
-	{
-		return node.vertex;
-	}
-
-	template <class Node>
-		requires requires(const Node& node)
-		{
-			requires concepts::vertex<std::remove_cvref_t<decltype(node.vertex())>>;
-		}
-	constexpr decltype(auto) vertex(const Node& node, const priority_tag<1>) noexcept(noexcept(node.vertex()))
-	{
-		return node.vertex();
-	}
-
-	template <class Node>
-		requires requires(const Node& node)
-		{
-			requires concepts::vertex<std::remove_cvref_t<decltype(vertex(node))>>;
-		}
-	constexpr decltype(auto) vertex(const Node& node, const priority_tag<0>) noexcept(noexcept(vertex(node)))
-	{
-		return vertex(node);
-	}
-
-	struct vertex_fn
-	{
-		template <class Node>
-			requires requires(const Node& node, const priority_tag<3> tag)
-			{
-				requires concepts::vertex<std::remove_cvref_t<decltype(detail::vertex(node, tag))>>;
-			}
-		constexpr decltype(auto) operator ()(const Node& node) const noexcept(noexcept(detail::vertex(node, priority_tag<3>{})))
-		{
-			return detail::vertex(node, priority_tag<3>{});
-		}
-	};
-
-	/*
-	 * rank extraction
-	 */
 	template <class Node>
 		requires requires(const Node& node, customize::rank_fn<Node> fn)
 		{
@@ -139,7 +79,7 @@ namespace sl::graph::node::detail
 
 namespace sl::graph::node
 {
-	inline constexpr detail::vertex_fn vertex{};
+	inline constexpr graph::detail::vertex_fn vertex{};
 	inline constexpr detail::rank_fn rank{};
 }
 

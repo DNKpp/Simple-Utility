@@ -3,7 +3,12 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
+#include "Simple-Utility/graph/Common.hpp"
+
 #include <catch2/catch_template_test_macros.hpp>
+#include <catch2/generators/catch_generators.hpp>
+#include <catch2/generators/catch_generators_adapters.hpp>
+#include <catch2/generators/catch_generators_random.hpp>
 
 #include "Defines.hpp"
 
@@ -73,6 +78,33 @@ namespace
 		valid_rank operator +([[maybe_unused]] const valid_rank&) const;
 		valid_rank& operator -=([[maybe_unused]] const valid_rank&);
 		valid_rank operator -([[maybe_unused]] const valid_rank&) const;
+	};
+
+	struct member_vertex
+	{
+		// ReSharper disable once CppDeclaratorNeverUsed
+		int vertex;
+	};
+
+	struct member_fun_vertex
+	{
+		MAKE_CONST_MOCK0(vertex, int());
+	};
+
+	struct free_fun_vertex
+	{
+		MAKE_CONST_MOCK0(my_vertex, int());
+
+		// ReSharper disable once CppDeclaratorNeverUsed
+		friend int vertex(const free_fun_vertex& v)
+		{
+			return v.my_vertex();
+		}
+	};
+
+	struct custom_fun_vertex
+	{
+		MAKE_CONST_MOCK0(my_vertex, int());
 	};
 }
 
@@ -188,6 +220,17 @@ struct sg::feature_traits<type_with_custom_trait>
 	using rank_type = float;
 };
 
+template <>
+struct sg::customize::vertex_fn<custom_fun_vertex>
+{
+	[[nodiscard]]
+	decltype(auto) operator ()(const custom_fun_vertex& e) const
+	{
+		return e.my_vertex();
+	}
+};
+
+
 TEMPLATE_TEST_CASE_SIG(
 	"graph::concepts::readable_vertex_type determines whether T contains a \"vertex_type\" member alias.",
 	"[graph][graph::concepts]",
@@ -282,4 +325,40 @@ TEMPLATE_TEST_CASE(
 	STATIC_REQUIRE(std::same_as<
 		sg::ranked_feature_category,
 		sg::common_feature_category_t<sg::ranked_feature_category, sg::feature_category_t<TestType>>>);
+}
+
+TEST_CASE("graph::details::vertex serves as a customization point accessing the vertex.", "[graph][detail]")
+{
+	constexpr sg::detail::vertex_fn fun{};
+
+	const int expected = GENERATE(take(5, random(0, std::numeric_limits<int>::max())));
+
+	SECTION("Access via the vertex member.")
+	{
+		REQUIRE(expected == fun(member_vertex{expected}));
+	}
+
+	SECTION("Access via the vertex member function.")
+	{
+		member_fun_vertex mock{};
+		REQUIRE_CALL(mock, vertex())
+			.RETURN(expected);
+		REQUIRE(expected == fun(std::as_const(mock)));
+	}
+
+	SECTION("Access via the vertex free function.")
+	{
+		free_fun_vertex mock{};
+		REQUIRE_CALL(mock, my_vertex())
+			.RETURN(expected);
+		REQUIRE(expected == fun(std::as_const(mock)));
+	}
+
+	SECTION("Access via custom function.")
+	{
+		custom_fun_vertex mock{};
+		REQUIRE_CALL(mock, my_vertex())
+			.RETURN(expected);
+		REQUIRE(expected == fun(std::as_const(mock)));
+	}
 }
