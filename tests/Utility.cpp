@@ -202,6 +202,8 @@ TEST_CASE("in_place_constructor can be utilized from types, which expects some o
 			sl::in_place<int>(42)
 		};
 
+		using Expected = MultiInPlaceExpecting<std::optional<int>, std::string, int>;
+		STATIC_REQUIRE(std::same_as<Expected, std::remove_const_t<decltype(obj)>>);
 		REQUIRE(1337 == obj.value1);
 		REQUIRE("Hello, World!" == obj.value2);
 		REQUIRE(42 == obj.value3);
@@ -215,7 +217,9 @@ TEST_CASE("in_place_constructor can be utilized from types, which expects some o
 			sl::in_place<int>(42)
 		};
 
-		REQUIRE(std::tuple{"World!, Hello", 42} == obj.value1.value);
+		using Expected = MultiInPlaceExpecting<immobile<std::string, int>, std::string, int>;
+		STATIC_REQUIRE(std::same_as<Expected, std::remove_const_t<decltype(obj)>>);
+		REQUIRE(std::tuple{"World, Hello!", 1337} == obj.value1.value);
 		REQUIRE("Hello, World!" == obj.value2);
 		REQUIRE(42 == obj.value3);
 	}
