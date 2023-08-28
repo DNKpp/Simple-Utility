@@ -8,35 +8,14 @@
 
 #pragma once
 
-#include "Simple-Utility/TypeList.hpp"
 #include "Simple-Utility/Utility.hpp"
 #include "Simple-Utility/concepts/operators.hpp"
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 
-#include <algorithm>
 #include <concepts>
-
-namespace sl::graph
-{
-	struct basic_feature_category
-	{
-	};
-
-	struct ranked_feature_category
-	{
-	};
-}
-
-namespace sl::graph::detail
-{
-	using feature_category_list = type_list::TypeList<basic_feature_category, ranked_feature_category>;
-}
 
 namespace sl::graph::concepts
 {
-	template <class T>
-	concept feature_category = type_list::contains_v<detail::feature_category_list, T>;
-
 	template <class T>
 	concept vertex = sl::concepts::unqualified<T>
 					&& std::equality_comparable<T>
@@ -61,7 +40,7 @@ namespace sl::graph::concepts
 
 	template <class T>
 	concept readable_weight_type = requires { typename T::weight_type; }
-								&& weight<typename T::weight_type>;
+									&& weight<typename T::weight_type>;
 
 	template <class T>
 	concept readable_rank_type = requires { typename T::rank_type; }
@@ -76,7 +55,7 @@ namespace sl::graph::customize
 
 namespace sl::graph::detail
 {
-		template <class Node>
+	template <class Node>
 		requires requires(const Node& node, customize::vertex_fn<Node> fn)
 		{
 			requires concepts::vertex<std::remove_cvref_t<decltype(fn(node))>>;
@@ -127,54 +106,6 @@ namespace sl::graph::detail
 		{
 			return detail::vertex(node, priority_tag<3>{});
 		}
-	};
-}
-
-namespace sl::graph
-{
-	template <concepts::feature_category T, concepts::feature_category... Others>
-	struct common_feature_category
-	{
-		using type = std::tuple_element_t<
-			std::min(	// clang seems to have issues with std::ranges::min
-				{
-					type_list::index_of_v<detail::feature_category_list, T>,
-					type_list::index_of_v<detail::feature_category_list, Others>...
-				}),
-			detail::feature_category_list>;
-	};
-
-	template <class T, class... Others>
-	using common_feature_category_t = typename common_feature_category<T, Others...>::type;
-
-	template <class T>
-	struct feature_traits;
-
-	template <class T>
-	using feature_category_t = typename feature_traits<T>::category_type;
-
-	template <class T>
-	using feature_vertex_t = typename feature_traits<T>::vertex_type;
-
-	template <class T>
-	using feature_rank_t = typename feature_traits<T>::rank_type;
-
-	template <class T>
-		requires concepts::readable_vertex_type<T>
-	struct feature_traits<T>
-	{
-		using category_type = basic_feature_category;
-		using vertex_type = typename T::vertex_type;
-	};
-
-	template <class T>
-		requires concepts::readable_vertex_type<T>
-				&& concepts::readable_rank_type<T>
-	struct feature_traits<T>
-	{
-		using category_type = ranked_feature_category;
-		using vertex_type = typename T::vertex_type;
-		using rank_type = typename T::rank_type;
 	};
 }
 

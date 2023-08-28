@@ -11,6 +11,7 @@
 #include "Simple-Utility/Utility.hpp"
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/graph/Common.hpp"
+#include "Simple-Utility/graph/Edge.hpp"
 
 namespace sl::graph::customize
 {
@@ -81,6 +82,25 @@ namespace sl::graph::node
 {
 	inline constexpr graph::detail::vertex_fn vertex{};
 	inline constexpr detail::rank_fn rank{};
+
+	template <class>
+	struct traits;
+
+	template <class T>
+		requires concepts::readable_vertex_type<T>
+	struct traits<T>
+	{
+		using vertex_type = typename T::vertex_type;
+	};
+
+	template <class T>
+		requires concepts::readable_vertex_type<T>
+				&& concepts::readable_rank_type<T>
+	struct traits<T>
+	{
+		using vertex_type = typename T::vertex_type;
+		using rank_type = typename T::rank_type;
+	};
 }
 
 namespace sl::graph::concepts
@@ -89,11 +109,30 @@ namespace sl::graph::concepts
 	concept node = sl::concepts::unqualified<T>
 					&& std::copyable<T>
 					&& std::destructible<T>
-					&& feature_category<typename feature_traits<T>::category_type>
-					&& vertex<typename feature_traits<T>::vertex_type>
+					&& vertex<typename node::traits<T>::vertex_type>
 					&& requires(const T& node)
 					{
-						requires concepts::vertex<std::remove_cvref_t<decltype(node::vertex(node))>>;
+						{ node::vertex(node) } -> std::convertible_to<typename node::traits<T>::vertex_type>;
+					};
+
+	template <class T>
+	concept ranked_node = node<T>
+						&& rank<typename node::traits<T>::rank_type>
+						&& requires(const T& node)
+						{
+							{ node::rank(node) } -> std::convertible_to<typename node::traits<T>::rank_type>;
+						};
+}
+
+namespace sl::graph::node
+{
+	template <concepts::node Node>
+	using vertex_t = typename traits<Node>::vertex_type;
+
+	template <concepts::ranked_node Node>
+	using rank_t = typename traits<Node>::rank_type;
+}
+
 					};
 
 	template <class T, class Node>
@@ -103,16 +142,19 @@ namespace sl::graph::concepts
 								&& requires(T& factory, const Node& node)
 								{
 									{ factory.make_init_node(node::vertex(node)) } -> std::convertible_to<Node>;
-									{ factory.make_successor_node(node, {}) } -> std::convertible_to<Node>;
+									/* Well, the info param is quite tricky here. We could simply expect it to be default constructible and {} it,
+									* but this will fail for templated types. So, just insert the node type itself, as this should provide
+									* as many info as we need.. */
+									{ factory.make_successor_node(node, node) } -> std::convertible_to<Node>;
 								};
 
-	template <class T, class Other>
-	concept compatible_with = node<T>
-							&& node<Other>
-							&& std::same_as<
-								feature_category_t<T>,
-								common_feature_category_t<feature_category_t<T>, feature_category_t<Other>>>
-							&& std::convertible_to<feature_vertex_t<Other>, feature_vertex_t<T>>;
+	template <class Node, class Edge>
+	concept compatible_with = node<Node>
+							&& edge<Edge>
+							&& std::same_as<edge::vertex_t<Edge>, node::vertex_t<Node>>
+							&& (!ranked_node<Node> || weighted_edge<Edge> && std::convertible_to<
+									edge::weight_t<Edge>, node::rank_t<Node>>)
+		;
 
 	template <class T, class Node>
 	concept graph_for = sl::concepts::unqualified<T>

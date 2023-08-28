@@ -124,13 +124,13 @@ namespace sl::graph::detail
 	template <
 		concepts::node Node,
 		state_for<Node> StateStrategy,
-		concepts::tracker_for<feature_vertex_t<Node>> TrackingStrategy,
+		concepts::tracker_for<node::vertex_t<Node>> TrackingStrategy,
 		concepts::node_factory_for<Node> NodeFactoryStrategy>
 	class BasicTraverseDriver
 	{
 	public:
 		using node_type = Node;
-		using vertex_type = feature_vertex_t<Node>;
+		using vertex_type = node::vertex_t<Node>;
 		using state_type = StateStrategy;
 		using tracker_type = TrackingStrategy;
 		using node_factory_type = NodeFactoryStrategy;
@@ -215,7 +215,7 @@ namespace sl::graph
 	{
 	public:
 		using node_type = typename Driver::node_type;
-		using vertex_type = feature_vertex_t<node_type>;
+		using vertex_type = node::vertex_t<node_type>;
 
 		[[nodiscard]]
 		constexpr explicit Traverser(Graph graph, vertex_type origin)

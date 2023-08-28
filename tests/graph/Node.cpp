@@ -12,35 +12,10 @@
 
 #include "Defines.hpp"
 
+#include <string>
+
 namespace
 {
-	struct member_vertex
-	{
-		// ReSharper disable once CppDeclaratorNeverUsed
-		int vertex;
-	};
-
-	struct member_fun_vertex
-	{
-		MAKE_CONST_MOCK0(vertex, int());
-	};
-
-	struct free_fun_vertex
-	{
-		MAKE_CONST_MOCK0(my_vertex, int());
-
-		// ReSharper disable once CppDeclaratorNeverUsed
-		friend int vertex(const free_fun_vertex& v)
-		{
-			return v.my_vertex();
-		}
-	};
-
-	struct custom_fun_vertex
-	{
-		MAKE_CONST_MOCK0(my_vertex, int());
-	};
-
 	struct member_rank
 	{
 		// ReSharper disable once CppDeclaratorNeverUsed
@@ -75,37 +50,76 @@ namespace
 		vertex_type vertex;
 	};
 
+	struct ranked_node
+	{
+		using vertex_type = std::string;
+		using rank_type = int;
+
+		vertex_type vertex;
+		rank_type rank;
+	};
+
 	struct minimal_node_factory
 	{
 		using node_type = minimal_node;
-		using vertex_type = sg::feature_vertex_t<node_type>;
+		using vertex_type = sg::node::vertex_t<node_type>;
 
 		static node_type make_init_node(const vertex_type& v)
 		{
 			return {.vertex = v};
 		}
 
-		static node_type make_successor_node([[maybe_unused]] const node_type& predecessor, const vertex_type& v)
+		static node_type make_successor_node([[maybe_unused]] const node_type& predecessor, const node_type& v)
 		{
-			return {.vertex = v};
+			return {.vertex = sg::node::vertex(v)};
 		}
 	};
 
-	struct generic_basic_graph
+	struct generic_basic_graph_stub
 	{
-		struct info
+		struct edge_type
 		{
 			using vertex_type = int;
 			vertex_type vertex;
 		};
 
 		[[nodiscard]]
-		static std::vector<info> neighbor_infos(const sg::concepts::node auto&)
+		static std::vector<edge_type> neighbor_infos(const sg::concepts::node auto&)
 		{
 			return {};
 		}
 	};
+
+	struct generic_ranked_graph_stub
+	{
+		struct edge_type
+		{
+			using vertex_type = std::string;
+			using weight_type = int;
+			vertex_type vertex;
+			weight_type weight;
+		};
+
+		[[nodiscard]]
+		static std::vector<edge_type> neighbor_infos(const sg::concepts::ranked_node auto&)
+		{
+			return {};
 }
+	};
+
+	struct node_with_custom_trait
+	{
+		int vertex;
+		float rank;
+	};
+}
+
+template <>
+struct sg::node::traits<node_with_custom_trait>
+{
+	using vertex_type = int;
+	using rank_type = float;
+};
 
 template <>
 struct sg::customize::rank_fn<custom_fun_rank>
@@ -152,19 +166,68 @@ TEST_CASE("graph::node::rank serves as a customization point accessing the node 
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"concepts::node determines, whether the given type satisfies the node requirements.",
+	"concepts::node determines, whether the given type satisfies the requirements.",
 	"[graph][graph::concepts]",
 	((bool expected, class T), expected, T),
-	(false, member_vertex),
-	(false, member_fun_vertex),
-	(false, free_fun_vertex),
 	(true, minimal_node),
-	(true, BasicTestNode<int>),
-	(true, generic_basic_graph::info),
-	(true, BasicGraph<minimal_node>::info)
+	(true, ranked_node),
+	(true, BasicTestNode<int>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::node<T>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"concepts::ranked_node determines, whether the given type satisfies the requirements.",
+	"[graph][graph::concepts]",
+	((bool expected, class T), expected, T),
+	(false, member_rank),
+	(false, member_fun_rank),
+	(false, free_fun_rank),
+	(false, minimal_node),
+	(true, ranked_node)
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::ranked_node<T>);
+}
+
+TEST_CASE(
+	"Default graph::node::traits exposes vertex_type if readable.",
+	"[graph][graph::node]"
+)
+{
+	using TestType = minimal_node;
+
+	STATIC_REQUIRE(std::same_as<int, sg::node::traits<TestType>::vertex_type>);
+	STATIC_REQUIRE(std::same_as<int, sg::node::vertex_t<TestType>>);
+}
+
+TEST_CASE(
+	"Default graph::node::traits exposes vertex_type and rank_type if readable.",
+	"[graph][graph::node]"
+)
+{
+	using TestType = ranked_node;
+
+	STATIC_REQUIRE(std::same_as<std::string, sg::node::traits<TestType>::vertex_type>);
+	STATIC_REQUIRE(std::same_as<std::string, sg::node::vertex_t<TestType>>);
+
+	STATIC_REQUIRE(std::same_as<int, sg::node::traits<TestType>::rank_type>);
+	STATIC_REQUIRE(std::same_as<int, sg::node::rank_t<TestType>>);
+}
+
+TEST_CASE(
+	"graph::node::traits can be specialized.",
+	"[graph][graph::node]"
+)
+{
+	using TestType = node_with_custom_trait;
+
+	STATIC_REQUIRE(std::same_as<int, sg::node::traits<TestType>::vertex_type>);
+	STATIC_REQUIRE(std::same_as<int, sg::node::vertex_t<TestType>>);
+
+	STATIC_REQUIRE(std::same_as<float, sg::node::traits<TestType>::rank_type>);
+	STATIC_REQUIRE(std::same_as<float, sg::node::rank_t<TestType>>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -173,7 +236,11 @@ TEMPLATE_TEST_CASE_SIG(
 	((bool expected, class Factory, class Node), expected, Factory, Node),
 	(false, minimal_node_factory, BasicTestNode<int>),
 	(true, minimal_node_factory, minimal_node),
-	(true, BasicNodeFactoryMock<minimal_node, generic_basic_graph::info>, minimal_node)
+	(true, BasicNodeFactoryMock<minimal_node, generic_basic_graph_stub::edge_type>, minimal_node),
+	(true, sg::NodeFactory<sg::BasicNode<std::string>>, sg::BasicNode<std::string>),
+	(false, sg::NodeFactory<sg::RankedNode<std::string, int>>, sg::BasicNode<std::string>),
+	(false, sg::NodeFactory<sg::BasicNode<std::string>>, sg::RankedNode<std::string, int>),
+	(true, sg::NodeFactory<sg::RankedNode<std::string, int>>, sg::RankedNode<std::string, int>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::node_factory_for<Factory, Node>);
@@ -182,27 +249,27 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
 	"concepts::compatible_with determines, whether the other type is compatible with T.",
 	"[graph][graph::concepts]",
-	((bool expected, class T, class Other), expected, T, Other),
-	(false, minimal_node, BasicTestNode<std::string>),
-	(true, minimal_node, BasicTestNode<int>),
-	(true, minimal_node, BasicGraph<minimal_node>::info),
-	(true, BasicTestNode<int>, BasicGraph<minimal_node>::info),
-	(false, BasicTestNode<std::string>, BasicGraph<minimal_node>::info),
-	(true, minimal_node, generic_basic_graph::info),
-	(true, BasicTestNode<int>, generic_basic_graph::info),
-	(false, BasicTestNode<std::string>, generic_basic_graph::info)
+	((bool expected, class Node, class Edge), expected, Node, Edge),
+	(true, minimal_node, BasicGraph<minimal_node>::edge_type),
+	(true, BasicTestNode<int>, BasicGraph<minimal_node>::edge_type),
+	(false, BasicTestNode<std::string>, BasicGraph<minimal_node>::edge_type),
+	(true, minimal_node, generic_basic_graph_stub::edge_type),
+	(true, BasicTestNode<int>, generic_basic_graph_stub::edge_type),
+	(false, BasicTestNode<std::string>, generic_basic_graph_stub::edge_type),
+	(false, ranked_node, generic_basic_graph_stub::edge_type),
+	(true, ranked_node, generic_ranked_graph_stub::edge_type)
 )
 {
-	STATIC_REQUIRE(expected == sg::concepts::compatible_with<T, Other>);
+	STATIC_REQUIRE(expected == sg::concepts::compatible_with<Node, Edge>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
 	"concepts::graph_for determines, whether the graph type satisfies the minimal requirements of the specified node.",
 	"[graph][graph::concepts]",
 	((bool expected, class Graph, class Node), expected, Graph, Node),
-	(true, generic_basic_graph, minimal_node),
-	(true, generic_basic_graph, BasicTestNode<int>),
-	(false, generic_basic_graph, BasicTestNode<std::string>),
+	(true, generic_basic_graph_stub, minimal_node),
+	(true, generic_basic_graph_stub, BasicTestNode<int>),
+	(false, generic_basic_graph_stub, BasicTestNode<std::string>),
 	(true, BasicGraph<minimal_node>, minimal_node),
 	(false, BasicGraph<minimal_node>, BasicTestNode<int>),
 	(false, BasicGraph<minimal_node>, BasicTestNode<std::string>)

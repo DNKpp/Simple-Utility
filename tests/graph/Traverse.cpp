@@ -35,9 +35,9 @@ namespace
 using DefaultNode = VertexMemberNode;
 using DefaultQueue = QueueMock<DefaultNode>;
 using DefaultState = sg::detail::BasicState<DefaultNode, DefaultQueue>;
-using DefaultTracker = TrackerMock<sg::feature_vertex_t<DefaultNode>>;
+using DefaultTracker = TrackerMock<sg::node::vertex_t<DefaultNode>>;
 using DefaultGraph = BasicGraph<DefaultNode>;
-using DefaultNodeFactory = BasicNodeFactoryMock<DefaultNode, DefaultGraph::info>;
+using DefaultNodeFactory = BasicNodeFactoryMock<DefaultNode, DefaultGraph::edge_type>;
 using DefaultDriver = sg::detail::BasicTraverseDriver<
 	DefaultNode,
 	DefaultState,
@@ -168,7 +168,7 @@ TEST_CASE("BasicTraverseDriver::next returns the current node, or std::nullopt."
 		};
 	}();
 
-	using VertexInfo = DefaultGraph::info;
+	using VertexInfo = DefaultGraph::edge_type;
 	DefaultGraph graphMock{};
 	auto& nodeFactoryMock = const_cast<DefaultNodeFactory&>(driver.node_factory());
 	auto& queueMock = const_cast<DefaultQueue&>(driver.state().queue());
@@ -206,7 +206,7 @@ TEST_CASE("BasicTraverseDriver::next returns the current node, or std::nullopt."
 	SECTION("Next returns std::nullopt.")
 	{
 		REQUIRE_CALL(graphMock, neighbor_infos(originNode))
-			.RETURN(std::vector<DefaultGraph::info>{});
+			.RETURN(std::vector<DefaultGraph::edge_type>{});
 
 		REQUIRE_CALL(queueMock, do_insert(matches(RangesEmpty{})));
 		REQUIRE_CALL(queueMock, empty())

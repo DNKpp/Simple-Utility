@@ -107,24 +107,25 @@ class BasicNodeFactoryMock
 public:
 	inline static constexpr bool trompeloeil_movable_mock = true;
 
-	using vertex_type = sg::feature_vertex_t<Node>;
+	using node_type = Node;
+	using vertex_type = sg::node::vertex_t<Node>;
 
 	MAKE_MOCK1(make_init_node, Node(const vertex_type&));
-	MAKE_MOCK2(make_successor_node, Node(const Node&, const VertexInfo&));
+	MAKE_MOCK2(make_successor_node, node_type(const node_type&, const VertexInfo&));
 };
 
 template <sg::concepts::node Node>
 class BasicGraph
 {
 public:
-	struct info
+	struct edge_type
 	{
-		using vertex_type = sg::feature_vertex_t<Node>;
+		using vertex_type = sg::node::vertex_t<Node>;
 
 		vertex_type vertex;
 
-		friend bool operator ==(const info&, const info&) = default; 
+		friend bool operator ==(const edge_type&, const edge_type&) = default; 
 	};
 
-	MAKE_CONST_MOCK1(neighbor_infos, std::vector<info>(const Node&));
+	MAKE_CONST_MOCK1(neighbor_infos, std::vector<edge_type>(const Node&));
 };
