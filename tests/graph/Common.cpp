@@ -197,6 +197,20 @@ namespace
 		using vertex_type = valid_vertex;
 	};
 
+	struct non_readable_weight_type
+	{
+	};
+
+	struct readable_but_unsatisfied_weight_type
+	{
+		using weight_type = non_mutable_plus;
+	};
+
+	struct readable_weight_type
+	{
+		using weight_type = valid_weight;
+	};
+
 	struct non_readable_rank_type
 	{
 	};
@@ -251,6 +265,18 @@ TEMPLATE_TEST_CASE_SIG(
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::readable_vertex_type<T>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"graph::concepts::readable_weight_type determines whether T contains a \"weight_type\" member alias.",
+	"[graph][graph::concepts]",
+	((bool expected, class T), expected, T),
+	(false, non_readable_weight_type),
+	(false, readable_but_unsatisfied_weight_type),
+	(true, readable_weight_type)
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::readable_weight_type<T>);
 }
 
 TEMPLATE_TEST_CASE_SIG(

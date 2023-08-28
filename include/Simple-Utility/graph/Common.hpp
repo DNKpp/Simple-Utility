@@ -60,8 +60,12 @@ namespace sl::graph::concepts
 									&& vertex<typename T::vertex_type>;
 
 	template <class T>
+	concept readable_weight_type = requires { typename T::weight_type; }
+								&& weight<typename T::weight_type>;
+
+	template <class T>
 	concept readable_rank_type = requires { typename T::rank_type; }
-								&& vertex<typename T::rank_type>;
+								&& rank<typename T::rank_type>;
 }
 
 namespace sl::graph::customize
