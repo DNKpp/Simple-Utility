@@ -40,6 +40,22 @@ namespace
 	{
 		MAKE_CONST_MOCK0(my_weight, int());
 	};
+
+	struct minimal_edge
+	{
+		using vertex_type = std::string;
+
+		vertex_type vertex;
+	};
+
+	struct minimal_weighted_edge
+	{
+		using vertex_type = std::string;
+		using weight_type = int;
+
+		vertex_type vertex;
+		weight_type weight;
+	};
 }
 
 template <>
@@ -84,4 +100,53 @@ TEST_CASE("graph::edge::weight serves as a customization point accessing the edg
 			.RETURN(expected);
 		REQUIRE(expected == sg::edge::weight(std::as_const(mock)));
 	}
+}
+
+TEST_CASE(
+	"Default graph::edge::traits exposes vertex_type, if readable.",
+	"[graph][graph::edge]"
+)
+{
+	using TestType = minimal_edge;
+
+	STATIC_REQUIRE(std::same_as<std::string, sg::edge::traits<TestType>::vertex_type>);
+	STATIC_REQUIRE(std::same_as<std::string, sg::edge::vertex_t<TestType>>);
+}
+
+TEST_CASE(
+	"Default graph::edge::traits exposes vertex_type and weight_type, if readable.",
+	"[graph][graph::edge]"
+)
+{
+	using TestType = minimal_weighted_edge;
+
+	STATIC_REQUIRE(std::same_as<std::string, sg::edge::traits<TestType>::vertex_type>);
+	STATIC_REQUIRE(std::same_as<std::string, sg::edge::vertex_t<TestType>>);
+
+	STATIC_REQUIRE(std::same_as<int, sg::edge::traits<TestType>::weight_type>);
+	STATIC_REQUIRE(std::same_as<int, sg::edge::weight_t<TestType>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"concepts::edge determines, whether the given type satisfies the requirements.",
+	"[graph][graph::concepts]",
+	((bool expected, class T), expected, T),
+	(true, minimal_edge),
+	(true, minimal_weighted_edge),
+	(true, BasicGraph<sg::BasicNode<std::string>>::edge_type)
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::edge<T>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"concepts::weighted_edge determines, whether the given type satisfies the requirements.",
+	"[graph][graph::concepts]",
+	((bool expected, class T), expected, T),
+	(false, BasicGraph<sg::BasicNode<std::string>>::edge_type),
+	(false, minimal_edge),
+	(true, minimal_weighted_edge)
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::weighted_edge<T>);
 }

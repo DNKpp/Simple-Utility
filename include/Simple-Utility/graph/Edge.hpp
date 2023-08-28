@@ -78,6 +78,55 @@ namespace sl::graph::edge
 {
 	inline constexpr graph::detail::vertex_fn vertex{};
 	inline constexpr detail::weight_fn weight{};
+
+	template <class>
+	struct traits;
+
+	template <class T>
+		requires concepts::readable_vertex_type<T>
+	struct traits<T>
+	{
+		using vertex_type = typename T::vertex_type;
+	};
+
+	template <class T>
+		requires concepts::readable_vertex_type<T>
+				&& concepts::readable_weight_type<T>
+	struct traits<T>
+	{
+		using vertex_type = typename T::vertex_type;
+		using weight_type = typename T::weight_type;
+	};
+}
+
+namespace sl::graph::concepts
+{
+	template <class T>
+	concept edge = sl::concepts::unqualified<T>
+					&& std::copyable<T>
+					&& std::destructible<T>
+					&& vertex<typename edge::traits<T>::vertex_type>
+					&& requires(const T& edge)
+					{
+						{ edge::vertex(edge) } -> std::convertible_to<typename edge::traits<T>::vertex_type>;
+					};
+
+	template <class T>
+	concept weighted_edge = edge<T>
+							&& weight<typename edge::traits<T>::weight_type>
+							&& requires(const T& edge)
+							{
+								{ edge::weight(edge) } -> std::convertible_to<typename edge::traits<T>::weight_type>;
+							};
+}
+
+namespace sl::graph::edge
+{
+	template <concepts::edge Edge>
+	using vertex_t = typename traits<Edge>::vertex_type;
+
+	template <concepts::edge Edge>
+	using weight_t = typename traits<Edge>::weight_type;
 }
 
 #endif
