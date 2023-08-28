@@ -12,8 +12,6 @@
 
 #include "Defines.hpp"
 
-#include "Simple-Utility/graph/Common.hpp"
-
 // ReSharper disable CppDeclaratorNeverUsed
 // ReSharper disable CppTypeAliasNeverUsed
 // ReSharper disable CppClangTidyClangDiagnosticUnusedMemberFunction
@@ -28,7 +26,7 @@ namespace
 		auto operator <=>(const non_equality_comparable&) const = default;
 	};
 
-	struct non_copyable  // NOLINT(cppcoreguidelines-special-member-functions)
+	struct non_copyable // NOLINT(cppcoreguidelines-special-member-functions)
 	{
 		non_copyable(const non_copyable&) = delete;
 		non_copyable& operator =(const non_copyable&) = delete;
@@ -45,39 +43,37 @@ namespace
 		bool operator ==(const non_totally_ordered&) const = default;
 	};
 
-	struct non_mutable_plus_rank
+	struct non_mutable_plus
 	{
-		auto operator <=>(const non_mutable_plus_rank&) const = default;
-		non_mutable_plus_rank operator +([[maybe_unused]] const non_mutable_plus_rank&) const;
+		non_mutable_plus operator +([[maybe_unused]] const non_mutable_plus&) const;
 	};
 
-	struct non_immutable_plus_rank
+	struct non_immutable_plus
 	{
-		auto operator <=>(const non_immutable_plus_rank&) const = default;
-
-		non_immutable_plus_rank& operator +=([[maybe_unused]] const non_immutable_plus_rank&);
+		non_immutable_plus& operator +=([[maybe_unused]] const non_immutable_plus&);
 	};
 
-	struct non_mutable_minus_rank
+	struct non_mutable_minus
 	{
-		auto operator <=>(const non_mutable_minus_rank&) const = default;
-
-		non_mutable_minus_rank operator +([[maybe_unused]] const non_mutable_minus_rank&) const;
+		non_mutable_minus operator +([[maybe_unused]] const non_mutable_minus&) const;
 	};
 
-	struct non_immutable_minus_rank
+	struct non_immutable_minus
 	{
-		auto operator <=>(const non_immutable_minus_rank&) const = default;
-		non_immutable_minus_rank& operator +=([[maybe_unused]] const non_immutable_minus_rank&);
+		non_immutable_minus& operator +=([[maybe_unused]] const non_immutable_minus&);
+	};
+
+	struct valid_weight
+	{
+		valid_weight& operator +=([[maybe_unused]] const valid_weight&);
+		valid_weight operator +([[maybe_unused]] const valid_weight&) const;
+		valid_weight& operator -=([[maybe_unused]] const valid_weight&);
+		valid_weight operator -([[maybe_unused]] const valid_weight&) const;
 	};
 
 	struct valid_rank
 	{
 		auto operator <=>(const valid_rank&) const = default;
-		valid_rank& operator +=([[maybe_unused]] const valid_rank&);
-		valid_rank operator +([[maybe_unused]] const valid_rank&) const;
-		valid_rank& operator -=([[maybe_unused]] const valid_rank&);
-		valid_rank operator -([[maybe_unused]] const valid_rank&) const;
 	};
 
 	struct member_vertex
@@ -125,6 +121,25 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
+	"graph::concepts::weight determines whether the given type can be used as weight type.",
+	"[graph][graph::concepts]",
+	((bool expected, class T), expected, T),
+	(true, int),
+	(true, float),
+	(true, valid_weight),
+	(false, const int),
+	(false, int&),
+	(false, non_copyable),
+	(false, non_mutable_plus),
+	(false, non_immutable_plus),
+	(false, non_mutable_minus),
+	(false, non_immutable_minus)
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::weight<T>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
 	"graph::concepts::rank determines whether the given type can be used as rank type.",
 	"[graph][graph::concepts]",
 	((bool expected, class T), expected, T),
@@ -134,12 +149,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, const int),
 	(false, int&),
 	(false, non_equality_comparable),
-	(false, non_copyable),
-	(false, non_totally_ordered),
-	(false, non_mutable_plus_rank),
-	(false, non_immutable_plus_rank),
-	(false, non_mutable_minus_rank),
-	(false, non_immutable_minus_rank)
+	(false, non_copyable)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::rank<T>);

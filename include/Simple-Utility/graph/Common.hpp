@@ -43,13 +43,17 @@ namespace sl::graph::concepts
 					&& std::copyable<T>;
 
 	template <class T>
-	concept rank = sl::concepts::unqualified<T>
-					&& std::totally_ordered<T>
-					&& std::regular<T>
+	concept weight = sl::concepts::unqualified<T>
+					&& std::copyable<T>
 					&& sl::concepts::plus<T>
 					&& sl::concepts::minus<T>
 					&& sl::concepts::plus_assign<T>
 					&& sl::concepts::minus_assign<T>;
+
+	template <class T>
+	concept rank = sl::concepts::unqualified<T>
+					&& std::regular<T>
+					&& std::totally_ordered<T>;
 
 	template <class T>
 	concept readable_vertex_type = requires { typename T::vertex_type; }
