@@ -73,14 +73,13 @@ namespace sl
 		in_place_constructor() = default;
 
 		[[nodiscard]]
-		constexpr operator Type() && noexcept(std::is_nothrow_constructible_v<Type, Args...>)
+		explicit constexpr operator Type() && noexcept(std::is_nothrow_constructible_v<Type, Args...>)
 		{
 			return std::make_from_tuple<Type>(std::move(m_Args));
 		}
 
 		template <class T, class... Ts>
-			requires std::constructible_from<T, Ts...>
-		friend constexpr auto in_place(Ts&&... args) noexcept;
+		friend constexpr in_place_constructor<T, Ts&&...> in_place(Ts&&... args) noexcept;
 
 	private:
 		std::tuple<Args...> m_Args;
@@ -100,9 +99,8 @@ namespace sl
 	 * \return in_place_constructor instance, storing the arguments as forwarding references.
 	 */
 	template <class Type, class... Args>
-		requires std::constructible_from<Type, Args...>
 	[[nodiscard]]
-	constexpr auto in_place(Args&&... args) noexcept
+	constexpr in_place_constructor<Type, Args&&...> in_place(Args&&... args) noexcept
 	{
 		return in_place_constructor<Type, Args&&...>{std::forward_as_tuple(std::forward<Args>(args)...)};
 	}

@@ -56,9 +56,9 @@ namespace
 	class ForwardingCTor
 	{
 	public:
-		template <std::convertible_to<T> Arg>
+		template <class Arg>
 		explicit ForwardingCTor(Arg&& arg)
-			: value{std::forward<Arg>(arg)}
+			: value{static_cast<T>(std::forward<Arg>(arg))}
 		{
 		}
 
@@ -71,7 +71,7 @@ namespace
 	public:
 		template <class... Args>
 		explicit InPlaceExpecting(sl::in_place_constructor<T, Args...>&& args)
-			: value{std::move(args)}
+			: value{static_cast<T>(std::move(args))}
 		{
 		}
 
@@ -88,9 +88,9 @@ namespace
 			sl::in_place_constructor<T2, T2s...>&& args2,
 			sl::in_place_constructor<T3, T3s...>&& args3
 		)
-			: value1{std::move(args1)},
-			value2{std::move(args2)},
-			value3{std::move(args3)}
+			: value1{static_cast<T1>(std::move(args1))},
+			value2{static_cast<T2>(std::move(args2))},
+			value3{static_cast<T3>(std::move(args3))}
 		{
 		}
 
@@ -203,6 +203,19 @@ TEST_CASE("in_place_constructor can be utilized from types, which expects some o
 		};
 
 		REQUIRE(1337 == obj.value1);
+		REQUIRE("Hello, World!" == obj.value2);
+		REQUIRE(42 == obj.value3);
+	}
+
+	SECTION("Supports immobile types")
+	{
+		const MultiInPlaceExpecting obj{
+			sl::in_place<immobile<std::string, int>>("World, Hello!", 1337),
+			sl::in_place<std::string>("Hello, World!"),
+			sl::in_place<int>(42)
+		};
+
+		REQUIRE(std::tuple{"World!, Hello", 42} == obj.value1.value);
 		REQUIRE("Hello, World!" == obj.value2);
 		REQUIRE(42 == obj.value3);
 	}
