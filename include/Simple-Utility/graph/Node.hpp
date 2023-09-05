@@ -149,12 +149,11 @@ namespace sl::graph::node
 								};
 
 	template <class Node, class Edge>
-	concept compatible_with = node<Node>
+	concept edge_for = node<Node>
 							&& edge<Edge>
 							&& std::same_as<edge::vertex_t<Edge>, node::vertex_t<Node>>
 							&& (!ranked_node<Node> || weighted_edge<Edge> && std::convertible_to<
-									edge::weight_t<Edge>, node::rank_t<Node>>)
-		;
+								edge::weight_t<Edge>, node::rank_t<Node>>);
 
 	template <class T, class Node>
 	concept graph_for = sl::concepts::unqualified<T>
@@ -162,7 +161,7 @@ namespace sl::graph::node
 						&& requires(const T& graph, const Node& node)
 						{
 							{ graph.neighbor_infos(node) } -> std::ranges::input_range;
-							requires compatible_with<
+							requires edge_for<
 								Node,
 								std::ranges::range_value_t<decltype(graph.neighbor_infos(node))>>;
 						};

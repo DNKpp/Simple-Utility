@@ -247,7 +247,7 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"concepts::compatible_with determines, whether the other type is compatible with T.",
+	"concepts::edge_for determines, whether the Edge type satisfies the minimal requirements of the Node type.",
 	"[graph][graph::concepts]",
 	((bool expected, class Node, class Edge), expected, Node, Edge),
 	(true, minimal_node, BasicGraph<minimal_node>::edge_type),
@@ -260,7 +260,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, ranked_node, generic_ranked_graph_stub::edge_type)
 )
 {
-	STATIC_REQUIRE(expected == sg::concepts::compatible_with<Node, Edge>);
+	STATIC_REQUIRE(expected == sg::concepts::edge_for<Node, Edge>);
 }
 
 TEMPLATE_TEST_CASE_SIG(
