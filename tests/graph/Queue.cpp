@@ -218,7 +218,6 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, free_fun_insert),
 	(false, member_fun_next),
 	(false, free_fun_next),
-	(false, QueueMock<BasicTestNode<int>>),
 	(true, QueueMock<TestNode>),
 	(true, std::stack<TestNode>)
 )

@@ -59,7 +59,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, GenericWeightedView<int, int>, GenericRankedNode<std::string, int>),
 	(true, GenericWeightedView<std::string, int>, GenericRankedNode<std::string, int>),
 
-	(true, BasicView<GenericBasicNode<std::string>>, GenericBasicNode<std::string>)
+	(true, BasicViewMock<std::string>, GenericBasicNode<std::string>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::view_for<Graph, Node>);

@@ -22,6 +22,8 @@ struct GenericBasicNode
 	using vertex_type = Vertex;
 
 	vertex_type vertex;
+
+	friend bool operator==(const GenericBasicNode&, const GenericBasicNode&) = default;
 };
 
 template <sg::concepts::vertex Vertex, sg::concepts::rank Rank>
@@ -32,6 +34,8 @@ struct GenericRankedNode
 
 	vertex_type vertex;
 	rank_type rank;
+
+	friend bool operator==(const GenericRankedNode&, const GenericRankedNode&) = default;
 };
 
 template <sg::concepts::vertex Vertex>
@@ -40,6 +44,8 @@ struct GenericBasicEdge
 	using vertex_type = Vertex;
 
 	vertex_type vertex;
+
+	friend bool operator==(const GenericBasicEdge&, const GenericBasicEdge&) = default;
 };
 
 template <sg::concepts::vertex Vertex, sg::concepts::weight Weight>
@@ -50,6 +56,8 @@ struct GenericWeightedEdge
 
 	vertex_type vertex;
 	weight_type weight;
+
+	friend bool operator==(const GenericWeightedEdge&, const GenericWeightedEdge&) = default;
 };
 
 template <sg::concepts::node Node>
@@ -125,18 +133,16 @@ public:
 	}
 };
 
-template <sg::concepts::node Node>
+template <sg::concepts::vertex Vertex>
 class BasicViewMock
 {
 public:
-	struct edge_type
+	using edge_type = GenericBasicEdge<Vertex>;
+
+	MAKE_CONST_MOCK1(edges, std::vector<edge_type>(const GenericBasicNode<Vertex>&));
+
+	std::vector<edge_type> edges(const sg::concepts::node auto& node)
 	{
-		using vertex_type = sg::node::vertex_t<Node>;
-
-		vertex_type vertex;
-
-		friend bool operator ==(const edge_type&, const edge_type&) = default;
-	};
-
-	MAKE_CONST_MOCK1(edges, std::vector<edge_type>(const Node&));
+		return edges(GenericBasicNode<Vertex>{.vertex = sg::node::vertex(node)});
+	}
 };
