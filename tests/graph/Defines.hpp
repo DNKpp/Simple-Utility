@@ -52,45 +52,6 @@ struct GenericWeightedEdge
 	weight_type weight;
 };
 
-template <sg::concepts::vertex Vertex>
-struct BasicTestNode
-{
-	using vertex_type = Vertex;
-
-	struct Mock
-	{
-		MAKE_CONST_MOCK1(vertex, vertex_type(const BasicTestNode&));
-	} inline static mock{};
-
-	friend constexpr vertex_type vertex(const BasicTestNode& node)
-	{
-		return mock.vertex(node);
-	}
-};
-
-template <sg::concepts::vertex Vertex, sg::concepts::rank Rank>
-struct RankedTestNode
-{
-	using vertex_type = Vertex;
-	using rank_type = Rank;
-
-	struct Mock
-	{
-		MAKE_CONST_MOCK1(vertex, vertex_type(const RankedTestNode&));
-		MAKE_CONST_MOCK1(rank, rank_type(const RankedTestNode&));
-	} inline static mock{};
-
-	friend constexpr vertex_type vertex(const RankedTestNode& node)
-	{
-		return mock.vertex(node);
-	}
-
-	friend constexpr rank_type rank(const RankedTestNode& node)
-	{
-		return mock.rank(node);
-	}
-};
-
 template <sg::concepts::node Node>
 class QueueMock
 {
