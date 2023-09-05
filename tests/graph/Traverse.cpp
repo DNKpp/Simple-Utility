@@ -36,7 +36,7 @@ using DefaultNode = VertexMemberNode;
 using DefaultQueue = QueueMock<DefaultNode>;
 using DefaultState = sg::detail::BasicState<DefaultNode, DefaultQueue>;
 using DefaultTracker = TrackerMock<sg::node::vertex_t<DefaultNode>>;
-using DefaultGraph = BasicGraph<DefaultNode>;
+using DefaultGraph = BasicViewMock<DefaultNode>;
 using DefaultNodeFactory = BasicNodeFactoryMock<DefaultNode, DefaultGraph::edge_type>;
 using DefaultDriver = sg::detail::BasicTraverseDriver<
 	DefaultNode,
@@ -177,7 +177,7 @@ TEST_CASE("BasicTraverseDriver::next returns the current node, or std::nullopt."
 	SECTION("Next returns a node.")
 	{
 		// vertex 43 will be skipped on purpose
-		REQUIRE_CALL(graphMock, neighbor_infos(originNode))
+		REQUIRE_CALL(graphMock, edges(originNode))
 			.RETURN(std::vector<VertexInfo>{{41}, {43}, {44}});
 
 		REQUIRE_CALL(nodeFactoryMock, make_successor_node(originNode, VertexInfo{41}))
@@ -205,7 +205,7 @@ TEST_CASE("BasicTraverseDriver::next returns the current node, or std::nullopt."
 
 	SECTION("Next returns std::nullopt.")
 	{
-		REQUIRE_CALL(graphMock, neighbor_infos(originNode))
+		REQUIRE_CALL(graphMock, edges(originNode))
 			.RETURN(std::vector<DefaultGraph::edge_type>{});
 
 		REQUIRE_CALL(queueMock, do_insert(matches(RangesEmpty{})));

@@ -15,6 +15,7 @@
 #include "Simple-Utility/graph/Node.hpp"
 #include "Simple-Utility/graph/Queue.hpp"
 #include "Simple-Utility/graph/Tracker.hpp"
+#include "Simple-Utility/graph/View.hpp"
 
 #include <array>
 #include <cassert>
@@ -157,12 +158,12 @@ namespace sl::graph::detail
 			assert(result && "Tracker returned false (already visited) for the origin node.");
 		}
 
-		template <concepts::graph_for<node_type> Graph> // let the concept here, because otherwise it results in an ICE on msvc v142
+		template <concepts::view_for<node_type> Graph> // let the concept here, because otherwise it results in an ICE on msvc v142
 		[[nodiscard]]
 		constexpr std::optional<node_type> next(const Graph& graph)
 		{
 			std::optional result = m_State.next(
-				filter_transform(graph.neighbor_infos(m_Current), m_Tracker, m_NodeFactory, m_Current));
+				filter_transform(graph.edges(m_Current), m_Tracker, m_NodeFactory, m_Current));
 			for (; result; result = m_State.next(std::array<node_type, 0>{}))
 			{
 				if (tracker::set_visited(m_Tracker, node::vertex(*result)))
@@ -210,7 +211,7 @@ namespace sl::graph::detail
 
 namespace sl::graph
 {
-	template <class Graph, class Driver>
+	template <class View, class Driver>
 	class Traverser final
 	{
 	public:
@@ -218,8 +219,8 @@ namespace sl::graph
 		using vertex_type = node::vertex_t<node_type>;
 
 		[[nodiscard]]
-		constexpr explicit Traverser(Graph graph, vertex_type origin)
-			: m_Graph{std::move(graph)},
+		constexpr explicit Traverser(View view, vertex_type origin)
+			: m_View{std::move(view)},
 			m_Driver{std::move(origin), std::tuple{}, std::tuple{}, std::tuple{}}
 		{
 		}
@@ -227,7 +228,7 @@ namespace sl::graph
 		[[nodiscard]]
 		std::optional<node_type> next()
 		{
-			return m_Driver.next(m_Graph);
+			return m_Driver.next(m_View);
 		}
 
 		struct Sentinel final
@@ -294,7 +295,7 @@ namespace sl::graph
 		}
 
 	private:
-		Graph m_Graph{};
+		View m_View{};
 		Driver m_Driver{};
 	};
 }

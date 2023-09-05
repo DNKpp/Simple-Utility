@@ -139,7 +139,7 @@ public:
 };
 
 template <sg::concepts::node Node, sg::concepts::node VertexInfo>
-	requires sg::concepts::compatible_with<Node, VertexInfo>
+	requires sg::concepts::edge_for<Node, VertexInfo>
 class BasicNodeFactoryMock
 {
 public:
@@ -150,10 +150,22 @@ public:
 
 	MAKE_MOCK1(make_init_node, Node(const vertex_type&));
 	MAKE_MOCK2(make_successor_node, node_type(const node_type&, const VertexInfo&));
+
+	template <class Info>
+		requires sg::concepts::edge_for<Node, Info>
+	node_type make_successor_node(const node_type& current, const Info& info)
+	{
+		VertexInfo convertedInfo{.vertex = sg::node::vertex(info)};
+		if constexpr (sg::concepts::ranked_node<VertexInfo>)
+		{
+			convertedInfo.rank = sg::node::rank(info);
+		}
+		return make_successor_node(current, convertedInfo);
+	}
 };
 
 template <sg::concepts::node Node>
-class BasicGraph
+class BasicViewMock
 {
 public:
 	struct edge_type
@@ -162,8 +174,8 @@ public:
 
 		vertex_type vertex;
 
-		friend bool operator ==(const edge_type&, const edge_type&) = default; 
+		friend bool operator ==(const edge_type&, const edge_type&) = default;
 	};
 
-	MAKE_CONST_MOCK1(neighbor_infos, std::vector<edge_type>(const Node&));
+	MAKE_CONST_MOCK1(edges, std::vector<edge_type>(const Node&));
 };
