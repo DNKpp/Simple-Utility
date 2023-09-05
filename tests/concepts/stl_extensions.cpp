@@ -359,6 +359,8 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(expected == nothrow_weakly_three_way_comparable_with<T1, T2, MinimalCategory>);
 }
 
+#ifdef SL_UTLITY_HAS_STD_FORMAT
+
 namespace
 {
 	struct Formattable
@@ -390,6 +392,8 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, NonFormattable, char),
 	(false, NonFormattable, wchar_t),
 	(true, Formattable, char),
+	(true, const Formattable, char),
+	(true, const Formattable&, char),
 	(true, Formattable, wchar_t),
 	(true, int, char),
 	(true, int, wchar_t),
@@ -401,3 +405,5 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(expected == formattable<T, Char>);
 }
+
+#endif

@@ -8,9 +8,10 @@
 
 #pragma once
 
+#include "Simple-Utility/Config.hpp"
+
 #include <compare>
 #include <concepts>
-#include <format>
 
 // ReSharper disable CppClangTidyClangDiagnosticDocumentation
 // ReSharper disable CppIdenticalOperandsInBinaryExpression
@@ -277,6 +278,22 @@ namespace sl::concepts
 		};
 
 	/**
+	* \}
+	*/
+}
+
+#ifdef SL_UTLITY_HAS_STD_FORMAT
+
+#include <format>
+
+namespace sl::concepts
+{
+	/**
+	* \addtogroup GROUP_STL_EXTENSION_CONCEPTS
+	* \{
+	*/
+
+	/**
 	 * \brief Determines, whether a complete specialization of ``std::formatter`` for the given (possibly cv-ref qualified) type exists.
 	 * \tparam T Type to check.
 	 * \tparam Char Used character type.
@@ -306,5 +323,7 @@ namespace sl::concepts
 	* \}
 	*/
 }
+
+#endif
 
 #endif
