@@ -119,10 +119,10 @@ public:
 	MAKE_MOCK1(make_init_node, Node(const vertex_type&));
 	MAKE_MOCK2(make_successor_node, node_type(const node_type&, const GenericBasicEdge<vertex_type>&));
 
-	template <sg::concepts::edge_for<Node> Edge>
+	template <sg::concepts::edge_for<node_type> Edge>
 	node_type make_successor_node(const node_type& current, const Edge& edge)
 	{
-		return make_successor_node(current, GenericBasicEdge<vertex_type>{.vertex = sg::node::vertex(edge)});
+		return make_successor_node(current, GenericBasicEdge<vertex_type>{.vertex = sg::edge::vertex(edge)});
 	}
 };
 
@@ -138,10 +138,10 @@ public:
 	MAKE_MOCK1(make_init_node, Node(const vertex_type&));
 	MAKE_MOCK2(make_successor_node, node_type(const node_type&, const GenericBasicEdge<vertex_type>&));
 
-	template <sg::concepts::edge_for<Node> Edge>
+	template <sg::concepts::edge_for<node_type> Edge>
 	node_type make_successor_node(const node_type& current, const Edge& edge)
 	{
-		return make_successor_node(current, GenericBasicEdge<vertex_type>{.vertex = sg::node::vertex(edge)});
+		return make_successor_node(current, GenericBasicEdge<vertex_type>{.vertex = sg::edge::vertex(edge)});
 	}
 };
 
