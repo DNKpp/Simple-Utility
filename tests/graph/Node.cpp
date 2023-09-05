@@ -74,39 +74,6 @@ namespace
 			return {.vertex = sg::node::vertex(v)};
 		}
 	};
-
-	struct generic_basic_graph_stub
-	{
-		struct edge_type
-		{
-			using vertex_type = int;
-			vertex_type vertex;
-		};
-
-		[[nodiscard]]
-		static std::vector<edge_type> neighbor_infos(const sg::concepts::node auto&)
-		{
-			return {};
-		}
-	};
-
-	struct generic_ranked_graph_stub
-	{
-		struct edge_type
-		{
-			using vertex_type = std::string;
-			using weight_type = int;
-			vertex_type vertex;
-			weight_type weight;
-		};
-
-		[[nodiscard]]
-		static std::vector<edge_type> neighbor_infos(const sg::concepts::ranked_node auto&)
-		{
-			return {};
-}
-	};
-
 	struct node_with_custom_trait
 	{
 		int vertex;
@@ -244,22 +211,5 @@ TEMPLATE_TEST_CASE_SIG(
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::node_factory_for<Factory, Node>);
-}
-
-TEMPLATE_TEST_CASE_SIG(
-	"concepts::edge_for determines, whether the Edge type satisfies the minimal requirements of the Node type.",
-	"[graph][graph::concepts]",
-	((bool expected, class Node, class Edge), expected, Node, Edge),
-	(true, minimal_node, BasicGraph<minimal_node>::edge_type),
-	(true, BasicTestNode<int>, BasicGraph<minimal_node>::edge_type),
-	(false, BasicTestNode<std::string>, BasicGraph<minimal_node>::edge_type),
-	(true, minimal_node, generic_basic_graph_stub::edge_type),
-	(true, BasicTestNode<int>, generic_basic_graph_stub::edge_type),
-	(false, BasicTestNode<std::string>, generic_basic_graph_stub::edge_type),
-	(false, ranked_node, generic_basic_graph_stub::edge_type),
-	(true, ranked_node, generic_ranked_graph_stub::edge_type)
-)
-{
-	STATIC_REQUIRE(expected == sg::concepts::edge_for<Node, Edge>);
 }
 

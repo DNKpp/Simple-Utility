@@ -11,7 +11,6 @@
 #include "Simple-Utility/Utility.hpp"
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/graph/Common.hpp"
-#include "Simple-Utility/graph/Edge.hpp"
 
 namespace sl::graph::customize
 {

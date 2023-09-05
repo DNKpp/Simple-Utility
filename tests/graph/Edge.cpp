@@ -40,22 +40,6 @@ namespace
 	{
 		MAKE_CONST_MOCK0(my_weight, int());
 	};
-
-	struct minimal_edge
-	{
-		using vertex_type = std::string;
-
-		vertex_type vertex;
-	};
-
-	struct minimal_weighted_edge
-	{
-		using vertex_type = std::string;
-		using weight_type = int;
-
-		vertex_type vertex;
-		weight_type weight;
-	};
 }
 
 template <>
@@ -107,7 +91,7 @@ TEST_CASE(
 	"[graph][graph::edge]"
 )
 {
-	using TestType = minimal_edge;
+	using TestType = GenericBasicEdge<std::string>;
 
 	STATIC_REQUIRE(std::same_as<std::string, sg::edge::traits<TestType>::vertex_type>);
 	STATIC_REQUIRE(std::same_as<std::string, sg::edge::vertex_t<TestType>>);
@@ -118,7 +102,7 @@ TEST_CASE(
 	"[graph][graph::edge]"
 )
 {
-	using TestType = minimal_weighted_edge;
+	using TestType = GenericWeightedEdge<std::string, int>;
 
 	STATIC_REQUIRE(std::same_as<std::string, sg::edge::traits<TestType>::vertex_type>);
 	STATIC_REQUIRE(std::same_as<std::string, sg::edge::vertex_t<TestType>>);
@@ -131,9 +115,12 @@ TEMPLATE_TEST_CASE_SIG(
 	"concepts::edge determines, whether the given type satisfies the requirements.",
 	"[graph][graph::concepts]",
 	((bool expected, class T), expected, T),
-	(true, minimal_edge),
-	(true, minimal_weighted_edge),
-	(true, BasicGraph<sg::BasicNode<std::string>>::edge_type)
+	(false, member_weight),
+	(false, member_fun_weight),
+	(false, free_fun_weight),
+	(false, custom_fun_weight),
+	(true, GenericBasicEdge<std::string>),
+	(true, GenericWeightedEdge<std::string, int>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::edge<T>);
@@ -143,10 +130,28 @@ TEMPLATE_TEST_CASE_SIG(
 	"concepts::weighted_edge determines, whether the given type satisfies the requirements.",
 	"[graph][graph::concepts]",
 	((bool expected, class T), expected, T),
-	(false, BasicGraph<sg::BasicNode<std::string>>::edge_type),
-	(false, minimal_edge),
-	(true, minimal_weighted_edge)
+	(false, member_weight),
+	(false, member_fun_weight),
+	(false, free_fun_weight),
+	(false, custom_fun_weight),
+	(false, GenericBasicEdge<std::string>),
+	(true, GenericWeightedEdge<std::string, int>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::weighted_edge<T>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"concepts::edge_for determines, whether the Edge type satisfies the minimal requirements of the Node type.",
+	"[graph][graph::concepts]",
+	((bool expected, class Edge, class Node), expected, Edge, Node),
+	(false, GenericBasicEdge<std::string>, GenericBasicNode<int>),
+	(true, GenericBasicEdge<std::string>, GenericBasicNode<std::string>),
+	(true, (GenericWeightedEdge<std::string, int>), GenericBasicNode<std::string>),
+
+	(false, GenericBasicEdge<std::string>, (GenericRankedNode<std::string, int>)),
+	(true, (GenericWeightedEdge<std::string, int>), (GenericRankedNode<std::string, int>))
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::edge_for<Edge, Node>);
 }

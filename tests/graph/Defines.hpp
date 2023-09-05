@@ -9,6 +9,7 @@
 #include <catch2/trompeloeil.hpp>
 
 #include "Simple-Utility/graph/Common.hpp"
+#include "Simple-Utility/graph/Edge.hpp"
 #include "Simple-Utility/graph/Node.hpp"
 #include "Simple-Utility/graph/Tracker.hpp"
 #include "Simple-Utility/graph/View.hpp"
