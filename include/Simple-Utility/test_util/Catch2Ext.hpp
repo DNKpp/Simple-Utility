@@ -8,6 +8,9 @@
 
 #pragma once
 
+#include "Simple-Utility/Config.hpp"
+#include "Simple-Utility/concepts/stl_extensions.hpp"
+
 #include <catch2/matchers/catch_matchers_templated.hpp>
 
 #include <ranges>
@@ -29,5 +32,22 @@ namespace catch_ext
 		}
 	};
 }
+
+#ifdef SL_UTLITY_HAS_STD_FORMAT
+
+#include <format>
+
+template <class T>
+	requires sl::concepts::formattable<T, char>
+			&& (!Catch::Detail::IsStreamInsertable<T>::value)
+struct Catch::StringMaker<T>
+{
+	static std::string convert(const T& value)
+	{
+		return std::format("{}", value);
+	}
+};
+
+#endif
 
 #endif

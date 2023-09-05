@@ -18,3 +18,33 @@ TEST_CASE("catch_ext::RangesEmpty::describe prints a description.", "[test_util]
 {
 	REQUIRE_THAT(catch_ext::RangesEmpty{}.describe(), !catch_ext::RangesEmpty{});
 }
+
+#ifdef SL_UTLITY_HAS_STD_FORMAT
+
+namespace
+{
+	struct TestType
+	{
+		int value{};
+	};
+}
+
+template <class Char>
+struct std::formatter<TestType, Char>
+	: public std::formatter<int, Char>
+{
+	template<class FormatContext>
+    auto format(TestType t, FormatContext& fc) const
+    {
+		return std::format_to(fc.out(), "TestType: {}", t.value);
+    }
+};
+
+TEST_CASE("Catch::StringMaker is extended by std::format compatible types.", "[test_util][test_util::catch2]")
+{
+	STATIC_CHECK(sl::concepts::formattable<TestType, char>);
+
+	REQUIRE("TestType: 42" == Catch::StringMaker<TestType>{}.convert(TestType{42}));
+}
+
+#endif
