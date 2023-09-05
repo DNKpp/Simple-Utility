@@ -8,8 +8,12 @@
 
 #pragma once
 
+#include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/graph/Edge.hpp"
 #include "Simple-Utility/graph/Node.hpp"
+
+#include <concepts>
+#include <ranges>
 
 namespace sl::graph::view
 {
