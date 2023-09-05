@@ -25,7 +25,7 @@ using DefaultQueue = QueueMock<DefaultNode>;
 using DefaultState = sg::detail::BasicState<DefaultNode, DefaultQueue>;
 using DefaultTracker = TrackerMock<sg::node::vertex_t<DefaultNode>>;
 using DefaultView = BasicViewMock<sg::node::vertex_t<DefaultNode>>;
-using DefaultNodeFactory = BasicNodeFactoryMock<DefaultNode, DefaultView::edge_type>;
+using DefaultNodeFactory = GenericBasicNodeFactoryMock<DefaultNode>;
 using DefaultDriver = sg::detail::BasicTraverseDriver<
 	DefaultNode,
 	DefaultState,

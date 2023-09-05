@@ -4,6 +4,7 @@ target_sources(
 	"Common.cpp"
 	"Edge.cpp"
 	"Node.cpp"
+	"NodeFactory.cpp"
 	"Queue.cpp"
 	"Tracker.cpp"
 	"Traverse.cpp"

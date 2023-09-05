@@ -132,19 +132,4 @@ namespace sl::graph::node
 	using rank_t = typename traits<Node>::rank_type;
 }
 
-					};
-
-	template <class T, class Node>
-	concept node_factory_for = sl::concepts::unqualified<T>
-								&& node<Node>
-								&& std::destructible<T>
-								&& requires(T& factory, const Node& node)
-								{
-									{ factory.make_init_node(node::vertex(node)) } -> std::convertible_to<Node>;
-									/* Well, the info param is quite tricky here. We could simply expect it to be default constructible and {} it,
-									* but this will fail for templated types. So, just insert the node type itself, as this should provide
-									* as many info as we need.. */
-									{ factory.make_successor_node(node, node) } -> std::convertible_to<Node>;
-								};
-
 #endif

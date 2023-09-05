@@ -59,21 +59,6 @@ namespace
 		rank_type rank;
 	};
 
-	struct minimal_node_factory
-	{
-		using node_type = minimal_node;
-		using vertex_type = sg::node::vertex_t<node_type>;
-
-		static node_type make_init_node(const vertex_type& v)
-		{
-			return {.vertex = v};
-		}
-
-		static node_type make_successor_node([[maybe_unused]] const node_type& predecessor, const node_type& v)
-		{
-			return {.vertex = sg::node::vertex(v)};
-		}
-	};
 	struct node_with_custom_trait
 	{
 		int vertex;
@@ -138,7 +123,8 @@ TEMPLATE_TEST_CASE_SIG(
 	((bool expected, class T), expected, T),
 	(true, minimal_node),
 	(true, ranked_node),
-	(true, BasicTestNode<int>)
+	(true, GenericBasicNode<std::string>),
+	(true, GenericRankedNode<std::string, int>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::node<T>);
@@ -152,7 +138,9 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, member_fun_rank),
 	(false, free_fun_rank),
 	(false, minimal_node),
-	(true, ranked_node)
+	(true, ranked_node),
+	(false, GenericBasicNode<std::string>),
+	(true, GenericRankedNode<std::string, int>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::ranked_node<T>);
@@ -197,19 +185,4 @@ TEST_CASE(
 	STATIC_REQUIRE(std::same_as<float, sg::node::rank_t<TestType>>);
 }
 
-TEMPLATE_TEST_CASE_SIG(
-	"concepts::node_factory_for determines, whether the given type satisfies the requirements of a node_factory for the specified node type.",
-	"[graph][graph::concepts]",
-	((bool expected, class Factory, class Node), expected, Factory, Node),
-	(false, minimal_node_factory, BasicTestNode<int>),
-	(true, minimal_node_factory, minimal_node),
-	(true, BasicNodeFactoryMock<minimal_node, generic_basic_graph_stub::edge_type>, minimal_node),
-	(true, sg::NodeFactory<sg::BasicNode<std::string>>, sg::BasicNode<std::string>),
-	(false, sg::NodeFactory<sg::RankedNode<std::string, int>>, sg::BasicNode<std::string>),
-	(false, sg::NodeFactory<sg::BasicNode<std::string>>, sg::RankedNode<std::string, int>),
-	(true, sg::NodeFactory<sg::RankedNode<std::string, int>>, sg::RankedNode<std::string, int>)
-)
-{
-	STATIC_REQUIRE(expected == sg::concepts::node_factory_for<Factory, Node>);
-}
 

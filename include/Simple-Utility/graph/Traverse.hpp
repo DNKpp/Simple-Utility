@@ -13,6 +13,7 @@
 #include "Simple-Utility/functional/Tuple.hpp"
 #include "Simple-Utility/graph/Common.hpp"
 #include "Simple-Utility/graph/Node.hpp"
+#include "Simple-Utility/graph/NodeFactory.hpp"
 #include "Simple-Utility/graph/Queue.hpp"
 #include "Simple-Utility/graph/Tracker.hpp"
 #include "Simple-Utility/graph/View.hpp"
@@ -126,7 +127,7 @@ namespace sl::graph::detail
 		concepts::node Node,
 		state_for<Node> StateStrategy,
 		concepts::tracker_for<node::vertex_t<Node>> TrackingStrategy,
-		concepts::node_factory_for<Node> NodeFactoryStrategy>
+		class NodeFactoryStrategy>
 	class BasicTraverseDriver
 	{
 	public:
@@ -158,9 +159,10 @@ namespace sl::graph::detail
 			assert(result && "Tracker returned false (already visited) for the origin node.");
 		}
 
-		template <concepts::view_for<node_type> Graph> // let the concept here, because otherwise it results in an ICE on msvc v142
+		template <concepts::view_for<node_type> View> // let the concept here, because otherwise it results in an ICE on msvc v142
+			requires concepts::node_factory_for<NodeFactoryStrategy, Node, view::edge_t<View>>
 		[[nodiscard]]
-		constexpr std::optional<node_type> next(const Graph& graph)
+		constexpr std::optional<node_type> next(const View& graph)
 		{
 			std::optional result = m_State.next(
 				filter_transform(graph.edges(m_Current), m_Tracker, m_NodeFactory, m_Current));
