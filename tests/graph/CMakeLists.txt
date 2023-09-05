@@ -7,4 +7,5 @@ target_sources(
 	"Queue.cpp"
 	"Tracker.cpp"
 	"Traverse.cpp"
+	"View.cpp"
 )

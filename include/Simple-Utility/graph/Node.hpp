@@ -148,22 +148,4 @@ namespace sl::graph::node
 									{ factory.make_successor_node(node, node) } -> std::convertible_to<Node>;
 								};
 
-	template <class Node, class Edge>
-	concept edge_for = node<Node>
-							&& edge<Edge>
-							&& std::same_as<edge::vertex_t<Edge>, node::vertex_t<Node>>
-							&& (!ranked_node<Node> || weighted_edge<Edge> && std::convertible_to<
-								edge::weight_t<Edge>, node::rank_t<Node>>);
-
-	template <class T, class Node>
-	concept graph_for = sl::concepts::unqualified<T>
-						&& node<Node>
-						&& requires(const T& graph, const Node& node)
-						{
-							{ graph.neighbor_infos(node) } -> std::ranges::input_range;
-							requires edge_for<
-								Node,
-								std::ranges::range_value_t<decltype(graph.neighbor_infos(node))>>;
-						};
-}
 #endif

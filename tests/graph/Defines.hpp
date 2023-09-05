@@ -11,8 +11,45 @@
 #include "Simple-Utility/graph/Common.hpp"
 #include "Simple-Utility/graph/Node.hpp"
 #include "Simple-Utility/graph/Tracker.hpp"
+#include "Simple-Utility/graph/View.hpp"
 
 namespace sg = sl::graph;
+
+template <sg::concepts::vertex Vertex>
+struct GenericBasicNode
+{
+	using vertex_type = Vertex;
+
+	vertex_type vertex;
+};
+
+template <sg::concepts::vertex Vertex, sg::concepts::rank Rank>
+struct GenericRankedNode
+{
+	using vertex_type = Vertex;
+	using rank_type = Rank;
+
+	vertex_type vertex;
+	rank_type rank;
+};
+
+template <sg::concepts::vertex Vertex>
+struct GenericBasicEdge
+{
+	using vertex_type = Vertex;
+
+	vertex_type vertex;
+};
+
+template <sg::concepts::vertex Vertex, sg::concepts::weight Weight>
+struct GenericWeightedEdge
+{
+	using vertex_type = Vertex;
+	using weight_type = Weight;
+
+	vertex_type vertex;
+	weight_type weight;
+};
 
 template <sg::concepts::vertex Vertex>
 struct BasicTestNode
