@@ -10,6 +10,7 @@
 
 #include <compare>
 #include <concepts>
+#include <format>
 
 // ReSharper disable CppClangTidyClangDiagnosticDocumentation
 // ReSharper disable CppIdenticalOperandsInBinaryExpression
@@ -273,6 +274,32 @@ namespace sl::concepts
 		{
 			{ t1 <=> t2 } noexcept -> detail::compares_as<MinimumCategory>;
 			{ t2 <=> t1 } noexcept -> detail::compares_as<MinimumCategory>;
+		};
+
+	/**
+	 * \brief Determines, whether a complete specialization of ``std::formatter`` for the given (possibly cv-ref qualified) type exists.
+	 * \tparam T Type to check.
+	 * \tparam Char Used character type.
+	 * \details This is an adapted implementation of the ``std::formattable`` concept, which is added c++23.
+	 * \note This implementation takes a simple but reasonable shortcut in assuming, that ```Char`` is either ``char`` or ``wchar_t``,
+	 * which must not necessarily true.
+	 * \see Adapted from here: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2286r8.html#concept-formattable
+	 * \see https://en.cppreference.com/w/cpp/utility/format/formattable
+	 */
+	template <class T, class Char>
+	concept formattable =
+		std::semiregular<std::formatter<std::remove_cvref_t<T>, Char>>
+		&& requires(
+		std::formatter<std::remove_cvref_t<T>, Char> formatter,
+		T t,
+		std::conditional_t<std::same_as<Char, char>, std::format_context, std::wformat_context> formatContext,
+		std::basic_format_parse_context<Char> parseContext
+	)
+		{
+			{ formatter.parse(parseContext) } -> std::same_as<typename std::basic_format_parse_context<Char>::iterator>;
+			{
+				std::as_const(formatter).format(t, formatContext)
+			} -> std::same_as<typename std::remove_reference_t<decltype(formatContext)>::iterator>;
 		};
 
 	/**

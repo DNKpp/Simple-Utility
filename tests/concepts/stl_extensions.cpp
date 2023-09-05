@@ -8,6 +8,7 @@
 #include "../helper.hpp"
 
 #include <optional>
+#include <string>
 
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 
@@ -356,4 +357,47 @@ TEMPLATE_TEST_CASE_SIG(
 )
 {
 	STATIC_REQUIRE(expected == nothrow_weakly_three_way_comparable_with<T1, T2, MinimalCategory>);
+}
+
+namespace
+{
+	struct Formattable
+	{
+		int value{};
+	};
+
+	struct NonFormattable
+	{
+		int value{};
+	};
+}
+
+template <class Char>
+struct std::formatter<Formattable, Char>
+	: public std::formatter<int, Char>
+{
+	template <class FormatContext>
+	auto format(Formattable t, FormatContext& fc) const
+	{
+		return std::formatter<int, Char>::format(t.value, fc);
+	}
+};
+
+TEMPLATE_TEST_CASE_SIG(
+	"formattable checks, whether a complete specialization of std::formatter for the given type T exists.",
+	"[concepts][stl_ext]",
+	((bool expected, class T, class Char), expected, T, Char),
+	(false, NonFormattable, char),
+	(false, NonFormattable, wchar_t),
+	(true, Formattable, char),
+	(true, Formattable, wchar_t),
+	(true, int, char),
+	(true, int, wchar_t),
+	(true, std::string, char),
+	(false, std::string, wchar_t),
+	(false, std::wstring, char),
+	(true, std::wstring, wchar_t)
+)
+{
+	STATIC_REQUIRE(expected == formattable<T, Char>);
 }
