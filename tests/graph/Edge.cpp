@@ -12,11 +12,12 @@
 
 #include "Defines.hpp"
 
+// ReSharper disable CppDeclaratorNeverUsed
+
 namespace
 {
 	struct member_weight
 	{
-		// ReSharper disable once CppDeclaratorNeverUsed
 		int weight;
 	};
 
@@ -29,7 +30,6 @@ namespace
 	{
 		MAKE_CONST_MOCK0(my_weight, int());
 
-		// ReSharper disable once CppDeclaratorNeverUsed
 		friend int weight(const free_fun_weight& v)
 		{
 			return v.my_weight();

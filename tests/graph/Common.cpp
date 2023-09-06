@@ -78,7 +78,6 @@ namespace
 
 	struct member_vertex
 	{
-		// ReSharper disable once CppDeclaratorNeverUsed
 		int vertex;
 	};
 
@@ -91,7 +90,6 @@ namespace
 	{
 		MAKE_CONST_MOCK0(my_vertex, int());
 
-		// ReSharper disable once CppDeclaratorNeverUsed
 		friend int vertex(const free_fun_vertex& v)
 		{
 			return v.my_vertex();
@@ -196,12 +194,6 @@ namespace
 
 	struct readable_rank_type
 	{
-		using rank_type = valid_rank;
-	};
-
-	struct ranked_feature_category_type
-	{
-		using vertex_type = valid_vertex;
 		using rank_type = valid_rank;
 	};
 }

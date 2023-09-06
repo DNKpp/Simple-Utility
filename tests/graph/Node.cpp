@@ -14,11 +14,12 @@
 
 #include <string>
 
+// ReSharper disable CppDeclaratorNeverUsed
+
 namespace
 {
 	struct member_rank
 	{
-		// ReSharper disable once CppDeclaratorNeverUsed
 		int rank;
 	};
 
@@ -31,7 +32,6 @@ namespace
 	{
 		MAKE_CONST_MOCK0(my_rank, int());
 
-		// ReSharper disable once CppDeclaratorNeverUsed
 		friend int rank(const free_fun_rank& v)
 		{
 			return v.my_rank();
