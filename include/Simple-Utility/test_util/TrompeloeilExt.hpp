@@ -8,6 +8,7 @@
 
 #pragma once
 
+// ReSharper disable once CppUnusedIncludeDirective
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_templated.hpp>
 
@@ -16,6 +17,9 @@
 
 #include <concepts>
 #include <type_traits>
+
+#include "Simple-Utility/Config.hpp"
+#include "Simple-Utility/concepts/stl_extensions.hpp"
 
 namespace trompeloeil_ext
 {
@@ -48,5 +52,18 @@ namespace trompeloeil_ext
 		return matches_matcher_fn<std::remove_cvref_t<Matcher>>{}(std::forward<Matcher>(matcher));
 	};
 }
+
+#ifdef SL_UTILITY_HAS_STD_FORMAT
+
+template <sl::concepts::formattable<char> T>
+struct trompeloeil::printer<T>
+{
+	static void print(std::ostream& os, const T& obj)
+	{
+		std::format_to(std::ostream_iterator<char>{os}, "{}", obj);
+	}
+};
+
+#endif
 
 #endif

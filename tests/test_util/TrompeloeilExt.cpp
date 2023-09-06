@@ -29,3 +29,36 @@ TEST_CASE("trompeloeil_ext::matches can be used to print something to an ostream
 
 	REQUIRE(!std::ranges::empty(ss.str()));
 }
+
+#ifdef SL_UTILITY_HAS_STD_FORMAT
+
+namespace
+{
+	struct TestType
+	{
+		int value{};
+	};
+}
+
+template <class Char>
+struct std::formatter<TestType, Char>
+	: public std::formatter<int, Char>
+{
+	template<class FormatContext>
+    auto format(TestType t, FormatContext& fc) const
+    {
+		return std::format_to(fc.out(), "TestType: {}", t.value);
+    }
+};
+
+TEST_CASE("trompeloeil::printer is extended by std::format compatible types.", "[test_util][test_util::trompeloeil]")
+{
+	STATIC_CHECK(sl::concepts::formattable<TestType, char>);
+
+	std::ostringstream os{};
+	trompeloeil::print(os, TestType{42});
+
+	REQUIRE("TestType: 42" == os.str());
+}
+
+#endif
