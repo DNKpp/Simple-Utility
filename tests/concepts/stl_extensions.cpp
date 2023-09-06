@@ -359,7 +359,7 @@ TEMPLATE_TEST_CASE_SIG(
 	STATIC_REQUIRE(expected == nothrow_weakly_three_way_comparable_with<T1, T2, MinimalCategory>);
 }
 
-#ifdef SL_UTLITY_HAS_STD_FORMAT
+#ifdef SL_UTILITY_HAS_STD_FORMAT
 
 namespace
 {

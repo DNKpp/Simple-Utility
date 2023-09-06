@@ -19,7 +19,7 @@ TEST_CASE("catch_ext::RangesEmpty::describe prints a description.", "[test_util]
 	REQUIRE_THAT(catch_ext::RangesEmpty{}.describe(), !catch_ext::RangesEmpty{});
 }
 
-#ifdef SL_UTLITY_HAS_STD_FORMAT
+#ifdef SL_UTILITY_HAS_STD_FORMAT
 
 namespace
 {

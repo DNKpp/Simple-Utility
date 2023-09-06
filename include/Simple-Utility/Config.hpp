@@ -31,8 +31,8 @@
     "." SL_UTILITY_XSTR(SL_UTILITY_VERSION_PATCH)
 
 
-#if defined(__cpp_lib_format) && __cpp_lib_format >= 201907L
-	#define SL_UTLITY_HAS_STD_FORMAT
+#if defined(_MSC_VER) || (__cpp_lib_format >= 201907L)
+	#define SL_UTILITY_HAS_STD_FORMAT
 #endif
 
 #endif

@@ -282,7 +282,7 @@ namespace sl::concepts
 	*/
 }
 
-#ifdef SL_UTLITY_HAS_STD_FORMAT
+#ifdef SL_UTILITY_HAS_STD_FORMAT
 
 #include <format>
 
