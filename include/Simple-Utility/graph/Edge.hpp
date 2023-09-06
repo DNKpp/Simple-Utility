@@ -109,7 +109,9 @@ namespace sl::graph::concepts
 					&& vertex<typename edge::traits<T>::vertex_type>
 					&& requires(const T& edge)
 					{
-						{ edge::vertex(edge) } -> std::convertible_to<typename edge::traits<T>::vertex_type>;
+						// fixes compile error on msvc v142
+						// ReSharper disable once CppRedundantTemplateKeyword
+						{ edge::vertex(edge) } -> std::convertible_to<typename edge::template traits<T>::vertex_type>;
 					};
 
 	template <class T>
@@ -117,7 +119,9 @@ namespace sl::graph::concepts
 							&& weight<typename edge::traits<T>::weight_type>
 							&& requires(const T& edge)
 							{
-								{ edge::weight(edge) } -> std::convertible_to<typename edge::traits<T>::weight_type>;
+								// fixes compile error on msvc v142
+								// ReSharper disable once CppRedundantTemplateKeyword
+								{ edge::weight(edge) } -> std::convertible_to<typename edge::template traits<T>::weight_type>;
 							};
 }
 

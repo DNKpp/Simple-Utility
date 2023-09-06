@@ -28,12 +28,16 @@ namespace sl::graph::concepts
 						&& sl::concepts::unqualified<T>
 						&& requires(const T& view, const Node& node)
 						{
-							typename view::traits<T>::edge_type;
-							requires edge_for<typename view::traits<T>::edge_type, Node>;
+							// fixes compile error on msvc v142
+							// ReSharper disable once CppRedundantTemplateKeyword
+							typename view::template traits<T>::edge_type;
+							// ReSharper disable once CppRedundantTemplateKeyword
+							requires edge_for<typename view::template traits<T>::edge_type, Node>;
 							{ view.edges(node) } -> std::ranges::input_range;
 							requires std::convertible_to<
 								std::ranges::range_value_t<decltype(view.edges(node))>,
-								typename view::traits<T>::edge_type>;
+								// ReSharper disable once CppRedundantTemplateKeyword
+								typename view::template traits<T>::edge_type>;
 						};
 }
 

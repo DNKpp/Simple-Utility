@@ -111,7 +111,9 @@ namespace sl::graph::concepts
 					&& vertex<typename node::traits<T>::vertex_type>
 					&& requires(const T& node)
 					{
-						{ node::vertex(node) } -> std::convertible_to<typename node::traits<T>::vertex_type>;
+						// fixes compile error on msvc v142
+						// ReSharper disable once CppRedundantTemplateKeyword
+						{ node::vertex(node) } -> std::convertible_to<typename node::template traits<T>::vertex_type>;
 					};
 
 	template <class T>
@@ -119,7 +121,9 @@ namespace sl::graph::concepts
 						&& rank<typename node::traits<T>::rank_type>
 						&& requires(const T& node)
 						{
-							{ node::rank(node) } -> std::convertible_to<typename node::traits<T>::rank_type>;
+							// fixes compile error on msvc v142
+							// ReSharper disable once CppRedundantTemplateKeyword
+							{ node::rank(node) } -> std::convertible_to<typename node::template traits<T>::rank_type>;
 						};
 }
 

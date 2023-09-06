@@ -153,7 +153,7 @@ public:
 
 	MAKE_CONST_MOCK1(edges, std::vector<edge_type>(const GenericBasicNode<Vertex>&));
 
-	std::vector<edge_type> edges(const sg::concepts::node auto& node)
+	std::vector<edge_type> edges(const sg::concepts::node auto& node) const
 	{
 		return edges(GenericBasicNode<Vertex>{.vertex = sg::node::vertex(node)});
 	}
