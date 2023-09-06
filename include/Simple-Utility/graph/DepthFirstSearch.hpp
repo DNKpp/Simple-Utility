@@ -38,7 +38,7 @@ namespace sl::graph::dfs
 		[[nodiscard]]
 		static constexpr node_type make_successor_node([[maybe_unused]] const node_type& current, const Edge& edge)
 		{
-			return node_type{.vertex = edge::vertex(edge)};
+			return node_type{.vertex = edge::destination(edge)};
 		}
 	};
 
@@ -46,7 +46,7 @@ namespace sl::graph::dfs
 	struct Edge
 	{
 		using vertex_type = Vertex;
-		vertex_type vertex{};
+		vertex_type destination{};
 	};
 
 	template <

@@ -39,7 +39,7 @@ namespace
 			std::ranges::transform(
 				vertices,
 				std::back_inserter(infos),
-				[](const int v) { return edge_type{.vertex = v}; });
+				[](const int v) { return edge_type{.destination = v}; });
 			return infos;
 		}
 	} inline constexpr graph{};

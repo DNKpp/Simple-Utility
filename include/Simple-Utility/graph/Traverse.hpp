@@ -87,38 +87,36 @@ namespace sl::graph::detail
 #if (defined(__clang__) && __clang_major__ < 16) \
 	|| (defined(__GNUG__) && __GNUG__ < 12)
 
-	template <class Source, class Node>
+	template <class Edges, class Node>
 	[[nodiscard]]
-	constexpr std::vector<Node> filter_transform(const Source& neighbors, auto& tracker, auto& nodeFactory, const Node& currentNode)
+	constexpr std::vector<Node> filter_transform(const Edges& edges, auto& tracker, auto& nodeFactory, const Node& currentNode)
 	{
 		std::vector<Node> nodes{};
-		if constexpr (std::ranges::sized_range<Source>)
+		if constexpr (std::ranges::sized_range<Edges>)
 		{
-			nodes.reserve(std::ranges::size(neighbors));
+			nodes.reserve(std::ranges::size(edges));
 		}
 
-		for (const auto& info : neighbors)
+		for (const auto& edge : edges)
 		{
-			if (tracker::set_discovered(tracker, node::vertex(info)))
+			if (tracker::set_discovered(tracker, edge::destination(edge)))
 			{
-				nodes.emplace_back(nodeFactory.make_successor_node(currentNode, info));
+				nodes.emplace_back(nodeFactory.make_successor_node(currentNode, edge));
 			}
 		}
 
 		return nodes;
-	/* LCOV_EXCL_START */
 	};
-	/* LCOV_EXCL_STOP */
 
 #else
 
-	template <class Source, class Node>
+	template <class Edges, class Node>
 	[[nodiscard]]
-	constexpr auto filter_transform(Source&& neighbors, auto& tracker, auto& nodeFactory, const Node& currentNode)
+	constexpr auto filter_transform(Edges&& edges, auto& tracker, auto& nodeFactory, const Node& currentNode)
 	{
-		return std::forward<Source>(neighbors)
-				| std::views::filter([&](const auto& info) { return tracker::set_discovered(tracker, node::vertex(info)); })
-				| std::views::transform([&](const auto& info) { return nodeFactory.make_successor_node(currentNode, info); });
+		return std::forward<Edges>(edges)
+				| std::views::filter([&](const auto& edge) { return tracker::set_discovered(tracker, edge::destination(edge)); })
+				| std::views::transform([&](const auto& edge) { return nodeFactory.make_successor_node(currentNode, edge); });
 	};
 
 #endif

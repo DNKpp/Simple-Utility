@@ -22,8 +22,61 @@ namespace sl::graph::customize
 	struct rank_fn;
 }
 
-namespace sl::graph::node::detail
+namespace sl::graph::detail
 {
+	template <class Node>
+		requires requires(const Node& node, customize::vertex_fn<Node> fn)
+		{
+			requires concepts::vertex<std::remove_cvref_t<decltype(fn(node))>>;
+		}
+	constexpr decltype(auto) vertex(const Node& node, const priority_tag<3>) noexcept(noexcept(customize::vertex_fn<Node>{}(node)))
+	{
+		return customize::vertex_fn<Node>{}(node);
+	}
+
+	template <class Node>
+		requires requires(const Node& node)
+		{
+			requires concepts::vertex<std::remove_cvref_t<decltype(node.vertex)>>;
+		}
+	constexpr auto& vertex(const Node& node, const priority_tag<2>) noexcept
+	{
+		return node.vertex;
+	}
+
+	template <class Node>
+		requires requires(const Node& node)
+		{
+			requires concepts::vertex<std::remove_cvref_t<decltype(node.vertex())>>;
+		}
+	constexpr decltype(auto) vertex(const Node& node, const priority_tag<1>) noexcept(noexcept(node.vertex()))
+	{
+		return node.vertex();
+	}
+
+	template <class Node>
+		requires requires(const Node& node)
+		{
+			requires concepts::vertex<std::remove_cvref_t<decltype(vertex(node))>>;
+		}
+	constexpr decltype(auto) vertex(const Node& node, const priority_tag<0>) noexcept(noexcept(vertex(node)))
+	{
+		return vertex(node);
+	}
+
+	struct vertex_fn
+	{
+		template <class Node>
+			requires requires(const Node& node, const priority_tag<3> tag)
+			{
+				requires concepts::vertex<std::remove_cvref_t<decltype(detail::vertex(node, tag))>>;
+			}
+		constexpr decltype(auto) operator ()(const Node& node) const noexcept(noexcept(detail::vertex(node, priority_tag<3>{})))
+		{
+			return detail::vertex(node, priority_tag<3>{});
+		}
+	};
+
 	template <class Node>
 		requires requires(const Node& node, customize::rank_fn<Node> fn)
 		{
@@ -80,7 +133,7 @@ namespace sl::graph::node::detail
 
 namespace sl::graph::node
 {
-	inline constexpr graph::detail::vertex_fn vertex{};
+	inline constexpr detail::vertex_fn vertex{};
 	inline constexpr detail::rank_fn rank{};
 
 	template <class>
@@ -186,6 +239,7 @@ struct std::formatter<Node, Char> // NOLINT(cert-dcl58-cpp)
 
 template <sl::graph::concepts::ranked_node Node, class Char>
 	requires sl::concepts::formattable<sl::graph::node::vertex_t<Node>, Char>
+			&& sl::concepts::formattable<sl::graph::node::rank_t<Node>, Char>
 struct std::formatter<Node, Char> // NOLINT(cert-dcl58-cpp)
 {
 	static constexpr auto parse(std::basic_format_parse_context<Char>& ctx) noexcept

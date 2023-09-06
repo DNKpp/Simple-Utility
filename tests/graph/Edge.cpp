@@ -16,6 +16,31 @@
 
 namespace
 {
+	struct member_destination
+	{
+		int destination;
+	};
+
+	struct member_fun_destination
+	{
+		MAKE_CONST_MOCK0(destination, int());
+	};
+
+	struct free_fun_destination
+	{
+		MAKE_CONST_MOCK0(my_destination, int());
+
+		friend int destination(const free_fun_destination& v)
+		{
+			return v.my_destination();
+		}
+	};
+
+	struct custom_fun_destination
+	{
+		MAKE_CONST_MOCK0(my_destination, int());
+	};
+
 	struct member_weight
 	{
 		int weight;
@@ -43,6 +68,16 @@ namespace
 }
 
 template <>
+struct sg::customize::destination_fn<custom_fun_destination>
+{
+	[[nodiscard]]
+	decltype(auto) operator ()(const custom_fun_destination& e) const
+	{
+		return e.my_destination();
+	}
+};
+
+template <>
 struct sg::customize::weight_fn<custom_fun_weight>
 {
 	[[nodiscard]]
@@ -51,6 +86,40 @@ struct sg::customize::weight_fn<custom_fun_weight>
 		return e.my_weight();
 	}
 };
+
+TEST_CASE("graph::edge::destination serves as a customization point accessing the destination.", "[graph][detail]")
+{
+	const int expected = GENERATE(take(5, random(0, std::numeric_limits<int>::max())));
+
+	SECTION("Access via the destination member.")
+	{
+		REQUIRE(expected == sg::edge::destination(member_destination{expected}));
+	}
+
+	SECTION("Access via the destination member function.")
+	{
+		member_fun_destination mock{};
+		REQUIRE_CALL(mock, destination())
+			.RETURN(expected);
+		REQUIRE(expected == sg::edge::destination(std::as_const(mock)));
+	}
+
+	SECTION("Access via the destination free function.")
+	{
+		free_fun_destination mock{};
+		REQUIRE_CALL(mock, my_destination())
+			.RETURN(expected);
+		REQUIRE(expected == sg::edge::destination(std::as_const(mock)));
+	}
+
+	SECTION("Access via custom function.")
+	{
+		custom_fun_destination mock{};
+		REQUIRE_CALL(mock, my_destination())
+			.RETURN(expected);
+		REQUIRE(expected == sg::edge::destination(std::as_const(mock)));
+	}
+}
 
 TEST_CASE("graph::edge::weight serves as a customization point accessing the edge weight.", "[graph][graph::edge]")
 {
@@ -159,3 +228,21 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(expected == sg::concepts::edge_for<Edge, Node>);
 }
+
+#ifdef SL_UTILITY_HAS_STD_FORMAT
+
+TEST_CASE("edge types can be formatted.", "[graph][graph::edge]")
+{
+	using TestType = GenericBasicEdge<std::string>;
+
+	REQUIRE("{vertex: Hello, World!}" == std::format("{}", TestType{.destination = "Hello, World!"}));
+}
+
+TEST_CASE("weighted_edge types can be formatted.", "[graph][graph::edge]")
+{
+	using TestType = GenericWeightedEdge<std::string, int>;
+
+	REQUIRE("{vertex: Hello, World!, weight: 42}" == std::format("{}", TestType{.destination = "Hello, World!", .weight = 42}));
+}
+
+#endif

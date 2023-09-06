@@ -17,10 +17,69 @@ namespace sl::graph::customize
 {
 	template <class>
 	struct weight_fn;
+
+	template <class>
+	struct destination_fn;
 }
 
 namespace sl::graph::edge::detail
 {
+	template <class Node>
+		requires requires(const Node& node, customize::destination_fn<Node> fn)
+		{
+			requires concepts::vertex<std::remove_cvref_t<decltype(fn(node))>>;
+		}
+	constexpr decltype(auto) destination(
+		const Node& node,
+		const priority_tag<3>
+	) noexcept(noexcept(customize::destination_fn<Node>{}(node)))
+	{
+		return customize::destination_fn<Node>{}(node);
+	}
+
+	template <class Node>
+		requires requires(const Node& node)
+		{
+			requires concepts::vertex<std::remove_cvref_t<decltype(node.destination)>>;
+		}
+	constexpr auto& destination(const Node& node, const priority_tag<2>) noexcept
+	{
+		return node.destination;
+	}
+
+	template <class Node>
+		requires requires(const Node& node)
+		{
+			requires concepts::vertex<std::remove_cvref_t<decltype(node.destination())>>;
+		}
+	constexpr decltype(auto) destination(const Node& node, const priority_tag<1>) noexcept(noexcept(node.destination()))
+	{
+		return node.destination();
+	}
+
+	template <class Node>
+		requires requires(const Node& node)
+		{
+			requires concepts::vertex<std::remove_cvref_t<decltype(destination(node))>>;
+		}
+	constexpr decltype(auto) destination(const Node& node, const priority_tag<0>) noexcept(noexcept(destination(node)))
+	{
+		return destination(node);
+	}
+
+	struct destination_fn
+	{
+		template <class Node>
+			requires requires(const Node& node, const priority_tag<3> tag)
+			{
+				requires concepts::vertex<std::remove_cvref_t<decltype(detail::destination(node, tag))>>;
+			}
+		constexpr decltype(auto) operator ()(const Node& node) const noexcept(noexcept(detail::destination(node, priority_tag<3>{})))
+		{
+			return detail::destination(node, priority_tag<3>{});
+		}
+	};
+
 	template <class Edge>
 		requires requires(const Edge& node, customize::weight_fn<Edge> fn)
 		{
@@ -77,7 +136,7 @@ namespace sl::graph::edge::detail
 
 namespace sl::graph::edge
 {
-	inline constexpr graph::detail::vertex_fn vertex{};
+	inline constexpr detail::destination_fn destination{};
 	inline constexpr detail::weight_fn weight{};
 
 	template <class>
@@ -111,7 +170,7 @@ namespace sl::graph::concepts
 					{
 						// fixes compile error on msvc v142
 						// ReSharper disable once CppRedundantTemplateKeyword
-						{ edge::vertex(edge) } -> std::convertible_to<typename edge::template traits<T>::vertex_type>;
+						{ edge::destination(edge) } -> std::convertible_to<typename edge::template traits<T>::vertex_type>;
 					};
 
 	template <class T>
@@ -151,7 +210,7 @@ namespace sl::graph
 	{
 		using vertex_type = Vertex;
 
-		vertex_type vertex;
+		vertex_type destination;
 
 		[[nodiscard]]
 		friend bool operator==(const CommonBasicEdge&, const CommonBasicEdge&) = default;
@@ -163,12 +222,57 @@ namespace sl::graph
 		using vertex_type = Vertex;
 		using weight_type = Weight;
 
-		vertex_type vertex;
+		vertex_type destination;
 		weight_type weight;
 
 		[[nodiscard]]
 		friend bool operator==(const CommonWeightedEdge&, const CommonWeightedEdge&) = default;
 	};
 }
+
+#ifdef SL_UTILITY_HAS_STD_FORMAT
+
+#include <format>
+
+template <sl::graph::concepts::edge Edge, class Char>
+	requires sl::concepts::formattable<sl::graph::edge::vertex_t<Edge>, Char>
+struct std::formatter<Edge, Char> // NOLINT(cert-dcl58-cpp)
+{
+	static constexpr auto parse(std::basic_format_parse_context<Char>& ctx) noexcept
+	{
+		return ctx.begin();
+	}
+
+	template <class FormatContext>
+	auto format(const Edge& node, FormatContext& fc) const
+	{
+		return std::format_to(fc.out(), "{}destination: {}{}", "{", sl::graph::edge::destination(node), "}");
+	}
+};
+
+template <sl::graph::concepts::weighted_edge Edge, class Char>
+	requires sl::concepts::formattable<sl::graph::edge::vertex_t<Edge>, Char>
+			&& sl::concepts::formattable<sl::graph::edge::weight_t<Edge>, Char>
+struct std::formatter<Edge, Char> // NOLINT(cert-dcl58-cpp)
+{
+	static constexpr auto parse(std::basic_format_parse_context<Char>& ctx) noexcept
+	{
+		return ctx.begin();
+	}
+
+	template <class FormatContext>
+	auto format(const Edge& edge, FormatContext& fc) const
+	{
+		return std::format_to(
+			fc.out(),
+			"{}destination: {}, weight: {}{}",
+			"{",
+			sl::graph::edge::destination(edge),
+			sl::graph::edge::weight(edge),
+			"}");
+	}
+};
+
+#endif
 
 #endif

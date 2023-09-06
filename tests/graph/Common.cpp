@@ -75,31 +75,6 @@ namespace
 	{
 		auto operator <=>(const valid_rank&) const = default;
 	};
-
-	struct member_vertex
-	{
-		int vertex;
-	};
-
-	struct member_fun_vertex
-	{
-		MAKE_CONST_MOCK0(vertex, int());
-	};
-
-	struct free_fun_vertex
-	{
-		MAKE_CONST_MOCK0(my_vertex, int());
-
-		friend int vertex(const free_fun_vertex& v)
-		{
-			return v.my_vertex();
-		}
-	};
-
-	struct custom_fun_vertex
-	{
-		MAKE_CONST_MOCK0(my_vertex, int());
-	};
 }
 
 TEMPLATE_TEST_CASE_SIG(
@@ -197,15 +172,6 @@ namespace
 		using rank_type = valid_rank;
 	};
 }
-template <>
-struct sg::customize::vertex_fn<custom_fun_vertex>
-{
-	[[nodiscard]]
-	decltype(auto) operator ()(const custom_fun_vertex& e) const
-	{
-		return e.my_vertex();
-	}
-};
 
 TEMPLATE_TEST_CASE_SIG(
 	"graph::concepts::readable_vertex_type determines whether T contains a \"vertex_type\" member alias.",
@@ -241,40 +207,4 @@ TEMPLATE_TEST_CASE_SIG(
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::readable_rank_type<T>);
-}
-
-TEST_CASE("graph::details::vertex serves as a customization point accessing the vertex.", "[graph][detail]")
-{
-	constexpr sg::detail::vertex_fn fun{};
-
-	const int expected = GENERATE(take(5, random(0, std::numeric_limits<int>::max())));
-
-	SECTION("Access via the vertex member.")
-	{
-		REQUIRE(expected == fun(member_vertex{expected}));
-	}
-
-	SECTION("Access via the vertex member function.")
-	{
-		member_fun_vertex mock{};
-		REQUIRE_CALL(mock, vertex())
-			.RETURN(expected);
-		REQUIRE(expected == fun(std::as_const(mock)));
-	}
-
-	SECTION("Access via the vertex free function.")
-	{
-		free_fun_vertex mock{};
-		REQUIRE_CALL(mock, my_vertex())
-			.RETURN(expected);
-		REQUIRE(expected == fun(std::as_const(mock)));
-	}
-
-	SECTION("Access via custom function.")
-	{
-		custom_fun_vertex mock{};
-		REQUIRE_CALL(mock, my_vertex())
-			.RETURN(expected);
-		REQUIRE(expected == fun(std::as_const(mock)));
-	}
 }

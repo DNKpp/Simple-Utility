@@ -18,6 +18,31 @@
 
 namespace
 {
+	struct member_vertex
+	{
+		int vertex;
+	};
+
+	struct member_fun_vertex
+	{
+		MAKE_CONST_MOCK0(vertex, int());
+	};
+
+	struct free_fun_vertex
+	{
+		MAKE_CONST_MOCK0(my_vertex, int());
+
+		friend int vertex(const free_fun_vertex& v)
+		{
+			return v.my_vertex();
+		}
+	};
+
+	struct custom_fun_vertex
+	{
+		MAKE_CONST_MOCK0(my_vertex, int());
+	};
+
 	struct member_rank
 	{
 		int rank;
@@ -67,6 +92,16 @@ namespace
 }
 
 template <>
+struct sg::customize::vertex_fn<custom_fun_vertex>
+{
+	[[nodiscard]]
+	decltype(auto) operator ()(const custom_fun_vertex& e) const
+	{
+		return e.my_vertex();
+	}
+};
+
+template <>
 struct sg::node::traits<node_with_custom_trait>
 {
 	using vertex_type = int;
@@ -82,6 +117,40 @@ struct sg::customize::rank_fn<custom_fun_rank>
 		return e.my_rank();
 	}
 };
+
+TEST_CASE("graph::node::vertex serves as a customization point accessing the vertex.", "[graph][detail]")
+{
+	const int expected = GENERATE(take(5, random(0, std::numeric_limits<int>::max())));
+
+	SECTION("Access via the vertex member.")
+	{
+		REQUIRE(expected == sg::node::vertex(member_vertex{expected}));
+	}
+
+	SECTION("Access via the vertex member function.")
+	{
+		member_fun_vertex mock{};
+		REQUIRE_CALL(mock, vertex())
+			.RETURN(expected);
+		REQUIRE(expected == sg::node::vertex(std::as_const(mock)));
+	}
+
+	SECTION("Access via the vertex free function.")
+	{
+		free_fun_vertex mock{};
+		REQUIRE_CALL(mock, my_vertex())
+			.RETURN(expected);
+		REQUIRE(expected == sg::node::vertex(std::as_const(mock)));
+	}
+
+	SECTION("Access via custom function.")
+	{
+		custom_fun_vertex mock{};
+		REQUIRE_CALL(mock, my_vertex())
+			.RETURN(expected);
+		REQUIRE(expected == sg::node::vertex(std::as_const(mock)));
+	}
+}
 
 TEST_CASE("graph::node::rank serves as a customization point accessing the node rank.", "[graph][graph::node]")
 {

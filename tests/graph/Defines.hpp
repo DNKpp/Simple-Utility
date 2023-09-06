@@ -45,7 +45,7 @@ struct GenericBasicEdge
 {
 	using vertex_type = Vertex;
 
-	vertex_type vertex;
+	vertex_type destination;
 
 	friend bool operator==(const GenericBasicEdge&, const GenericBasicEdge&) = default;
 };
@@ -56,7 +56,7 @@ struct GenericWeightedEdge
 	using vertex_type = Vertex;
 	using weight_type = Weight;
 
-	vertex_type vertex;
+	vertex_type destination;
 	weight_type weight;
 
 	friend bool operator==(const GenericWeightedEdge&, const GenericWeightedEdge&) = default;
@@ -124,7 +124,7 @@ public:
 	template <sg::concepts::edge_for<node_type> Edge>
 	node_type make_successor_node(const node_type& current, const Edge& edge)
 	{
-		return make_successor_node(current, GenericBasicEdge<vertex_type>{.vertex = sg::edge::vertex(edge)});
+		return make_successor_node(current, GenericBasicEdge<vertex_type>{.vertex = sg::edge::destination(edge)});
 	}
 };
 
@@ -143,7 +143,7 @@ public:
 	template <sg::concepts::edge_for<node_type> Edge>
 	node_type make_successor_node(const node_type& current, const Edge& edge)
 	{
-		return make_successor_node(current, GenericBasicEdge<vertex_type>{.vertex = sg::edge::vertex(edge)});
+		return make_successor_node(current, GenericBasicEdge<vertex_type>{.vertex = sg::edge::destination(edge)});
 	}
 };
 
