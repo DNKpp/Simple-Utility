@@ -244,9 +244,9 @@ struct std::formatter<Edge, Char> // NOLINT(cert-dcl58-cpp)
 	}
 
 	template <class FormatContext>
-	auto format(const Edge& node, FormatContext& fc) const
+	auto format(const Edge& edge, FormatContext& ctx) const
 	{
-		return std::format_to(fc.out(), "{}destination: {}{}", "{", sl::graph::edge::destination(node), "}");
+		return std::format_to(ctx.out(), "{}destination: {}{}", "{", sl::graph::edge::destination(edge), "}");
 	}
 };
 
@@ -261,10 +261,10 @@ struct std::formatter<Edge, Char> // NOLINT(cert-dcl58-cpp)
 	}
 
 	template <class FormatContext>
-	auto format(const Edge& edge, FormatContext& fc) const
+	auto format(const Edge& edge, FormatContext& ctx) const
 	{
 		return std::format_to(
-			fc.out(),
+			ctx.out(),
 			"{}destination: {}, weight: {}{}",
 			"{",
 			sl::graph::edge::destination(edge),
