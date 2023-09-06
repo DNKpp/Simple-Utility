@@ -150,7 +150,7 @@ TEST_CASE("BasicTraverseDriver::next returns the current node, or std::nullopt."
 			.RETURN(true);
 
 		return DefaultDriver{
-			42,
+			originNode.vertex,
 			std::forward_as_tuple(std::move(trackerMock)),
 			std::forward_as_tuple(std::move(nodeFactoryMock)),
 			std::forward_as_tuple(std::move(queue))
