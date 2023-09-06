@@ -124,7 +124,9 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, minimal_node),
 	(true, ranked_node),
 	(true, GenericBasicNode<std::string>),
-	(true, GenericRankedNode<std::string, int>)
+	(true, GenericRankedNode<std::string, int>),
+	(true, sg::CommonBasicNode<std::string>),
+	(true, sg::CommonRankedNode<std::string, int>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::node<T>);
@@ -140,7 +142,9 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, minimal_node),
 	(true, ranked_node),
 	(false, GenericBasicNode<std::string>),
-	(true, GenericRankedNode<std::string, int>)
+	(true, GenericRankedNode<std::string, int>),
+	(false, sg::CommonBasicNode<std::string>),
+	(true, sg::CommonRankedNode<std::string, int>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::ranked_node<T>);

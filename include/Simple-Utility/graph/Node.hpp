@@ -137,6 +137,33 @@ namespace sl::graph::node
 	using rank_t = typename traits<Node>::rank_type;
 }
 
+namespace sl::graph
+{
+	template <concepts::vertex Vertex>
+	struct CommonBasicNode
+	{
+		using vertex_type = Vertex;
+
+		vertex_type vertex;
+
+		[[nodiscard]]
+		friend bool operator==(const CommonBasicNode&, const CommonBasicNode&) = default;
+	};
+
+	template <concepts::vertex Vertex, concepts::rank Rank>
+	struct CommonRankedNode
+	{
+		using vertex_type = Vertex;
+		using rank_type = Rank;
+
+		vertex_type vertex;
+		rank_type rank;
+
+		[[nodiscard]]
+		friend bool operator==(const CommonRankedNode&, const CommonRankedNode&) = default;
+	};
+}
+
 #ifdef SL_UTILITY_HAS_STD_FORMAT
 
 #include <format>
