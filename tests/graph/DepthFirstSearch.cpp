@@ -50,18 +50,18 @@ namespace
 TEST_CASE("dfs::BasicTraverser visits all reachable vertices.", "[graph][graph::dfs]")
 {
 	const auto& [expected, origin] = GENERATE(
-		(table<std::vector<int>, int>)({
-			{{/*3,*/ 6, 2, 5}, 3},
-			{{/*6,*/ 2}, 6},
-			{{/*1,*/ 3, 6, 2, 5}, 1},
-			{{/*8,*/ 9, 4, 7}, 8},
+		(table<std::vector<sg::dfs::Node<int>>, int>)({
+			{{/*3,*/ {6}, {2}, {5}}, 3},
+			{{/*6,*/ {2}}, 6},
+			{{/*1,*/ {3}, {6}, {2}, {5}}, 1},
+			{{/*8,*/ {9}, {4}, {7}}, 8},
 			}));
 
 	sg::dfs::BasicTraverser<View> traverser{graph, origin};
 	STATIC_CHECK(std::ranges::input_range<decltype(traverser)>);
 
-	std::vector<int> visitedVertices{};
-	std::ranges::transform(traverser, std::back_inserter(visitedVertices), &sg::dfs::Node<int>::vertex);
+	std::vector<sg::dfs::Node<int>> nodes{};
+	std::ranges::copy(traverser, std::back_inserter(nodes));
 
-	REQUIRE_THAT(visitedVertices, Catch::Matchers::RangeEquals(expected));
+	REQUIRE_THAT(nodes, Catch::Matchers::RangeEquals(expected));
 }

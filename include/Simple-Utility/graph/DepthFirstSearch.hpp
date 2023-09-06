@@ -9,8 +9,6 @@
 #include "Simple-Utility/graph/mixins/queue/std_stack.hpp"
 #include "Simple-Utility/graph/mixins/tracker/std_unordered_map.hpp"
 
-#include <optional>
-
 namespace sl::graph::dfs
 {
 	template <concepts::vertex Vertex>
@@ -18,15 +16,8 @@ namespace sl::graph::dfs
 	{
 		using vertex_type = Vertex;
 		vertex_type vertex{};
-	};
 
-	template <concepts::vertex Vertex>
-	struct ExtendedNode
-	{
-		using vertex_type = Vertex;
-		vertex_type vertex{};
-		int depth{};
-		std::optional<vertex_type> predecessor{};
+		friend bool operator==(const Node&, const Node&) = default;
 	};
 
 	template <concepts::node Node>
@@ -52,25 +43,6 @@ namespace sl::graph::dfs
 	};
 
 	template <concepts::vertex Vertex>
-	struct NodeFactory<ExtendedNode<Vertex>>
-	{
-		using node_type = ExtendedNode<Vertex>;
-		using vertex_type = node::vertex_t<node_type>;
-
-		static constexpr node_type make_init_node(vertex_type origin)
-		{
-			return node_type{.vertex = std::move(origin), .depth = 0, .predecessor = std::nullopt};
-		}
-
-		template <concepts::edge_for<node_type> Edge>
-		[[nodiscard]]
-		static constexpr node_type make_successor_node(const node_type& current, const Edge& edge)
-		{
-			return node_type{.vertex = edge::vertex(edge), .depth = current.depth + 1, .predecessor = current.vertex};
-		}
-	};
-
-	template <concepts::vertex Vertex>
 	struct Edge
 	{
 		using vertex_type = Vertex;
@@ -90,7 +62,4 @@ namespace sl::graph::dfs
 			detail::BasicState<Node, std::stack<Node>>,
 			Tracker,
 			NodeFactory>>;
-
-	template <class View>
-	using ExtendedTraverser = BasicTraverser<View, ExtendedNode<edge::vertex_t<view::edge_t<View>>>>;
 }
