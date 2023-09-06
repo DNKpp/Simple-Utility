@@ -189,7 +189,7 @@ TEST_CASE("BasicTraverseDriver::next returns the current node, or std::nullopt."
 		REQUIRE_CALL(trackerMock, set_visited(41))
 			.RETURN(true);
 
-		//REQUIRE(DefaultNode{.vertex = 41} == driver.next(std::as_const(view)));
+		REQUIRE(DefaultNode{.vertex = 41} == driver.next(std::as_const(view)));
 	}
 
 	SECTION("Next returns std::nullopt.")
