@@ -185,4 +185,20 @@ TEST_CASE(
 	STATIC_REQUIRE(std::same_as<float, sg::node::rank_t<TestType>>);
 }
 
+#ifdef SL_UTILITY_HAS_STD_FORMAT
 
+TEST_CASE("node types can be formatted.", "[graph][graph::node]")
+{
+	using TestType = GenericBasicNode<std::string>;
+
+	REQUIRE("{vertex: Hello, World!}" == std::format("{}", TestType{.vertex = "Hello, World!"}));
+}
+
+TEST_CASE("ranked_node types can be formatted.", "[graph][graph::node]")
+{
+	using TestType = GenericRankedNode<std::string, int>;
+
+	REQUIRE("{vertex: Hello, World!, rank: 42}" == std::format("{}", TestType{.vertex = "Hello, World!", .rank = 42}));
+}
+
+#endif

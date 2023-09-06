@@ -13,6 +13,8 @@
 #include "Simple-Utility/graph/Node.hpp"
 #include "Simple-Utility/graph/Tracker.hpp"
 #include "Simple-Utility/graph/View.hpp"
+#include "Simple-Utility/test_util/Catch2Ext.hpp"
+#include "Simple-Utility/test_util/TrompeloeilExt.hpp"
 
 namespace sg = sl::graph;
 

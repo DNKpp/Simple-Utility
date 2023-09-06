@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "Simple-Utility/Config.hpp"
 #include "Simple-Utility/Utility.hpp"
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/graph/Common.hpp"
@@ -135,5 +136,49 @@ namespace sl::graph::node
 	template <concepts::ranked_node Node>
 	using rank_t = typename traits<Node>::rank_type;
 }
+
+#ifdef SL_UTILITY_HAS_STD_FORMAT
+
+#include <format>
+
+template <sl::graph::concepts::node Node, class Char>
+	requires sl::concepts::formattable<sl::graph::node::vertex_t<Node>, Char>
+struct std::formatter<Node, Char> // NOLINT(cert-dcl58-cpp)
+{
+	static constexpr auto parse(std::basic_format_parse_context<Char>& ctx) noexcept
+	{
+		return ctx.begin();
+	}
+
+	template <class FormatContext>
+	auto format(const Node& node, FormatContext& fc) const
+	{
+		return std::format_to(fc.out(), "{}vertex: {}{}", "{", sl::graph::node::vertex(node), "}");
+	}
+};
+
+template <sl::graph::concepts::ranked_node Node, class Char>
+	requires sl::concepts::formattable<sl::graph::node::vertex_t<Node>, Char>
+struct std::formatter<Node, Char> // NOLINT(cert-dcl58-cpp)
+{
+	static constexpr auto parse(std::basic_format_parse_context<Char>& ctx) noexcept
+	{
+		return ctx.begin();
+	}
+
+	template <class FormatContext>
+	auto format(const Node& node, FormatContext& fc) const
+	{
+		return std::format_to(
+			fc.out(),
+			"{}vertex: {}, rank: {}{}",
+			"{",
+			sl::graph::node::vertex(node),
+			sl::graph::node::rank(node),
+			"}");
+	}
+};
+
+#endif
 
 #endif
