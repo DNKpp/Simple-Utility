@@ -2,6 +2,7 @@ target_sources(
 	Simple-Utility-Tests
 	PRIVATE
 	"Common.cpp"
+	"DepthFirstSearch.cpp"
 	"Edge.cpp"
 	"Node.cpp"
 	"NodeFactory.cpp"
