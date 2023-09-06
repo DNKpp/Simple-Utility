@@ -144,4 +144,31 @@ namespace sl::graph::concepts
 							|| weighted_edge<Edge> && std::convertible_to<edge::weight_t<Edge>, node::rank_t<Node>>);
 }
 
+namespace sl::graph
+{
+	template <concepts::vertex Vertex>
+	struct CommonBasicEdge
+	{
+		using vertex_type = Vertex;
+
+		vertex_type vertex;
+
+		[[nodiscard]]
+		friend bool operator==(const CommonBasicEdge&, const CommonBasicEdge&) = default;
+	};
+
+	template <concepts::vertex Vertex, concepts::weight Weight>
+	struct CommonWeightedEdge
+	{
+		using vertex_type = Vertex;
+		using weight_type = Weight;
+
+		vertex_type vertex;
+		weight_type weight;
+
+		[[nodiscard]]
+		friend bool operator==(const CommonWeightedEdge&, const CommonWeightedEdge&) = default;
+	};
+}
+
 #endif

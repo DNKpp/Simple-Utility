@@ -120,7 +120,9 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, free_fun_weight),
 	(false, custom_fun_weight),
 	(true, GenericBasicEdge<std::string>),
-	(true, GenericWeightedEdge<std::string, int>)
+	(true, GenericWeightedEdge<std::string, int>),
+	(true, sg::CommonBasicEdge<std::string>),
+	(true, sg::CommonWeightedEdge<std::string, int>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::edge<T>);
@@ -135,7 +137,9 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, free_fun_weight),
 	(false, custom_fun_weight),
 	(false, GenericBasicEdge<std::string>),
-	(true, GenericWeightedEdge<std::string, int>)
+	(true, GenericWeightedEdge<std::string, int>),
+	(false, sg::CommonBasicEdge<std::string>),
+	(true, sg::CommonWeightedEdge<std::string, int>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::weighted_edge<T>);
