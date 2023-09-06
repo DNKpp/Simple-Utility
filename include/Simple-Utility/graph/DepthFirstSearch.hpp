@@ -11,22 +11,13 @@
 
 namespace sl::graph::dfs
 {
-	template <concepts::vertex Vertex>
-	struct Node
-	{
-		using vertex_type = Vertex;
-		vertex_type vertex{};
-
-		friend bool operator==(const Node&, const Node&) = default;
-	};
-
 	template <concepts::node Node>
 	struct NodeFactory;
-	
+
 	template <concepts::vertex Vertex>
-	struct NodeFactory<Node<Vertex>>
+	struct NodeFactory<CommonBasicNode<Vertex>>
 	{
-		using node_type = Node<Vertex>;
+		using node_type = CommonBasicNode<Vertex>;
 		using vertex_type = node::vertex_t<node_type>;
 
 		static constexpr node_type make_init_node(vertex_type origin)
@@ -42,16 +33,9 @@ namespace sl::graph::dfs
 		}
 	};
 
-	template <concepts::vertex Vertex>
-	struct Edge
-	{
-		using vertex_type = Vertex;
-		vertex_type destination{};
-	};
-
 	template <
 		class View,
-		concepts::node Node = Node<edge::vertex_t<view::edge_t<View>>>,
+		concepts::node Node = CommonBasicNode<edge::vertex_t<view::edge_t<View>>>,
 		concepts::node_factory_for<Node, view::edge_t<View>> NodeFactory = NodeFactory<Node>,
 		concepts::tracker_for<node::vertex_t<Node>> Tracker = std::unordered_map<node::vertex_t<Node>, bool>>
 		requires concepts::view_for<View, Node>

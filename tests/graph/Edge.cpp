@@ -223,7 +223,10 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, (GenericWeightedEdge<std::string, int>), GenericBasicNode<std::string>),
 
 	(false, GenericBasicEdge<std::string>, (GenericRankedNode<std::string, int>)),
-	(true, (GenericWeightedEdge<std::string, int>), (GenericRankedNode<std::string, int>))
+	(true, (GenericWeightedEdge<std::string, int>), (GenericRankedNode<std::string, int>)),
+
+	(true, sg::CommonBasicEdge<std::string>, sg::CommonBasicNode<std::string>),
+	(true, sg::CommonWeightedEdge<std::string, int>, sg::CommonRankedNode<std::string, int>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::edge_for<Edge, Node>);
