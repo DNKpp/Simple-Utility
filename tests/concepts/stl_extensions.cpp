@@ -370,7 +370,6 @@ namespace
 
 	struct NonFormattable
 	{
-		int value{};
 	};
 }
 
