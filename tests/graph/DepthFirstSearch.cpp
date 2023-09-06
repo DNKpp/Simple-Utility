@@ -11,8 +11,6 @@
 
 #include "Defines.hpp"
 
-#include <iostream>
-
 namespace
 {
 	struct View
