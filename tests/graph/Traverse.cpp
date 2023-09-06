@@ -157,6 +157,8 @@ TEST_CASE("BasicTraverseDriver::next returns the current node, or std::nullopt."
 		};
 	}();
 
+	CHECK(driver.current_node() == originNode);
+
 	using VertexInfo = DefaultView::edge_type;
 	DefaultView view{};
 	auto& nodeFactoryMock = const_cast<DefaultNodeFactory&>(driver.node_factory());
