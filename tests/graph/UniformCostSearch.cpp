@@ -63,13 +63,34 @@ TEST_CASE("ucs::BasicTraverser visits all reachable vertices.", "[graph][graph::
 			{{{"5", 2}, {"6", 3}, {"2", 7}}, "3"},
 			{{{"2", 4}}, "6"},
 			{{{"2", 1}, {"3", 2}, {"6", 5}, {"5", 4}}, "1"},
-			{{{"7", 1}, {"4", 4}, {"9", 1}}, "8"},
+			{{{"7", 1}, {"4", 4}, {"9", 1}}, "8"}
 			}));
 
 	sg::ucs::BasicTraverser<View> traverser{graph, origin};
 	STATIC_CHECK(std::ranges::input_range<decltype(traverser)>);
 
 	std::vector<Node> nodes{};
+	std::ranges::copy(traverser, std::back_inserter(nodes));
+
+	REQUIRE_THAT(nodes, Catch::Matchers::UnorderedRangeEquals(expected));
+}
+
+TEST_CASE("ucs::BasicTraverser node can be decorated with PredecessorNodeDecorator.", "[graph][graph::ucs]")
+{
+	using DecoratedNode = sg::PredecessorNodeDecorator<::Node>;
+
+	const auto& [expected, origin] = GENERATE(
+		(table<std::vector<DecoratedNode>, std::string>)({
+			{{{{"5", 2}, "3"}, {{"6", 3}, "3"}, {{"2", 7}, "6"}}, "3"},
+			{{{{"2", 4}, "6"}}, "6"},
+			//{{{{"2", 1}, "1"}, {{"3", 2}, "1"}, {{"6", 5}, "2"}, {{"5", 4}, "3"}}, "1"},	// non-deterministic as 6 may have the predecessor 2 or 3
+			{{{{"7", 1}, "8"}, {{"4", 4}, "7"}, {{"9", 1}, "8"}}, "8"}
+			}));
+
+	sg::ucs::BasicTraverser<View, DecoratedNode> traverser{graph, origin};
+	STATIC_CHECK(std::ranges::input_range<decltype(traverser)>);
+
+	std::vector<DecoratedNode> nodes{};
 	std::ranges::copy(traverser, std::back_inserter(nodes));
 
 	REQUIRE_THAT(nodes, Catch::Matchers::UnorderedRangeEquals(expected));
