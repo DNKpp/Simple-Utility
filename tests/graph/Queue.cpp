@@ -15,6 +15,8 @@
 
 #include "Defines.hpp"
 
+#include <array>
+
 // ReSharper disable CppDeclaratorNeverUsed
 
 namespace
@@ -233,7 +235,7 @@ TEST_CASE("graph::queue::CommonStack follows the queue protocol.", "[graph][grap
 
 	SECTION("When a single node is inserted.")
 	{
-		sg::queue::insert(queue, std::views::single(node));
+		sg::queue::insert(queue, std::array{node});
 	}
 
 	SECTION("When multiple nodes are inserted.")
@@ -243,7 +245,7 @@ TEST_CASE("graph::queue::CommonStack follows the queue protocol.", "[graph][grap
 
 	SECTION("When multiple nodes are inserted during multiple insertions.")
 	{
-		sg::queue::insert(queue, std::views::single(TestNode{41}));
+		sg::queue::insert(queue, std::array{TestNode{41}});
 		sg::queue::insert(queue, std::array{TestNode{44}, node});
 	}
 
@@ -261,7 +263,7 @@ TEST_CASE("graph::queue::CommonQueue follows the queue protocol.", "[graph][grap
 
 	SECTION("When a single node is inserted.")
 	{
-		sg::queue::insert(queue, std::views::single(node));
+		sg::queue::insert(queue, std::array{node});
 	}
 
 	SECTION("When multiple nodes are inserted.")
@@ -272,7 +274,7 @@ TEST_CASE("graph::queue::CommonQueue follows the queue protocol.", "[graph][grap
 	SECTION("When multiple nodes are inserted during multiple insertions.")
 	{
 		sg::queue::insert(queue, std::array{node, TestNode{44}});
-		sg::queue::insert(queue, std::views::single(TestNode{41}));
+		sg::queue::insert(queue, std::array{TestNode{41}});
 	}
 
 	REQUIRE(!sg::queue::empty(queue));
@@ -289,7 +291,7 @@ TEST_CASE("graph::queue::CommonPriorityQueue follows the queue protocol.", "[gra
 
 	SECTION("When a single node is inserted.")
 	{
-		sg::queue::insert(queue, std::views::single(node));
+		sg::queue::insert(queue, std::array{node});
 	}
 
 	SECTION("When multiple nodes are inserted.")
@@ -300,7 +302,7 @@ TEST_CASE("graph::queue::CommonPriorityQueue follows the queue protocol.", "[gra
 	SECTION("When multiple nodes are inserted during multiple insertions.")
 	{
 		sg::queue::insert(queue, std::array{node, TestRankedNode{"V44", 2}});
-		sg::queue::insert(queue, std::views::single(TestRankedNode{"V41", 3}));
+		sg::queue::insert(queue, std::array{TestRankedNode{"V41", 3}});
 	}
 
 	REQUIRE(!sg::queue::empty(queue));
