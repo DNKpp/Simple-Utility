@@ -1,7 +1,7 @@
 name: coverage
 
 env:
-    GXX_VERSION: 11
+    GXX_VERSION: 12
     TESTS_DIR: out/tests
     COVERAGE_FILE: coverage.info
 
