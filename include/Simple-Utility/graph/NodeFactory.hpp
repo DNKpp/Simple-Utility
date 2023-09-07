@@ -40,9 +40,11 @@ namespace sl::graph
 			return node_type{.vertex = std::move(origin)};
 		}
 
-		template <concepts::edge_for<node_type> Edge>
 		[[nodiscard]]
-		static constexpr node_type make_successor_node([[maybe_unused]] const node_type& current, const Edge& edge)
+		static constexpr node_type make_successor_node(
+			[[maybe_unused]] const node_type& current,
+			const concepts::edge_for<node_type> auto& edge
+		)
 		{
 			return node_type{.vertex = edge::destination(edge)};
 		}
@@ -58,12 +60,11 @@ namespace sl::graph
 		[[nodiscard]]
 		static constexpr node_type make_init_node(vertex_type origin)
 		{
-			return node_type{.vertex = std::move(origin), .rank = 0};
+			return node_type{.vertex = std::move(origin), .rank = {}};
 		}
 
-		template <concepts::edge_for<node_type> Edge>
 		[[nodiscard]]
-		static constexpr node_type make_successor_node(const node_type& current, const Edge& edge)
+		static constexpr node_type make_successor_node(const node_type& current, const concepts::edge_for<node_type> auto& edge)
 		{
 			return node_type{
 				.vertex = edge::destination(edge),
@@ -88,20 +89,23 @@ namespace sl::graph
 		[[nodiscard]]
 		constexpr node_type make_init_node(vertex_type origin)
 		{
-			return {
+			// leave code as-is, because directly returning the temporary results in an ICE on gcc10
+			node_type node{
 				{static_cast<Super&>(*this).make_init_node(std::move(origin))},
 				std::nullopt
 			};
+			return node;
 		}
 
-		template <concepts::edge_for<node_type> Edge>
 		[[nodiscard]]
-		constexpr node_type make_successor_node(const node_type& current, const Edge& edge)
+		constexpr node_type make_successor_node(const node_type& current, const concepts::edge_for<node_type> auto& edge)
 		{
-			return {
+			// leave code as-is, because directly returning the temporary results in an ICE on gcc10
+			node_type node{
 				{static_cast<Super&>(*this).make_successor_node(current, edge)},
 				node::vertex(current)
 			};
+			return node;
 		}
 	};
 }
