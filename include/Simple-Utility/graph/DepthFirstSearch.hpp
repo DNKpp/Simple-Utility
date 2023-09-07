@@ -40,13 +40,13 @@ namespace sl::graph::dfs
 		class View,
 		concepts::node Node = CommonBasicNode<edge::vertex_t<view::edge_t<View>>>,
 		concepts::node_factory_for<Node, view::edge_t<View>> NodeFactory = NodeFactory<Node>,
-		concepts::tracker_for<node::vertex_t<Node>> Tracker = std::unordered_map<node::vertex_t<Node>, bool>>
+		concepts::tracker_for<node::vertex_t<Node>> Tracker = tracker::CommonHashMap<node::vertex_t<Node>>>
 		requires concepts::view_for<View, Node>
 	using BasicTraverser = Traverser<
 		View,
 		detail::BasicTraverseDriver<
 			Node,
-			detail::BasicState<Node, std::stack<Node>>,
+			detail::BasicState<Node, queue::CommonStack<Node>>,
 			Tracker,
 			NodeFactory>>;
 }
