@@ -38,9 +38,9 @@ jobs:
       - name: Collect data
         run: |
           sudo apt-get install lcov -y
-          lcov -c -d ${{ env.TESTS_DIR }} -o ${{ env.COVERAGE_FILE }}
-          lcov --remove ${{env.COVERAGE_FILE}} 'out/*' '/usr/*' -o ${{env.COVERAGE_FILE}}
-          lcov -l ${{ env.COVERAGE_FILE }}
+          lcov -c -d ${{env.TESTS_DIR}} -o ${{env.COVERAGE_FILE}}
+          #lcov --remove ${{env.COVERAGE_FILE}} 'out/*' '/usr/*' -o ${{env.COVERAGE_FILE}}
+          lcov -l ${{env.COVERAGE_FILE}}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
