@@ -60,7 +60,7 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          base-path: ${{ env.TESTS_DIR }}
+          file: ${{ env.COVERAGE_FILE }}
           fail-on-error: true
 
       - name: Upload artifacts
