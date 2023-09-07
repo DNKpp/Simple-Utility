@@ -34,7 +34,7 @@ namespace
 			{"9", {4}}
 		};
 
-		template <sg::concepts::node Node>
+		template <sg::concepts::ranked_node Node>
 			requires sg::concepts::edge_for<edge_type, Node>
 		static std::vector<edge_type> edges(const Node& current)
 		{
