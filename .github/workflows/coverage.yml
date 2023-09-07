@@ -8,8 +8,7 @@ env:
 on: [push, pull_request]
 
 jobs:
-  coverage-reporter:
-    timeout-minutes: 10
+  create-coverage-report:
     runs-on: ubuntu-latest
 
     steps:
@@ -42,12 +41,26 @@ jobs:
           lcov --remove ${{ env.COVERAGE_FILE }} 'out/*' 'usr/*' -o ${{ env.COVERAGE_FILE }}
           lcov -l ${{ env.COVERAGE_FILE }}
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: ${{ env.COVERAGE_FILE }}
+
+  codacy-report:
+    needs: create-coverage-report
+    runs-on: ubuntu-latest
+    steps:
       - name: Upload coverage to Codacy
         uses: codacy/codacy-coverage-reporter-action@v1
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN  }}
           coverage-reports: ${{ env.COVERAGE_FILE }}
 
+  codecov-report:
+    needs: create-coverage-report
+    runs-on: ubuntu-latest
+    steps:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -57,6 +70,10 @@ jobs:
           fail_ci_if_error: true
           verbose: true
 
+  coveralls-report:
+    needs: create-coverage-report
+    runs-on: ubuntu-latest
+    steps:
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@v2
         with:
@@ -64,9 +81,3 @@ jobs:
           file: ${{ env.COVERAGE_FILE }}
           format: lcov
           fail-on-error: true
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-report
-          path: ${{ env.COVERAGE_FILE }}
