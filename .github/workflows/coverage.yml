@@ -55,3 +55,9 @@ jobs:
           files: ${{ env.COVERAGE_FILE }}
           fail_ci_if_error: true
           verbose: true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: ${{ env.COVERAGE_FILE }}
