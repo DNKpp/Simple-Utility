@@ -4,6 +4,7 @@ target_sources(
 	"Common.cpp"
 	"DepthFirstSearch.cpp"
 	"Edge.cpp"
+	"Formatter.cpp"
 	"Node.cpp"
 	"NodeFactory.cpp"
 	"Queue.cpp"

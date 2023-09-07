@@ -261,29 +261,3 @@ TEST_CASE(
 	STATIC_REQUIRE(std::same_as<float, sg::node::traits<TestType>::rank_type>);
 	STATIC_REQUIRE(std::same_as<float, sg::node::rank_t<TestType>>);
 }
-
-#ifdef SL_UTILITY_HAS_STD_FORMAT
-
-TEST_CASE("node types can be formatted.", "[graph][graph::node]")
-{
-	using TestType = GenericBasicNode<std::string>;
-
-	REQUIRE("{vertex: Hello, World!}" == std::format("{}", TestType{.vertex = "Hello, World!"}));
-}
-
-TEST_CASE("ranked_node types can be formatted.", "[graph][graph::node]")
-{
-	using TestType = GenericRankedNode<std::string, int>;
-
-	REQUIRE("{vertex: Hello, World!, rank: 42}" == std::format("{}", TestType{.vertex = "Hello, World!", .rank = 42}));
-}
-
-TEST_CASE("decorated ranked_node types can be formatted.", "[graph][graph::node]")
-{
-	using TestType = sg::PredecessorNodeDecorator<GenericRankedNode<std::string, int>>;
-
-	REQUIRE("{vertex: 42, rank: 1337, predecessor: 41}" == std::format("{}", TestType{{.vertex = "42", .rank = 1337}, "41"}));
-	REQUIRE("{vertex: 42, rank: 1337, predecessor: null}" == std::format("{}", TestType{{.vertex = "42", .rank = 1337}, std::nullopt}));
-}
-
-#endif

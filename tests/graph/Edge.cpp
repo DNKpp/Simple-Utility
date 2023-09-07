@@ -231,21 +231,3 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(expected == sg::concepts::edge_for<Edge, Node>);
 }
-
-#ifdef SL_UTILITY_HAS_STD_FORMAT
-
-TEST_CASE("edge types can be formatted.", "[graph][graph::edge]")
-{
-	using TestType = GenericBasicEdge<std::string>;
-
-	REQUIRE("{destination: Hello, World!}" == std::format("{}", TestType{.destination = "Hello, World!"}));
-}
-
-TEST_CASE("weighted_edge types can be formatted.", "[graph][graph::edge]")
-{
-	using TestType = GenericWeightedEdge<std::string, int>;
-
-	REQUIRE("{destination: Hello, World!, weight: 42}" == std::format("{}", TestType{.destination = "Hello, World!", .weight = 42}));
-}
-
-#endif

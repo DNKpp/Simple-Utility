@@ -230,49 +230,4 @@ namespace sl::graph
 	};
 }
 
-#ifdef SL_UTILITY_HAS_STD_FORMAT
-
-#include <format>
-
-template <sl::graph::concepts::edge Edge, class Char>
-	requires sl::concepts::formattable<sl::graph::edge::vertex_t<Edge>, Char>
-struct std::formatter<Edge, Char> // NOLINT(cert-dcl58-cpp)
-{
-	static constexpr auto parse(std::basic_format_parse_context<Char>& ctx) noexcept
-	{
-		return ctx.begin();
-	}
-
-	template <class FormatContext>
-	auto format(const Edge& edge, FormatContext& ctx) const
-	{
-		return std::format_to(ctx.out(), "{}destination: {}{}", "{", sl::graph::edge::destination(edge), "}");
-	}
-};
-
-template <sl::graph::concepts::weighted_edge Edge, class Char>
-	requires sl::concepts::formattable<sl::graph::edge::vertex_t<Edge>, Char>
-			&& sl::concepts::formattable<sl::graph::edge::weight_t<Edge>, Char>
-struct std::formatter<Edge, Char> // NOLINT(cert-dcl58-cpp)
-{
-	static constexpr auto parse(std::basic_format_parse_context<Char>& ctx) noexcept
-	{
-		return ctx.begin();
-	}
-
-	template <class FormatContext>
-	auto format(const Edge& edge, FormatContext& ctx) const
-	{
-		return std::format_to(
-			ctx.out(),
-			"{}destination: {}, weight: {}{}",
-			"{",
-			sl::graph::edge::destination(edge),
-			sl::graph::edge::weight(edge),
-			"}");
-	}
-};
-
-#endif
-
 #endif
