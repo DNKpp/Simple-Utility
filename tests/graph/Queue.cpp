@@ -4,6 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "Simple-Utility/graph/Queue.hpp"
+#include "Simple-Utility/graph/mixins/queue/std_queue.hpp"
 #include "Simple-Utility/graph/mixins/queue/std_stack.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
@@ -212,7 +213,8 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, member_fun_next),
 	(false, free_fun_next),
 	(true, QueueMock<TestNode>),
-	(true, std::stack<TestNode>)
+	(true, std::stack<TestNode>),
+	(true, std::queue<TestNode>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::queue_for<T, TestNode>);
@@ -240,6 +242,34 @@ TEST_CASE("std::stack follows the queue protocol.", "[graph][graph::queue]")
 	{
 		sg::queue::insert(queue, std::views::single(TestNode{41}));
 		sg::queue::insert(queue, std::array{TestNode{44}, node});
+	}
+
+	REQUIRE(!sg::queue::empty(queue));
+	REQUIRE(node == sg::queue::next(queue));
+}
+
+TEST_CASE("std::queue follows the queue protocol.", "[graph][graph::queue]")
+{
+	std::queue<TestNode> queue{};
+
+	REQUIRE(sg::queue::empty(queue));
+
+	TestNode node{.vertex = 42};
+
+	SECTION("When a single node is inserted.")
+	{
+		sg::queue::insert(queue, std::views::single(node));
+	}
+
+	SECTION("When multiple nodes are inserted.")
+	{
+		sg::queue::insert(queue, std::array{node, TestNode{44}});
+	}
+
+	SECTION("When multiple nodes are inserted during multiple insertions.")
+	{
+		sg::queue::insert(queue, std::array{node, TestNode{44}});
+		sg::queue::insert(queue, std::views::single(TestNode{41}));
 	}
 
 	REQUIRE(!sg::queue::empty(queue));
