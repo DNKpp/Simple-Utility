@@ -15,26 +15,8 @@
 namespace sl::graph::dfs
 {
 	template <concepts::node Node>
-	struct NodeFactory;
-
-	template <concepts::vertex Vertex>
-	struct NodeFactory<CommonBasicNode<Vertex>>
-	{
-		using node_type = CommonBasicNode<Vertex>;
-		using vertex_type = node::vertex_t<node_type>;
-
-		static constexpr node_type make_init_node(vertex_type origin)
-		{
-			return node_type{.vertex = std::move(origin)};
-		}
-
-		template <concepts::edge_for<node_type> Edge>
-		[[nodiscard]]
-		static constexpr node_type make_successor_node([[maybe_unused]] const node_type& current, const Edge& edge)
-		{
-			return node_type{.vertex = edge::destination(edge)};
-		}
-	};
+		requires (!concepts::ranked_node<Node>)
+	using NodeFactory = CommonNodeFactory<Node>;
 
 	template <
 		class View,

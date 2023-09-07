@@ -15,53 +15,7 @@
 namespace sl::graph::ucs
 {
 	template <concepts::ranked_node Node>
-	struct NodeFactory
-	{
-		using node_type = Node;
-		using vertex_type = node::vertex_t<Node>;
-
-		[[nodiscard]]
-		static constexpr node_type make_init_node(vertex_type origin)
-		{
-			return node_type{.vertex = std::move(origin), .rank = 0};
-		}
-
-		template <concepts::edge_for<node_type> Edge>
-		[[nodiscard]]
-		static constexpr node_type make_successor_node(const node_type& current, const Edge& edge)
-		{
-			return node_type{
-				.vertex = edge::destination(edge),
-				.rank = node::rank(current) + edge::weight(edge)
-			};
-		}
-	};
-
-	template <concepts::ranked_node Node>
-	struct NodeFactory<PredecessorNodeDecorator<Node>>
-	{
-		using node_type = PredecessorNodeDecorator<Node>;
-		using vertex_type = node::vertex_t<Node>;
-
-		[[nodiscard]]
-		static constexpr node_type make_init_node(vertex_type origin)
-		{
-			return {
-				{NodeFactory<Node>{}.make_init_node(std::move(origin))},
-				std::nullopt
-			};
-		}
-
-		template <concepts::edge_for<node_type> Edge>
-		[[nodiscard]]
-		static constexpr node_type make_successor_node(const node_type& current, const Edge& edge)
-		{
-			return {
-				{NodeFactory<Node>{}.make_successor_node(current, edge)},
-				node::vertex(current)
-			};
-		}
-	};
+	using NodeFactory = CommonNodeFactory<Node>;
 
 	template <
 		class View,

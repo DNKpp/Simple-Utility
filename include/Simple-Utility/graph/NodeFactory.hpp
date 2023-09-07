@@ -25,4 +25,85 @@ namespace sl::graph::concepts
 								};
 }
 
+namespace sl::graph
+{
+	template <concepts::node Node>
+	class CommonNodeFactory
+	{
+	public:
+		using node_type = Node;
+		using vertex_type = node::vertex_t<node_type>;
+
+		[[nodiscard]]
+		static constexpr node_type make_init_node(vertex_type origin)
+		{
+			return node_type{.vertex = std::move(origin)};
+		}
+
+		template <concepts::edge_for<node_type> Edge>
+		[[nodiscard]]
+		static constexpr node_type make_successor_node([[maybe_unused]] const node_type& current, const Edge& edge)
+		{
+			return node_type{.vertex = edge::destination(edge)};
+		}
+	};
+
+	template <concepts::ranked_node Node>
+	class CommonNodeFactory<Node>
+	{
+	public:
+		using node_type = Node;
+		using vertex_type = node::vertex_t<node_type>;
+
+		[[nodiscard]]
+		static constexpr node_type make_init_node(vertex_type origin)
+		{
+			return node_type{.vertex = std::move(origin), .rank = 0};
+		}
+
+		template <concepts::edge_for<node_type> Edge>
+		[[nodiscard]]
+		static constexpr node_type make_successor_node(const node_type& current, const Edge& edge)
+		{
+			return node_type{
+				.vertex = edge::destination(edge),
+				.rank = node::rank(current) + edge::weight(edge)
+			};
+		}
+	};
+
+	template <concepts::node Node>
+	class CommonNodeFactory<PredecessorNodeDecorator<Node>>
+		: public CommonNodeFactory<Node>
+	{
+	private:
+		using Super = CommonNodeFactory<Node>;
+
+	public:
+		using node_type = PredecessorNodeDecorator<Node>;
+		using vertex_type = node::vertex_t<node_type>;
+
+		using Super::Super;
+
+		[[nodiscard]]
+		constexpr node_type make_init_node(vertex_type origin)
+		{
+			return {
+				{static_cast<Super&>(*this).make_init_node(std::move(origin))},
+				std::nullopt
+			};
+		}
+
+		template <concepts::edge_for<node_type> Edge>
+		[[nodiscard]]
+		constexpr node_type make_successor_node(const node_type& current, const Edge& edge)
+		{
+			return {
+				{static_cast<Super&>(*this).make_successor_node(current, edge)},
+				node::vertex(current)
+			};
+		}
+	};
+}
+
 #endif
