@@ -9,5 +9,6 @@ target_sources(
 	"Queue.cpp"
 	"Tracker.cpp"
 	"Traverse.cpp"
+	"UniformCostSearch.cpp"
 	"View.cpp"
 )
