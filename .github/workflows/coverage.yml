@@ -56,6 +56,14 @@ jobs:
           fail_ci_if_error: true
           verbose: true
 
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          base-path: ${{ env.TESTS_DIR }}
+          fail-on-error: true
+          verbose: true
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
