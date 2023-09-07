@@ -38,7 +38,8 @@ jobs:
       - name: Collect data
         run: |
           sudo apt-get install lcov -y
-          lcov -c -d ${{env.TESTS_DIR}} -o ${{env.COVERAGE_FILE}} --kernel-directory include/ --kernel-directory tests/
+          lcov --capture -d ${{env.TESTS_DIR}} -o ${{env.COVERAGE_FILE}}
+          lcov --extract "~/Simple-Utility/include/*" -o ${{env.COVERAGE_FILE}}
           #lcov --remove ${{env.COVERAGE_FILE}} './out/*' '/usr/*' -o ${{env.COVERAGE_FILE}}
           lcov -l ${{env.COVERAGE_FILE}}
 
