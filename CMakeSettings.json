@@ -30,7 +30,7 @@
 			"inheritEnvironments": [ "clang_cl_x64_x64" ],
 			"variables": [
 				{
-					"name": "Simple-Utility_BUILD_TESTS",
+          "name": "CMAKE_C_COMPILER_WORKS",
 					"value": "True",
 					"type": "BOOL"
 				}
