@@ -61,6 +61,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           file: ${{ env.COVERAGE_FILE }}
+          format: lcov
           fail-on-error: true
 
       - name: Upload artifacts
