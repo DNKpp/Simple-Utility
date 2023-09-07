@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install compiler
         run: |
             sudo apt-get update
@@ -39,7 +39,7 @@ jobs:
         run: |
           sudo apt-get install lcov -y
           lcov -c -d ${{env.TESTS_DIR}} -o ${{env.COVERAGE_FILE}}
-          #lcov --remove ${{env.COVERAGE_FILE}} 'out/*' '/usr/*' -o ${{env.COVERAGE_FILE}}
+          lcov --remove ${{env.COVERAGE_FILE}} 'out/*' '/usr/*' -o ${{env.COVERAGE_FILE}}
           lcov -l ${{env.COVERAGE_FILE}}
 
       - name: Upload artifacts
@@ -52,6 +52,8 @@ jobs:
     needs: create-coverage-report
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+  
       - uses: actions/download-artifact@v3
         with:
           name: ${{env.COVERAGE_ARTIFACT_NAME}}
@@ -66,6 +68,8 @@ jobs:
     needs: create-coverage-report
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
       - uses: actions/download-artifact@v3
         with:
           name: ${{env.COVERAGE_ARTIFACT_NAME}}
@@ -83,11 +87,11 @@ jobs:
     needs: create-coverage-report
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+  
       - uses: actions/download-artifact@v3
         with:
           name: ${{env.COVERAGE_ARTIFACT_NAME}}
-
-      - run: ls -l
 
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@v2
