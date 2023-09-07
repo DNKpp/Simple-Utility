@@ -13,6 +13,8 @@
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/graph/Common.hpp"
 
+#include <optional>
+
 namespace sl::graph::customize
 {
 	template <class>
@@ -214,6 +216,18 @@ namespace sl::graph
 
 		[[nodiscard]]
 		friend bool operator==(const CommonRankedNode&, const CommonRankedNode&) = default;
+	};
+
+	template <concepts::node Node>
+	struct PredecessorNodeDecorator
+		: public Node
+	{
+		using vertex_type = node::vertex_t<Node>;
+
+		std::optional<vertex_type> predecessor{};
+
+		[[nodiscard]]
+		friend bool operator==(const PredecessorNodeDecorator&, const PredecessorNodeDecorator&) = default;
 	};
 }
 
