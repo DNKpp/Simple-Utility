@@ -23,7 +23,7 @@ jobs:
 
       - name: Compile tests
         env:
-          CXXFLAGS: "--coverage -fno-inline"
+          CXXFLAGS: "--coverage -fno-inline -fprofile-abs-path"
           CC: gcc
           CXX: g++
         run: |
