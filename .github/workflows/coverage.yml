@@ -62,7 +62,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           base-path: ${{ env.TESTS_DIR }}
           fail-on-error: true
-          verbose: true
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
