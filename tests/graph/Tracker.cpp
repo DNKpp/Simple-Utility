@@ -154,8 +154,8 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, free_fun_set_visited, int),
 	(false, TrackerMock<int>, std::string),
 	(true, TrackerMock<int>, int),
-	(true, std::unordered_map<int, bool>, int),
-	(true, std::map<int, bool>, int)
+	(true, sg::tracker::common_hash_map<int>, int),
+	(true, sg::tracker::common_map<int>, int)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::tracker_for<T, Vertex>);
@@ -164,8 +164,8 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE(
 	"Concrete tracker types behave as expected.",
 	"[graph][graph::concepts][graph::tracker]",
-	(std::unordered_map<int, bool>),
-	(std::map<int, bool>)
+	(sg::tracker::common_hash_map<int>),
+	(sg::tracker::common_map<int>)
 )
 {
 	TestType tracker{};

@@ -11,6 +11,7 @@
 #include <cassert>
 #include <unordered_map>
 
+#include "Simple-Utility/graph/Common.hpp"
 #include "Simple-Utility/graph/Tracker.hpp"
 
 template <sl::graph::concepts::vertex Key, class Hash, class KeyEqual, class Allocator>
@@ -34,5 +35,12 @@ struct sl::graph::customize::set_visited_fn<std::unordered_map<Key, bool, Hash, 
 		return !std::exchange(iter->second, true);
 	}
 };
+
+namespace sl::graph::tracker
+{
+	template <concepts::vertex Vertex, class Hash = std::hash<Vertex>>
+		requires std::is_invocable_r_v<std::size_t, Hash, const Vertex&>
+	using common_hash_map = std::unordered_map<Vertex, bool, Hash>;
+}
 
 #endif

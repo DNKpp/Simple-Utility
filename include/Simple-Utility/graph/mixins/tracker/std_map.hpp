@@ -11,6 +11,7 @@
 #include <cassert>
 #include <map>
 
+#include "Simple-Utility/graph/Common.hpp"
 #include "Simple-Utility/graph/Tracker.hpp"
 
 template <sl::graph::concepts::vertex Key, class Compare, class Allocator>
@@ -34,5 +35,11 @@ struct sl::graph::customize::set_visited_fn<std::map<Key, bool, Compare, Allocat
 		return !std::exchange(iter->second, true);
 	}
 };
+
+namespace sl::graph::tracker
+{
+	template <concepts::vertex Vertex>
+	using common_map = std::map<Vertex, bool>;
+}
 
 #endif
