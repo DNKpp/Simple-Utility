@@ -16,19 +16,6 @@
 #include "Simple-Utility/graph/Node.hpp"
 #include "Simple-Utility/graph/Queue.hpp"
 
-namespace sl::graph
-{
-	struct PriorityAfterRelation
-	{
-		template <concepts::ranked_node Node>
-		[[nodiscard]]
-		constexpr bool operator ()(const Node& lhs, const Node& rhs) const
-		{
-			return node::rank(lhs) > node::rank(rhs);
-		}
-	};
-}
-
 template <class T, class Container, class AfterRelation>
 struct sl::graph::customize::insert_fn<std::priority_queue<T, Container, AfterRelation>>
 {
@@ -54,8 +41,18 @@ struct sl::graph::customize::next_fn<std::priority_queue<T, Container, AfterRela
 	}
 };
 
-namespace sl::graph
+namespace sl::graph::queue
 {
+	struct PriorityAfterRelation
+	{
+		template <concepts::ranked_node Node>
+		[[nodiscard]]
+		constexpr bool operator ()(const Node& lhs, const Node& rhs) const
+		{
+			return node::rank(lhs) > node::rank(rhs);
+		}
+	};
+
 	template <concepts::ranked_node Node, class Container = std::vector<Node>>
 	using common_priority_queue = std::priority_queue<Node, Container, PriorityAfterRelation>;
 }

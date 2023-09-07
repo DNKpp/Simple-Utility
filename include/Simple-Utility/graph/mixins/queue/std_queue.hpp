@@ -13,6 +13,7 @@
 #include <ranges>
 #include <utility>
 
+#include "Simple-Utility/graph/Node.hpp"
 #include "Simple-Utility/graph/Queue.hpp"
 
 template <class T, class Container>
@@ -39,5 +40,11 @@ struct sl::graph::customize::next_fn<std::queue<T, Container>>
 		return element;
 	}
 };
+
+namespace sl::graph::queue
+{
+	template <concepts::node Node, class Container = std::deque<Node>>
+	using common_queue = std::queue<Node, Container>;
+}
 
 #endif

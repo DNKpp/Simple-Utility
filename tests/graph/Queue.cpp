@@ -215,17 +215,17 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, member_fun_next, TestNode),
 	(false, free_fun_next, TestNode),
 	(true, QueueMock<TestNode>, TestNode),
-	(true, std::stack<TestNode>, TestNode),
-	(true, std::queue<TestNode>, TestNode),
-	(true, sg::common_priority_queue<TestRankedNode>, TestRankedNode)
+	(true, sg::queue::common_stack<TestNode>, TestNode),
+	(true, sg::queue::common_queue<TestNode>, TestNode),
+	(true, sg::queue::common_priority_queue<TestRankedNode>, TestRankedNode)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::queue_for<Queue, Node>);
 }
 
-TEST_CASE("std::stack follows the queue protocol.", "[graph][graph::queue]")
+TEST_CASE("graph::queue::common_stack follows the queue protocol.", "[graph][graph::queue]")
 {
-	std::stack<TestNode> queue{};
+	sg::queue::common_stack<TestNode> queue{};
 
 	REQUIRE(sg::queue::empty(queue));
 
@@ -251,9 +251,9 @@ TEST_CASE("std::stack follows the queue protocol.", "[graph][graph::queue]")
 	REQUIRE(node == sg::queue::next(queue));
 }
 
-TEST_CASE("std::queue follows the queue protocol.", "[graph][graph::queue]")
+TEST_CASE("graph::queue::common_queue follows the queue protocol.", "[graph][graph::queue]")
 {
-	std::queue<TestNode> queue{};
+	sg::queue::common_queue<TestNode> queue{};
 
 	REQUIRE(sg::queue::empty(queue));
 
@@ -279,9 +279,9 @@ TEST_CASE("std::queue follows the queue protocol.", "[graph][graph::queue]")
 	REQUIRE(node == sg::queue::next(queue));
 }
 
-TEST_CASE("std::priority_queue follows the queue protocol.", "[graph][graph::queue]")
+TEST_CASE("graph::queue::common_priority_queue follows the queue protocol.", "[graph][graph::queue]")
 {
-	sg::common_priority_queue<TestRankedNode> queue{};
+	sg::queue::common_priority_queue<TestRankedNode> queue{};
 
 	REQUIRE(sg::queue::empty(queue));
 
