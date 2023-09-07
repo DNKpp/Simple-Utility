@@ -37,14 +37,7 @@ namespace
 		MAKE_CONST_MOCK0(is_empty, bool());
 	};
 
-	struct TestNode
-	{
-		// ReSharper disable once CppTypeAliasNeverUsed
-		using vertex_type = int;
-		int vertex{};
-
-		friend bool operator==(const TestNode&, const TestNode&) = default;
-	};
+	using TestNode = GenericBasicNode<int>;
 
 	struct member_fun_insert
 	{
@@ -223,4 +216,32 @@ TEMPLATE_TEST_CASE_SIG(
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::queue_for<T, TestNode>);
+}
+
+TEST_CASE("std::stack follows the queue protocol.", "[graph][graph::queue]")
+{
+	std::stack<TestNode> queue{};
+
+	REQUIRE(sg::queue::empty(queue));
+
+	TestNode node{.vertex = 42};
+
+	SECTION("When a single node is inserted.")
+	{
+		sg::queue::insert(queue, std::views::single(node));
+	}
+
+	SECTION("When multiple nodes are inserted.")
+	{
+		sg::queue::insert(queue, std::array{TestNode{44}, node});
+	}
+
+	SECTION("When multiple nodes are inserted during multiple insertions.")
+	{
+		sg::queue::insert(queue, std::views::single(TestNode{41}));
+		sg::queue::insert(queue, std::array{TestNode{44}, node});
+	}
+
+	REQUIRE(!sg::queue::empty(queue));
+	REQUIRE(node == sg::queue::next(queue));
 }
