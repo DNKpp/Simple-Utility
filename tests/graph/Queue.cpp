@@ -4,6 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "Simple-Utility/graph/Queue.hpp"
+#include "Simple-Utility/graph/mixins/queue/std_priority_queue.hpp"
 #include "Simple-Utility/graph/mixins/queue/std_queue.hpp"
 #include "Simple-Utility/graph/mixins/queue/std_stack.hpp"
 
@@ -39,6 +40,7 @@ namespace
 	};
 
 	using TestNode = GenericBasicNode<int>;
+	using TestRankedNode = GenericRankedNode<std::string, int>;
 
 	struct member_fun_insert
 	{
@@ -205,19 +207,20 @@ TEST_CASE("graph::queue::next serves as a customization point, retrieving the ne
 TEMPLATE_TEST_CASE_SIG(
 	"concepts::queue_for determines, whether the given type satisfies the requirements of a queue for the specified node type.",
 	"[graph][graph::concepts]",
-	((bool expected, class T), expected, T),
-	(false, member_fun_empty),
-	(false, free_fun_empty),
-	(false, member_fun_insert),
-	(false, free_fun_insert),
-	(false, member_fun_next),
-	(false, free_fun_next),
-	(true, QueueMock<TestNode>),
-	(true, std::stack<TestNode>),
-	(true, std::queue<TestNode>)
+	((bool expected, class Queue, class Node), expected, Queue, Node),
+	(false, member_fun_empty, TestNode),
+	(false, free_fun_empty, TestNode),
+	(false, member_fun_insert, TestNode),
+	(false, free_fun_insert, TestNode),
+	(false, member_fun_next, TestNode),
+	(false, free_fun_next, TestNode),
+	(true, QueueMock<TestNode>, TestNode),
+	(true, std::stack<TestNode>, TestNode),
+	(true, std::queue<TestNode>, TestNode),
+	(true, sg::common_priority_queue<TestRankedNode>, TestRankedNode)
 )
 {
-	STATIC_REQUIRE(expected == sg::concepts::queue_for<T, TestNode>);
+	STATIC_REQUIRE(expected == sg::concepts::queue_for<Queue, Node>);
 }
 
 TEST_CASE("std::stack follows the queue protocol.", "[graph][graph::queue]")
@@ -270,6 +273,34 @@ TEST_CASE("std::queue follows the queue protocol.", "[graph][graph::queue]")
 	{
 		sg::queue::insert(queue, std::array{node, TestNode{44}});
 		sg::queue::insert(queue, std::views::single(TestNode{41}));
+	}
+
+	REQUIRE(!sg::queue::empty(queue));
+	REQUIRE(node == sg::queue::next(queue));
+}
+
+TEST_CASE("std::priority_queue follows the queue protocol.", "[graph][graph::queue]")
+{
+	sg::common_priority_queue<TestRankedNode> queue{};
+
+	REQUIRE(sg::queue::empty(queue));
+
+	TestRankedNode node{.vertex = "V42", .rank = 1};
+
+	SECTION("When a single node is inserted.")
+	{
+		sg::queue::insert(queue, std::views::single(node));
+	}
+
+	SECTION("When multiple nodes are inserted.")
+	{
+		sg::queue::insert(queue, std::array{node, TestRankedNode{"V44", 2}});
+	}
+
+	SECTION("When multiple nodes are inserted during multiple insertions.")
+	{
+		sg::queue::insert(queue, std::array{node, TestRankedNode{"V44", 2}});
+		sg::queue::insert(queue, std::views::single(TestRankedNode{"V41", 3}));
 	}
 
 	REQUIRE(!sg::queue::empty(queue));
