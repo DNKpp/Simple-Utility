@@ -39,7 +39,7 @@ struct sl::graph::customize::set_visited_fn<std::map<Key, bool, Compare, Allocat
 namespace sl::graph::tracker
 {
 	template <concepts::vertex Vertex>
-	using common_map = std::map<Vertex, bool>;
+	using CommonMap = std::map<Vertex, bool>;
 }
 
 #endif

@@ -54,7 +54,7 @@ namespace sl::graph::queue
 	};
 
 	template <concepts::ranked_node Node, class Container = std::vector<Node>>
-	using common_priority_queue = std::priority_queue<Node, Container, PriorityAfterRelation>;
+	using CommonPriorityQueue = std::priority_queue<Node, Container, PriorityAfterRelation>;
 }
 
 #endif

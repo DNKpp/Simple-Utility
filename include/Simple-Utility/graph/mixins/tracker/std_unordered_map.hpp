@@ -40,7 +40,7 @@ namespace sl::graph::tracker
 {
 	template <concepts::vertex Vertex, class Hash = std::hash<Vertex>>
 		requires std::is_invocable_r_v<std::size_t, Hash, const Vertex&>
-	using common_hash_map = std::unordered_map<Vertex, bool, Hash>;
+	using CommonHashMap = std::unordered_map<Vertex, bool, Hash>;
 }
 
 #endif
