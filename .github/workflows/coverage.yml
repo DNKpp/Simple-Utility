@@ -4,6 +4,7 @@ env:
     GXX_VERSION: 12
     TESTS_DIR: out/tests
     COVERAGE_FILE: coverage.info
+    COVERAGE_ARTIFACT_NAME: coverage-report
 
 on: [push, pull_request]
 
@@ -44,13 +45,18 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: coverage-report
-          path: ${{ env.COVERAGE_FILE }}
+          name: ${{env.COVERAGE_ARTIFACT_NAME}}
+          path: ${{env.COVERAGE_FILE}}
 
   codacy-report:
     needs: create-coverage-report
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{env.COVERAGE_ARTIFACT_NAME}}
+          path: ${{env.COVERAGE_FILE}}
+
       - name: Upload coverage to Codacy
         uses: codacy/codacy-coverage-reporter-action@v1
         with:
@@ -61,6 +67,11 @@ jobs:
     needs: create-coverage-report
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{env.COVERAGE_ARTIFACT_NAME}}
+          path: ${{env.COVERAGE_FILE}}
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -74,6 +85,11 @@ jobs:
     needs: create-coverage-report
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/download-artifact@master
+        with:
+          name: ${{env.COVERAGE_ARTIFACT_NAME}}
+          path: ${{env.COVERAGE_FILE}}
+
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@v2
         with:
