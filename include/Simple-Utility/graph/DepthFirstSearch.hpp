@@ -3,6 +3,9 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef SIMPLE_UTILITY_GRAPH_DEPTH_FIRST_SEARCH_HPP
+#define SIMPLE_UTILITY_GRAPH_DEPTH_FIRST_SEARCH_HPP
+
 #pragma once
 
 #include "Simple-Utility/graph/Traverse.hpp"
@@ -47,3 +50,5 @@ namespace sl::graph::dfs
 			Tracker,
 			NodeFactory>>;
 }
+
+#endif
