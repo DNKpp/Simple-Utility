@@ -200,7 +200,11 @@ namespace sl::graph::concepts
 						&& edge<Edge>
 						&& std::same_as<edge::vertex_t<Edge>, node::vertex_t<Node>>
 						&& (!ranked_node<Node>
-							|| weighted_edge<Edge> && std::convertible_to<edge::weight_t<Edge>, node::rank_t<Node>>);
+							|| requires(const Edge& edge)
+							{
+								requires weighted_edge<Edge>;
+								{ edge::weight(edge) } -> std::convertible_to<node::rank_t<Node>>;
+							});
 }
 
 namespace sl::graph
