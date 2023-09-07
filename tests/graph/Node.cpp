@@ -278,4 +278,12 @@ TEST_CASE("ranked_node types can be formatted.", "[graph][graph::node]")
 	REQUIRE("{vertex: Hello, World!, rank: 42}" == std::format("{}", TestType{.vertex = "Hello, World!", .rank = 42}));
 }
 
+TEST_CASE("decorated ranked_node types can be formatted.", "[graph][graph::node]")
+{
+	using TestType = sg::PredecessorNodeDecorator<GenericRankedNode<std::string, int>>;
+
+	REQUIRE("{vertex: 42, rank: 1337, predecessor: 41}" == std::format("{}", TestType{{.vertex = "42", .rank = 1337}, "41"}));
+	REQUIRE("{vertex: 42, rank: 1337, predecessor: null}" == std::format("{}", TestType{{.vertex = "42", .rank = 1337}, std::nullopt}));
+}
+
 #endif

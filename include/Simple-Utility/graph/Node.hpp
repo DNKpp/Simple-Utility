@@ -235,43 +235,86 @@ namespace sl::graph
 
 #include <format>
 
+namespace sl::graph
+{
+	template <concepts::node Node, class Char>
+		requires sl::concepts::formattable<node::vertex_t<Node>, Char>
+	class NodeFormatter
+	{
+	public:
+		static constexpr auto parse(std::basic_format_parse_context<Char>& ctx) noexcept
+		{
+			return ctx.begin();
+		}
+
+		template <class FormatContext>
+		static auto format(const Node& node, FormatContext& ctx)
+		{
+			return std::format_to(ctx.out(), "vertex: {}", node::vertex(node));
+		}
+	};
+
+	template <concepts::ranked_node Node, class Char>
+		requires sl::concepts::formattable<node::vertex_t<Node>, Char>
+				&& sl::concepts::formattable<node::rank_t<Node>, Char>
+	class NodeFormatter<Node, Char>
+	{
+	public:
+		static constexpr auto parse(std::basic_format_parse_context<Char>& ctx) noexcept
+		{
+			return ctx.begin();
+		}
+
+		template <class FormatContext>
+		static auto format(const Node& node, FormatContext& ctx)
+		{
+			return std::format_to(ctx.out(), "vertex: {}, rank: {}", node::vertex(node), node::rank(node));
+		}
+	};
+
+	template <concepts::node Node, class Char>
+	class NodeFormatter<PredecessorNodeDecorator<Node>, Char>
+	{
+	public:
+		constexpr auto parse(std::basic_format_parse_context<Char>& ctx) noexcept
+		{
+			return m_Formatter.parse(ctx);
+		}
+
+		template <class FormatContext>
+		auto format(const PredecessorNodeDecorator<Node>& node, FormatContext& ctx) const
+		{
+			return std::format_to(
+				m_Formatter.format(node, ctx),
+				", predecessor: {}",
+				node.predecessor ? std::format("{}", *node.predecessor) : "null");
+		}
+
+	private:
+		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFormatter<Node, Char> m_Formatter{};
+	};
+}
+
+
 template <sl::graph::concepts::node Node, class Char>
-	requires sl::concepts::formattable<sl::graph::node::vertex_t<Node>, Char>
-struct std::formatter<Node, Char> // NOLINT(cert-dcl58-cpp)
+struct std::formatter<Node, Char>  // NOLINT(cert-dcl58-cpp)
 {
-	static constexpr auto parse(std::basic_format_parse_context<Char>& ctx) noexcept
+public:
+	constexpr auto parse(std::basic_format_parse_context<Char>& ctx)
 	{
-		return ctx.begin();
+		return m_Formatter.parse(ctx);
 	}
 
 	template <class FormatContext>
-	auto format(const Node& node, FormatContext& fc) const
+	auto format(const Node& node, FormatContext& ctx) const
 	{
-		return std::format_to(fc.out(), "{}vertex: {}{}", "{", sl::graph::node::vertex(node), "}");
-	}
-};
-
-template <sl::graph::concepts::ranked_node Node, class Char>
-	requires sl::concepts::formattable<sl::graph::node::vertex_t<Node>, Char>
-			&& sl::concepts::formattable<sl::graph::node::rank_t<Node>, Char>
-struct std::formatter<Node, Char> // NOLINT(cert-dcl58-cpp)
-{
-	static constexpr auto parse(std::basic_format_parse_context<Char>& ctx) noexcept
-	{
-		return ctx.begin();
+		auto out = std::format_to(ctx.out(), "{}", "{");
+		out = m_Formatter.format(node, ctx);
+		return std::format_to(out, "{}", "}");
 	}
 
-	template <class FormatContext>
-	auto format(const Node& node, FormatContext& fc) const
-	{
-		return std::format_to(
-			fc.out(),
-			"{}vertex: {}, rank: {}{}",
-			"{",
-			sl::graph::node::vertex(node),
-			sl::graph::node::rank(node),
-			"}");
-	}
+private:
+	SL_UTILITY_NO_UNIQUE_ADDRESS sl::graph::NodeFormatter<Node, Char> m_Formatter{};
 };
 
 #endif
