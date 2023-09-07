@@ -55,7 +55,6 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: ${{env.COVERAGE_ARTIFACT_NAME}}
-          path: .
 
       - name: Upload coverage to Codacy
         uses: codacy/codacy-coverage-reporter-action@v1
@@ -70,7 +69,6 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: ${{env.COVERAGE_ARTIFACT_NAME}}
-          path: .
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -88,12 +86,11 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: ${{env.COVERAGE_ARTIFACT_NAME}}
-          path: .
 
       - name: Upload coverage to Coveralls
         uses: coverallsapp/github-action@v2
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ env.COVERAGE_FILE }}
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          file: ${{env.COVERAGE_FILE}}
           format: lcov
           fail-on-error: true
