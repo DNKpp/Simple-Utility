@@ -39,7 +39,7 @@ jobs:
         run: |
           sudo apt-get install lcov -y
           lcov --capture -d ${{env.TESTS_DIR}} -o ${{env.COVERAGE_FILE}}
-          lcov --extract ${{env.COVERAGE_FILE}} "Simple-Utility/include/*" -o ${{env.COVERAGE_FILE}}
+          lcov --extract ${{env.COVERAGE_FILE}} "include/Simple-Utility/*" -o ${{env.COVERAGE_FILE}}
           #lcov --remove ${{env.COVERAGE_FILE}} './out/*' '/usr/*' -o ${{env.COVERAGE_FILE}}
           lcov -l ${{env.COVERAGE_FILE}}
 
