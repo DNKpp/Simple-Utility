@@ -262,10 +262,7 @@ namespace sl::graph
 			}
 
 			[[nodiscard]]
-			constexpr bool operator==(const Iterator&) const = default;
-
-			[[nodiscard]]
-			constexpr bool operator==([[maybe_unused]] const Sentinel) const
+			constexpr bool operator==([[maybe_unused]] const Sentinel) const noexcept
 			{
 				return !m_Value;
 			}
