@@ -1,19 +1,19 @@
 name: coverage
 
 env:
-    GXX_VERSION: 11
+    GXX_VERSION: 12
     TESTS_DIR: out/tests
     COVERAGE_FILE: coverage.info
+    COVERAGE_ARTIFACT_NAME: coverage-report
 
 on: [push, pull_request]
 
 jobs:
-  coverage-reporter:
-    timeout-minutes: 10
+  create-coverage-report:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install compiler
         run: |
             sudo apt-get update
@@ -23,7 +23,7 @@ jobs:
 
       - name: Compile tests
         env:
-          CXXFLAGS: "--coverage -fno-inline"
+          CXXFLAGS: "--coverage -fno-inline -fprofile-abs-path"
           CC: gcc
           CXX: g++
         run: |
@@ -38,14 +38,40 @@ jobs:
       - name: Collect data
         run: |
           sudo apt-get install lcov -y
-          lcov -c -d ${{ env.TESTS_DIR }} -o ${{ env.COVERAGE_FILE }}
-          lcov -l ${{ env.COVERAGE_FILE }}
+          lcov --capture -d ${{env.TESTS_DIR}} -o ${{env.COVERAGE_FILE}} --include "$PWD/include/*"
+          lcov -l ${{env.COVERAGE_FILE}}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{env.COVERAGE_ARTIFACT_NAME}}
+          path: ${{env.COVERAGE_FILE}}
+
+  codacy-report:
+    needs: create-coverage-report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+  
+      - uses: actions/download-artifact@v3
+        with:
+          name: ${{env.COVERAGE_ARTIFACT_NAME}}
 
       - name: Upload coverage to Codacy
         uses: codacy/codacy-coverage-reporter-action@v1
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN  }}
           coverage-reports: ${{ env.COVERAGE_FILE }}
+
+  codecov-report:
+    needs: create-coverage-report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: ${{env.COVERAGE_ARTIFACT_NAME}}
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
@@ -55,3 +81,21 @@ jobs:
           files: ${{ env.COVERAGE_FILE }}
           fail_ci_if_error: true
           verbose: true
+
+  coveralls-report:
+    needs: create-coverage-report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+  
+      - uses: actions/download-artifact@v3
+        with:
+          name: ${{env.COVERAGE_ARTIFACT_NAME}}
+
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          file: ${{env.COVERAGE_FILE}}
+          format: lcov
+          fail-on-error: true
