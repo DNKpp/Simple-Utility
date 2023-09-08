@@ -46,7 +46,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: gcov-reports
-          path: ./*.gcov
+          path: ${{env.TESTS_DIR}}/*.gcov
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
