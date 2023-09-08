@@ -23,7 +23,8 @@ jobs:
 
       - name: Compile tests
         env:
-          CXXFLAGS: "--coverage -fno-inline -fprofile-abs-path"
+          LDFLAGS: "-fprofile-arcs"
+          CXXFLAGS: "-g -O0 --coverage -fno-inline -fprofile-abs-path -fkeep-inline-functions -fkeep-static-functions"
           CC: gcc
           CXX: g++
         run: |
@@ -40,6 +41,12 @@ jobs:
           sudo apt-get install lcov -y
           lcov --capture -d ${{env.TESTS_DIR}} -o ${{env.COVERAGE_FILE}} --include "$PWD/include/*"
           lcov -l ${{env.COVERAGE_FILE}}
+
+      - name: Upload gcov artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: gcov-reports
+          path: ./*.gcov
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
