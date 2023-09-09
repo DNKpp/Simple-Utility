@@ -78,7 +78,7 @@ jobs:
 
       - name: Generate html
         run: |
-          sudo apt-get install genhtml -y
+          sudo apt-get install lcov -y
           genhtml --title "Simple-Utility Coverage Report" --prefix "$PWD/include/" --output-directory html ${{env.COVERAGE_FILE}}
 
       - name: Upload artifacts
