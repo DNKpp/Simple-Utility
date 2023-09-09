@@ -52,7 +52,7 @@ jobs:
       - name: Collect data
         run: |
           sudo apt-get install lcov -y
-          lcov --capture -d ${{env.TESTS_DIR}} -o ${{env.COVERAGE_FILE}} --include "$PWD/include/*" --branch-coverage
+          lcov --capture -d ${{env.TESTS_DIR}} -o ${{env.COVERAGE_FILE}} --include "$PWD/include/*"
 
       - name: Upload raw coverage artifacts
         uses: actions/upload-artifact@v3
