@@ -52,20 +52,42 @@ jobs:
       - name: Collect data
         run: |
           sudo apt-get install lcov -y
-          lcov --capture -d ${{env.TESTS_DIR}} -o ${{env.COVERAGE_FILE}} --include "$PWD/include/*"
-          lcov -l ${{env.COVERAGE_FILE}}
+          lcov --capture -d ${{env.TESTS_DIR}} -o ${{env.COVERAGE_FILE}} --include "$PWD/include/*" --branch-coverage
 
-      - name: Upload gcov artifacts
+      - name: Upload raw coverage artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: gcov-reports
-          path: ${{env.TESTS_DIR}}/*.gcov
+          name: raw-coverage-reports
+          path: |
+              ${{env.TESTS_DIR}}/*.gcno
+              ${{env.TESTS_DIR}}/*.gcda
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{env.COVERAGE_ARTIFACT_NAME}}
           path: ${{env.COVERAGE_FILE}}
+
+  generate-html-report:
+    needs: create-coverage-report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+  
+      - uses: actions/download-artifact@v3
+        with:
+          name: ${{env.COVERAGE_ARTIFACT_NAME}}
+
+      - name: Generate html
+        run: |
+          sudo apt-get install genhtml -y
+          genhtml --title "Simple-Utility Coverage Report" --prefix "$PWD/include/" --output-directory html ${{env.COVERAGE_FILE}}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Simple-Utility-HTML-Report
+          path: html/
 
   codacy-report:
     needs: create-coverage-report
@@ -81,7 +103,7 @@ jobs:
         uses: codacy/codacy-coverage-reporter-action@v1
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN  }}
-          coverage-reports: ${{ env.COVERAGE_FILE }}
+          coverage-reports: ${{env.COVERAGE_FILE}}
 
   codecov-report:
     needs: create-coverage-report
