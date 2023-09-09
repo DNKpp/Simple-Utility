@@ -58,9 +58,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: raw-coverage-reports
-          path: |
-              ${{env.TESTS_DIR}}/*.gcno
-              ${{env.TESTS_DIR}}/*.gcda
+          path: Simple-Utility-Tests.dir/
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
