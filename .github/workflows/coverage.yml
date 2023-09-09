@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: raw-coverage-reports
-          path: Simple-Utility-Tests.dir/
+          path: "${{env.TESTS_DIR}}/Simple-Utility-Tests.dir/"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
