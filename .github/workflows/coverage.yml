@@ -6,7 +6,20 @@ env:
     COVERAGE_FILE: coverage.info
     COVERAGE_ARTIFACT_NAME: coverage-report
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+    - master
+    - development
+    paths-ignore:
+      - 'README.md'
+      - 'docs/'
+  pull_request:
+    branches:
+    - '**'
+    paths-ignore:
+      - 'README.md'
+      - 'docs/'
 
 jobs:
   create-coverage-report:
