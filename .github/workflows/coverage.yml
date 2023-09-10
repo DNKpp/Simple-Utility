@@ -3,7 +3,9 @@ name: coverage
 env:
     GXX_VERSION: 12
     TESTS_DIR: out/tests
-    COVERAGE_FILE: coverage.info
+    COBERTURA_REPORT: cobertura.xml
+    COVERALLS_REPORT: coveralls.json
+    HTML_REPORT_DIR: html/
     COVERAGE_ARTIFACT_NAME: coverage-report
 
 on:
@@ -27,9 +29,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Install compiler
+      - name: Install prerequisites
         run: |
             sudo apt-get update
+            sudo apt-get install pip -y
+            sudo pip install gcovr
             sudo apt-get install g++-${{ env.GXX_VERSION }} -y
             sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${{ env.GXX_VERSION }} ${{ env.GXX_VERSION }}00 --slave /usr/bin/gcc gcc /usr/bin/gcc-${{ env.GXX_VERSION }}
             sudo update-alternatives --install /usr/bin/gcov gcov /usr/bin/gcov-${{ env.GXX_VERSION }} ${{ env.GXX_VERSION }}00
@@ -47,45 +51,29 @@ jobs:
       - name: Run tests
         env:
           CTEST_OUTPUT_ON_FAILURE: 1
-        run: ctest --test-dir ${{ env.TESTS_DIR }} --timeout 30 -C Debug -j4
+        run: ctest --test-dir ${{env.TESTS_DIR}} -C Debug -j4
 
-      - name: Collect data
+      - name: Run gcovr
         run: |
-          sudo apt-get install lcov -y
-          lcov --capture -d ${{env.TESTS_DIR}} -o ${{env.COVERAGE_FILE}} --include "$PWD/include/*"
+           gcovr -root ${{env.TESTS_DIR}} --filter include/Simple-Utility --keep -j 4 \
+            --cobertura ${{env.COBERTURA_REPORT}} --cobertura-pretty \
+            --html-nested ${{env.HTML_OUTPUT_DIR}} --html-title "Simple-Utility Coverage Report" \
+            --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
 
-      - name: Upload raw coverage artifacts
+      - name: Upload gcov coverage report artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: raw-coverage-reports
-          path: "${{env.TESTS_DIR}}/Simple-Utility-Tests.dir/"
+          name: gcov-files
+          path: "${{env.TESTS_DIR}}/*.gcov"
 
-      - name: Upload artifacts
+      - name: Upload generated report artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{env.COVERAGE_ARTIFACT_NAME}}
-          path: ${{env.COVERAGE_FILE}}
-
-  generate-html-report:
-    needs: create-coverage-report
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-  
-      - uses: actions/download-artifact@v3
-        with:
-          name: ${{env.COVERAGE_ARTIFACT_NAME}}
-
-      - name: Generate html
-        run: |
-          sudo apt-get install lcov -y
-          genhtml --title "Simple-Utility Coverage Report" --prefix "$PWD/include/" --output-directory html ${{env.COVERAGE_FILE}}
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: Simple-Utility-HTML-Report
-          path: html/
+          path: |
+              ${{env.COBERTURA_REPORT}}
+              ${{env.COVERALLS_REPORT}}
+              ${{env.HTML_REPORT_DIR}}
 
   codacy-report:
     needs: create-coverage-report
@@ -100,8 +88,8 @@ jobs:
       - name: Upload coverage to Codacy
         uses: codacy/codacy-coverage-reporter-action@v1
         with:
-          project-token: ${{ secrets.CODACY_PROJECT_TOKEN  }}
-          coverage-reports: ${{env.COVERAGE_FILE}}
+          project-token: ${{secrets.CODACY_PROJECT_TOKEN}}
+          coverage-reports: ${{env.COBERTURA_REPORT}}
 
   codecov-report:
     needs: create-coverage-report
@@ -117,8 +105,8 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           name: $GITHUB_REPOSITORY
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ${{ env.COVERAGE_FILE }}
+          token: ${{secrets.CODECOV_TOKEN}}
+          files: ${{env.COBERTURA_REPORT}}
           fail_ci_if_error: true
           verbose: true
 
@@ -136,6 +124,6 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
-          file: ${{env.COVERAGE_FILE}}
-          format: lcov
+          file: ${{env.COVERALLS_REPORT}}
+          format: coveralls
           fail-on-error: true
