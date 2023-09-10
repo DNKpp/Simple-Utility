@@ -57,7 +57,7 @@ jobs:
         run: |
            gcovr -root ${{env.TESTS_DIR}} --filter include/Simple-Utility --keep -j 4 \
             --cobertura ${{env.COBERTURA_REPORT}} --cobertura-pretty \
-            --html-nested ${{env.HTML_OUTPUT_DIR}} --html-title "Simple-Utility Coverage Report" \
+            --html-nested ${{env.HTML_REPORT_DIR}} --html-title "Simple-Utility Coverage Report" \
             --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
 
       - name: Upload gcov coverage report artifacts
