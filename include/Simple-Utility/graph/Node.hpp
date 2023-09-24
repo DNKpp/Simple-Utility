@@ -176,7 +176,9 @@ namespace sl::graph::concepts
 						&& vertex<node::vertex_t<T>>
 						&& requires(const T& node)
 						{
-							{ node::vertex(node) } -> std::convertible_to<node::vertex_t<T>>;
+							// ReSharper disable once CppRedundantTemplateKeyword
+							// ReSharper disable once CppRedundantTypenameKeyword
+							{ node::vertex(node) } -> std::convertible_to<typename node::template vertex_t<T>>; // pleases msvc v142
 						};
 
 	template <class Node>
@@ -185,7 +187,9 @@ namespace sl::graph::concepts
 						&& rank<node::rank_t<Node>>
 						&& requires(const Node& node)
 						{
-							{ node::rank(node) } -> std::convertible_to<node::rank_t<Node>>;
+							// ReSharper disable once CppRedundantTemplateKeyword
+							// ReSharper disable once CppRedundantTypenameKeyword
+							{ node::rank(node) } -> std::convertible_to<typename node::template rank_t<Node>>; // pleases msvc v142
 						};
 
 	template <class Edge, class Node>
