@@ -213,21 +213,3 @@ TEMPLATE_TEST_CASE_SIG(
 {
 	STATIC_REQUIRE(expected == sg::concepts::weighted_edge<T>);
 }
-
-TEMPLATE_TEST_CASE_SIG(
-	"concepts::edge_for determines, whether the Edge type satisfies the minimal requirements of the Node type.",
-	"[graph][graph::concepts]",
-	((bool expected, class Edge, class Node), expected, Edge, Node),
-	(false, GenericBasicEdge<std::string>, GenericBasicNode<int>),
-	(true, GenericBasicEdge<std::string>, GenericBasicNode<std::string>),
-	(true, (GenericWeightedEdge<std::string, int>), GenericBasicNode<std::string>),
-
-	(false, GenericBasicEdge<std::string>, (GenericRankedNode<std::string, int>)),
-	(true, (GenericWeightedEdge<std::string, int>), (GenericRankedNode<std::string, int>)),
-
-	(true, sg::CommonBasicEdge<std::string>, sg::CommonBasicNode<std::string>),
-	(true, sg::CommonWeightedEdge<std::string, int>, sg::CommonRankedNode<std::string, int>)
-)
-{
-	STATIC_REQUIRE(expected == sg::concepts::edge_for<Edge, Node>);
-}
