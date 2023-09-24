@@ -113,8 +113,11 @@ namespace sl::graph::detail
 	{
 	public:
 		[[nodiscard]]
+		explicit BaseKernel() = default;
+
+		[[nodiscard]]
 		explicit constexpr BaseKernel(
-			NodeFactory nodeFactory = NodeFactory{}
+			NodeFactory nodeFactory
 		) noexcept(std::is_nothrow_move_constructible_v<NodeFactory>)
 			: m_NodeFactory{std::move(nodeFactory)}
 		{
@@ -123,6 +126,12 @@ namespace sl::graph::detail
 		constexpr Node operator ()(const node::vertex_t<Node>& vertex) const
 		{
 			return std::invoke(m_NodeFactory, vertex);
+		}
+
+		[[nodiscard]]
+		constexpr const NodeFactory& node_factory() const & noexcept
+		{
+			return m_NodeFactory;
 		}
 
 	protected:
@@ -151,11 +160,8 @@ namespace sl::graph::detail
 		constexpr auto operator ()(const Node& current, Edges&& edges) const
 		{
 			return std::forward<Edges>(edges)
-					| std::views::transform([&](const auto& edge) { return std::invoke(m_NodeFactory, current, edge); });
+					| std::views::transform([&](const auto& edge) { return std::invoke(Super::m_NodeFactory, current, edge); });
 		}
-
-	private:
-		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactory m_NodeFactory{};
 	};
 
 	template <concepts::basic_node Node, typename NodeFactory>
@@ -185,12 +191,13 @@ namespace sl::graph::detail
 				results.reserve(std::ranges::size(edges));
 			}
 
-			return std::forward<Edges>(edges)
-					| std::views::transform([&](const auto& edge) { return std::invoke(m_NodeFactory, current, edge); });
-		}
+			std::ranges::transform(
+				std::forward<Edges>(edges),
+				std::back_inserter(results),
+				[&](const auto& edge) { return std::invoke(Super::m_NodeFactory, current, edge); });
 
-	private:
-		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactory m_NodeFactory{};
+			return results;
+		}
 	};
 
 #if (defined(__clang__) && __clang_major__ < 16) \
@@ -198,7 +205,7 @@ namespace sl::graph::detail
 	using default_explorer_t = BufferedExplorer;
 
 	template <typename Node, typename NodeFactory>
-	using default_kernel_t = LazyKernel<Node, NodeFactory>;
+	using default_kernel_t = BufferedKernel<Node, NodeFactory>;
 #else
 	using default_explorer_t = LazyExplorer;
 

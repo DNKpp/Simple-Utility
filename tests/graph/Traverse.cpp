@@ -26,7 +26,6 @@ using DefaultEdge = GenericBasicEdge<int>;
 using DefaultQueue = QueueMock<DefaultNode>;
 using DefaultTracker = TrackerMock<sg::node::vertex_t<DefaultNode>>;
 using DefaultView = BasicViewMock<sg::node::vertex_t<DefaultNode>>;
-using DefaultNodeFactory = GenericBasicNodeFactoryMock<DefaultNode>;
 using DefaultTraverser = sg::detail::BasicTraverser<
 	DefaultNode,
 	DefaultView,
@@ -65,6 +64,69 @@ TEMPLATE_TEST_CASE(
 
 	TestType explorer{};
 	REQUIRE_THAT(std::invoke(explorer, current, view, tracker), RangeEquals(std::array{DefaultEdge{44}}));
+}
+
+namespace
+{
+	template <typename Node, typename Edge>
+	struct NodeFactoryMock
+	{
+		MAKE_CONST_MOCK1(MakeOrigin, Node(const sg::node::vertex_t<Node>& vertex));
+		MAKE_CONST_MOCK2(MakeSuccessor, Node(const Node& current, const Edge& edge));
+
+		[[nodiscard]]
+		constexpr Node operator ()(const sg::node::vertex_t<Node>& vertex) const
+		{
+			return MakeOrigin(vertex);
+		}
+
+		[[nodiscard]]
+		constexpr Node operator ()(const Node& current, const Edge& edge) const
+		{
+			return MakeSuccessor(current, edge);
+		}
+	};
+}
+
+TEMPLATE_TEST_CASE(
+	"Kernel implementations behave as expected.",
+	"[graph][graph::detail]",
+	(sg::detail::LazyKernel<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>),
+	(sg::detail::BufferedKernel<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>)
+)
+{
+	using namespace Catch::Matchers;
+
+	TestType kernel{};
+
+	SECTION("When creating origin.")
+	{
+		REQUIRE_CALL(kernel.node_factory(), MakeOrigin(42))
+			.RETURN(DefaultNode{.vertex = 42});
+
+		REQUIRE(DefaultNode{.vertex = 42} == std::invoke(kernel, 42));
+	}
+
+	SECTION("When creating successor(s).")
+	{
+		constexpr DefaultNode current{.vertex = 42};
+		const auto& [expected, edges] = GENERATE(
+			(table<std::vector<DefaultNode>, std::vector<DefaultEdge>>)({
+				{{}, {}},
+				{{{.vertex = 43}}, {{.destination = 43}}},
+				{{{.vertex = 43}, {.vertex = 41}}, {{.destination = 43}, {.destination = 41}}}
+			}));
+
+		std::vector<std::unique_ptr<trompeloeil::expectation>> expectations{};
+		for (const auto& edge : edges)
+		{
+			expectations.emplace_back(
+				NAMED_REQUIRE_CALL(kernel.node_factory(), MakeSuccessor(current, edge))
+					.RETURN(DefaultNode{.vertex = sg::edge::destination(edge)}));
+		}
+
+		REQUIRE_THAT(std::invoke(kernel, current, edges), RangeEquals(expected));
+	}
 }
 
 TEST_CASE("detail::BasicTraverser is not copyable but movable, when strategies support it.", "[graph][graph::traverser][graph::detail]")
