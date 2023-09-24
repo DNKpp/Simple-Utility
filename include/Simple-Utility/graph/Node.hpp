@@ -14,6 +14,7 @@
 #include "Simple-Utility/graph/Common.hpp"
 #include "Simple-Utility/graph/Edge.hpp"
 
+#include <functional>
 #include <optional>
 
 namespace sl::graph::customize
