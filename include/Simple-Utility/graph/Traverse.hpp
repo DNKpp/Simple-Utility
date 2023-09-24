@@ -200,17 +200,16 @@ namespace sl::graph::detail
 		}
 	};
 
-#if (defined(__clang__) && __clang_major__ < 16) \
-	|| (defined(__GNUG__) && __GNUG__ < 12)
-	using default_explorer_t = BufferedExplorer;
-
-	template <typename Node, typename NodeFactory>
-	using default_kernel_t = BufferedKernel<Node, NodeFactory>;
-#else
+#ifdef SL_UTILITY_HAS_RANGES_VIEWS
 	using default_explorer_t = LazyExplorer;
 
 	template <typename Node, typename NodeFactory>
 	using default_kernel_t = LazyKernel<Node, NodeFactory>;
+#else
+	using default_explorer_t = BufferedExplorer;
+
+	template <typename Node, typename NodeFactory>
+	using default_kernel_t = BufferedKernel<Node, NodeFactory>;
 #endif
 
 	template <

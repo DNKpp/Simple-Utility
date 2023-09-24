@@ -88,11 +88,17 @@ namespace
 	};
 }
 
-TEMPLATE_TEST_CASE(
+using TestKernels = std::tuple<
+	sg::detail::LazyKernel<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>
+#ifdef SL_UTILITY_HAS_RANGES_VIEWS
+	,sg::detail::BufferedKernel<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>
+#endif
+>;
+
+TEMPLATE_LIST_TEST_CASE(
 	"Kernel implementations behave as expected.",
 	"[graph][graph::detail]",
-	(sg::detail::LazyKernel<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>),
-	(sg::detail::BufferedKernel<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>)
+	TestKernels
 )
 {
 	using namespace Catch::Matchers;
