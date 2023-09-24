@@ -39,6 +39,34 @@ using MovableTraverser = sg::detail::BasicTraverser<
 		EmptyQueueStub<DefaultNode>,
 		sg::tracker::Null>;
 
+TEMPLATE_TEST_CASE(
+	"Explorer implementations behave as expected.",
+	"[graph][graph::detail]",
+	sg::detail::LazyExplorer,
+	sg::detail::BufferedExplorer
+)
+{
+	using namespace Catch::Matchers;
+
+	constexpr DefaultNode current{.vertex = 42};
+	const BasicViewMock<int> view{};
+	REQUIRE_CALL(view, edges(current))
+		.RETURN(std::vector<DefaultEdge>{{41}, {43}, {44}, {45}});
+
+	TrackerMock<int> tracker{};
+	REQUIRE_CALL(tracker, set_discovered(41))
+		.RETURN(false);
+	REQUIRE_CALL(tracker, set_discovered(43))
+		.RETURN(false);
+	REQUIRE_CALL(tracker, set_discovered(44))
+		.RETURN(true);
+	REQUIRE_CALL(tracker, set_discovered(45))
+		.RETURN(false);
+
+	TestType explorer{};
+	REQUIRE_THAT(std::invoke(explorer, current, view, tracker), RangeEquals(std::array{DefaultEdge{44}}));
+}
+
 TEST_CASE("detail::BasicTraverser is not copyable but movable, when strategies support it.", "[graph][graph::traverser][graph::detail]")
 {
 	STATIC_REQUIRE(!std::is_copy_constructible_v<MovableTraverser>);

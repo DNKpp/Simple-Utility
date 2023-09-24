@@ -47,7 +47,7 @@ namespace sl::graph::detail
 		{
 			auto edges = graph.edges(current);
 
-			std::vector<Node> results{};
+			std::vector<view::edge_t<View>> results{};
 			if constexpr (std::ranges::sized_range<decltype(edges)>)
 			{
 				results.reserve(std::ranges::size(edges));
@@ -109,11 +109,11 @@ namespace sl::graph::detail
 	};
 
 	template <concepts::basic_node Node, typename NodeFactory>
-	class LazyKernel
+	class BaseKernel
 	{
 	public:
 		[[nodiscard]]
-		explicit constexpr LazyKernel(
+		explicit constexpr BaseKernel(
 			NodeFactory nodeFactory = NodeFactory{}
 		) noexcept(std::is_nothrow_move_constructible_v<NodeFactory>)
 			: m_NodeFactory{std::move(nodeFactory)}
@@ -125,6 +125,21 @@ namespace sl::graph::detail
 			return std::invoke(m_NodeFactory, vertex);
 		}
 
+	protected:
+		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactory m_NodeFactory{};
+	};
+
+	template <concepts::basic_node Node, typename NodeFactory>
+	class LazyKernel
+		: public BaseKernel<Node, NodeFactory>
+	{
+	private:
+		using Super = BaseKernel<Node, NodeFactory>;
+
+	public:
+		using Super::Super;
+		using Super::operator();
+
 		template <std::ranges::input_range Edges>
 			requires std::convertible_to<
 				std::invoke_result_t<
@@ -135,6 +150,41 @@ namespace sl::graph::detail
 		[[nodiscard]]
 		constexpr auto operator ()(const Node& current, Edges&& edges) const
 		{
+			return std::forward<Edges>(edges)
+					| std::views::transform([&](const auto& edge) { return std::invoke(m_NodeFactory, current, edge); });
+		}
+
+	private:
+		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactory m_NodeFactory{};
+	};
+
+	template <concepts::basic_node Node, typename NodeFactory>
+	class BufferedKernel
+		: public BaseKernel<Node, NodeFactory>
+	{
+	private:
+		using Super = BaseKernel<Node, NodeFactory>;
+
+	public:
+		using Super::Super;
+		using Super::operator();
+
+		template <std::ranges::input_range Edges>
+			requires std::convertible_to<
+				std::invoke_result_t<
+					NodeFactory,
+					const Node&,
+					std::ranges::range_reference_t<Edges>>,
+				Node>
+		[[nodiscard]]
+		constexpr auto operator ()(const Node& current, Edges&& edges) const
+		{
+			std::vector<Node> results{};
+			if constexpr (std::ranges::sized_range<decltype(edges)>)
+			{
+				results.reserve(std::ranges::size(edges));
+			}
+
 			return std::forward<Edges>(edges)
 					| std::views::transform([&](const auto& edge) { return std::invoke(m_NodeFactory, current, edge); });
 		}
