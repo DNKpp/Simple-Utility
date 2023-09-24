@@ -36,7 +36,7 @@
 #endif
 
 #if not (defined(__clang__) && __clang_major__ < 16) \
-	|| (defined(__GNUG__) && __GNUG__ < 12)
+	|| not (defined(__GNUG__) && __GNUG__ < 12)
 	#define SL_UTILITY_HAS_RANGES_VIEWS
 #endif
 
