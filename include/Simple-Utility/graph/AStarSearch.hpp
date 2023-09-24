@@ -33,13 +33,16 @@ namespace sl::graph::astar::detail
 	}
 
 	template <concepts::ranked_node Node, concepts::heuristic_for<Node> Heuristic, typename NodeFactory>
-	class LazyKernel
+	class BaseKernel
 	{
 	public:
 		[[nodiscard]]
-		explicit constexpr LazyKernel(
-			Heuristic heuristic = Heuristic{},
-			NodeFactory nodeFactory = NodeFactory{}
+		explicit BaseKernel() = default;
+
+		[[nodiscard]]
+		explicit constexpr BaseKernel(
+			Heuristic heuristic,
+			NodeFactory nodeFactory
 		) noexcept(std::is_nothrow_move_constructible_v<Heuristic>
 					&& std::is_nothrow_move_constructible_v<NodeFactory>)
 			: m_Heuristic{std::move(heuristic)},
@@ -54,6 +57,34 @@ namespace sl::graph::astar::detail
 				vertex,
 				std::invoke(m_Heuristic, vertex));
 		}
+
+		[[nodiscard]]
+		constexpr const Heuristic& heuristic() const & noexcept
+		{
+			return m_Heuristic;
+		}
+
+		[[nodiscard]]
+		constexpr const NodeFactory& node_factory() const & noexcept
+		{
+			return m_NodeFactory;
+		}
+
+	protected:
+		SL_UTILITY_NO_UNIQUE_ADDRESS Heuristic m_Heuristic{};
+		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactory m_NodeFactory{};
+	};
+
+	template <concepts::ranked_node Node, concepts::heuristic_for<Node> Heuristic, typename NodeFactory>
+	class LazyKernel
+		: public BaseKernel<Node, Heuristic, NodeFactory>
+	{
+	private:
+		using Super = BaseKernel<Node, Heuristic, NodeFactory>;
+
+	public:
+		using Super::Super;
+		using Super::operator();
 
 		template <std::ranges::input_range Edges>
 			requires std::convertible_to<
@@ -71,17 +102,65 @@ namespace sl::graph::astar::detail
 						[&](const auto& edge)
 						{
 							return std::invoke(
-								m_NodeFactory,
+								Super::m_NodeFactory,
 								current,
 								edge,
-								std::invoke(m_Heuristic, edge::destination(edge)));
+								std::invoke(Super::m_Heuristic, edge::destination(edge)));
 						});
 		}
-
-	private:
-		SL_UTILITY_NO_UNIQUE_ADDRESS Heuristic m_Heuristic{};
-		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactory m_NodeFactory{};
 	};
+
+	template <concepts::ranked_node Node, concepts::heuristic_for<Node> Heuristic, typename NodeFactory>
+	class BufferedKernel
+		: public BaseKernel<Node, Heuristic, NodeFactory>
+	{
+	private:
+		using Super = BaseKernel<Node, Heuristic, NodeFactory>;
+
+	public:
+		using Super::Super;
+		using Super::operator();
+
+		template <std::ranges::input_range Edges>
+			requires std::convertible_to<
+				std::invoke_result_t<
+					NodeFactory,
+					const Node&,
+					std::ranges::range_reference_t<Edges>,
+					std::invoke_result_t<Heuristic, const node::vertex_t<Node>>>,
+				Node>
+		[[nodiscard]]
+		constexpr auto operator ()(const Node& current, Edges&& edges) const
+		{
+			std::vector<Node> results{};
+			if constexpr (std::ranges::sized_range<decltype(edges)>)
+			{
+				results.reserve(std::ranges::size(edges));
+			}
+
+			std::ranges::transform(
+				std::forward<Edges>(edges),
+				std::back_inserter(results),
+				[&](const auto& edge)
+				{
+					return std::invoke(
+						Super::m_NodeFactory,
+						current,
+						edge,
+						std::invoke(Super::m_Heuristic, edge::destination(edge)));
+				});
+
+			return results;
+		}
+	};
+
+#ifdef SL_UTILITY_HAS_RANGES_VIEWS
+	template <typename Node, typename Heuristic, typename NodeFactory>
+	using default_kernel_t = LazyKernel<Node, Heuristic, NodeFactory>;
+#else
+	template <typename Node, typename Heuristic, typename NodeFactory>
+	using default_kernel_t = BufferedKernel<Node, Heuristic, NodeFactory>;
+#endif
 }
 
 namespace sl::graph::astar
@@ -205,7 +284,7 @@ namespace sl::graph::astar
 			View,
 			queue::CommonPriorityQueue<Node>,
 			Tracker,
-			detail::LazyKernel<
+			detail::default_kernel_t<
 				Node,
 				Heuristic,
 				NodeFactory<Node>>>>;
