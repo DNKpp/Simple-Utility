@@ -1,0 +1,214 @@
+//          Copyright Dominic Koepke 2019 - 2023.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          https://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef SIMPLE_UTILITY_GRAPH_A_STAR_SEARCH_HPP
+#define SIMPLE_UTILITY_GRAPH_A_STAR_SEARCH_HPP
+
+#pragma once
+
+#include "Simple-Utility/graph/Traverse.hpp"
+#include "Simple-Utility/graph/mixins/queue/std_priority_queue.hpp"
+#include "Simple-Utility/graph/mixins/tracker/std_unordered_map.hpp"
+
+namespace sl::graph::concepts
+{
+	template <typename T, typename Node>
+	concept heuristic_for = ranked_node<Node>
+							&& sl::concepts::unqualified<T>
+							&& std::movable<T>
+							&& std::invocable<const T&, node::vertex_t<Node>>
+							&& std::convertible_to<std::invoke_result_t<T, node::vertex_t<Node>>, node::rank_t<Node>>;
+}
+
+namespace sl::graph::astar::detail
+{
+	template <concepts::rank Rank>
+	constexpr void check_bounds(const Rank& base, const Rank& increase) noexcept
+	{
+		assert(0 <= base && "base must be non-negative.");
+		assert(0 <= increase && "increase must be non-negative.");
+		assert(increase <= std::numeric_limits<Rank>::max() - base && "Rank is about to overflow.");
+	}
+
+	template <concepts::ranked_node Node, concepts::heuristic_for<Node> Heuristic, typename NodeFactory>
+	class LazyKernel
+	{
+	public:
+		[[nodiscard]]
+		explicit constexpr LazyKernel(
+			Heuristic heuristic = Heuristic{},
+			NodeFactory nodeFactory = NodeFactory{}
+		) noexcept(std::is_nothrow_move_constructible_v<Heuristic>
+					&& std::is_nothrow_move_constructible_v<NodeFactory>)
+			: m_Heuristic{std::move(heuristic)},
+			m_NodeFactory{std::move(nodeFactory)}
+		{
+		}
+
+		constexpr Node operator ()(const node::vertex_t<Node>& vertex) const
+		{
+			return std::invoke(
+				m_NodeFactory,
+				vertex,
+				std::invoke(m_Heuristic, vertex));
+		}
+
+		template <std::ranges::input_range Edges>
+			requires std::convertible_to<
+				std::invoke_result_t<
+					NodeFactory,
+					const Node&,
+					std::ranges::range_reference_t<Edges>,
+					std::invoke_result_t<Heuristic, const node::vertex_t<Node>>>,
+				Node>
+		[[nodiscard]]
+		constexpr auto operator ()(const Node& current, Edges&& edges) const
+		{
+			return std::forward<Edges>(edges)
+					| std::views::transform(
+						[&](const auto& edge)
+						{
+							return std::invoke(
+								m_NodeFactory,
+								current,
+								edge,
+								std::invoke(m_Heuristic, edge::destination(edge)));
+						});
+		}
+
+	private:
+		SL_UTILITY_NO_UNIQUE_ADDRESS Heuristic m_Heuristic{};
+		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactory m_NodeFactory{};
+	};
+}
+
+namespace sl::graph::astar
+{
+	template <concepts::vertex Vertex, concepts::rank Rank>
+	struct Node
+	{
+		using vertex_type = Vertex;
+		using rank_type = Rank;
+
+		vertex_type vertex{};
+		rank_type cost{};
+		rank_type estimatedPendingCost{};
+
+		[[nodiscard]]
+		friend constexpr rank_type rank(const Node& node) noexcept(noexcept(node.cost + node.cost))
+		{
+			detail::check_bounds(node.cost, node.estimatedPendingCost);
+
+			return node.cost + node.estimatedPendingCost;
+		}
+
+		[[nodiscard]]
+		friend bool operator==(const Node&, const Node&) = default;
+	};
+
+	template <concepts::ranked_node Node>
+	struct NodeFactory;
+
+	template <concepts::vertex Vertex, concepts::rank Rank>
+	struct NodeFactory<Node<Vertex, Rank>>
+	{
+	public:
+		using node_type = Node<Vertex, Rank>;
+		using vertex_type = Vertex;
+		using rank_type = Rank;
+
+		[[nodiscard]]
+		constexpr node_type operator ()(vertex_type origin, rank_type estimatedPendingCost) const
+		{
+			node_type node{
+				.vertex = std::move(origin),
+				.cost = {},
+				.estimatedPendingCost = std::move(estimatedPendingCost)
+			};
+			detail::check_bounds(node.cost, node.estimatedPendingCost);
+
+			return node;
+		}
+
+		template <concepts::edge_for<node_type> Edge>
+		[[nodiscard]]
+		constexpr node_type operator ()(const node_type& current, const Edge& edge, rank_type estimatedPendingCost) const
+		{
+			detail::check_bounds(current.cost, edge::weight(edge));
+
+			node_type node{
+				.vertex = edge::destination(edge),
+				.cost = current.cost + edge::weight(edge),
+				.estimatedPendingCost = std::move(estimatedPendingCost)
+			};
+			detail::check_bounds(node.cost, node.estimatedPendingCost);
+
+			return node;
+		}
+	};
+
+	template <typename Node>
+	struct NodeFactory<PredecessorNodeDecorator<Node>>
+		: public NodeFactoryDecorator<PredecessorNodeDecorator<Node>, NodeFactory>
+	{
+	};
+
+	template <concepts::vertex Vertex, std::invocable<Vertex, Vertex> Strategy>
+	class SingleDestinationHeuristic
+	{
+	public:
+		using vertex_type = Vertex;
+
+		[[nodiscard]]
+		explicit constexpr SingleDestinationHeuristic(
+			Vertex destination
+		) noexcept(std::is_nothrow_move_constructible_v<Strategy>
+					&& std::is_nothrow_default_constructible_v<Strategy>)
+			: m_Destination{std::move(destination)}
+		{
+		}
+
+		[[nodiscard]]
+		explicit constexpr SingleDestinationHeuristic(
+			Vertex destination,
+			Strategy strategy
+		) noexcept(std::is_nothrow_move_constructible_v<Strategy>
+					&& std::is_nothrow_move_constructible_v<Strategy>)
+			: m_Destination{std::move(destination)},
+			m_Strategy{std::move(strategy)}
+		{
+		}
+
+		[[nodiscard]]
+		constexpr auto operator ()(const Vertex& current) const noexcept(std::is_nothrow_invocable_v<Strategy, Vertex, Vertex>)
+		{
+			return std::invoke(m_Strategy, m_Destination, current);
+		}
+
+	private:
+		Vertex m_Destination{};
+		Strategy m_Strategy{};
+	};
+
+	template <
+		typename View,
+		typename Heuristic,
+		concepts::ranked_node Node = Node<edge::vertex_t<view::edge_t<View>>, edge::weight_t<view::edge_t<View>>>,
+		concepts::tracker_for<node::vertex_t<Node>> Tracker = tracker::CommonHashMap<node::vertex_t<Node>>>
+		requires concepts::view_for<View, Node>
+				&& concepts::heuristic_for<Heuristic, Node>
+	using Range = IterableTraverser<
+		graph::detail::BasicTraverser<
+			Node,
+			View,
+			queue::CommonPriorityQueue<Node>,
+			Tracker,
+			detail::LazyKernel<
+				Node,
+				Heuristic,
+				NodeFactory<Node>>>>;
+}
+
+#endif
