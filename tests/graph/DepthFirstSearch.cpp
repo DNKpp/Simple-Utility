@@ -31,7 +31,7 @@ namespace
 
 		using edge_type = sg::CommonBasicEdge<int>;
 
-		template <sg::concepts::node Node>
+		template <sg::concepts::basic_node Node>
 			requires sg::concepts::edge_for<edge_type, Node>
 		static std::vector<edge_type> edges(const Node& current)
 		{
@@ -44,24 +44,24 @@ namespace
 				[](const int v) { return edge_type{.destination = v}; });
 			return infos;
 		}
-	} inline constexpr graph{};
+	};
 }
 
-TEST_CASE("dfs::BasicTraverser visits all reachable vertices.", "[graph][graph::dfs]")
+TEST_CASE("dfs::Range visits all reachable vertices.", "[graph][graph::dfs]")
 {
 	const auto& [expected, origin] = GENERATE(
 		(table<std::vector<sg::CommonBasicNode<int>>, int>)({
-			{{/*3,*/ {6}, {2}, {5}}, 3},
-			{{/*6,*/ {2}}, 6},
-			{{/*1,*/ {3}, {6}, {2}, {5}}, 1},
-			{{/*8,*/ {9}, {4}, {7}}, 8},
+			{{{3}, {6}, {2}, {5}}, 3},
+			{{{6}, {2}}, 6},
+			{{{1}, {3}, {6}, {2}, {5}}, 1},
+			{{{8}, {9}, {4}, {7}}, 8},
 			}));
 
-	sg::dfs::BasicTraverser<View> traverser{graph, origin};
-	STATIC_CHECK(std::ranges::input_range<decltype(traverser)>);
+	sg::dfs::Range<View> range{origin, std::tuple{View{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};
+	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
 
 	std::vector<sg::CommonBasicNode<int>> nodes{};
-	std::ranges::copy(traverser, std::back_inserter(nodes));
+	std::ranges::copy(range, std::back_inserter(nodes));
 
 	REQUIRE_THAT(nodes, Catch::Matchers::RangeEquals(expected));
 }

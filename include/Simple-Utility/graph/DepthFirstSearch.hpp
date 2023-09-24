@@ -14,23 +14,25 @@
 
 namespace sl::graph::dfs
 {
-	template <concepts::node Node>
-		requires (!concepts::ranked_node<Node>)
-	using NodeFactory = CommonNodeFactory<Node>;
+	template <concepts::basic_node Node>
+	struct NodeFactory
+		: public detail::NodeFactory<Node>
+	{
+	};
 
 	template <
 		class View,
-		concepts::node Node = CommonBasicNode<edge::vertex_t<view::edge_t<View>>>,
-		concepts::node_factory_for<Node, view::edge_t<View>> NodeFactory = NodeFactory<Node>,
+		concepts::basic_node Node = CommonBasicNode<edge::vertex_t<view::edge_t<View>>>,
 		concepts::tracker_for<node::vertex_t<Node>> Tracker = tracker::CommonHashMap<node::vertex_t<Node>>>
 		requires concepts::view_for<View, Node>
-	using BasicTraverser = Traverser<
-		View,
-		detail::BasicTraverseDriver<
+				&& (!concepts::ranked_node<Node>)
+	using Range = IterableTraverser<
+		detail::BasicTraverser<
 			Node,
-			detail::BasicState<Node, queue::CommonStack<Node>>,
+			View,
+			queue::CommonStack<Node>,
 			Tracker,
-			NodeFactory>>;
+			detail::default_kernel_t<Node, NodeFactory<Node>>>>;
 }
 
 #endif
