@@ -28,40 +28,7 @@
 
 namespace sl::graph::detail
 {
-	struct LazyExplorer
-	{
-		template <typename View, typename Node, typename Tracker>
-		[[nodiscard]]
-		constexpr auto operator ()(const Node& current, const View& graph, Tracker& tracker) const
-		{
-			return graph.edges(current)
-					| std::views::filter([&](const auto& edge) { return tracker::set_discovered(tracker, edge::destination(edge)); });
-		}
-	};
-
-	struct BufferedExplorer
-	{
-		template <typename View, typename Node, typename Tracker>
-		[[nodiscard]]
-		constexpr auto operator ()(const Node& current, const View& graph, Tracker& tracker)
-		{
-			auto edges = graph.edges(current);
-
-			std::vector<view::edge_t<View>> results{};
-			if constexpr (std::ranges::sized_range<decltype(edges)>)
-			{
-				results.reserve(std::ranges::size(edges));
-			}
-
-			std::ranges::copy_if(
-				std::move(edges),
-				std::back_inserter(results),
-				[&](const auto& edge) { return tracker::set_discovered(tracker, edge::destination(edge)); });
-
-			return results;
-		}
-	};
-
+	
 	template <typename Node>
 	struct NodeFactory;
 
@@ -139,32 +106,6 @@ namespace sl::graph::detail
 	};
 
 	template <concepts::basic_node Node, typename NodeFactory>
-	class LazyKernel
-		: public BaseKernel<Node, NodeFactory>
-	{
-	private:
-		using Super = BaseKernel<Node, NodeFactory>;
-
-	public:
-		using Super::Super;
-		using Super::operator();
-
-		template <std::ranges::input_range Edges>
-			requires std::convertible_to<
-				std::invoke_result_t<
-					NodeFactory,
-					const Node&,
-					std::ranges::range_reference_t<Edges>>,
-				Node>
-		[[nodiscard]]
-		constexpr auto operator ()(const Node& current, Edges&& edges) const
-		{
-			return std::forward<Edges>(edges)
-					| std::views::transform([&](const auto& edge) { return std::invoke(Super::m_NodeFactory, current, edge); });
-		}
-	};
-
-	template <concepts::basic_node Node, typename NodeFactory>
 	class BufferedKernel
 		: public BaseKernel<Node, NodeFactory>
 	{
@@ -200,7 +141,67 @@ namespace sl::graph::detail
 		}
 	};
 
+	struct BufferedExplorer
+	{
+		template <typename View, typename Node, typename Tracker>
+		[[nodiscard]]
+		constexpr auto operator ()(const Node& current, const View& graph, Tracker& tracker)
+		{
+			auto edges = graph.edges(current);
+
+			std::vector<view::edge_t<View>> results{};
+			if constexpr (std::ranges::sized_range<decltype(edges)>)
+			{
+				results.reserve(std::ranges::size(edges));
+			}
+
+			std::ranges::copy_if(
+				std::move(edges),
+				std::back_inserter(results),
+				[&](const auto& edge) { return tracker::set_discovered(tracker, edge::destination(edge)); });
+
+			return results;
+		}
+	};
+
 #ifdef SL_UTILITY_HAS_RANGES_VIEWS
+	struct LazyExplorer
+	{
+		template <typename View, typename Node, typename Tracker>
+		[[nodiscard]]
+		constexpr auto operator ()(const Node& current, const View& graph, Tracker& tracker) const
+		{
+			return graph.edges(current)
+					| std::views::filter([&](const auto& edge) { return tracker::set_discovered(tracker, edge::destination(edge)); });
+		}
+	};
+
+	template <concepts::basic_node Node, typename NodeFactory>
+	class LazyKernel
+		: public BaseKernel<Node, NodeFactory>
+	{
+	private:
+		using Super = BaseKernel<Node, NodeFactory>;
+
+	public:
+		using Super::Super;
+		using Super::operator();
+
+		template <std::ranges::input_range Edges>
+			requires std::convertible_to<
+				std::invoke_result_t<
+					NodeFactory,
+					const Node&,
+					std::ranges::range_reference_t<Edges>>,
+				Node>
+		[[nodiscard]]
+		constexpr auto operator ()(const Node& current, Edges&& edges) const
+		{
+			return std::forward<Edges>(edges)
+					| std::views::transform([&](const auto& edge) { return std::invoke(Super::m_NodeFactory, current, edge); });
+		}
+	};
+
 	using default_explorer_t = LazyExplorer;
 
 	template <typename Node, typename NodeFactory>

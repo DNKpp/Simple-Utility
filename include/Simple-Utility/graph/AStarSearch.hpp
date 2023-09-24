@@ -76,41 +76,6 @@ namespace sl::graph::astar::detail
 	};
 
 	template <concepts::ranked_node Node, concepts::heuristic_for<Node> Heuristic, typename NodeFactory>
-	class LazyKernel
-		: public BaseKernel<Node, Heuristic, NodeFactory>
-	{
-	private:
-		using Super = BaseKernel<Node, Heuristic, NodeFactory>;
-
-	public:
-		using Super::Super;
-		using Super::operator();
-
-		template <std::ranges::input_range Edges>
-			requires std::convertible_to<
-				std::invoke_result_t<
-					NodeFactory,
-					const Node&,
-					std::ranges::range_reference_t<Edges>,
-					std::invoke_result_t<Heuristic, const node::vertex_t<Node>>>,
-				Node>
-		[[nodiscard]]
-		constexpr auto operator ()(const Node& current, Edges&& edges) const
-		{
-			return std::forward<Edges>(edges)
-					| std::views::transform(
-						[&](const auto& edge)
-						{
-							return std::invoke(
-								Super::m_NodeFactory,
-								current,
-								edge,
-								std::invoke(Super::m_Heuristic, edge::destination(edge)));
-						});
-		}
-	};
-
-	template <concepts::ranked_node Node, concepts::heuristic_for<Node> Heuristic, typename NodeFactory>
 	class BufferedKernel
 		: public BaseKernel<Node, Heuristic, NodeFactory>
 	{
@@ -155,6 +120,41 @@ namespace sl::graph::astar::detail
 	};
 
 #ifdef SL_UTILITY_HAS_RANGES_VIEWS
+	template <concepts::ranked_node Node, concepts::heuristic_for<Node> Heuristic, typename NodeFactory>
+	class LazyKernel
+		: public BaseKernel<Node, Heuristic, NodeFactory>
+	{
+	private:
+		using Super = BaseKernel<Node, Heuristic, NodeFactory>;
+
+	public:
+		using Super::Super;
+		using Super::operator();
+
+		template <std::ranges::input_range Edges>
+			requires std::convertible_to<
+				std::invoke_result_t<
+					NodeFactory,
+					const Node&,
+					std::ranges::range_reference_t<Edges>,
+					std::invoke_result_t<Heuristic, const node::vertex_t<Node>>>,
+				Node>
+		[[nodiscard]]
+		constexpr auto operator ()(const Node& current, Edges&& edges) const
+		{
+			return std::forward<Edges>(edges)
+					| std::views::transform(
+						[&](const auto& edge)
+						{
+							return std::invoke(
+								Super::m_NodeFactory,
+								current,
+								edge,
+								std::invoke(Super::m_Heuristic, edge::destination(edge)));
+						});
+		}
+	};
+
 	template <typename Node, typename Heuristic, typename NodeFactory>
 	using default_kernel_t = LazyKernel<Node, Heuristic, NodeFactory>;
 #else
