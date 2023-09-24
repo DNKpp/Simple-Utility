@@ -35,8 +35,7 @@
 	#define SL_UTILITY_HAS_STD_FORMAT
 #endif
 
-#if not (defined(__clang__) && __clang_major__ < 16) \
-	|| not (defined(__GNUG__) && __GNUG__ < 12)
+#if defined(_MSC_VER) || (__cpp_lib_ranges >= 202110L)
 	#define SL_UTILITY_HAS_RANGES_VIEWS
 #endif
 
