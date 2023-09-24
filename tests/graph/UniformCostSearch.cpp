@@ -53,45 +53,46 @@ namespace
 				});
 			return infos;
 		}
-	} inline constexpr graph{};
+	};
 }
 
-TEST_CASE("ucs::BasicTraverser visits all reachable vertices.", "[graph][graph::ucs]")
+TEST_CASE("ucs::Range visits all reachable vertices.", "[graph][graph::ucs]")
 {
 	const auto& [expected, origin] = GENERATE(
 		(table<std::vector<Node>, std::string>)({
-			{{{"5", 2}, {"6", 3}, {"2", 7}}, "3"},
-			{{{"2", 4}}, "6"},
-			{{{"2", 1}, {"3", 2}, {"6", 5}, {"5", 4}}, "1"},
-			{{{"7", 1}, {"4", 4}, {"9", 1}}, "8"}
+			{{{"3", 0}, {"5", 2}, {"6", 3}, {"2", 7}}, "3"},
+			{{{"6", 0}, {"2", 4}}, "6"},
+			{{{"1", 0}, {"2", 1}, {"3", 2}, {"6", 5}, {"5", 4}}, "1"},
+			{{{"8", 0}, {"7", 1}, {"4", 4}, {"9", 1}}, "8"}
 			}));
 
-	sg::ucs::BasicTraverser<View> traverser{graph, origin};
-	STATIC_CHECK(std::ranges::input_range<decltype(traverser)>);
+	sg::ucs::Range<View> range{origin, std::tuple{View{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};
+	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
 
 	std::vector<Node> nodes{};
-	std::ranges::copy(traverser, std::back_inserter(nodes));
+	std::ranges::copy(range, std::back_inserter(nodes));
 
 	REQUIRE_THAT(nodes, Catch::Matchers::UnorderedRangeEquals(expected));
 }
 
-TEST_CASE("ucs::BasicTraverser node can be decorated with PredecessorNodeDecorator.", "[graph][graph::ucs]")
+TEST_CASE("ucs::Range node can be decorated with PredecessorNodeDecorator.", "[graph][graph::ucs]")
 {
 	using DecoratedNode = sg::PredecessorNodeDecorator<::Node>;
 
 	const auto& [expected, origin] = GENERATE(
 		(table<std::vector<DecoratedNode>, std::string>)({
-			{{{{"5", 2}, "3"}, {{"6", 3}, "3"}, {{"2", 7}, "6"}}, "3"},
-			{{{{"2", 4}, "6"}}, "6"},
-			//{{{{"2", 1}, "1"}, {{"3", 2}, "1"}, {{"6", 5}, "2"}, {{"5", 4}, "3"}}, "1"},	// non-deterministic as 6 may have the predecessor 2 or 3
-			{{{{"7", 1}, "8"}, {{"4", 4}, "7"}, {{"9", 1}, "8"}}, "8"}
+			{{{{"3", 0}, std::nullopt}, {{"5", 2}, "3"}, {{"6", 3}, "3"}, {{"2", 7}, "6"}}, "3"},
+			{{{{"6", 0}, std::nullopt}, {{"2", 4}, "6"}}, "6"},
+			// non-deterministic, as 6 may have the predecessor 2 or 3
+			//{{{{"1", 0}, std::nullopt}, {{"2", 1}, "1"}, {{"3", 2}, "1"}, {{"6", 5}, "2"}, {{"5", 4}, "3"}}, "1"},
+			{{{{"8", 0}, std::nullopt}, {{"7", 1}, "8"}, {{"4", 4}, "7"}, {{"9", 1}, "8"}}, "8"}
 			}));
 
-	sg::ucs::BasicTraverser<View, DecoratedNode> traverser{graph, origin};
-	STATIC_CHECK(std::ranges::input_range<decltype(traverser)>);
+	sg::ucs::Range<View, DecoratedNode> range{origin, std::tuple{View{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};
+	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
 
 	std::vector<DecoratedNode> nodes{};
-	std::ranges::copy(traverser, std::back_inserter(nodes));
+	std::ranges::copy(range, std::back_inserter(nodes));
 
 	REQUIRE_THAT(nodes, Catch::Matchers::UnorderedRangeEquals(expected));
 }

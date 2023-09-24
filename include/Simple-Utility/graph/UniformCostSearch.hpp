@@ -15,21 +15,23 @@
 namespace sl::graph::ucs
 {
 	template <concepts::ranked_node Node>
-	using NodeFactory = CommonNodeFactory<Node>;
+	struct NodeFactory
+		: public detail::NodeFactory<Node>
+	{
+	};
 
 	template <
 		class View,
 		concepts::ranked_node Node = CommonRankedNode<edge::vertex_t<view::edge_t<View>>, edge::weight_t<view::edge_t<View>>>,
-		concepts::node_factory_for<Node, view::edge_t<View>> NodeFactory = NodeFactory<Node>,
 		concepts::tracker_for<node::vertex_t<Node>> Tracker = tracker::CommonHashMap<node::vertex_t<Node>>>
 		requires concepts::view_for<View, Node>
-	using BasicTraverser = Traverser<
-		View,
-		detail::BasicTraverseDriver<
+	using Range = IterableTraverser<
+		detail::BasicTraverser<
 			Node,
-			detail::BasicState<Node, queue::CommonPriorityQueue<Node>>,
+			View,
+			queue::CommonPriorityQueue<Node>,
 			Tracker,
-			NodeFactory>>;
+			detail::default_kernel_t<Node, NodeFactory<Node>>>>;
 }
 
 #endif
