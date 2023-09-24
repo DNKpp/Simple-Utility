@@ -18,7 +18,7 @@
 
 namespace sl::graph
 {
-	template <concepts::node Node, class Char>
+	template <concepts::basic_node Node, class Char>
 		requires sl::concepts::formattable<node::vertex_t<Node>, Char>
 	class NodeFormatter
 	{
@@ -53,7 +53,7 @@ namespace sl::graph
 		}
 	};
 
-	template <concepts::node Node, class Char>
+	template <concepts::basic_node Node, class Char>
 	class NodeFormatter<PredecessorNodeDecorator<Node>, Char>
 	{
 	public:
@@ -76,7 +76,7 @@ namespace sl::graph
 	};
 }
 
-template <sl::graph::concepts::node Node, class Char>
+template <sl::graph::concepts::basic_node Node, class Char>
 struct std::formatter<Node, Char> // NOLINT(cert-dcl58-cpp)
 {
 public:
