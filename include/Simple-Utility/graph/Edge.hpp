@@ -11,7 +11,6 @@
 #include "Simple-Utility/Utility.hpp"
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/graph/Common.hpp"
-#include "Simple-Utility/graph/Node.hpp"
 
 namespace sl::graph::customize
 {
@@ -191,20 +190,6 @@ namespace sl::graph::edge
 
 	template <concepts::edge Edge>
 	using weight_t = typename traits<Edge>::weight_type;
-}
-
-namespace sl::graph::concepts
-{
-	template <class Edge, class Node>
-	concept edge_for = node<Node>
-						&& edge<Edge>
-						&& std::same_as<edge::vertex_t<Edge>, node::vertex_t<Node>>
-						&& (!ranked_node<Node>
-							|| requires(const Edge& edge)
-							{
-								requires weighted_edge<Edge>;
-								{ edge::weight(edge) } -> std::convertible_to<node::rank_t<Node>>;
-							});
 }
 
 namespace sl::graph

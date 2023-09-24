@@ -1,12 +1,12 @@
 target_sources(
 	Simple-Utility-Tests
 	PRIVATE
+	"AStarSearch.cpp"
 	"Common.cpp"
 	"DepthFirstSearch.cpp"
 	"Edge.cpp"
 	"Formatter.cpp"
 	"Node.cpp"
-	"NodeFactory.cpp"
 	"Queue.cpp"
 	"Tracker.cpp"
 	"Traverse.cpp"

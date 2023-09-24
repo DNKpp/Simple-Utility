@@ -13,6 +13,7 @@
 
 #include "Defines.hpp"
 
+#include "Simple-Utility/graph/mixins/tracker/Null.hpp"
 #include "Simple-Utility/test_util/Catch2Ext.hpp"
 #include "Simple-Utility/test_util/TrompeloeilExt.hpp"
 
@@ -21,188 +22,130 @@
 // ReSharper disable CppClangTidyClangDiagnosticUnneededMemberFunction
 
 using DefaultNode = GenericBasicNode<int>;
+using DefaultEdge = GenericBasicEdge<int>;
 using DefaultQueue = QueueMock<DefaultNode>;
-using DefaultState = sg::detail::BasicState<DefaultNode, DefaultQueue>;
 using DefaultTracker = TrackerMock<sg::node::vertex_t<DefaultNode>>;
 using DefaultView = BasicViewMock<sg::node::vertex_t<DefaultNode>>;
 using DefaultNodeFactory = GenericBasicNodeFactoryMock<DefaultNode>;
-using DefaultDriver = sg::detail::BasicTraverseDriver<
+using DefaultTraverser = sg::detail::BasicTraverser<
 	DefaultNode,
-	DefaultState,
-	DefaultTracker,
-	DefaultNodeFactory>;
+	DefaultView,
+	DefaultQueue,
+	DefaultTracker>;
 
-TEST_CASE("BasicState is constructible.", "[graph][graph::traverse][graph::detail]")
+using MovableTraverser = sg::detail::BasicTraverser<
+		DefaultNode,
+		EmptyViewStub<int>,
+		EmptyQueueStub<DefaultNode>,
+		sg::tracker::Null>;
+
+TEST_CASE("detail::BasicTraverser is not copyable but movable, when strategies support it.", "[graph][graph::traverser][graph::detail]")
 {
-	using State = sg::detail::BasicState<DefaultNode, EmptyQueueStub<DefaultNode>>;
-
-	SECTION("Default constructible.")
-	{
-		constexpr State state{};
-	}
-
-	SECTION("Constructible with queue object as argument.")
-	{
-		constexpr State state{EmptyQueueStub<DefaultNode>{}};
-	}
+	STATIC_REQUIRE(!std::is_copy_constructible_v<MovableTraverser>);
+	STATIC_REQUIRE(!std::is_copy_assignable_v<MovableTraverser>);
+	STATIC_REQUIRE(std::is_move_constructible_v<MovableTraverser>);
+	STATIC_REQUIRE(std::is_move_assignable_v<MovableTraverser>);
 }
 
-TEST_CASE(
-	"BasicState::next accepts current neighbors and returns the next node, if present.",
-	"[graph][graph::traverse][graph::detail]")
+TEMPLATE_TEST_CASE(
+	"detail::BasicTraverser satisfies graph::concepts::traverser.",
+	"[graph][graph::traverser][graph::concepts]",
+	MovableTraverser,
+	DefaultTraverser
+)
 {
-	using trompeloeil::_;
-	using namespace trompeloeil_ext;
-	using namespace Catch::Matchers;
-	using namespace catch_ext;
-
-	DefaultQueue queue{};
-	ALLOW_CALL(queue, empty()) // allow debug assertion
-		.RETURN(true);
-	DefaultState state{std::move(queue)};
-
-	SECTION("Providing neighbor infos on next call.")
-	{
-		std::vector<DefaultNode> neighbors{{44}, {45}, {46}};
-		auto& queueMember = const_cast<DefaultQueue&>(state.queue());
-
-		trompeloeil::sequence seq{};
-		REQUIRE_CALL(queueMember, do_insert(matches(UnorderedRangeEquals(neighbors))))
-			.IN_SEQUENCE(seq);
-
-		REQUIRE_CALL(queueMember, empty())
-			.RETURN(false)
-			.IN_SEQUENCE(seq);
-
-		REQUIRE_CALL(queueMember, next())
-			.RETURN(DefaultNode{44})
-			.IN_SEQUENCE(seq);
-
-		REQUIRE(DefaultNode{44} == state.next(neighbors));
-
-		SECTION("And when the internal queue depletes.")
-		{
-			REQUIRE_CALL(queueMember, do_insert(matches(RangesEmpty{})))
-				.IN_SEQUENCE(seq);
-
-			REQUIRE_CALL(queueMember, empty())
-				.RETURN(true)
-				.IN_SEQUENCE(seq);
-
-			REQUIRE(std::nullopt == state.next(std::array<DefaultNode, 0>{}));
-		}
-	}
+	STATIC_REQUIRE(sg::concepts::traverser<TestType>);
 }
 
-TEST_CASE("BasicTraverseDriver can be constructed with an origin.", "[graph][graph::traverse][graph::detail]")
+TEST_CASE("detail::BasicTraverser can be constructed with an origin.", "[graph][graph::traverser][graph::detail]")
 {
 	using namespace trompeloeil_ext;
 	using namespace Catch::Matchers;
 
 	const auto origin = GENERATE(take(5, random(std::numeric_limits<int>::min(), std::numeric_limits<int>::max())));
 
-	DefaultNodeFactory nodeFactoryMock{};
-	REQUIRE_CALL(nodeFactoryMock, make_init_node(origin))
-		.RETURN(DefaultNode{.vertex = origin});
-
-	DefaultTracker trackerMock{};
-	REQUIRE_CALL(trackerMock, set_discovered(origin))
+	DefaultQueue queue{};
+	ALLOW_CALL(queue, empty())	// internal assertion
 		.RETURN(true);
-	REQUIRE_CALL(trackerMock, set_visited(origin))
+	REQUIRE_CALL(queue, do_insert(matches(RangeEquals(std::array{DefaultNode{origin}}))));
+
+	DefaultTracker tracker{};
+	REQUIRE_CALL(tracker, set_discovered(origin))
 		.RETURN(true);
 
-	const sg::detail::BasicTraverseDriver<
-		DefaultNode,
-		sg::detail::BasicState<DefaultNode, EmptyQueueStub<DefaultNode>>,
-		DefaultTracker,
-		DefaultNodeFactory> driver{
+	const DefaultTraverser traverser{
 		origin,
-		std::forward_as_tuple(std::move(trackerMock)),
-		std::forward_as_tuple(std::move(nodeFactoryMock)),
+		std::forward_as_tuple(DefaultView{}),
+		std::forward_as_tuple(std::move(queue)),
+		std::forward_as_tuple(std::move(tracker)),
+		std::tuple{},
 		std::tuple{}
 	};
-
-	REQUIRE(DefaultNode{.vertex = origin} == driver.current_node());
 }
 
-TEST_CASE("BasicTraverseDriver::next returns the current node, or std::nullopt.", "[graph][graph::traverse][graph::detail]")
+TEST_CASE("detail::BasicTraverser::next returns the current node, or std::nullopt.", "[graph][graph::traverser][graph::detail]")
 {
 	using trompeloeil::_;
 	using namespace trompeloeil_ext;
 	using namespace catch_ext;
 	using namespace Catch::Matchers;
 
-	constexpr DefaultNode originNode{.vertex = 42};
-	auto driver = [&]
+	constexpr DefaultNode originNode{42};
+	auto traverser = [&]
 	{
-		DefaultNodeFactory nodeFactoryMock{};
-		REQUIRE_CALL(nodeFactoryMock, make_init_node(42))
-			.RETURN(originNode);
-
 		DefaultTracker trackerMock{};
 		REQUIRE_CALL(trackerMock, set_discovered(42))
 			.RETURN(true);
-		REQUIRE_CALL(trackerMock, set_visited(42))
-			.RETURN(true);
 
 		DefaultQueue queue{};
-		ALLOW_CALL(queue, empty())
+		ALLOW_CALL(queue, empty())	// internal assertion
 			.RETURN(true);
+		REQUIRE_CALL(queue, do_insert(matches(RangeEquals(std::array{originNode}))));
 
-		return DefaultDriver{
+		return DefaultTraverser{
 			originNode.vertex,
+			std::forward_as_tuple(DefaultView{}),
+			std::forward_as_tuple(std::move(queue)),
 			std::forward_as_tuple(std::move(trackerMock)),
-			std::forward_as_tuple(std::move(nodeFactoryMock)),
-			std::forward_as_tuple(std::move(queue))
+			std::tuple{},
+			std::tuple{}
 		};
 	}();
 
-	CHECK(driver.current_node() == originNode);
-
 	using VertexInfo = DefaultView::edge_type;
-	DefaultView view{};
-	auto& nodeFactoryMock = const_cast<DefaultNodeFactory&>(driver.node_factory());
-	auto& queueMock = const_cast<DefaultQueue&>(driver.state().queue());
-	auto& trackerMock = const_cast<DefaultTracker&>(driver.tracker());
+	auto& view = const_cast<DefaultView&>(traverser.view());
+	auto& queue = const_cast<DefaultQueue&>(traverser.queue());
+	auto& tracker = const_cast<DefaultTracker&>(traverser.tracker());
 
-	SECTION("Next returns a node.")
+	SECTION("Next returns a node, when queue contains elements.")
 	{
 		// vertex 43 will be skipped on purpose
 		REQUIRE_CALL(view, edges(originNode))
 			.RETURN(std::vector<VertexInfo>{{41}, {43}, {44}});
 
-		REQUIRE_CALL(nodeFactoryMock, make_successor_node(originNode, VertexInfo{41}))
-			.RETURN(DefaultNode{.vertex = 41});
-		REQUIRE_CALL(nodeFactoryMock, make_successor_node(originNode, VertexInfo{44}))
-			.RETURN(DefaultNode{.vertex = 44});
-
-		REQUIRE_CALL(queueMock, do_insert(matches(RangeEquals(std::vector<DefaultNode>{{41}, {44}}))));
-		REQUIRE_CALL(queueMock, empty())
+		REQUIRE_CALL(queue, do_insert(matches(RangeEquals(std::vector<DefaultNode>{{41}, {44}}))));
+		REQUIRE_CALL(queue, empty())
 			.RETURN(false);
-		REQUIRE_CALL(queueMock, next())
-			.RETURN(DefaultNode{.vertex = 41});
+		REQUIRE_CALL(queue, next())
+			.RETURN(DefaultNode{.vertex = 42});
 
-		REQUIRE_CALL(trackerMock, set_discovered(41))
+		REQUIRE_CALL(tracker, set_discovered(41))
 			.RETURN(true);
-		REQUIRE_CALL(trackerMock, set_discovered(43))
+		REQUIRE_CALL(tracker, set_discovered(43))
 			.RETURN(false);
-		REQUIRE_CALL(trackerMock, set_discovered(44))
+		REQUIRE_CALL(tracker, set_discovered(44))
 			.RETURN(true);
-		REQUIRE_CALL(trackerMock, set_visited(41))
+		REQUIRE_CALL(tracker, set_visited(42))
 			.RETURN(true);
 
-		REQUIRE(DefaultNode{.vertex = 41} == driver.next(std::as_const(view)));
+		REQUIRE(DefaultNode{.vertex = 42} == traverser.next());
 	}
 
-	SECTION("Next returns std::nullopt.")
+	SECTION("Next returns std::nullopt, when queue is empty.")
 	{
-		REQUIRE_CALL(view, edges(originNode))
-			.RETURN(std::vector<sg::view::edge_t<DefaultView>>{});
-
-		REQUIRE_CALL(queueMock, do_insert(matches(RangesEmpty{})));
-		REQUIRE_CALL(queueMock, empty())
+		REQUIRE_CALL(queue, empty())
 			.RETURN(true);
 
-		REQUIRE(std::nullopt == driver.next(std::as_const(view)));
+		REQUIRE(std::nullopt == traverser.next());
 	}
 }

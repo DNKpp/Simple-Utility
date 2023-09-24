@@ -24,7 +24,7 @@ namespace sl::graph::view
 namespace sl::graph::concepts
 {
 	template <class T, class Node>
-	concept view_for = node<Node>
+	concept view_for = basic_node<Node>
 						&& sl::concepts::unqualified<T>
 						&& requires(const T& view, const Node& node)
 						{

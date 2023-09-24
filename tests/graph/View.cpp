@@ -16,7 +16,7 @@ namespace
 	{
 		using edge_type = GenericBasicEdge<Vertex>;
 
-		template <sg::concepts::node Node>
+		template <sg::concepts::basic_node Node>
 			requires sg::concepts::edge_for<edge_type, Node>
 		// ReSharper disable once CppFunctionIsNotImplemented
 		static std::vector<edge_type> edges(const Node&);
@@ -27,7 +27,7 @@ namespace
 	{
 		using edge_type = GenericWeightedEdge<Vertex, Weight>;
 
-		template <sg::concepts::node Node>
+		template <sg::concepts::basic_node Node>
 			requires sg::concepts::edge_for<edge_type, Node>
 		// ReSharper disable once CppFunctionIsNotImplemented
 		static std::vector<edge_type> edges(const Node&);

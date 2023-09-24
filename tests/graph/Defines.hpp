@@ -63,7 +63,7 @@ struct GenericWeightedEdge
 	friend bool operator==(const GenericWeightedEdge&, const GenericWeightedEdge&) = default;
 };
 
-template <sg::concepts::node Node>
+template <sg::concepts::basic_node Node>
 class QueueMock
 {
 public:
@@ -84,7 +84,7 @@ public:
 	}
 };
 
-template <sg::concepts::node Node>
+template <sg::concepts::basic_node Node>
 struct EmptyQueueStub
 {
 	[[nodiscard]]
@@ -110,7 +110,7 @@ public:
 	MAKE_MOCK1(set_visited, bool(const Vertex&));
 };
 
-template <sg::concepts::node Node>
+template <sg::concepts::basic_node Node>
 class GenericBasicNodeFactoryMock
 {
 public:
@@ -152,12 +152,30 @@ template <sg::concepts::vertex Vertex>
 class BasicViewMock
 {
 public:
+	inline static constexpr bool trompeloeil_movable_mock = true;
+
 	using edge_type = GenericBasicEdge<Vertex>;
 
 	MAKE_CONST_MOCK1(edges, std::vector<edge_type>(const GenericBasicNode<Vertex>&));
 
-	std::vector<edge_type> edges(const sg::concepts::node auto& node) const
+	template <sg::concepts::basic_node Node>
+		requires sg::concepts::edge_for<edge_type, Node>
+	std::vector<edge_type> edges(const Node& node) const
 	{
 		return edges(GenericBasicNode<Vertex>{.vertex = sg::node::vertex(node)});
+	}
+};
+
+template <sg::concepts::vertex Vertex>
+class EmptyViewStub
+{
+public:
+	using edge_type = GenericBasicEdge<Vertex>;
+
+	template <sg::concepts::basic_node Node>
+		requires sg::concepts::edge_for<edge_type, Node>
+	static constexpr std::array<edge_type, 0> edges([[maybe_unused]] const Node& node) noexcept
+	{
+		return {};
 	}
 };

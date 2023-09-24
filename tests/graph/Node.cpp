@@ -200,7 +200,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, sg::PredecessorNodeDecorator<sg::CommonRankedNode<std::string, int>>)
 )
 {
-	STATIC_REQUIRE(expected == sg::concepts::node<T>);
+	STATIC_REQUIRE(expected == sg::concepts::basic_node<T>);
 }
 
 TEMPLATE_TEST_CASE_SIG(

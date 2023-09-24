@@ -12,6 +12,7 @@
 #include "Simple-Utility/Utility.hpp"
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/graph/Common.hpp"
+#include "Simple-Utility/graph/Edge.hpp"
 
 #include <optional>
 
@@ -37,9 +38,9 @@ namespace sl::graph::detail
 	}
 
 	template <class Node>
-		requires requires(const Node& node)
+		requires requires
 		{
-			requires concepts::vertex<std::remove_cvref_t<decltype(node.vertex)>>;
+			requires concepts::vertex<std::remove_cvref_t<decltype(std::declval<const Node&>().vertex)>>;
 		}
 	constexpr auto& vertex(const Node& node, const priority_tag<2>) noexcept
 	{
@@ -141,6 +142,12 @@ namespace sl::graph::node
 	template <class>
 	struct traits;
 
+	template <typename Node>
+	using vertex_t = typename traits<Node>::vertex_type;
+
+	template <typename Node>
+	using rank_t = typename traits<Node>::rank_type;
+
 	template <class T>
 		requires concepts::readable_vertex_type<T>
 	struct traits<T>
@@ -161,35 +168,35 @@ namespace sl::graph::node
 namespace sl::graph::concepts
 {
 	template <class T>
-	concept node = sl::concepts::unqualified<T>
-					&& std::copyable<T>
-					&& std::destructible<T>
-					&& vertex<typename node::traits<T>::vertex_type>
-					&& requires(const T& node)
-					{
-						// fixes compile error on msvc v142
-						// ReSharper disable once CppRedundantTemplateKeyword
-						{ node::vertex(node) } -> std::convertible_to<typename node::template traits<T>::vertex_type>;
-					};
-
-	template <class T>
-	concept ranked_node = node<T>
-						&& rank<typename node::traits<T>::rank_type>
+	concept basic_node = sl::concepts::unqualified<T>
+						&& std::copyable<T>
+						&& std::destructible<T>
+						&& requires { typename node::traits<T>::vertex_type; }
+						&& vertex<node::vertex_t<T>>
 						&& requires(const T& node)
 						{
-							// fixes compile error on msvc v142
-							// ReSharper disable once CppRedundantTemplateKeyword
-							{ node::rank(node) } -> std::convertible_to<typename node::template traits<T>::rank_type>;
+							{ node::vertex(node) } -> std::convertible_to<node::vertex_t<T>>;
 						};
-}
 
-namespace sl::graph::node
-{
-	template <concepts::node Node>
-	using vertex_t = typename traits<Node>::vertex_type;
+	template <class Node>
+	concept ranked_node = basic_node<Node>
+						&& requires { typename node::traits<Node>::rank_type; }
+						&& rank<node::rank_t<Node>>
+						&& requires(const Node& node)
+						{
+							{ node::rank(node) } -> std::convertible_to<node::rank_t<Node>>;
+						};
 
-	template <concepts::ranked_node Node>
-	using rank_t = typename traits<Node>::rank_type;
+	template <class Edge, class Node>
+	concept edge_for = basic_node<Node>
+						&& edge<Edge>
+						&& std::same_as<edge::vertex_t<Edge>, node::vertex_t<Node>>
+						&& (!ranked_node<Node>
+							|| requires(const Edge& edge)
+							{
+								requires weighted_edge<Edge>;
+								{ edge::weight(edge) } -> std::convertible_to<node::rank_t<Node>>;
+							});
 }
 
 namespace sl::graph
@@ -218,7 +225,7 @@ namespace sl::graph
 		friend bool operator==(const CommonRankedNode&, const CommonRankedNode&) = default;
 	};
 
-	template <concepts::node Node>
+	template <concepts::basic_node Node>
 	struct PredecessorNodeDecorator
 		: public Node
 	{
@@ -228,6 +235,45 @@ namespace sl::graph
 
 		[[nodiscard]]
 		friend bool operator==(const PredecessorNodeDecorator&, const PredecessorNodeDecorator&) = default;
+	};
+
+	template <concepts::basic_node Node, template<class> typename BaseNodeFactory>
+	class NodeFactoryDecorator;
+
+	template <concepts::basic_node Node, template<class> typename BaseNodeFactory>
+	class NodeFactoryDecorator<PredecessorNodeDecorator<Node>, BaseNodeFactory>
+		: private BaseNodeFactory<Node>
+	{
+	private:
+		using Super = BaseNodeFactory<Node>;
+
+	public:
+		using node_type = PredecessorNodeDecorator<Node>;
+		using vertex_type = node::vertex_t<node_type>;
+
+		template <typename... Args>
+		[[nodiscard]]
+		constexpr node_type operator ()(vertex_type origin, Args&&... args) const
+		{
+			// leave code as-is, because directly returning the temporary results in an ICE on gcc10
+			node_type node{
+				{std::invoke(static_cast<const Super&>(*this), std::move(origin), std::forward<Args>(args)...)},
+				std::nullopt
+			};
+			return node;
+		}
+
+		template <concepts::edge_for<node_type> Edge, typename... Args>
+		[[nodiscard]]
+		constexpr node_type operator ()(const node_type& current, const Edge& edge, Args&&... args) const
+		{
+			// leave code as-is, because directly returning the temporary results in an ICE on gcc10
+			node_type node{
+				{std::invoke(static_cast<const Super&>(*this), current, edge, std::forward<Args>(args)...)},
+				node::vertex(current)
+			};
+			return node;
+		}
 	};
 }
 

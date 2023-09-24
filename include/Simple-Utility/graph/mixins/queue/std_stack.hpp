@@ -42,7 +42,7 @@ struct sl::graph::customize::next_fn<std::stack<T, Container>>
 
 namespace sl::graph::queue
 {
-	template <concepts::node Node, class Container = std::deque<Node>>
+	template <concepts::basic_node Node, class Container = std::deque<Node>>
 	using CommonStack = std::stack<Node, Container>;
 }
 

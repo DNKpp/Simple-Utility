@@ -12,8 +12,8 @@
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/functional/Tuple.hpp"
 #include "Simple-Utility/graph/Common.hpp"
+#include "Simple-Utility/graph/Edge.hpp"
 #include "Simple-Utility/graph/Node.hpp"
-#include "Simple-Utility/graph/NodeFactory.hpp"
 #include "Simple-Utility/graph/Queue.hpp"
 #include "Simple-Utility/graph/Tracker.hpp"
 #include "Simple-Utility/graph/View.hpp"
@@ -21,33 +21,231 @@
 #include <array>
 #include <cassert>
 #include <concepts>
-#include <forward_list>
 #include <optional>
 #include <ranges>
 #include <type_traits>
+#include <vector>
 
 namespace sl::graph::detail
 {
-	template <concepts::node Node, concepts::queue_for<Node> QueuingStrategy>
-	class BasicState
+	struct LazyExplorer
+	{
+		template <typename View, typename Node, typename Tracker>
+		[[nodiscard]]
+		constexpr auto operator ()(const Node& current, const View& graph, Tracker& tracker) const
+		{
+			return graph.edges(current)
+					| std::views::filter([&](const auto& edge) { return tracker::set_discovered(tracker, edge::destination(edge)); });
+		}
+	};
+
+	struct BufferedExplorer
+	{
+		template <typename View, typename Node, typename Tracker>
+		[[nodiscard]]
+		constexpr auto operator ()(const Node& current, const View& graph, Tracker& tracker)
+		{
+			auto edges = graph.edges(current);
+
+			std::vector<Node> results{};
+			if constexpr (std::ranges::sized_range<decltype(edges)>)
+			{
+				results.reserve(std::ranges::size(edges));
+			}
+
+			std::ranges::copy_if(
+				std::move(edges),
+				std::back_inserter(results),
+				[&](const auto& edge) { return tracker::set_discovered(tracker, edge::destination(edge)); });
+
+			return results;
+		}
+	};
+
+	template <typename Node>
+	struct NodeFactory;
+
+	template <concepts::basic_node Node>
+	struct NodeFactory<Node>
+	{
+		[[nodiscard]]
+		constexpr Node operator ()(const node::vertex_t<Node>& vertex) const
+		{
+			return Node{vertex};
+		}
+
+		template <concepts::edge_for<Node> Edge>
+		[[nodiscard]]
+		constexpr Node operator ()([[maybe_unused]] const Node& predecessor, const Edge& edge) const
+		{
+			return Node{edge::destination(edge)};
+		}
+	};
+
+	template <concepts::ranked_node Node>
+	struct NodeFactory<Node>
+	{
+		[[nodiscard]]
+		constexpr Node operator ()(const node::vertex_t<Node>& vertex) const
+		{
+			return Node{vertex};
+		}
+
+		template <concepts::edge_for<Node> Edge>
+		[[nodiscard]]
+		constexpr Node operator ()(const Node& predecessor, const Edge& edge) const
+		{
+			return Node{
+				edge::destination(edge),
+				node::rank(predecessor) + edge::weight(edge)
+			};
+		}
+	};
+
+	template <typename Node>
+	struct NodeFactory<PredecessorNodeDecorator<Node>>
+		: public NodeFactoryDecorator<PredecessorNodeDecorator<Node>, NodeFactory>
+	{
+	};
+
+	template <concepts::basic_node Node, typename NodeFactory>
+	class LazyKernel
+	{
+	public:
+		[[nodiscard]]
+		explicit constexpr LazyKernel(
+			NodeFactory nodeFactory = NodeFactory{}
+		) noexcept(std::is_nothrow_move_constructible_v<NodeFactory>)
+			: m_NodeFactory{std::move(nodeFactory)}
+		{
+		}
+
+		constexpr Node operator ()(const node::vertex_t<Node>& vertex) const
+		{
+			return std::invoke(m_NodeFactory, vertex);
+		}
+
+		template <std::ranges::input_range Edges>
+			requires std::convertible_to<
+				std::invoke_result_t<
+					NodeFactory,
+					const Node&,
+					std::ranges::range_reference_t<Edges>>,
+				Node>
+		[[nodiscard]]
+		constexpr auto operator ()(const Node& current, Edges&& edges) const
+		{
+			return std::forward<Edges>(edges)
+					| std::views::transform([&](const auto& edge) { return std::invoke(m_NodeFactory, current, edge); });
+		}
+
+	private:
+		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactory m_NodeFactory{};
+	};
+
+#if (defined(__clang__) && __clang_major__ < 16) \
+	|| (defined(__GNUG__) && __GNUG__ < 12)
+	using default_explorer_t = BufferedExplorer;
+
+	template <typename Node, typename NodeFactory>
+	using default_kernel_t = LazyKernel<Node, NodeFactory>;
+#else
+	using default_explorer_t = LazyExplorer;
+
+	template <typename Node, typename NodeFactory>
+	using default_kernel_t = LazyKernel<Node, NodeFactory>;
+#endif
+
+	template <
+		concepts::basic_node Node,
+		concepts::view_for<Node> View,
+		concepts::queue_for<Node> QueueStrategy,
+		concepts::tracker_for<node::vertex_t<Node>> TrackingStrategy,
+		typename KernelStrategy = default_kernel_t<Node, NodeFactory<Node>>,
+		typename ExplorationStrategy = default_explorer_t>
+		requires concepts::edge_for<view::edge_t<View>, Node>
+	class BasicTraverser
 	{
 	public:
 		using node_type = Node;
-		using queue_type = QueuingStrategy;
+		using edge_type = view::edge_t<View>;
+		using vertex_type = node::vertex_t<Node>;
+		using view_type = View;
+		using queue_type = QueueStrategy;
+		using tracker_type = TrackingStrategy;
 
-		~BasicState() = default;
-		BasicState(const BasicState&) = delete;
-		BasicState& operator =(const BasicState&) = delete;
-		BasicState(BasicState&&) = default;
-		BasicState& operator =(BasicState&&) = default;
+		~BasicTraverser() = default;
 
-		template <class... QueueArgs>
-			requires std::constructible_from<queue_type, QueueArgs...>
+		BasicTraverser(const BasicTraverser&) = delete;
+		BasicTraverser& operator =(const BasicTraverser&) = delete;
+		BasicTraverser(BasicTraverser&&) = default;
+		BasicTraverser& operator =(BasicTraverser&&) = default;
+
+		template <
+			typename... ViewArgs,
+			typename... QueueArgs,
+			typename... TrackerArgs,
+			typename... KernelArgs,
+			typename... ExplorerArgs>
+			requires std::constructible_from<view_type, ViewArgs...>
+					&& std::constructible_from<queue_type, QueueArgs...>
+					&& std::constructible_from<tracker_type, TrackerArgs...>
+					&& std::constructible_from<KernelStrategy, KernelArgs...>
+					&& std::constructible_from<ExplorationStrategy, ExplorerArgs...>
 		[[nodiscard]]
-		constexpr explicit BasicState(QueueArgs&&... queueArgs) noexcept(std::is_nothrow_constructible_v<queue_type, QueueArgs...>)
-			: m_Queue{std::forward<QueueArgs>(queueArgs)...}
+		explicit constexpr BasicTraverser(
+			const vertex_type& origin,
+			std::tuple<ViewArgs...> viewArgs,
+			std::tuple<QueueArgs...> queueArgs,
+			std::tuple<TrackerArgs...> trackerArgs,
+			std::tuple<KernelArgs...> kernelArgs,
+			std::tuple<ExplorerArgs...> explorerArgs
+		)
+			: m_Explorer{std::make_from_tuple<ExplorationStrategy>(std::move(explorerArgs))},
+			m_Kernel{std::make_from_tuple<KernelStrategy>(std::move(kernelArgs))},
+			m_Queue{std::make_from_tuple<queue_type>(std::move(queueArgs))},
+			m_Tracker{std::make_from_tuple<tracker_type>(std::move(trackerArgs))},
+			m_View{std::make_from_tuple<view_type>(std::move(viewArgs))}
 		{
 			assert(queue::empty(m_Queue) && "Queue already contains elements.");
+
+			const bool result = tracker::set_discovered(m_Tracker, origin);
+			assert(result && "Tracker returned false (already visited) for the origin node.");
+
+			queue::insert(m_Queue, std::array{std::invoke(m_Kernel, origin)});
+		}
+
+		[[nodiscard]]
+		constexpr std::optional<node_type> next()
+		{
+			const auto queueNext = [&]() -> std::optional<node_type>
+			{
+				if (!queue::empty(m_Queue))
+				{
+					return {queue::next(m_Queue)};
+				}
+
+				return std::nullopt;
+			};
+
+			std::optional result = queueNext();
+			for (;
+				result && !tracker::set_visited(m_Tracker, node::vertex(*result));
+				result = queueNext())
+			{
+			}
+
+			if (result)
+			{
+				queue::insert(
+					m_Queue,
+					std::invoke(
+						m_Kernel,
+						*result,
+						std::invoke(m_Explorer, *result, m_View, m_Tracker)));
+			}
+
+			return result;
 		}
 
 		[[nodiscard]]
@@ -56,179 +254,63 @@ namespace sl::graph::detail
 			return m_Queue;
 		}
 
-		template <class Neighbors>
-			requires std::convertible_to<std::ranges::range_value_t<Neighbors>, node_type>
 		[[nodiscard]]
-		constexpr std::optional<node_type> next(Neighbors&& neighbors)
-		{
-			queue::insert(m_Queue, std::forward<Neighbors>(neighbors));
-			if (!queue::empty(m_Queue))
-			{
-				return queue::next(m_Queue);
-			}
-
-			return std::nullopt;
-		}
-
-	private:
-		QueuingStrategy m_Queue;
-	};
-
-	template <class T, class Node>
-	concept state_for = sl::concepts::unqualified<T>
-						&& std::destructible<T>
-						&& concepts::node<Node>
-						&& requires(T& state, const std::forward_list<Node>& inputRange)
-						{
-							{ !state.next(inputRange) } -> std::convertible_to<bool>;
-							{ *state.next(inputRange) } -> std::convertible_to<Node>;
-						};
-
-#if (defined(__clang__) && __clang_major__ < 16) \
-	|| (defined(__GNUG__) && __GNUG__ < 12)
-
-	template <class Edges, class Node>
-	[[nodiscard]]
-	constexpr std::vector<Node> filter_transform(const Edges& edges, auto& tracker, auto& nodeFactory, const Node& currentNode)
-	{
-		std::vector<Node> nodes{};
-		if constexpr (std::ranges::sized_range<Edges>)
-		{
-			nodes.reserve(std::ranges::size(edges));
-		}
-
-		for (const auto& edge : edges)
-		{
-			if (tracker::set_discovered(tracker, edge::destination(edge)))
-			{
-				nodes.emplace_back(nodeFactory.make_successor_node(currentNode, edge));
-			}
-		}
-
-		return nodes;
-	};
-
-#else
-
-	template <class Edges, class Node>
-	[[nodiscard]]
-	constexpr auto filter_transform(Edges&& edges, auto& tracker, auto& nodeFactory, const Node& currentNode)
-	{
-		return std::forward<Edges>(edges)
-				| std::views::filter([&](const auto& edge) { return tracker::set_discovered(tracker, edge::destination(edge)); })
-				| std::views::transform([&](const auto& edge) { return nodeFactory.make_successor_node(currentNode, edge); });
-	};
-
-#endif
-
-	template <
-		concepts::node Node,
-		state_for<Node> StateStrategy,
-		concepts::tracker_for<node::vertex_t<Node>> TrackingStrategy,
-		class NodeFactoryStrategy>
-	class BasicTraverseDriver
-	{
-	public:
-		using node_type = Node;
-		using vertex_type = node::vertex_t<Node>;
-		using state_type = StateStrategy;
-		using tracker_type = TrackingStrategy;
-		using node_factory_type = NodeFactoryStrategy;
-
-		template <class Origin, class... TrackerArgs, class... NodeFactoryArgs, class... StateArgs>
-			requires std::constructible_from<vertex_type, Origin>
-					&& std::constructible_from<tracker_type, TrackerArgs...>
-					&& std::constructible_from<node_factory_type, NodeFactoryArgs...>
-					&& std::constructible_from<state_type, StateArgs...>
-		[[nodiscard]]
-		explicit BasicTraverseDriver(
-			Origin&& origin,
-			std::tuple<TrackerArgs...> trackerArgs,
-			std::tuple<NodeFactoryArgs...> nodeFactoryArgs,
-			std::tuple<StateArgs...> stateArgs
-		)
-			: m_Tracker{std::make_from_tuple<tracker_type>(std::move(trackerArgs))},
-			m_NodeFactory{std::make_from_tuple<node_factory_type>(std::move(nodeFactoryArgs))},
-			m_State{std::make_from_tuple<state_type>(std::move(stateArgs))},
-			m_Current{m_NodeFactory.make_init_node(std::forward<Origin>(origin))}
-		{
-			const bool result = tracker::set_discovered(m_Tracker, node::vertex(m_Current))
-								&& tracker::set_visited(m_Tracker, node::vertex(m_Current));
-			assert(result && "Tracker returned false (already visited) for the origin node.");
-		}
-
-		template <concepts::view_for<node_type> View> // let the concept here, because otherwise it results in an ICE on msvc v142
-			requires concepts::node_factory_for<NodeFactoryStrategy, Node, view::edge_t<View>>
-		[[nodiscard]]
-		constexpr std::optional<node_type> next(const View& graph)
-		{
-			std::optional result = m_State.next(
-				filter_transform(graph.edges(m_Current), m_Tracker, m_NodeFactory, m_Current));
-			for (; result; result = m_State.next(std::array<node_type, 0>{}))
-			{
-				if (tracker::set_visited(m_Tracker, node::vertex(*result)))
-				{
-					m_Current = *result;
-					return result;
-				}
-			}
-
-			return std::nullopt;
-		}
-
-		[[nodiscard]]
-		constexpr const Node& current_node() const noexcept
-		{
-			return m_Current;
-		}
-
-		[[nodiscard]]
-		constexpr const TrackingStrategy& tracker() const noexcept
+		constexpr const tracker_type& tracker() const noexcept
 		{
 			return m_Tracker;
 		}
 
 		[[nodiscard]]
-		constexpr const NodeFactoryStrategy& node_factory() const noexcept
+		constexpr const view_type& view() const noexcept
 		{
-			return m_NodeFactory;
-		}
-
-		[[nodiscard]]
-		constexpr const StateStrategy& state() const noexcept
-		{
-			return m_State;
+			return m_View;
 		}
 
 	private:
-		// do not reorder. Seems to somehow cause segment faults, when ordered differently
-		SL_UTILITY_NO_UNIQUE_ADDRESS TrackingStrategy m_Tracker;
-		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactoryStrategy m_NodeFactory;
-		StateStrategy m_State;
-		Node m_Current;
+		SL_UTILITY_NO_UNIQUE_ADDRESS ExplorationStrategy m_Explorer{};
+		KernelStrategy m_Kernel{};
+		queue_type m_Queue;
+		tracker_type m_Tracker;
+		View m_View;
 	};
+}
+
+namespace sl::graph::concepts
+{
+	template <typename T>
+	concept traverser = std::destructible<T>
+						&& requires(T& traverser)
+						{
+							typename T::node_type;
+							{!traverser.next()} -> std::convertible_to<bool>;
+							{*traverser.next()} -> std::convertible_to<typename T::node_type>;
+						};
 }
 
 namespace sl::graph
 {
-	template <class View, class Driver>
-	class Traverser final
+	template <concepts::traverser Traverser>
+	class IterableTraverser final
 	{
 	public:
-		using node_type = typename Driver::node_type;
+		using node_type = typename Traverser::node_type;
 		using vertex_type = node::vertex_t<node_type>;
 
-		[[nodiscard]]
-		constexpr explicit Traverser(View view, vertex_type origin)
-			: m_View{std::move(view)},
-			m_Driver{std::move(origin), std::tuple{}, std::tuple{}, std::tuple{}}
-		{
-		}
+		~IterableTraverser() = default;
 
+		IterableTraverser(const IterableTraverser&) = delete;
+		IterableTraverser& operator =(const IterableTraverser&) = delete;
+		IterableTraverser(IterableTraverser&&) = default;
+		IterableTraverser& operator =(IterableTraverser&&) = default;
+
+		template <typename... TraverserArgs>
+			requires std::constructible_from<Traverser, TraverserArgs...>
 		[[nodiscard]]
-		std::optional<node_type> next()
+		constexpr explicit IterableTraverser(
+			TraverserArgs&&... traverserArgs
+		) noexcept(std::is_nothrow_constructible_v<Traverser, TraverserArgs...>)
+			: m_Traverser{std::forward<TraverserArgs>(traverserArgs)...}
 		{
-			return m_Driver.next(m_View);
 		}
 
 		struct Sentinel final
@@ -237,7 +319,7 @@ namespace sl::graph
 
 		struct Iterator final
 		{
-			friend Traverser;
+			friend IterableTraverser;
 
 		public:
 			using iterator_concept = std::input_iterator_tag;
@@ -282,7 +364,7 @@ namespace sl::graph
 		[[nodiscard]]
 		constexpr Iterator begin() &
 		{
-			return Iterator{*this};
+			return Iterator{m_Traverser};
 		}
 
 		[[nodiscard]]
@@ -292,8 +374,7 @@ namespace sl::graph
 		}
 
 	private:
-		View m_View{};
-		Driver m_Driver{};
+		Traverser m_Traverser;
 	};
 }
 

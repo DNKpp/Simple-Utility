@@ -109,7 +109,7 @@ namespace sl::graph::queue::detail
 	template <class Queue>
 		requires requires(Queue& queue)
 		{
-			requires concepts::node<std::remove_cvref_t<decltype(customize::next_fn<Queue>{}(queue))>>;
+			requires concepts::basic_node<std::remove_cvref_t<decltype(customize::next_fn<Queue>{}(queue))>>;
 		}
 	constexpr decltype(auto) next(Queue& queue, const priority_tag<2>) noexcept(noexcept(customize::next_fn<Queue>{}(queue)))
 	{
@@ -119,7 +119,7 @@ namespace sl::graph::queue::detail
 	template <class Queue>
 		requires requires(Queue& queue)
 		{
-			requires concepts::node<std::remove_cvref_t<decltype(queue.next())>>;
+			requires concepts::basic_node<std::remove_cvref_t<decltype(queue.next())>>;
 		}
 	constexpr decltype(auto) next(Queue& queue, const priority_tag<1>) noexcept(noexcept(queue.next()))
 	{
@@ -129,7 +129,7 @@ namespace sl::graph::queue::detail
 	template <class Queue>
 		requires requires(Queue& queue)
 		{
-			requires concepts::node<std::remove_cvref_t<decltype(next(queue))>>;
+			requires concepts::basic_node<std::remove_cvref_t<decltype(next(queue))>>;
 		}
 	constexpr decltype(auto) next(Queue& queue, const priority_tag<0>) noexcept(noexcept(next(queue)))
 	{
@@ -141,7 +141,7 @@ namespace sl::graph::queue::detail
 		template <class Queue>
 			requires requires(Queue& queue)
 			{
-				requires concepts::node<std::remove_cvref_t<decltype(detail::next(queue, priority_tag<2>{}))>>;
+				requires concepts::basic_node<std::remove_cvref_t<decltype(detail::next(queue, priority_tag<2>{}))>>;
 			}
 		constexpr decltype(auto) operator ()(Queue& queue) const noexcept(noexcept(detail::next(queue, priority_tag<2>{})))
 		{
@@ -211,7 +211,7 @@ namespace sl::graph::concepts
 {
 	template <class T, class Node>
 	concept queue_for = sl::concepts::unqualified<T>
-						&& node<Node>
+						&& basic_node<Node>
 						// ReSharper disable once CppRedundantTemplateKeyword
 						&& requires(T& queue, queue::detail::template dummy_input_range<Node> inputRange)
 						{

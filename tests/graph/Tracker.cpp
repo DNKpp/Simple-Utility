@@ -165,7 +165,7 @@ TEMPLATE_TEST_CASE_SIG(
 
 TEMPLATE_TEST_CASE(
 	"Concrete tracker types behave as expected.",
-	"[graph][graph::concepts][graph::tracker]",
+	"[graph][graph::tracker]",
 	(sg::tracker::CommonHashMap<int>),
 	(sg::tracker::CommonMap<int>)
 )
@@ -200,6 +200,43 @@ TEMPLATE_TEST_CASE(
 			SECTION("Visiting an already visited vertex, yields false.")
 			{
 				REQUIRE(!sg::tracker::set_visited(tracker, vertex));
+			}
+		}
+	}
+}
+
+TEST_CASE("tracker::Null always returns true.", "[graph][graph::tracker]")
+{
+	sg::tracker::Null tracker{};
+
+	SECTION("Discovering a new vertex yields true.")
+	{
+		const int vertex = GENERATE(take(5, random(std::numeric_limits<int>::min() + 1, std::numeric_limits<int>::max())));
+
+		REQUIRE(sg::tracker::set_discovered(tracker, vertex));
+
+		SECTION("Discovering the same vertex again, yields also true.")
+		{
+			REQUIRE(sg::tracker::set_discovered(tracker, vertex));
+		}
+
+		SECTION("Discovering another vertex yields true.")
+		{
+			REQUIRE(sg::tracker::set_discovered(tracker, -vertex));
+		}
+
+		SECTION("Visiting a discovered vertex yields true.")
+		{
+			REQUIRE(sg::tracker::set_visited(tracker, vertex));
+
+			SECTION("Discovering an already visited vertex, yields true.")
+			{
+				REQUIRE(sg::tracker::set_discovered(tracker, vertex));
+			}
+
+			SECTION("Visiting an already visited vertex, yields true.")
+			{
+				REQUIRE(sg::tracker::set_visited(tracker, vertex));
 			}
 		}
 	}
