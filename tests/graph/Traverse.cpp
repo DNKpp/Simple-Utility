@@ -38,11 +38,16 @@ using MovableTraverser = sg::detail::BasicTraverser<
 		EmptyQueueStub<DefaultNode>,
 		sg::tracker::Null>;
 
-TEMPLATE_TEST_CASE(
+using TestExplorers = std::tuple<
+#ifdef SL_UTILITY_HAS_RANGES_VIEWS
+	sg::detail::LazyExplorer,
+#endif
+	sg::detail::BufferedExplorer>;
+
+TEMPLATE_LIST_TEST_CASE(
 	"Explorer implementations behave as expected.",
 	"[graph][graph::detail]",
-	sg::detail::LazyExplorer,
-	sg::detail::BufferedExplorer
+	TestExplorers
 )
 {
 	using namespace Catch::Matchers;
@@ -89,11 +94,10 @@ namespace
 }
 
 using TestKernels = std::tuple<
-	sg::detail::LazyKernel<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>
 #ifdef SL_UTILITY_HAS_RANGES_VIEWS
-	,sg::detail::BufferedKernel<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>
+	sg::detail::LazyKernel<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>,
 #endif
->;
+	sg::detail::BufferedKernel<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>>;
 
 TEMPLATE_LIST_TEST_CASE(
 	"Kernel implementations behave as expected.",

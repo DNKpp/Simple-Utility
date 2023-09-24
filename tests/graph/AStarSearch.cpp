@@ -85,7 +85,7 @@ TEST_CASE("astar::Range visits all reachable vertices.", "[graph][graph::astar]"
 		std::tuple{Heuristic{destination}, sg::astar::NodeFactory<Node>{}},
 		std::tuple{}
 	};
-	//STATIC_CHECK(std::ranges::input_range<decltype(range)>);
+	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
 
 	std::vector<Node> nodes{};
 	std::ranges::copy(range, std::back_inserter(nodes));
