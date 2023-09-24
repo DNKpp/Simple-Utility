@@ -12,6 +12,7 @@
 
 #include "Defines.hpp"
 
+#include "Simple-Utility/graph/mixins/tracker/Null.hpp"
 #include "Simple-Utility/graph/mixins/tracker/std_map.hpp"
 #include "Simple-Utility/graph/mixins/tracker/std_unordered_map.hpp"
 
@@ -155,7 +156,8 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, TrackerMock<int>, std::string),
 	(true, TrackerMock<int>, int),
 	(true, sg::tracker::CommonHashMap<int>, int),
-	(true, sg::tracker::CommonMap<int>, int)
+	(true, sg::tracker::CommonMap<int>, int),
+	(true, sg::tracker::Null, int)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::tracker_for<T, Vertex>);
