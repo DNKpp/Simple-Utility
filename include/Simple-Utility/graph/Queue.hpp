@@ -187,7 +187,7 @@ namespace sl::graph::queue::detail
 
 	static_assert(std::ranges::input_range<dummy_input_range<int>>);
 
-	// LCOV_EXCL_END
+	// LCOV_EXCL_STOP
 }
 
 namespace sl::graph::concepts
