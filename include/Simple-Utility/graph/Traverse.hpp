@@ -28,7 +28,6 @@
 
 namespace sl::graph::detail
 {
-	
 	template <typename Node>
 	struct NodeFactory;
 
@@ -339,15 +338,15 @@ namespace sl::graph::concepts
 						&& requires(T& traverser)
 						{
 							typename T::node_type;
-							{!traverser.next()} -> std::convertible_to<bool>;
-							{*traverser.next()} -> std::convertible_to<typename T::node_type>;
+							{ !traverser.next() } -> std::convertible_to<bool>;
+							{ *traverser.next() } -> std::convertible_to<typename T::node_type>;
 						};
 }
 
 namespace sl::graph
 {
 	template <concepts::traverser Traverser>
-	class IterableTraverser final
+	class IterableTraverser
 	{
 	public:
 		using node_type = typename Traverser::node_type;
@@ -363,7 +362,7 @@ namespace sl::graph
 		template <typename... TraverserArgs>
 			requires std::constructible_from<Traverser, TraverserArgs...>
 		[[nodiscard]]
-		constexpr explicit IterableTraverser(
+		explicit constexpr IterableTraverser(
 			TraverserArgs&&... traverserArgs
 		) noexcept(std::is_nothrow_constructible_v<Traverser, TraverserArgs...>)
 			: m_Traverser{std::forward<TraverserArgs>(traverserArgs)...}
