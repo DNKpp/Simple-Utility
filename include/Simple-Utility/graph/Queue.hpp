@@ -163,7 +163,6 @@ namespace sl::graph::queue::detail
 	template <class T>
 	struct dummy_input_range
 	{
-		// ReSharper disable CppFunctionIsNotImplemented
 		struct iterator
 		{
 			using iterator_concept = std::input_iterator_tag;
@@ -180,9 +179,9 @@ namespace sl::graph::queue::detail
 			bool operator==(const iterator&) const = default;
 		};
 
-		iterator begin();
-		iterator end();
-		// ReSharper restore CppFunctionIsNotImplemented
+		static iterator begin() { return {}; }
+
+		static iterator end() { return {}; }
 	};
 
 	static_assert(std::ranges::input_range<dummy_input_range<int>>);
