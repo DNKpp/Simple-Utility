@@ -56,7 +56,11 @@ jobs:
       - name: Run gcovr
         run: |
            gcovr --root ${{env.TESTS_DIR}} --filter include/Simple-Utility --keep -j 4 \
-            --exclude-lines-by-pattern "\s*assert\(" --exclude-unreachable-branches --exclude-noncode-lines --exclude-throw-branches \
+            --exclude-lines-by-pattern "\s*assert\(" \
+            --exclude-pattern-prefix "\s*(LCOV|GCOV|GCOVR)" \
+            --exclude-unreachable-branches \
+            --exclude-noncode-lines \
+            --exclude-throw-branches \
             --cobertura ${{env.COBERTURA_REPORT}} --cobertura-pretty \
             --html-nested ${{env.HTML_REPORT_DIR}} --html-title "Simple-Utility Coverage Report" \
             --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
