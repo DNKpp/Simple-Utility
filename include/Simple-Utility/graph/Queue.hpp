@@ -188,7 +188,8 @@ namespace sl::graph::concepts
 	template <class T, class Node>
 	concept queue_for = sl::concepts::unqualified<T>
 						&& basic_node<Node>
-						&& requires(T& queue, queue::detail::dummy_input_range<Node> inputRange)
+						// ReSharper disable once CppRedundantTemplateKeyword // pleases msvc v142
+						&& requires(T& queue, queue::detail::template dummy_input_range<Node> inputRange)
 						{
 							{ queue::empty(std::as_const(queue)) } -> std::convertible_to<bool>;
 							queue::insert(queue, inputRange);
