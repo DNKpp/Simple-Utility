@@ -159,6 +159,7 @@ namespace sl::graph::queue
 
 namespace sl::graph::queue::detail
 {
+	// GCOVR_EXCL_START
 	template <class T>
 	struct dummy_input_range
 	{
@@ -169,10 +170,14 @@ namespace sl::graph::queue::detail
 			using element_type = T;
 			using difference_type = std::ptrdiff_t;
 
-			T& operator *() const;
-			iterator& operator ++();
-			void operator ++(int);
-			bool operator==(const iterator&) const;
+			T operator *() const { throw std::runtime_error{"Dummy"}; }
+
+			iterator& operator ++() { return *this; }
+
+			// ReSharper disable once CppDiscardedPostfixOperatorResult
+			void operator ++(int) { (*this)++; }
+
+			bool operator==(const iterator&) const = default;
 		};
 
 		iterator begin();
@@ -181,6 +186,8 @@ namespace sl::graph::queue::detail
 	};
 
 	static_assert(std::ranges::input_range<dummy_input_range<int>>);
+
+	// GCOVR_EXCL_END
 }
 
 namespace sl::graph::concepts
