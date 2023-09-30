@@ -33,10 +33,23 @@ using DefaultTraverser = sg::detail::BasicTraverser<
 	DefaultTracker>;
 
 using MovableTraverser = sg::detail::BasicTraverser<
-		DefaultNode,
-		EmptyViewStub<int>,
-		EmptyQueueStub<DefaultNode>,
-		sg::tracker::Null>;
+	DefaultNode,
+	EmptyViewStub<int>,
+	EmptyQueueStub<DefaultNode>,
+	sg::tracker::Null>;
+
+namespace
+{
+	template <sg::concepts::basic_node Node>
+	struct TraverserMock
+	{
+		inline static constexpr bool trompeloeil_movable_mock = true;
+
+		using node_type = Node;
+
+		MAKE_MOCK0(next, std::optional<node_type>());
+	};
+}
 
 using TestExplorers = std::tuple<
 #ifdef SL_UTILITY_HAS_RANGES_VIEWS
@@ -125,7 +138,7 @@ TEMPLATE_LIST_TEST_CASE(
 				{{}, {}},
 				{{{.vertex = 43}}, {{.destination = 43}}},
 				{{{.vertex = 43}, {.vertex = 41}}, {{.destination = 43}, {.destination = 41}}}
-			}));
+				}));
 
 		std::vector<std::unique_ptr<trompeloeil::expectation>> expectations{};
 		for (const auto& edge : edges)
@@ -139,7 +152,10 @@ TEMPLATE_LIST_TEST_CASE(
 	}
 }
 
-TEST_CASE("detail::BasicTraverser is not copyable but movable, when strategies support it.", "[graph][graph::traverser][graph::detail]")
+TEST_CASE(
+	"detail::BasicTraverser is not copyable but movable, when strategies support it.",
+	"[graph][graph::traverser][graph::detail]"
+)
 {
 	STATIC_REQUIRE(!std::is_copy_constructible_v<MovableTraverser>);
 	STATIC_REQUIRE(!std::is_copy_assignable_v<MovableTraverser>);
@@ -151,7 +167,8 @@ TEMPLATE_TEST_CASE(
 	"detail::BasicTraverser satisfies graph::concepts::traverser.",
 	"[graph][graph::traverser][graph::concepts]",
 	MovableTraverser,
-	DefaultTraverser
+	DefaultTraverser,
+	TraverserMock<DefaultNode>
 )
 {
 	STATIC_REQUIRE(sg::concepts::traverser<TestType>);
@@ -165,7 +182,7 @@ TEST_CASE("detail::BasicTraverser can be constructed with an origin.", "[graph][
 	const auto origin = GENERATE(take(5, random(std::numeric_limits<int>::min(), std::numeric_limits<int>::max())));
 
 	DefaultQueue queue{};
-	ALLOW_CALL(queue, empty())	// internal assertion
+	ALLOW_CALL(queue, empty()) // internal assertion
 		.RETURN(true);
 	REQUIRE_CALL(queue, do_insert(matches(RangeEquals(std::array{DefaultNode{origin}}))));
 
@@ -198,7 +215,7 @@ TEST_CASE("detail::BasicTraverser::next returns the current node, or std::nullop
 			.RETURN(true);
 
 		DefaultQueue queue{};
-		ALLOW_CALL(queue, empty())	// internal assertion
+		ALLOW_CALL(queue, empty()) // internal assertion
 			.RETURN(true);
 		REQUIRE_CALL(queue, do_insert(matches(RangeEquals(std::array{originNode}))));
 
@@ -248,4 +265,58 @@ TEST_CASE("detail::BasicTraverser::next returns the current node, or std::nullop
 
 		REQUIRE(std::nullopt == traverser.next());
 	}
+}
+
+TEST_CASE("graph::IterableTraverser can be used as a range.", "[graph][graph::traverser]")
+{
+	SECTION("Is empty, when traverser returned std::nullopt.")
+	{
+		TraverserMock<DefaultNode> traverser{};
+		REQUIRE_CALL(traverser, next())
+			.RETURN(std::nullopt);
+
+		sg::IterableTraverser range{std::move(traverser)};
+		STATIC_REQUIRE(std::ranges::input_range<decltype(range)>);
+
+		REQUIRE(0 == std::ranges::distance(range));
+	}
+
+	SECTION("Returns nodes as given from traverser.")
+	{
+		TraverserMock<DefaultNode> traverser{};
+		trompeloeil::sequence seq{};
+		REQUIRE_CALL(traverser, next())
+			.RETURN(DefaultNode{.vertex = 42})
+			.IN_SEQUENCE(seq);
+
+		REQUIRE_CALL(traverser, next())
+			.RETURN(DefaultNode{.vertex = 41})
+			.IN_SEQUENCE(seq);
+
+		REQUIRE_CALL(traverser, next())
+			.RETURN(DefaultNode{.vertex = -42})
+			.IN_SEQUENCE(seq);
+
+		REQUIRE_CALL(traverser, next())
+			.RETURN(std::nullopt)
+			.IN_SEQUENCE(seq);
+
+		sg::IterableTraverser range{std::move(traverser)};
+		STATIC_REQUIRE(std::ranges::input_range<decltype(range)>);
+
+		REQUIRE_THAT(range, Catch::Matchers::RangeEquals(std::to_array<DefaultNode>({{42}, {41}, {-42}})));
+	}
+}
+
+// Test case needs to be a template, because the negative requires statements will fail.
+TEMPLATE_TEST_CASE(
+	"graph::IterableTraverser::begin can only be called from an lvalue-ref.",
+	"[graph][graph::traverser]",
+	sg::IterableTraverser<TraverserMock<DefaultNode>>
+)
+{
+	STATIC_REQUIRE(requires{ {std::declval<TestType&>().begin()} -> std::input_iterator; });
+	STATIC_REQUIRE(!requires{std::declval<const TestType&>().begin(); });
+	STATIC_REQUIRE(!requires{std::declval<TestType&&>().begin(); });
+	STATIC_REQUIRE(!requires{std::declval<const TestType&&>().begin(); });
 }
