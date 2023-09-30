@@ -424,6 +424,8 @@ namespace sl::graph
 			return Iterator{m_Traverser};
 		}
 
+		void begin() const & = delete;
+
 		[[nodiscard]]
 		constexpr Sentinel end() const noexcept
 		{
