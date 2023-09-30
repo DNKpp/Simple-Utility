@@ -433,6 +433,10 @@ namespace sl::graph
 	private:
 		Traverser m_Traverser;
 	};
+
+	template <typename Traverser>
+		requires concepts::traverser<std::remove_cvref_t<Traverser>>
+	IterableTraverser(Traverser&&) -> IterableTraverser<Traverser>;
 }
 
 #endif
