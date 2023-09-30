@@ -159,7 +159,8 @@ namespace sl::graph::queue
 
 namespace sl::graph::queue::detail
 {
-	// GCOVR_EXCL_START
+	// LCOV_EXCL_START
+
 	template <class T>
 	struct dummy_input_range
 	{
@@ -186,7 +187,7 @@ namespace sl::graph::queue::detail
 
 	static_assert(std::ranges::input_range<dummy_input_range<int>>);
 
-	// GCOVR_EXCL_END
+	// LCOV_EXCL_END
 }
 
 namespace sl::graph::concepts
