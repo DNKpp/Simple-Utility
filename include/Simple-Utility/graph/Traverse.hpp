@@ -9,9 +9,7 @@
 #pragma once
 
 #include "Simple-Utility/Config.hpp"
-#include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/functional/Tuple.hpp"
-#include "Simple-Utility/graph/Common.hpp"
 #include "Simple-Utility/graph/Edge.hpp"
 #include "Simple-Utility/graph/Node.hpp"
 #include "Simple-Utility/graph/Queue.hpp"
@@ -44,33 +42,24 @@ namespace sl::graph::detail
 		[[nodiscard]]
 		constexpr Node operator ()([[maybe_unused]] const Node& predecessor, const Edge& edge) const
 		{
-			return Node{edge::destination(edge)};
+			if constexpr (concepts::ranked_node<Node>)
+			{
+				return Node{
+					edge::destination(edge),
+					node::rank(predecessor) + edge::weight(edge)
+				};
+			}
+			else
+			{
+				return Node{edge::destination(edge)};
+			}
 		}
 	};
 
-	template <concepts::ranked_node Node>
+	template <concepts::basic_node Node>
+		requires requires { typename NodeFactoryDecorator<Node, NodeFactory>::node_type; }
 	struct NodeFactory<Node>
-	{
-		[[nodiscard]]
-		constexpr Node operator ()(const node::vertex_t<Node>& vertex) const
-		{
-			return Node{vertex};
-		}
-
-		template <concepts::edge_for<Node> Edge>
-		[[nodiscard]]
-		constexpr Node operator ()(const Node& predecessor, const Edge& edge) const
-		{
-			return Node{
-				edge::destination(edge),
-				node::rank(predecessor) + edge::weight(edge)
-			};
-		}
-	};
-
-	template <typename Node>
-	struct NodeFactory<PredecessorNodeDecorator<Node>>
-		: public NodeFactoryDecorator<PredecessorNodeDecorator<Node>, NodeFactory>
+		: public NodeFactoryDecorator<Node, NodeFactory>
 	{
 	};
 
