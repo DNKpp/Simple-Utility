@@ -74,6 +74,28 @@ namespace sl::graph
 	private:
 		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFormatter<Node, Char> m_Formatter{};
 	};
+
+	template <concepts::basic_node Node, class Char>
+	class NodeFormatter<DepthNodeDecorator<Node>, Char>
+	{
+	public:
+		constexpr auto parse(std::basic_format_parse_context<Char>& ctx) noexcept
+		{
+			return m_Formatter.parse(ctx);
+		}
+
+		template <class FormatContext>
+		auto format(const DepthNodeDecorator<Node>& node, FormatContext& ctx) const
+		{
+			return std::format_to(
+				m_Formatter.format(node, ctx),
+				", depth: {}",
+				node.depth);
+		}
+
+	private:
+		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFormatter<Node, Char> m_Formatter{};
+	};
 }
 
 template <sl::graph::concepts::basic_node Node, class Char>

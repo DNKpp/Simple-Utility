@@ -227,7 +227,7 @@ namespace sl::graph
 		rank_type rank;
 
 		[[nodiscard]]
-		friend bool operator==(const CommonRankedNode&, const CommonRankedNode&) = default;
+		friend bool operator ==(const CommonRankedNode&, const CommonRankedNode&) = default;
 	};
 
 	template <concepts::basic_node Node>
@@ -239,7 +239,7 @@ namespace sl::graph
 		std::optional<vertex_type> predecessor{};
 
 		[[nodiscard]]
-		friend bool operator==(const PredecessorNodeDecorator&, const PredecessorNodeDecorator&) = default;
+		friend bool operator ==(const PredecessorNodeDecorator&, const PredecessorNodeDecorator&) = default;
 	};
 
 	template <concepts::basic_node Node, template<class> typename BaseNodeFactory>
@@ -276,6 +276,54 @@ namespace sl::graph
 			node_type node{
 				{std::invoke(static_cast<const Super&>(*this), current, edge, std::forward<Args>(args)...)},
 				node::vertex(current)
+			};
+			return node;
+		}
+	};
+
+	template <concepts::basic_node Node>
+	struct DepthNodeDecorator
+		: public Node
+	{
+		using vertex_type = node::vertex_t<Node>;
+
+		int depth{};
+
+		[[nodiscard]]
+		friend bool operator ==(const DepthNodeDecorator&, const DepthNodeDecorator&) = default;
+	};
+
+	template <concepts::basic_node Node, template<class> typename BaseNodeFactory>
+	class NodeFactoryDecorator<DepthNodeDecorator<Node>, BaseNodeFactory>
+		: private BaseNodeFactory<Node>
+	{
+	private:
+		using Super = BaseNodeFactory<Node>;
+
+	public:
+		using node_type = DepthNodeDecorator<Node>;
+		using vertex_type = node::vertex_t<node_type>;
+
+		template <typename... Args>
+		[[nodiscard]]
+		constexpr node_type operator ()(vertex_type origin, Args&&... args) const
+		{
+			// leave code as-is, because directly returning the temporary results in an ICE on gcc10
+			node_type node{
+				{std::invoke(static_cast<const Super&>(*this), std::move(origin), std::forward<Args>(args)...)},
+				{0}
+			};
+			return node;
+		}
+
+		template <concepts::edge_for<node_type> Edge, typename... Args>
+		[[nodiscard]]
+		constexpr node_type operator ()(const node_type& current, const Edge& edge, Args&&... args) const
+		{
+			// leave code as-is, because directly returning the temporary results in an ICE on gcc10
+			node_type node{
+				{std::invoke(static_cast<const Super&>(*this), current, edge, std::forward<Args>(args)...)},
+				{current.depth + 1}
 			};
 			return node;
 		}
