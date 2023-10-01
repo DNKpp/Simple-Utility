@@ -2,6 +2,7 @@ target_sources(
 	Simple-Utility-Tests
 	PRIVATE
 	"AStarSearch.cpp"
+	"BreadthFirstSearch.cpp"
 	"Common.cpp"
 	"DepthFirstSearch.cpp"
 	"Edge.cpp"
