@@ -60,6 +60,7 @@ jobs:
             --exclude-unreachable-branches \
             --exclude-noncode-lines \
             --exclude-throw-branches \
+            --decisions \
             --cobertura ${{env.COBERTURA_REPORT}} --cobertura-pretty \
             --html-nested ${{env.HTML_REPORT_DIR}} --html-title "Simple-Utility Coverage Report" \
             --coveralls ${{env.COVERALLS_REPORT}} --coveralls-pretty
