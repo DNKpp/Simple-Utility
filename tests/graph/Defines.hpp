@@ -141,3 +141,69 @@ public:
 		return {};
 	}
 };
+
+inline static const std::unordered_map<int, std::vector<int>> graph{
+	{1, {2, 3}},
+	{2, {6}},
+	{3, {5, 6}},
+	{5, {5}},
+	{6, {2}},
+
+	// begin isolated sub-graph
+	{4, {7}},
+	{7, {4, 7, 9}},
+	{8, {7, 9}},
+	{9, {4}}
+};
+
+struct BasicViewStub
+{
+	using edge_type = sg::CommonBasicEdge<std::string>;
+
+	template <sg::concepts::basic_node Node>
+		requires sg::concepts::edge_for<edge_type, Node>
+	static std::vector<edge_type> edges(const Node& current)
+	{
+		const auto& vertices = graph.at(std::stoi(sg::node::vertex(current)));
+		std::vector<edge_type> infos{};
+		infos.reserve(std::ranges::size(vertices));
+		std::ranges::transform(
+			vertices,
+			std::back_inserter(infos),
+			[](const int v) { return edge_type{.destination = std::to_string(v)}; });
+		return infos;
+	}
+};
+
+struct WeightedViewStub
+{
+	using edge_type = sg::CommonWeightedEdge<std::string, int>;
+
+	template <sg::concepts::basic_node Node>
+		requires sg::concepts::edge_for<edge_type, Node>
+	static std::vector<edge_type> edges(const Node& current)
+	{
+		const auto& vertices = graph.at(std::stoi(sg::node::vertex(current)));
+		std::vector<edge_type> infos{};
+		infos.reserve(std::ranges::size(vertices));
+		std::ranges::transform(
+			vertices,
+			std::back_inserter(infos),
+			[&](const int v)
+			{
+				return edge_type{
+					.destination = std::to_string(v),
+					.weight = std::abs(v - std::stoi(current.vertex))
+				};
+			});
+		return infos;
+	}
+};
+
+template <typename Range>
+constexpr auto buffer_nodes(Range& range)
+{
+	std::vector<typename Range::node_type> nodes{};
+	std::ranges::copy(range, std::back_inserter(nodes));
+	return nodes;
+}
