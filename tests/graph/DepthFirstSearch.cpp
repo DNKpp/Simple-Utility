@@ -12,16 +12,32 @@
 
 #include "Defines.hpp"
 
-inline const std::vector<
-	std::tuple<
-		std::vector<sg::DepthNodeDecorator<sg::PredecessorNodeDecorator<sg::CommonBasicNode<std::string>>>>,
-		std::string
-	>> testResults{
-	{{{{{"3"}, std::nullopt}, 0}, {{{"6"}, "3"}, 1}, {{{"2"}, "6"}, 2}, {{{"5"}, "3"}, 1}}, "3"},
-	{{{{{"6"}, std::nullopt}, 0}, {{{"2"}, "6"}, 1}}, "6"},
-	{{{{{"1"}, std::nullopt}, 0}, {{{"3"}, "1"}, 1}, {{{"6"}, "3"}, 2}, {{{"2"}, "6"}, 3}, {{{"5"}, "3"}, 2}}, "1"},
-	{{{{{"8"}, std::nullopt}, 0}, {{{"9"}, "8"}, 1}, {{{"4"}, "9"}, 2}, {{{"7"}, "4"}, 3}}, "8"}
-};
+namespace
+{
+	inline const std::vector<
+		std::tuple<
+			std::vector<sg::DepthNodeDecorator<sg::PredecessorNodeDecorator<sg::CommonBasicNode<std::string>>>>,
+			std::string
+		>> testResults{
+		{
+			{{{{"3"}, std::nullopt}, 0}, {{{"6"}, "3"}, 1}, {{{"2"}, "6"}, 2}, {{{"5"}, "3"}, 1}},
+			"3"
+		},
+		{
+			{{{{"6"}, std::nullopt}, 0}, {{{"2"}, "6"}, 1}},
+			"6"
+		},
+		{
+			{{{{"1"}, std::nullopt}, 0}, {{{"3"}, "1"}, 1}, {{{"6"}, "3"}, 2}, {{{"2"}, "6"}, 3}, {{{"5"}, "3"}, 2}},
+			"1"
+		},
+		{
+			{{{{"8"}, std::nullopt}, 0}, {{{"9"}, "8"}, 1}, {{{"4"}, "9"}, 2}, {{{"7"}, "4"}, 3}},
+			"8"
+		}
+	};
+}
+
 
 TEMPLATE_TEST_CASE(
 	"dfs::Range visits all reachable vertices.",
@@ -33,7 +49,7 @@ TEMPLATE_TEST_CASE(
 	using Node = sg::CommonBasicNode<std::string>;
 	const auto& [expected, origin] = GENERATE(from_range(convert_test_expectations(testResults, toCommonBasicNode)));
 
-	sg::dfs::Range<TestType> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};
+	sg::dfs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};
 	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
 
 	REQUIRE_THAT(buffer_nodes(range), Catch::Matchers::RangeEquals(expected));
