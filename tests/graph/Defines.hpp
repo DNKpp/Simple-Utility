@@ -207,3 +207,50 @@ constexpr auto buffer_nodes(Range& range)
 	std::ranges::copy(range, std::back_inserter(nodes));
 	return nodes;
 }
+
+template <std::ranges::input_range Range, typename Transform>
+constexpr auto convert_test_expectations(const Range& range, Transform transform)
+{
+	using TargetNode = std::invoke_result_t<
+		Transform,
+		std::ranges::range_value_t<std::tuple_element_t<0, std::ranges::range_value_t<Range>>>>;
+	std::vector<
+		std::tuple<
+			std::vector<TargetNode>,
+			std::tuple_element_t<1, std::ranges::range_value_t<Range>>>> results{};
+	std::ranges::transform(
+		range,
+		std::back_inserter(results),
+		[&](const auto& tuple)
+		{
+			std::vector<TargetNode> nodes{};
+			std::ranges::transform(std::get<0>(tuple), std::back_inserter(nodes), transform);
+			return std::tuple{
+				std::move(nodes),
+				std::get<1>(tuple)
+			};
+		});
+
+	return results;
+}
+
+constexpr auto toCommonBasicNode = [](const sg::concepts::basic_node auto& node)
+{
+	return sg::CommonBasicNode{sg::node::vertex(node)};
+};
+
+constexpr auto toDepthBasicNode = []<typename Node>(const sg::DepthNodeDecorator<Node>& node)
+{
+	return sg::DepthNodeDecorator<sg::CommonBasicNode<sg::node::vertex_t<Node>>>{
+		{toCommonBasicNode(node)},
+		node.depth
+	};
+};
+
+constexpr auto toPredecessorBasicNode = []<typename Node>(const sg::PredecessorNodeDecorator<Node>& node)
+{
+	return sg::PredecessorNodeDecorator<sg::CommonBasicNode<sg::node::vertex_t<Node>>>{
+		{toCommonBasicNode(node)},
+		node.predecessor
+	};
+};
