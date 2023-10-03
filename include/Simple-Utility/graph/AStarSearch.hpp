@@ -243,7 +243,7 @@ namespace sl::graph::astar
 		[[nodiscard]]
 		explicit constexpr SingleDestinationHeuristic(
 			Vertex destination
-		) noexcept(std::is_nothrow_move_constructible_v<Strategy>
+		) noexcept(std::is_nothrow_move_constructible_v<Vertex>
 					&& std::is_nothrow_default_constructible_v<Strategy>)
 			: m_Destination{std::move(destination)}
 		{
@@ -253,7 +253,7 @@ namespace sl::graph::astar
 		explicit constexpr SingleDestinationHeuristic(
 			Vertex destination,
 			Strategy strategy
-		) noexcept(std::is_nothrow_move_constructible_v<Strategy>
+		) noexcept(std::is_nothrow_move_constructible_v<Vertex>
 					&& std::is_nothrow_move_constructible_v<Strategy>)
 			: m_Destination{std::move(destination)},
 			m_Strategy{std::move(strategy)}
