@@ -209,7 +209,7 @@ constexpr auto buffer_nodes(Range& range)
 }
 
 template <std::ranges::input_range Range, typename Transform>
-constexpr auto convert_test_expectations(const Range& range, Transform transform)
+constexpr auto slice_test_expectations(const Range& range, Transform transform)
 {
 	using TargetNode = std::invoke_result_t<
 		Transform,

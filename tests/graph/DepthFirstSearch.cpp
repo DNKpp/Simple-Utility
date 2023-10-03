@@ -47,7 +47,7 @@ TEMPLATE_TEST_CASE(
 )
 {
 	using Node = sg::CommonBasicNode<std::string>;
-	const auto& [expected, origin] = GENERATE(from_range(convert_test_expectations(testResults, toCommonBasicNode)));
+	const auto& [expected, origin] = GENERATE(from_range(slice_test_expectations(testResults, toCommonBasicNode)));
 
 	sg::dfs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};
 	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
@@ -63,7 +63,7 @@ TEMPLATE_TEST_CASE(
 )
 {
 	using Node = sg::DepthNodeDecorator<sg::CommonBasicNode<std::string>>;
-	const auto& [expected, origin] = GENERATE(from_range(convert_test_expectations(testResults, toDepthBasicNode)));
+	const auto& [expected, origin] = GENERATE(from_range(slice_test_expectations(testResults, toDepthBasicNode)));
 
 	sg::dfs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};
 	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
@@ -79,7 +79,7 @@ TEMPLATE_TEST_CASE(
 )
 {
 	using Node = sg::PredecessorNodeDecorator<sg::CommonBasicNode<std::string>>;
-	const auto& [expected, origin] = GENERATE(from_range(convert_test_expectations(testResults, toPredecessorBasicNode)));
+	const auto& [expected, origin] = GENERATE(from_range(slice_test_expectations(testResults, toPredecessorBasicNode)));
 
 	sg::dfs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};
 	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
