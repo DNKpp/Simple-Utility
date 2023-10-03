@@ -38,7 +38,6 @@ namespace
 	};
 }
 
-
 TEMPLATE_TEST_CASE(
 	"dfs::Range visits all reachable vertices.",
 	"[graph][graph::dfs]",

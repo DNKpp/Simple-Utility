@@ -164,7 +164,13 @@ struct BasicViewStub
 		requires sg::concepts::edge_for<edge_type, Node>
 	static std::vector<edge_type> edges(const Node& current)
 	{
-		const auto& vertices = graph.at(std::stoi(sg::node::vertex(current)));
+		const auto vertex = std::stoi(sg::node::vertex(current));
+		if (!graph.contains(vertex))
+		{
+			return {};
+		}
+
+		const auto& vertices = graph.at(vertex);
 		std::vector<edge_type> infos{};
 		infos.reserve(std::ranges::size(vertices));
 		std::ranges::transform(
@@ -183,7 +189,13 @@ struct WeightedViewStub
 		requires sg::concepts::edge_for<edge_type, Node>
 	static std::vector<edge_type> edges(const Node& current)
 	{
-		const auto& vertices = graph.at(std::stoi(sg::node::vertex(current)));
+		const auto vertex = std::stoi(sg::node::vertex(current));
+		if (!graph.contains(vertex))
+		{
+			return {};
+		}
+
+		const auto& vertices = graph.at(vertex);
 		std::vector<edge_type> infos{};
 		infos.reserve(std::ranges::size(vertices));
 		std::ranges::transform(
@@ -251,6 +263,30 @@ constexpr auto toPredecessorBasicNode = []<typename Node>(const sg::PredecessorN
 {
 	return sg::PredecessorNodeDecorator<sg::CommonBasicNode<sg::node::vertex_t<Node>>>{
 		{toCommonBasicNode(node)},
+		node.predecessor
+	};
+};
+
+constexpr auto toCommonRankedNode = []<sg::concepts::ranked_node Node>(const Node& node)
+{
+	return sg::CommonRankedNode<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>{
+		sg::node::vertex(node),
+		sg::node::rank(node)
+	};
+};
+
+constexpr auto toDepthRankedNode = []<typename Node>(const sg::DepthNodeDecorator<Node>& node)
+{
+	return sg::DepthNodeDecorator<sg::CommonRankedNode<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>>{
+		{toCommonRankedNode(node)},
+		node.depth
+	};
+};
+
+constexpr auto toPredecessorRankedNode = []<typename Node>(const sg::PredecessorNodeDecorator<Node>& node)
+{
+	return sg::PredecessorNodeDecorator<sg::CommonRankedNode<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>>{
+		{toCommonRankedNode(node)},
 		node.predecessor
 	};
 };
