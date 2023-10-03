@@ -234,9 +234,9 @@ constexpr auto convert_test_expectations(const Range& range, Transform transform
 	return results;
 }
 
-constexpr auto toCommonBasicNode = [](const sg::concepts::basic_node auto& node)
+constexpr auto toCommonBasicNode = []<sg::concepts::basic_node Node>(const Node& node)
 {
-	return sg::CommonBasicNode{sg::node::vertex(node)};
+	return sg::CommonBasicNode<sg::node::vertex_t<Node>>{sg::node::vertex(node)};
 };
 
 constexpr auto toDepthBasicNode = []<typename Node>(const sg::DepthNodeDecorator<Node>& node)
