@@ -6,6 +6,7 @@
 #include "Simple-Utility/graph/View.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_range_equals.hpp>
 
 #include "Defines.hpp"
 
@@ -88,7 +89,7 @@ TEST_CASE(
 		const member_fun_get_edges mock{};
 		REQUIRE_CALL(mock, edges(node))
 			.RETURN(expected);
-		REQUIRE(expected == sg::view::edges(mock, node));
+		REQUIRE_THAT(sg::view::edges(mock, node), Catch::Matchers::RangeEquals(expected));
 	}
 
 	SECTION("Access via the free function.")
@@ -96,7 +97,7 @@ TEST_CASE(
 		const free_fun_get_edges mock{};
 		REQUIRE_CALL(mock, get_edges(node))
 			.RETURN(expected);
-		REQUIRE(expected == sg::view::edges(mock, node));
+		REQUIRE_THAT(sg::view::edges(mock, node), Catch::Matchers::RangeEquals(expected));
 	}
 
 	SECTION("Access via customized function.")
@@ -104,7 +105,7 @@ TEST_CASE(
 		const customized_get_edges mock{};
 		REQUIRE_CALL(mock, get_edges(node))
 			.RETURN(expected);
-		REQUIRE(expected == sg::view::edges(mock, node));
+		REQUIRE_THAT(sg::view::edges(mock, node), Catch::Matchers::RangeEquals(expected));
 	}
 }
 
