@@ -320,3 +320,11 @@ TEMPLATE_TEST_CASE(
 	STATIC_REQUIRE(!requires{std::declval<TestType&&>().begin(); });
 	STATIC_REQUIRE(!requires{std::declval<const TestType&&>().begin(); });
 }
+
+TEST_CASE("graph::IterableTraverser can be used with std::ranges traits.", "[graph][graph::traverser]")
+{
+	using Range = sg::IterableTraverser<TraverserMock<DefaultNode>>;
+
+	STATIC_REQUIRE(std::same_as<DefaultNode, std::ranges::range_value_t<Range>>);
+	STATIC_REQUIRE(std::same_as<const DefaultNode&, std::ranges::range_reference_t<Range>>);
+}
