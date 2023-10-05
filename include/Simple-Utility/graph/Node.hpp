@@ -8,13 +8,13 @@
 
 #pragma once
 
-#include "Simple-Utility/Config.hpp"
 #include "Simple-Utility/Utility.hpp"
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/graph/Common.hpp"
 #include "Simple-Utility/graph/Edge.hpp"
 
-#include <functional>
+// ReSharper disable once CppUnusedIncludeDirective
+#include <functional>	// std::invoke
 #include <optional>
 
 namespace sl::graph::customize
