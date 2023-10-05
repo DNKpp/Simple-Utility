@@ -16,7 +16,7 @@ namespace
 {
 	inline const std::vector<
 		std::tuple<
-			std::vector<sg::DepthNodeDecorator<sg::PredecessorNodeDecorator<sg::CommonBasicNode<std::string>>>>,
+			std::vector<sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::CommonBasicNode<std::string>>>>,
 			std::string
 		>> testResults{
 		{
@@ -65,7 +65,7 @@ TEMPLATE_TEST_CASE(
 	WeightedViewStub
 )
 {
-	using Node = sg::DepthNodeDecorator<sg::CommonBasicNode<std::string>>;
+	using Node = sg::decorator::DepthNode<sg::CommonBasicNode<std::string>>;
 	const auto& [expected, origin] = GENERATE(from_range(slice_test_expectations(testResults, toDepthBasicNode)));
 
 	sg::dfs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};
@@ -81,7 +81,7 @@ TEMPLATE_TEST_CASE(
 	WeightedViewStub
 )
 {
-	using Node = sg::PredecessorNodeDecorator<sg::CommonBasicNode<std::string>>;
+	using Node = sg::decorator::PredecessorNode<sg::CommonBasicNode<std::string>>;
 	const auto& [expected, origin] = GENERATE(from_range(slice_test_expectations(testResults, toPredecessorBasicNode)));
 
 	sg::dfs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};
@@ -97,7 +97,7 @@ TEMPLATE_TEST_CASE(
 	WeightedViewStub
 )
 {
-	using Node = sg::DepthNodeDecorator<sg::PredecessorNodeDecorator<sg::CommonBasicNode<std::string>>>;
+	using Node = sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::CommonBasicNode<std::string>>>;
 	const auto& [expected, origin] = GENERATE(from_range(testResults));
 
 	sg::dfs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};

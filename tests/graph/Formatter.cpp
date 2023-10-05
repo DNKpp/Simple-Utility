@@ -27,7 +27,7 @@ TEST_CASE("ranked_node types can be formatted.", "[graph][graph::node][graph::fo
 
 TEST_CASE("predecessor decorated ranked_node types can be formatted.", "[graph][graph::node][graph::format]")
 {
-	using TestType = sg::PredecessorNodeDecorator<GenericRankedNode<std::string, int>>;
+	using TestType = sg::decorator::PredecessorNode<GenericRankedNode<std::string, int>>;
 
 	REQUIRE("{vertex: 42, rank: 1337, predecessor: 41}" == std::format("{}", TestType{{.vertex = "42", .rank = 1337}, "41"}));
 	REQUIRE(
@@ -36,7 +36,7 @@ TEST_CASE("predecessor decorated ranked_node types can be formatted.", "[graph][
 
 TEST_CASE("depth decorated ranked_node types can be formatted.", "[graph][graph::node][graph::format]")
 {
-	using TestType = sg::DepthNodeDecorator<GenericRankedNode<std::string, int>>;
+	using TestType = sg::decorator::DepthNode<GenericRankedNode<std::string, int>>;
 
 	REQUIRE("{vertex: -42, rank: 1337, depth: 42}" == std::format("{}", TestType{{.vertex = "-42", .rank = 1337}, 42}));
 }

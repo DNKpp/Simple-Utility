@@ -196,8 +196,15 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, GenericRankedNode<std::string, int>),
 	(true, sg::CommonBasicNode<std::string>),
 	(true, sg::CommonRankedNode<std::string, int>),
-	(true, sg::PredecessorNodeDecorator<sg::CommonBasicNode<std::string>>),
-	(true, sg::PredecessorNodeDecorator<sg::CommonRankedNode<std::string, int>>)
+
+	(true, sg::decorator::PredecessorNode<sg::CommonBasicNode<std::string>>),
+	(true, sg::decorator::PredecessorNode<sg::CommonRankedNode<std::string, int>>),
+	(true, sg::decorator::DepthNode<sg::CommonBasicNode<std::string>>),
+	(true, sg::decorator::DepthNode<sg::CommonRankedNode<std::string, int>>),
+	(true, sg::decorator::PredecessorNode<sg::decorator::DepthNode<sg::CommonBasicNode<std::string>>>),
+	(true, sg::decorator::PredecessorNode<sg::decorator::DepthNode<sg::CommonRankedNode<std::string, int>>>),
+	(true, sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::CommonBasicNode<std::string>>>),
+	(true, sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::CommonRankedNode<std::string, int>>>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::basic_node<T>);
@@ -215,9 +222,16 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, GenericBasicNode<std::string>),
 	(true, GenericRankedNode<std::string, int>),
 	(false, sg::CommonBasicNode<std::string>),
-	(false, sg::PredecessorNodeDecorator<sg::CommonBasicNode<std::string>>),
 	(true, sg::CommonRankedNode<std::string, int>),
-	(true, sg::PredecessorNodeDecorator<sg::CommonRankedNode<std::string, int>>)
+
+	(false, sg::decorator::PredecessorNode<sg::CommonBasicNode<std::string>>),
+	(true, sg::decorator::PredecessorNode<sg::CommonRankedNode<std::string, int>>),
+	(false, sg::decorator::DepthNode<sg::CommonBasicNode<std::string>>),
+	(true, sg::decorator::DepthNode<sg::CommonRankedNode<std::string, int>>),
+	(false, sg::decorator::PredecessorNode<sg::decorator::DepthNode<sg::CommonBasicNode<std::string>>>),
+	(true, sg::decorator::PredecessorNode<sg::decorator::DepthNode<sg::CommonRankedNode<std::string, int>>>),
+	(false, sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::CommonBasicNode<std::string>>>),
+	(true, sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::CommonRankedNode<std::string, int>>>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::ranked_node<T>);

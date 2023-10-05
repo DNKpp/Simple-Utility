@@ -16,7 +16,7 @@ namespace
 {
 	inline const std::vector<
 		std::tuple<
-			std::vector<sg::DepthNodeDecorator<sg::PredecessorNodeDecorator<sg::CommonRankedNode<std::string, int>>>>,
+			std::vector<sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::CommonRankedNode<std::string, int>>>>,
 			std::string
 		>> testResults{
 		{
@@ -59,12 +59,12 @@ TEMPLATE_TEST_CASE(
 }
 
 TEMPLATE_TEST_CASE(
-	"ucs::Range node can be decorated with DepthNodeDecorator.",
+	"ucs::Range node can be decorated with DepthNode.",
 	"[graph][graph::ucs]",
 	WeightedViewStub
 )
 {
-	using Node = sg::DepthNodeDecorator<sg::CommonRankedNode<std::string, int>>;
+	using Node = sg::decorator::DepthNode<sg::CommonRankedNode<std::string, int>>;
 	const auto& [expected, origin] = GENERATE(from_range(slice_test_expectations(testResults, toDepthRankedNode)));
 
 	sg::ucs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};
@@ -74,12 +74,12 @@ TEMPLATE_TEST_CASE(
 }
 
 TEMPLATE_TEST_CASE(
-	"ucs::Range node can be decorated with PredecessorNodeDecorator.",
+	"ucs::Range node can be decorated with PredecessorNode.",
 	"[graph][graph::ucs]",
 	WeightedViewStub
 )
 {
-	using Node = sg::PredecessorNodeDecorator<sg::CommonRankedNode<std::string, int>>;
+	using Node = sg::decorator::PredecessorNode<sg::CommonRankedNode<std::string, int>>;
 	const auto& [expected, origin] = GENERATE(from_range(slice_test_expectations(testResults, toPredecessorRankedNode)));
 
 	sg::ucs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};
@@ -94,7 +94,7 @@ TEMPLATE_TEST_CASE(
 	WeightedViewStub
 )
 {
-	using Node = sg::DepthNodeDecorator<sg::PredecessorNodeDecorator<sg::CommonRankedNode<std::string, int>>>;
+	using Node = sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::CommonRankedNode<std::string, int>>>;
 	const auto& [expected, origin] = GENERATE(from_range(testResults));
 
 	sg::ucs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};

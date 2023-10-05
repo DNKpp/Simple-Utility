@@ -57,9 +57,9 @@ namespace sl::graph::detail
 	};
 
 	template <concepts::basic_node Node>
-		requires requires { typename NodeFactoryDecorator<Node, NodeFactory>::node_type; }
+		requires requires { typename decorator::NodeFactory<Node, NodeFactory>::node_type; }
 	struct NodeFactory<Node>
-		: public NodeFactoryDecorator<Node, NodeFactory>
+		: public decorator::NodeFactory<Node, NodeFactory>
 	{
 	};
 

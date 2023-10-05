@@ -255,17 +255,17 @@ constexpr auto toCommonBasicNode = []<sg::concepts::basic_node Node>(const Node&
 	return sg::CommonBasicNode<sg::node::vertex_t<Node>>{sg::node::vertex(node)};
 };
 
-constexpr auto toDepthBasicNode = []<typename Node>(const sg::DepthNodeDecorator<Node>& node)
+constexpr auto toDepthBasicNode = []<typename Node>(const sg::decorator::DepthNode<Node>& node)
 {
-	return sg::DepthNodeDecorator<sg::CommonBasicNode<sg::node::vertex_t<Node>>>{
+	return sg::decorator::DepthNode<sg::CommonBasicNode<sg::node::vertex_t<Node>>>{
 		{toCommonBasicNode(node)},
 		node.depth
 	};
 };
 
-constexpr auto toPredecessorBasicNode = []<typename Node>(const sg::PredecessorNodeDecorator<Node>& node)
+constexpr auto toPredecessorBasicNode = []<typename Node>(const sg::decorator::PredecessorNode<Node>& node)
 {
-	return sg::PredecessorNodeDecorator<sg::CommonBasicNode<sg::node::vertex_t<Node>>>{
+	return sg::decorator::PredecessorNode<sg::CommonBasicNode<sg::node::vertex_t<Node>>>{
 		{toCommonBasicNode(node)},
 		node.predecessor
 	};
@@ -279,17 +279,17 @@ constexpr auto toCommonRankedNode = []<sg::concepts::ranked_node Node>(const Nod
 	};
 };
 
-constexpr auto toDepthRankedNode = []<typename Node>(const sg::DepthNodeDecorator<Node>& node)
+constexpr auto toDepthRankedNode = []<typename Node>(const sg::decorator::DepthNode<Node>& node)
 {
-	return sg::DepthNodeDecorator<sg::CommonRankedNode<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>>{
+	return sg::decorator::DepthNode<sg::CommonRankedNode<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>>{
 		{toCommonRankedNode(node)},
 		node.depth
 	};
 };
 
-constexpr auto toPredecessorRankedNode = []<typename Node>(const sg::PredecessorNodeDecorator<Node>& node)
+constexpr auto toPredecessorRankedNode = []<typename Node>(const sg::decorator::PredecessorNode<Node>& node)
 {
-	return sg::PredecessorNodeDecorator<sg::CommonRankedNode<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>>{
+	return sg::decorator::PredecessorNode<sg::CommonRankedNode<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>>{
 		{toCommonRankedNode(node)},
 		node.predecessor
 	};

@@ -229,9 +229,12 @@ namespace sl::graph
 		[[nodiscard]]
 		friend bool operator ==(const CommonRankedNode&, const CommonRankedNode&) = default;
 	};
+}
 
+namespace sl::graph::decorator
+{
 	template <concepts::basic_node Node>
-	struct PredecessorNodeDecorator
+	struct PredecessorNode
 		: public Node
 	{
 		using vertex_type = node::vertex_t<Node>;
@@ -239,21 +242,21 @@ namespace sl::graph
 		std::optional<vertex_type> predecessor{};
 
 		[[nodiscard]]
-		friend bool operator ==(const PredecessorNodeDecorator&, const PredecessorNodeDecorator&) = default;
+		friend bool operator ==(const PredecessorNode&, const PredecessorNode&) = default;
 	};
 
 	template <concepts::basic_node Node, template<class> typename BaseNodeFactory>
-	class NodeFactoryDecorator;
+	class NodeFactory;
 
 	template <concepts::basic_node Node, template<class> typename BaseNodeFactory>
-	class NodeFactoryDecorator<PredecessorNodeDecorator<Node>, BaseNodeFactory>
+	class NodeFactory<PredecessorNode<Node>, BaseNodeFactory>
 		: private BaseNodeFactory<Node>
 	{
 	private:
 		using Super = BaseNodeFactory<Node>;
 
 	public:
-		using node_type = PredecessorNodeDecorator<Node>;
+		using node_type = PredecessorNode<Node>;
 		using vertex_type = node::vertex_t<node_type>;
 
 		template <typename... Args>
@@ -282,7 +285,7 @@ namespace sl::graph
 	};
 
 	template <concepts::basic_node Node>
-	struct DepthNodeDecorator
+	struct DepthNode
 		: public Node
 	{
 		using vertex_type = node::vertex_t<Node>;
@@ -290,18 +293,18 @@ namespace sl::graph
 		int depth{};
 
 		[[nodiscard]]
-		friend bool operator ==(const DepthNodeDecorator&, const DepthNodeDecorator&) = default;
+		friend bool operator ==(const DepthNode&, const DepthNode&) = default;
 	};
 
 	template <concepts::basic_node Node, template<class> typename BaseNodeFactory>
-	class NodeFactoryDecorator<DepthNodeDecorator<Node>, BaseNodeFactory>
+	class NodeFactory<DepthNode<Node>, BaseNodeFactory>
 		: private BaseNodeFactory<Node>
 	{
 	private:
 		using Super = BaseNodeFactory<Node>;
 
 	public:
-		using node_type = DepthNodeDecorator<Node>;
+		using node_type = DepthNode<Node>;
 		using vertex_type = node::vertex_t<node_type>;
 
 		template <typename... Args>

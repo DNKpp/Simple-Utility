@@ -54,7 +54,7 @@ namespace sl::graph
 	};
 
 	template <concepts::basic_node Node, class Char>
-	class NodeFormatter<PredecessorNodeDecorator<Node>, Char>
+	class NodeFormatter<decorator::PredecessorNode<Node>, Char>
 	{
 	public:
 		constexpr auto parse(std::basic_format_parse_context<Char>& ctx) noexcept
@@ -63,7 +63,7 @@ namespace sl::graph
 		}
 
 		template <class FormatContext>
-		auto format(const PredecessorNodeDecorator<Node>& node, FormatContext& ctx) const
+		auto format(const decorator::PredecessorNode<Node>& node, FormatContext& ctx) const
 		{
 			return std::format_to(
 				m_Formatter.format(node, ctx),
@@ -76,7 +76,7 @@ namespace sl::graph
 	};
 
 	template <concepts::basic_node Node, class Char>
-	class NodeFormatter<DepthNodeDecorator<Node>, Char>
+	class NodeFormatter<decorator::DepthNode<Node>, Char>
 	{
 	public:
 		constexpr auto parse(std::basic_format_parse_context<Char>& ctx) noexcept
@@ -85,7 +85,7 @@ namespace sl::graph
 		}
 
 		template <class FormatContext>
-		auto format(const DepthNodeDecorator<Node>& node, FormatContext& ctx) const
+		auto format(const decorator::DepthNode<Node>& node, FormatContext& ctx) const
 		{
 			return std::format_to(
 				m_Formatter.format(node, ctx),
