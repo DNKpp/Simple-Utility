@@ -158,15 +158,15 @@ namespace sl::graph::astar::detail
 	template <typename Node, typename Heuristic, typename NodeFactory>
 	using default_kernel_t = LazyKernel<Node, Heuristic, NodeFactory>;
 #else
-	template <typename Node, typename Heuristic, typename NodeFactory>
-	using default_kernel_t = BufferedKernel<Node, Heuristic, NodeFactory>;
+	template <typename CommonNode, typename Heuristic, typename NodeFactory>
+	using default_kernel_t = BufferedKernel<CommonNode, Heuristic, NodeFactory>;
 #endif
 }
 
 namespace sl::graph::astar
 {
 	template <concepts::vertex Vertex, concepts::rank Rank>
-	struct Node
+	struct CommonNode
 	{
 		using vertex_type = Vertex;
 		using rank_type = Rank;
@@ -176,7 +176,7 @@ namespace sl::graph::astar
 		rank_type estimatedPendingCost{};
 
 		[[nodiscard]]
-		friend constexpr rank_type rank(const Node& node) noexcept(noexcept(node.cost + node.cost))
+		friend constexpr rank_type rank(const CommonNode& node) noexcept(noexcept(node.cost + node.cost))
 		{
 			detail::check_bounds(node.cost, node.estimatedPendingCost);
 
@@ -184,15 +184,15 @@ namespace sl::graph::astar
 		}
 
 		[[nodiscard]]
-		friend bool operator==(const Node&, const Node&) = default;
+		friend bool operator==(const CommonNode&, const CommonNode&) = default;
 	};
 }
 
 template <sl::graph::concepts::vertex Vertex, sl::graph::concepts::rank Rank>
-struct sl::graph::detail::NodeFactory<sl::graph::astar::Node<Vertex, Rank>>
+struct sl::graph::detail::NodeFactory<sl::graph::astar::CommonNode<Vertex, Rank>>
 {
 public:
-	using node_type = astar::Node<Vertex, Rank>;
+	using node_type = astar::CommonNode<Vertex, Rank>;
 	using vertex_type = Vertex;
 	using rank_type = Rank;
 
@@ -274,7 +274,7 @@ namespace sl::graph::astar
 	template <
 		typename View,
 		typename Heuristic,
-		concepts::ranked_node Node = Node<edge::vertex_t<view::edge_t<View>>, edge::weight_t<view::edge_t<View>>>,
+		concepts::ranked_node Node = CommonNode<edge::vertex_t<view::edge_t<View>>, edge::weight_t<view::edge_t<View>>>,
 		concepts::tracker_for<node::vertex_t<Node>> Tracker = tracker::CommonHashMap<node::vertex_t<Node>>>
 		requires concepts::view_for<View, Node>
 				&& concepts::heuristic_for<Heuristic, Node>

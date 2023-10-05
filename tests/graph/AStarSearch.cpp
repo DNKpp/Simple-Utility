@@ -16,7 +16,7 @@ namespace
 {
 	inline const std::vector<
 		std::tuple<
-			std::vector<sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::astar::Node<std::string, int>>>>,
+			std::vector<sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::astar::CommonNode<std::string, int>>>>,
 			std::string, // origin
 			std::string  // destination
 		>> testResults{
@@ -61,7 +61,7 @@ namespace
 
 	constexpr auto toCommonAStarNode = []<sg::concepts::ranked_node Node>(const Node& node)
 	{
-		return sg::astar::Node<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>{
+		return sg::astar::CommonNode<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>{
 			sg::node::vertex(node),
 			node.cost,
 			node.estimatedPendingCost
@@ -70,7 +70,7 @@ namespace
 
 	constexpr auto toDepthAStarNode = []<typename Node>(const sg::decorator::DepthNode<Node>& node)
 	{
-		return sg::decorator::DepthNode<sg::astar::Node<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>>{
+		return sg::decorator::DepthNode<sg::astar::CommonNode<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>>{
 			{toCommonAStarNode(node)},
 			node.depth
 		};
@@ -78,7 +78,7 @@ namespace
 
 	constexpr auto toPredecessorAStarNode = []<typename Node>(const sg::decorator::PredecessorNode<Node>& node)
 	{
-		return sg::decorator::PredecessorNode<sg::astar::Node<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>>{
+		return sg::decorator::PredecessorNode<sg::astar::CommonNode<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>>{
 			{toCommonAStarNode(node)},
 			node.predecessor
 		};
@@ -90,7 +90,7 @@ TEMPLATE_TEST_CASE(
 	"[graph][graph::astar]",
 	WeightedViewStub)
 {
-	using Node = sg::astar::Node<std::string, int>;
+	using Node = sg::astar::CommonNode<std::string, int>;
 	const auto& [expected, origin, destination] = GENERATE(from_range(slice_test_expectations(testResults, toCommonAStarNode)));
 
 	sg::astar::Range<TestType, Heuristic, Node> range{
@@ -112,7 +112,7 @@ TEMPLATE_TEST_CASE(
 	WeightedViewStub
 )
 {
-	using Node = sg::decorator::DepthNode<sg::astar::Node<std::string, int>>;
+	using Node = sg::decorator::DepthNode<sg::astar::CommonNode<std::string, int>>;
 	const auto& [expected, origin, destination] = GENERATE(from_range(slice_test_expectations(testResults, toDepthAStarNode)));
 
 	sg::astar::Range<TestType, Heuristic, Node> range{
@@ -134,7 +134,7 @@ TEMPLATE_TEST_CASE(
 	WeightedViewStub
 )
 {
-	using Node = sg::decorator::PredecessorNode<sg::astar::Node<std::string, int>>;
+	using Node = sg::decorator::PredecessorNode<sg::astar::CommonNode<std::string, int>>;
 	const auto& [expected, origin, destination] = GENERATE(from_range(slice_test_expectations(testResults, toPredecessorAStarNode)));
 
 	sg::astar::Range<TestType, Heuristic, Node> range{
@@ -156,7 +156,7 @@ TEMPLATE_TEST_CASE(
 	WeightedViewStub
 )
 {
-	using Node = sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::astar::Node<std::string, int>>>;
+	using Node = sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::astar::CommonNode<std::string, int>>>;
 	const auto& [expected, origin, destination] = GENERATE(from_range(testResults));
 
 	sg::astar::Range<TestType, Heuristic, Node> range{

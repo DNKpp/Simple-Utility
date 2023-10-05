@@ -20,9 +20,12 @@ namespace sl::graph::dfs
 	{
 	};
 
+	template <concepts::vertex Vertex>
+	using CommonNode = CommonBasicNode<Vertex>;
+
 	template <
 		class View,
-		concepts::basic_node Node = CommonBasicNode<edge::vertex_t<view::edge_t<View>>>,
+		concepts::basic_node Node = CommonNode<edge::vertex_t<view::edge_t<View>>>,
 		concepts::tracker_for<node::vertex_t<Node>> Tracker = tracker::CommonHashMap<node::vertex_t<Node>>>
 		requires concepts::view_for<View, Node>
 				&& (!concepts::ranked_node<Node>)

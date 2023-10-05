@@ -20,9 +20,12 @@ namespace sl::graph::ucs
 	{
 	};
 
+	template <concepts::vertex Vertex, concepts::rank Rank>
+	using CommonNode = CommonRankedNode<Vertex, Rank>;
+
 	template <
 		class View,
-		concepts::ranked_node Node = CommonRankedNode<edge::vertex_t<view::edge_t<View>>, edge::weight_t<view::edge_t<View>>>,
+		concepts::ranked_node Node = CommonNode<edge::vertex_t<view::edge_t<View>>, edge::weight_t<view::edge_t<View>>>,
 		concepts::tracker_for<node::vertex_t<Node>> Tracker = tracker::CommonHashMap<node::vertex_t<Node>>>
 		requires concepts::view_for<View, Node>
 	using Range = IterableTraverser<
