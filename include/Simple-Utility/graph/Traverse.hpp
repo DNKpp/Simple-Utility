@@ -135,7 +135,7 @@ namespace sl::graph::detail
 		[[nodiscard]]
 		constexpr auto operator ()(const Node& current, const View& graph, Tracker& tracker)
 		{
-			auto edges = graph.edges(current);
+			auto edges = view::edges(graph, current);
 
 			std::vector<view::edge_t<View>> results{};
 			if constexpr (std::ranges::sized_range<decltype(edges)>)
@@ -159,7 +159,7 @@ namespace sl::graph::detail
 		[[nodiscard]]
 		constexpr auto operator ()(const Node& current, const View& graph, Tracker& tracker) const
 		{
-			return graph.edges(current)
+			return view::edges(graph, current)
 					| std::views::filter([&](const auto& edge) { return tracker::set_discovered(tracker, edge::destination(edge)); });
 		}
 	};
