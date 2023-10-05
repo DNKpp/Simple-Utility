@@ -11,6 +11,32 @@
 
 namespace
 {
+	struct member_fun_get_edges
+	{
+		using edge_type = GenericBasicEdge<std::string>;
+
+		MAKE_CONST_MOCK1(edges, std::vector<edge_type>(const GenericBasicNode<std::string>&));
+	};
+
+	struct free_fun_get_edges
+	{
+		using edge_type = GenericBasicEdge<std::string>;
+
+		MAKE_CONST_MOCK1(get_edges, std::vector<edge_type>(const GenericBasicNode<std::string>&));
+
+		friend std::vector<edge_type> edges(const free_fun_get_edges& obj, const GenericBasicNode<std::string>& node)
+		{
+			return obj.get_edges(node);
+		}
+	};
+
+	struct customized_get_edges
+	{
+		using edge_type = GenericBasicEdge<std::string>;
+
+		MAKE_CONST_MOCK1(get_edges, std::vector<edge_type>(const GenericBasicNode<std::string>&));
+	};
+
 	template <sg::concepts::vertex Vertex>
 	struct GenericBasicView
 	{
@@ -19,8 +45,10 @@ namespace
 		template <sg::concepts::basic_node Node>
 			requires sg::concepts::edge_for<edge_type, Node>
 		// ReSharper disable once CppFunctionIsNotImplemented
-		static std::vector<edge_type> edges(const Node&);
+		static std::vector<edge_type> edges(const Node&); // NOLINT(clang-diagnostic-undefined-internal)
 	};
+
+	static_assert(sg::concepts::view_for<GenericBasicView<std::string>, GenericBasicNode<std::string>>);
 
 	template <sg::concepts::vertex Vertex, sg::concepts::weight Weight>
 	struct GenericWeightedView
@@ -30,8 +58,54 @@ namespace
 		template <sg::concepts::basic_node Node>
 			requires sg::concepts::edge_for<edge_type, Node>
 		// ReSharper disable once CppFunctionIsNotImplemented
-		static std::vector<edge_type> edges(const Node&);
+		static std::vector<edge_type> edges(const Node&); // NOLINT(clang-diagnostic-undefined-internal)
 	};
+}
+
+template <>
+struct sl::graph::customize::edges_fn<customized_get_edges>
+{
+	[[nodiscard]]
+	auto operator ()(const customized_get_edges& e, const GenericBasicNode<std::string>& node) const
+	{
+		return e.get_edges(node);
+	}
+};
+
+TEST_CASE(
+	"graph::view::edges serves as a customization point, returning the outgoing edges of the given node.",
+	"[graph][graph::view]")
+{
+	const GenericBasicNode<std::string> node{"Hello, World!"};
+	const std::vector<GenericBasicEdge<std::string>> expected{
+		{"Edge0"},
+		{"Edge1"},
+		{"Edge2"}
+	};
+
+	SECTION("Access via the member function.")
+	{
+		const member_fun_get_edges mock{};
+		REQUIRE_CALL(mock, edges(node))
+			.RETURN(expected);
+		REQUIRE(expected == sg::view::edges(mock, node));
+	}
+
+	SECTION("Access via the free function.")
+	{
+		const free_fun_get_edges mock{};
+		REQUIRE_CALL(mock, get_edges(node))
+			.RETURN(expected);
+		REQUIRE(expected == sg::view::edges(mock, node));
+	}
+
+	SECTION("Access via customized function.")
+	{
+		const customized_get_edges mock{};
+		REQUIRE_CALL(mock, get_edges(node))
+			.RETURN(expected);
+		REQUIRE(expected == sg::view::edges(mock, node));
+	}
 }
 
 TEMPLATE_TEST_CASE_SIG(
