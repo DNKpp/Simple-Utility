@@ -186,51 +186,51 @@ namespace sl::graph::astar
 		[[nodiscard]]
 		friend bool operator==(const Node&, const Node&) = default;
 	};
+}
 
-	template <concepts::ranked_node Node>
-	struct NodeFactory;
+template <sl::graph::concepts::vertex Vertex, sl::graph::concepts::rank Rank>
+struct sl::graph::detail::NodeFactory<sl::graph::astar::Node<Vertex, Rank>>
+{
+public:
+	using node_type = astar::Node<Vertex, Rank>;
+	using vertex_type = Vertex;
+	using rank_type = Rank;
 
-	template <concepts::vertex Vertex, concepts::rank Rank>
-	struct NodeFactory<Node<Vertex, Rank>>
+	[[nodiscard]]
+	constexpr node_type operator ()(vertex_type origin, rank_type estimatedPendingCost) const
 	{
-	public:
-		using node_type = Node<Vertex, Rank>;
-		using vertex_type = Vertex;
-		using rank_type = Rank;
+		node_type node{
+			.vertex = std::move(origin),
+			.cost = {},
+			.estimatedPendingCost = std::move(estimatedPendingCost)
+		};
+		astar::detail::check_bounds(node.cost, node.estimatedPendingCost);
 
-		[[nodiscard]]
-		constexpr node_type operator ()(vertex_type origin, rank_type estimatedPendingCost) const
-		{
-			node_type node{
-				.vertex = std::move(origin),
-				.cost = {},
-				.estimatedPendingCost = std::move(estimatedPendingCost)
-			};
-			detail::check_bounds(node.cost, node.estimatedPendingCost);
+		return node;
+	}
 
-			return node;
-		}
+	template <concepts::edge_for<node_type> Edge>
+	[[nodiscard]]
+	constexpr node_type operator ()(const node_type& current, const Edge& edge, rank_type estimatedPendingCost) const
+	{
+		astar::detail::check_bounds(current.cost, edge::weight(edge));
 
-		template <concepts::edge_for<node_type> Edge>
-		[[nodiscard]]
-		constexpr node_type operator ()(const node_type& current, const Edge& edge, rank_type estimatedPendingCost) const
-		{
-			detail::check_bounds(current.cost, edge::weight(edge));
+		node_type node{
+			.vertex = edge::destination(edge),
+			.cost = current.cost + edge::weight(edge),
+			.estimatedPendingCost = std::move(estimatedPendingCost)
+		};
+		astar::detail::check_bounds(node.cost, node.estimatedPendingCost);
 
-			node_type node{
-				.vertex = edge::destination(edge),
-				.cost = current.cost + edge::weight(edge),
-				.estimatedPendingCost = std::move(estimatedPendingCost)
-			};
-			detail::check_bounds(node.cost, node.estimatedPendingCost);
+		return node;
+	}
+};
 
-			return node;
-		}
-	};
-
+namespace sl::graph::astar
+{
 	template <typename Node>
-	struct NodeFactory<PredecessorNodeDecorator<Node>>
-		: public NodeFactoryDecorator<PredecessorNodeDecorator<Node>, NodeFactory>
+	struct NodeFactory
+		: public graph::detail::NodeFactory<Node>
 	{
 	};
 

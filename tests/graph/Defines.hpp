@@ -8,6 +8,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/trompeloeil.hpp>
 
+#include "Simple-Utility/TypeList.hpp"
+#include "Simple-Utility/functional/Tuple.hpp"
 #include "Simple-Utility/graph/Common.hpp"
 #include "Simple-Utility/graph/Edge.hpp"
 #include "Simple-Utility/graph/Formatter.hpp"
@@ -227,21 +229,23 @@ constexpr auto slice_test_expectations(const Range& range, Transform transform)
 		Transform,
 		std::ranges::range_value_t<std::tuple_element_t<0, std::ranges::range_value_t<Range>>>>;
 	std::vector<
-		std::tuple<
-			std::vector<TargetNode>,
-			std::tuple_element_t<1, std::ranges::range_value_t<Range>>>> results{};
+		sl::type_list::prepend_t<
+			sl::type_list::pop_front_t<
+				std::ranges::range_value_t<Range>>,
+			std::vector<TargetNode>>> results{};
 	std::ranges::transform(
 		range,
 		std::back_inserter(results),
-		[&](const auto& tuple)
-		{
-			std::vector<TargetNode> nodes{};
-			std::ranges::transform(std::get<0>(tuple), std::back_inserter(nodes), transform);
-			return std::tuple{
-				std::move(nodes),
-				std::get<1>(tuple)
-			};
-		});
+		sl::functional::envelop<sl::functional::Apply>(
+			[&]<typename Nodes, typename... Args>(const Nodes& nodes, Args&&... args)
+			{
+				std::vector<TargetNode> targetNodes{};
+				std::ranges::transform(nodes, std::back_inserter(targetNodes), transform);
+				return std::tuple{
+					std::move(targetNodes),
+					std::forward<Args>(args)...
+				};
+			}));
 
 	return results;
 }
