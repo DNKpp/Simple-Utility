@@ -72,67 +72,47 @@ class maze
 public:
 	friend void random_maze(maze&, std::uint32_t);
 
-	maze(std::size_t x, std::size_t y)
-		: m_grid(create_grid(x, y)),
-		m_barrier_grid(create_barrier_grid())
+	explicit maze(const std::size_t x, const std::size_t y)
+		: m_Grid{{x, y}},
+		m_BarrierGrid(make_vertex_subset_complement_filter(m_Grid, m_Barriers))
 	{
 	}
 
 	// The length of the maze along the specified dimension.
-	vertices_size_type length(std::size_t d) const { return m_grid.length(d); }
+	vertices_size_type length(std::size_t d) const { return m_Grid.length(d); }
 
 	bool has_barrier(vertex_descriptor u) const
 	{
-		return m_barriers.find(u) != m_barriers.end();
+		return m_Barriers.find(u) != m_Barriers.end();
 	}
 
 	// Try to find a path from the lower-left-hand corner source (0,0) to the
 	// upper-right-hand corner goal (x-1, y-1).
-	vertex_descriptor source() const { return vertex(0, m_grid); }
+	vertex_descriptor source() const { return vertex(0, m_Grid); }
 
 	vertex_descriptor goal() const
 	{
-		return vertex(num_vertices(m_grid) - 1, m_grid);
+		return vertex(num_vertices(m_Grid) - 1, m_Grid);
 	}
 
 	std::optional<std::tuple<vertex_set, distance>> solve();
 
-	bool solved() const { return !m_solution.empty(); }
-
-	bool solution_contains(vertex_descriptor u) const
-	{
-		return m_solution.find(u) != m_solution.end();
-	}
-
 	const filtered_grid& get_grid() const noexcept
 	{
-		return m_barrier_grid;
+		return m_BarrierGrid;
 	}
 
 private:
-	// Create the underlying rank-2 grid with the specified dimensions.
-	grid create_grid(std::size_t x, std::size_t y)
-	{
-		boost::array lengths = {{x, y}};
-		return grid(lengths);
-	}
-
-	// Filter the barrier vertices out of the underlying grid.
-	filtered_grid create_barrier_grid()
-	{
-		return boost::make_vertex_subset_complement_filter(m_grid, m_barriers);
-	}
-
 	// The grid underlying the maze
-	grid m_grid;
+	grid m_Grid;
 	// The barriers in the maze
-	vertex_set m_barriers;
+	vertex_set m_Barriers{};
 	// The underlying maze grid with barrier vertices filtered out
-	filtered_grid m_barrier_grid;
+	filtered_grid m_BarrierGrid;
 	// The vertices on a solution path through the maze
-	vertex_set m_solution;
+	vertex_set m_Solution{};
 	// The length of the solution path
-	distance m_solution_length;
+	distance m_SolutionLength{};
 };
 
 // Euclidean heuristic for a grid
@@ -143,20 +123,20 @@ class euclidean_heuristic
 	: public boost::astar_heuristic<filtered_grid, double>
 {
 public:
-	euclidean_heuristic(vertex_descriptor goal)
-		: m_goal(goal)
+	explicit euclidean_heuristic(const vertex_descriptor& goal)
+		: m_Goal{goal}
 	{
-	};
+	}
 
 	double operator()(vertex_descriptor v) const
 	{
-		return sqrt(
-			pow(static_cast<double>(m_goal[0] - v[0]), 2)
-			+ pow(static_cast<double>(m_goal[1] - v[1]), 2));
+		return std::sqrt(
+			std::pow(static_cast<double>(m_Goal[0] - v[0]), 2)
+			+ std::pow(static_cast<double>(m_Goal[1] - v[1]), 2));
 	}
 
 private:
-	vertex_descriptor m_goal;
+	vertex_descriptor m_Goal;
 };
 
 // Exception thrown when the goal vertex is found
@@ -167,64 +147,55 @@ struct found_goal
 // Visitor that terminates when we find the goal vertex
 struct astar_goal_visitor : public boost::default_astar_visitor
 {
-	astar_goal_visitor(vertex_descriptor goal)
-		: m_goal(goal)
+	explicit astar_goal_visitor(const vertex_descriptor& goal)
+		: m_Goal{goal}
 	{
-	};
+	}
 
-	void examine_vertex(vertex_descriptor u, const filtered_grid&)
+	void examine_vertex(const vertex_descriptor& u, const filtered_grid&) const
 	{
-		if (u == m_goal)
+		if (u == m_Goal)
 		{
-			throw found_goal();
+			throw found_goal{};
 		}
 	}
 
 private:
-	vertex_descriptor m_goal;
+	vertex_descriptor m_Goal;
 };
 
 // Solve the maze using A-star search.  Return true if a solution was found.
 std::optional<std::tuple<vertex_set, distance>> maze::solve()
 {
-	boost::static_property_map<distance> weight(1);
 	// The predecessor map is a vertex-to-vertex mapping.
-	using pred_map = std::unordered_map<vertex_descriptor, vertex_descriptor,
-										vertex_hash>;
-	pred_map predecessor;
-	boost::associative_property_map<pred_map> pred_pmap(predecessor);
+	std::unordered_map<vertex_descriptor, vertex_descriptor, vertex_hash> predecessors{};
 	// The distance map is a vertex-to-distance mapping.
-	using dist_map = std::unordered_map<vertex_descriptor, distance, vertex_hash>;
-	dist_map distance;
-	boost::associative_property_map<dist_map> dist_pmap(distance);
+	std::unordered_map<vertex_descriptor, distance, vertex_hash> distances{};
 
-	vertex_descriptor s = source();
-	vertex_descriptor g = goal();
-	euclidean_heuristic heuristic(g);
-	astar_goal_visitor visitor(g);
+	const vertex_descriptor g = goal();
 
 	try
 	{
 		astar_search(
-			m_barrier_grid,
-			s,
-			heuristic,
-			boost::weight_map(weight)
-			.predecessor_map(pred_pmap)
-			.distance_map(dist_pmap)
-			.visitor(visitor));
+			m_BarrierGrid,
+			source(),
+			euclidean_heuristic{g},
+			weight_map(boost::static_property_map{distance{1}})
+			.predecessor_map(boost::associative_property_map{predecessors})
+			.distance_map(boost::associative_property_map{distances})
+			.visitor(astar_goal_visitor{g}));
 	}
-	catch (found_goal fg)
+	catch (const found_goal&)
 	{
 		// Walk backwards from the goal through the predecessor chain adding
 		// vertices to the solution path.
-		for (vertex_descriptor u = g; u != s; u = predecessor[u])
+		for (vertex_descriptor u = g, s = source(); u != s; u = predecessors[u])
 		{
-			m_solution.insert(u);
+			m_Solution.insert(u);
 		}
-		m_solution.insert(s);
-		m_solution_length = distance[g];
-		return std::tuple{m_solution, m_solution_length};
+		m_Solution.insert(source());
+		m_SolutionLength = distances[g];
+		return std::tuple{m_Solution, m_SolutionLength};
 	}
 
 	return std::nullopt;
@@ -233,21 +204,21 @@ std::optional<std::tuple<vertex_set, distance>> maze::solve()
 // Generate a maze with a random assignment of barriers.
 void random_maze(maze& m, const std::uint32_t seed)
 {
-	vertices_size_type n = num_vertices(m.m_grid);
-	vertex_descriptor s = m.source();
-	vertex_descriptor g = m.goal();
+	const vertices_size_type n = num_vertices(m.m_Grid);
+	const vertex_descriptor s = m.source();
+	const vertex_descriptor g = m.goal();
 	// One quarter of the cells in the maze should be barriers.
-	int barriers = n / 4;
+	vertices_size_type barriers{n / 4u};
 
 	std::mt19937 rng{seed};
 	while (barriers > 0)
 	{
 		// Choose horizontal or vertical direction.
-		std::size_t direction = std::uniform_int<std::size_t>{0, 1}(rng);
+		const std::size_t direction = std::uniform_int<std::size_t>{0, 1}(rng);
 		// Walls range up to one quarter the dimension length in this direction.
 		vertices_size_type wall = std::uniform_int<std::size_t>{1, m.length(direction) / 4}(rng);
 		// Create the wall while decrementing the total barrier count.
-		vertex_descriptor u = vertex(std::uniform_int<std::size_t>{0, n - 1}(rng), m.m_grid);
+		vertex_descriptor u = vertex(std::uniform_int<std::size_t>{0, n - 1}(rng), m.m_Grid);
 		while (wall)
 		{
 			// Start and goal spaces should never be barriers.
@@ -256,11 +227,11 @@ void random_maze(maze& m, const std::uint32_t seed)
 				wall--;
 				if (!m.has_barrier(u))
 				{
-					m.m_barriers.insert(u);
+					m.m_Barriers.insert(u);
 					barriers--;
 				}
 			}
-			vertex_descriptor v = m.m_grid.next(u, direction);
+			vertex_descriptor v = m.m_Grid.next(u, direction);
 			// Stop creating this wall if we reached the maze's edge.
 			if (u == v)
 			{
