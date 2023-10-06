@@ -212,11 +212,11 @@ void random_maze(maze& m, const std::uint32_t seed)
 	while (barriers > 0)
 	{
 		// Choose horizontal or vertical direction.
-		const std::size_t direction = std::uniform_int<std::size_t>{0, 1}(rng);
+		const std::size_t direction = std::uniform_int_distribution<std::size_t>{0, 1}(rng);
 		// Walls range up to one quarter the dimension length in this direction.
-		vertices_size_type wall = std::uniform_int<std::size_t>{1, m.length(direction) / 4}(rng);
+		vertices_size_type wall = std::uniform_int_distribution<std::size_t>{1, m.length(direction) / 4}(rng);
 		// Create the wall while decrementing the total barrier count.
-		vertex_descriptor u = vertex(std::uniform_int<std::size_t>{0, n - 1}(rng), m.m_Grid);
+		vertex_descriptor u = vertex(std::uniform_int_distribution<std::size_t>{0, n - 1}(rng), m.m_Grid);
 		while (wall)
 		{
 			// Start and goal spaces should never be barriers.
