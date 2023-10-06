@@ -56,13 +56,16 @@ namespace sl::graph::detail
 		return customize::edges_fn<View>{}(view, node);
 	}
 
+	// pleases msvc v142
+	// ReSharper disable CppRedundantTemplateKeyword
+	// ReSharper disable CppRedundantTypenameKeyword
 	template <typename View, typename Node>
 		requires requires(const View& view, const Node& node)
 		{
 			{ view.edges(node) } -> std::ranges::input_range;
 			requires std::convertible_to<
 				std::ranges::range_reference_t<decltype(view.edges(node))>,
-				view::edge_t<View>>;
+				typename view::template edge_t<View>>;
 		}
 	constexpr decltype(auto) edges(const View& view, const Node& node, const priority_tag<1>) noexcept(noexcept(view.edges(node)))
 	{
@@ -75,7 +78,7 @@ namespace sl::graph::detail
 			{ edges(view, node) } -> std::ranges::input_range;
 			requires std::convertible_to<
 				std::ranges::range_reference_t<decltype(edges(view, node))>,
-				view::edge_t<View>>;
+				typename view::template edge_t<View>>;
 		}
 	constexpr decltype(auto) edges(const View& view, const Node& node, const priority_tag<0>) noexcept(noexcept(edges(view, node)))
 	{
@@ -90,7 +93,7 @@ namespace sl::graph::detail
 				{ detail::edges(view, node, tag) } -> std::ranges::input_range;
 				requires std::convertible_to<
 					std::ranges::range_reference_t<decltype(detail::edges(view, node, tag))>,
-					view::edge_t<View>>;
+					typename view::template edge_t<View>>;
 			}
 		constexpr decltype(auto) operator ()(
 			const View& view,
@@ -100,6 +103,9 @@ namespace sl::graph::detail
 			return detail::edges(view, node, priority_tag<2>{});
 		}
 	};
+
+	// ReSharper restore CppRedundantTemplateKeyword
+	// ReSharper restore CppRedundantTypenameKeyword
 }
 
 namespace sl::graph::view
@@ -115,13 +121,16 @@ namespace sl::graph::concepts
 						&& requires(const T& view, const Node& node)
 						{
 							// fixes compile error on msvc v142
-							// ReSharper disable once CppRedundantTemplateKeyword
+							// ReSharper disable CppRedundantTemplateKeyword
+							// ReSharper disable CppRedundantTypenameKeyword
 							typename view::template traits<T>::edge_type;
-							requires edge_for<view::edge_t<T>, Node>;
+							requires edge_for<typename view::template edge_t<T>, Node>;
 							{ view::edges(view, node) } -> std::ranges::input_range;
 							requires std::convertible_to<
 								std::ranges::range_value_t<std::invoke_result_t<detail::edges_fn, const T&, const Node&>>,
-								view::edge_t<T>>;
+								typename view::template edge_t<T>>;
+							// ReSharper restore CppRedundantTemplateKeyword
+							// ReSharper restore CppRedundantTypenameKeyword
 						};
 }
 
