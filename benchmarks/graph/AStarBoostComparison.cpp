@@ -348,11 +348,6 @@ std::optional<std::tuple<vertex_set, distance>> sl_graph_solve(const maze& m)
  * End sl::graph related symbols
  ############################## */
 
-TEST_CASE("", "[comparison]")
-{
-	
-}
-
 TEMPLATE_TEST_CASE_SIG(
 	"sl::graph and boost::graph generate equally good solutions",
 	"[vs_boost][comparison]",
