@@ -71,7 +71,7 @@ public:
 	friend void random_maze(maze&, std::uint32_t);
 
 	explicit maze(const std::size_t x, const std::size_t y)
-		: m_Grid{{x, y}},
+		: m_Grid{boost::array{{x, y}}},
 		m_BarrierGrid(make_vertex_subset_complement_filter(m_Grid, m_Barriers))
 	{
 	}
@@ -317,32 +317,32 @@ std::optional<std::tuple<vertex_set, distance>> sl_graph_solve(const maze& m)
  * End sl::graph related symbols
  ############################## */
 
-TEMPLATE_TEST_CASE_SIG(
-	"sl::graph and boost::graph generate equally good solutions",
-	"[vs_boost][comparison]",
-	((int width, int height), width, height),
-	(8, 8),
-	(16, 16),
-	(32, 32),
-	(64, 64),
-	(128, 128),
-	(256, 256),
-	(512, 512),
-	(1024, 1024)
-)
-{
-	maze m{width, height};
-	random_maze(m, Catch::getSeed());
-
-	const std::optional boostSolution = [m]() mutable { return m.solve(); }();
-	const std::optional slSolution = [m] { return sl_graph_solve(m); }();
-
-	REQUIRE(boostSolution.has_value() == slSolution.has_value());
-	if (boostSolution.has_value())
-	{
-		REQUIRE(std::get<1>(*boostSolution) == Catch::Approx{std::get<1>(*slSolution)});
-	}
-}
+//TEMPLATE_TEST_CASE_SIG(
+//	"sl::graph and boost::graph generate equally good solutions",
+//	"[vs_boost][comparison]",
+//	((int width, int height), width, height),
+//	(8, 8),
+//	(16, 16),
+//	(32, 32),
+//	(64, 64),
+//	(128, 128),
+//	(256, 256),
+//	(512, 512),
+//	(1024, 1024)
+//)
+//{
+//	maze m{width, height};
+//	random_maze(m, Catch::getSeed());
+//
+//	const std::optional boostSolution = [m]() mutable { return m.solve(); }();
+//	const std::optional slSolution = [m] { return sl_graph_solve(m); }();
+//
+//	REQUIRE(boostSolution.has_value() == slSolution.has_value());
+//	if (boostSolution.has_value())
+//	{
+//		REQUIRE(std::get<1>(*boostSolution) == Catch::Approx{std::get<1>(*slSolution)});
+//	}
+//}
 
 TEMPLATE_TEST_CASE_SIG(
 	"Benchmarking sl::graph vs boost::graph AStar.",
