@@ -222,11 +222,14 @@ void random_maze(maze& m, const std::uint32_t seed)
 			// Start and goal spaces should never be barriers.
 			if (u != s && u != g)
 			{
-				wall--;
+				--wall;
 				if (!m.has_barrier(u))
 				{
 					m.m_Barriers.insert(u);
-					barriers--;
+					if (0 == --barriers)
+					{
+						break;
+					}
 				}
 			}
 			vertex_descriptor v = m.m_Grid.next(u, direction);
