@@ -21,7 +21,8 @@
 #include "Simple-Utility/graph/AStarSearch.hpp"
 
 /* Most of this code is directly taken from https://github.com/boostorg/graph/blob/develop/example/astar_maze.cpp
- * and are used for benchmarking both, boost::graph and sl::graph.
+ * and slightly modernized.
+ * The example types are used for benchmarking both, boost::graph and sl::graph.
  */
 
 // Distance traveled in the maze
