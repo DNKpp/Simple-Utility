@@ -45,8 +45,10 @@ namespace
 
 		template <sg::concepts::basic_node Node>
 			requires sg::concepts::edge_for<edge_type, Node>
-		// ReSharper disable once CppFunctionIsNotImplemented
-		static std::vector<edge_type> edges(const Node&); // NOLINT(clang-diagnostic-undefined-internal)
+		static std::vector<edge_type> edges(const Node&)
+		{
+			return {};
+		}
 	};
 
 	static_assert(sg::concepts::view_for<GenericBasicView<std::string>, GenericBasicNode<std::string>>);
@@ -58,8 +60,10 @@ namespace
 
 		template <sg::concepts::basic_node Node>
 			requires sg::concepts::edge_for<edge_type, Node>
-		// ReSharper disable once CppFunctionIsNotImplemented
-		static std::vector<edge_type> edges(const Node&); // NOLINT(clang-diagnostic-undefined-internal)
+		static std::vector<edge_type> edges(const Node&)
+		{
+			return {};
+		}
 	};
 }
 
