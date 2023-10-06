@@ -281,16 +281,22 @@ constexpr auto toCommonRankedNode = []<sg::concepts::ranked_node Node>(const Nod
 
 constexpr auto toDepthRankedNode = []<typename Node>(const sg::decorator::DepthNode<Node>& node)
 {
-	return sg::decorator::DepthNode<sg::CommonRankedNode<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>>{
+	// leave code as-is, because directly returning the temporary results in an ICE on gcc10
+	sg::decorator::DepthNode<sg::CommonRankedNode<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>> sliced{
 		{toCommonRankedNode(node)},
 		node.depth
 	};
+
+	return sliced;
 };
 
 constexpr auto toPredecessorRankedNode = []<typename Node>(const sg::decorator::PredecessorNode<Node>& node)
 {
-	return sg::decorator::PredecessorNode<sg::CommonRankedNode<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>>{
+	// leave code as-is, because directly returning the temporary results in an ICE on gcc10
+	sg::decorator::PredecessorNode<sg::CommonRankedNode<sg::node::vertex_t<Node>, sg::node::rank_t<Node>>> sliced{
 		{toCommonRankedNode(node)},
 		node.predecessor
 	};
+
+	return sliced;
 };
