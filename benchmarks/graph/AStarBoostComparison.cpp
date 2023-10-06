@@ -8,9 +8,6 @@
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
 
-#include <experimental/mdarray>
-namespace stdexp = std::experimental;
-
 #include <boost/graph/astar_search.hpp>
 #include <boost/graph/filtered_graph.hpp>
 #include <boost/graph/grid_graph.hpp>
