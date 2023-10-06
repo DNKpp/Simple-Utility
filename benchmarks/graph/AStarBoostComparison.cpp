@@ -3,10 +3,13 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
+#include <filesystem>
+
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_get_random_seed.hpp>
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
+#include <catch2/generators/catch_generators_random.hpp>
 
 #include <boost/graph/astar_search.hpp>
 #include <boost/graph/filtered_graph.hpp>
@@ -16,7 +19,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include <catch2/generators/catch_generators_random.hpp>
+#include <fstream>
 
 #include "Simple-Utility/graph/AStarSearch.hpp"
 
@@ -68,6 +71,7 @@ using filtered_grid = boost::vertex_subset_complement_filter<grid, vertex_set>::
 class maze
 {
 public:
+	friend std::ostream& operator<<(std::ostream&, const maze&);
 	friend void random_maze(maze&, std::uint32_t);
 
 	explicit maze(const std::size_t x, const std::size_t y)
@@ -94,6 +98,13 @@ public:
 	}
 
 	std::optional<std::tuple<vertex_set, distance>> solve();
+
+	bool solved() const { return !m_Solution.empty(); }
+
+	bool solution_contains(vertex_descriptor u) const
+	{
+		return m_Solution.find(u) != m_Solution.end();
+	}
 
 	const filtered_grid& get_grid() const noexcept
 	{
@@ -171,6 +182,7 @@ std::optional<std::tuple<vertex_set, distance>> maze::solve()
 	std::unordered_map<vertex_descriptor, distance, vertex_hash> distances{};
 
 	const vertex_descriptor g = goal();
+	const vertex_descriptor s = source();
 
 	try
 	{
@@ -187,11 +199,11 @@ std::optional<std::tuple<vertex_set, distance>> maze::solve()
 	{
 		// Walk backwards from the goal through the predecessor chain adding
 		// vertices to the solution path.
-		for (vertex_descriptor u = g, s = source(); u != s; u = predecessors[u])
+		for (vertex_descriptor u = g; u != s; u = predecessors[u])
 		{
 			m_Solution.insert(u);
 		}
-		m_Solution.insert(source());
+		m_Solution.insert(s);
 		m_SolutionLength = distances[g];
 		return std::tuple{m_Solution, m_SolutionLength};
 	}
@@ -320,6 +332,82 @@ std::optional<std::tuple<vertex_set, distance>> sl_graph_solve(const maze& m)
  * End sl::graph related symbols
  ############################## */
 
+// Print the maze as an ASCII map.
+std::ostream& operator<<(std::ostream& output, const maze& m)
+{
+	constexpr char barrier = '#';
+	constexpr char start = 'S';
+	constexpr char goal = 'G';
+
+	// Header
+	for (vertices_size_type i = 0; i < m.length(0) + 2; i++)
+	{
+		output << barrier;
+	}
+	output << std::endl;
+	// Body
+	for (vertices_size_type i = 0; i < m.length(1); ++i)
+	{
+		const vertices_size_type y = m.length(1) - 1 - i;
+		// Enumerate rows in reverse order and columns in regular order so that
+		// (0,0) appears in the lower left-hand corner.  This requires that y be
+		// int and not the unsigned vertices_size_type because the loop exit
+		// condition is y==-1.
+		for (vertices_size_type x = 0; x < m.length(0); x++)
+		{
+			// Put a barrier on the left-hand side.
+			if (x == 0)
+			{
+				output << barrier;
+			}
+			// Put the character representing this point in the maze grid.
+			vertex_descriptor u = {{x, y}};
+			if (u == m.source())
+			{
+				output << start;
+			}
+			else if (u == m.goal())
+			{
+				output << goal;
+			}
+			else if (m.solution_contains(u))
+			{
+				output << ".";
+			}
+			else if (m.has_barrier(u))
+			{
+				output << barrier;
+			}
+			else
+			{
+				output << " ";
+			}
+			// Put a barrier on the right-hand side.
+			if (x == m.length(0) - 1)
+			{
+				output << barrier;
+			}
+		}
+		// Put a newline after every row except the last one.
+		output << std::endl;
+	}
+	// Footer
+	for (vertices_size_type i = 0; i < m.length(0) + 2; i++)
+	{
+		output << barrier;
+	}
+	if (m.solved())
+	{
+		output << std::endl << "Solution length " << m.m_SolutionLength;
+	}
+	else
+	{
+		output << std::endl << "Not solvable";
+	}
+
+	return output;
+}
+
 TEMPLATE_TEST_CASE_SIG(
 	"sl::graph and boost::graph generate equally good solutions",
 	"[vs_boost][comparison]",
@@ -334,10 +422,17 @@ TEMPLATE_TEST_CASE_SIG(
 	(1024, 1024)
 )
 {
+	const auto seed = Catch::getSeed();
 	maze m{width, height};
-	random_maze(m, Catch::getSeed());
+	random_maze(m, seed);
 
-	const std::optional boostSolution = [m]() mutable { return m.solve(); }();
+	const std::optional boostSolution = [m, fileName = std::format("./{}_{}x{}.maze.txt", seed, width, height)]() mutable
+	{
+		auto result = m.solve();
+		std::ofstream out{std::filesystem::current_path() / fileName};
+		out << m;
+		return result;
+	}();
 	const std::optional slSolution = [m] { return sl_graph_solve(m); }();
 
 	REQUIRE(boostSolution.has_value() == slSolution.has_value());
