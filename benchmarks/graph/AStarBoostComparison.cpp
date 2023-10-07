@@ -15,6 +15,9 @@
 #include <boost/graph/filtered_graph.hpp>
 #include <boost/graph/grid_graph.hpp>
 
+#include <range/v3/all.hpp>
+#include <fmt/format.h>
+
 #include <fstream>
 #include <random>
 #include <unordered_map>
@@ -76,7 +79,7 @@ public:
 	friend void random_maze(maze&, std::uint32_t);
 
 	explicit maze(const std::size_t x, const std::size_t y)
-		: m_Grid{boost::array{{x, y}}},
+		: m_Grid{grid::vertex_descriptor{x, y}},
 		m_BarrierGrid(make_vertex_subset_complement_filter(m_Grid, m_Barriers))
 	{
 	}
@@ -277,8 +280,9 @@ struct sl::graph::customize::edges_fn<std::reference_wrapper<const maze>>
 	{
 		const auto& g = m.get_grid();
 		const auto [edgesBegin, edgesEnd] = out_edges(node::vertex(current), g);
-		return std::ranges::subrange{edgesBegin, edgesEnd}
-				| std::views::transform([&](const auto& e) { return edge_type{target(e, g), 1.}; });
+
+		return ranges::subrange{edgesBegin, edgesEnd}
+			| ranges::views::transform([&](const auto& e) { return edge_type{target(e, g), 1.}; });
 	}
 };
 
@@ -431,7 +435,7 @@ TEMPLATE_TEST_CASE_SIG(
 
 	SECTION("Compare the results of both implementations.")
 	{
-		const std::optional boostSolution = [m, fileName = std::format("./{}_{}x{}.maze.txt", seed, width, height)]() mutable
+		const std::optional boostSolution = [m, fileName = fmt::format("./{}_{}x{}.maze.txt", seed, width, height)]() mutable
 		{
 			auto result = m.solve();
 			const auto path = artifacts_root_path() / "graph" / "astar_vs_boost";
