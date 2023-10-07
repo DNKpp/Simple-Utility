@@ -82,6 +82,15 @@ using TestExplorers = std::tuple<
 	sg::detail::BufferedExplorer<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>>;
 
 TEMPLATE_LIST_TEST_CASE(
+	"Explorer implementations satisfy concepts::explorer.",
+	"[graph][graph::detail][graph::concept]",
+	TestExplorers
+)
+{
+	STATIC_REQUIRE(sg::concepts::explorer<TestType, DefaultNode, BasicViewMock<int>, TrackerMock<int>>);
+}
+
+TEMPLATE_LIST_TEST_CASE(
 	"Explorer implementations behave as expected.",
 	"[graph][graph::detail]",
 	TestExplorers

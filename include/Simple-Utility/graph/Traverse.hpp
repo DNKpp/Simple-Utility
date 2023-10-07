@@ -24,6 +24,33 @@
 #include <type_traits>
 #include <vector>
 
+namespace sl::graph::concepts
+{
+	template <typename T, typename Node, typename View, typename Tracker>
+	concept explorer = basic_node<Node>
+						&& view_for<View, Node>
+						&& tracker_for<Tracker, node::vertex_t<Node>>
+						&& sl::concepts::unqualified<T>
+						&& std::destructible<T>
+						&& requires(const T& explorer, const Node& node, const View& view, Tracker& tracker)
+						{
+							{ std::invoke(explorer, node::vertex(node), tracker) } -> std::convertible_to<Node>;
+							{ std::invoke(explorer, view, node, tracker) } -> std::ranges::input_range;
+							requires std::convertible_to<
+								std::ranges::range_reference_t<std::invoke_result_t<T&, const View&, const Node&, Tracker&>>,
+								Node>;
+						};
+
+	template <typename T>
+	concept traverser = std::destructible<T>
+						&& requires(T& traverser)
+						{
+							typename T::node_type;
+							{ !traverser.next() } -> std::convertible_to<bool>;
+							{ *traverser.next() } -> std::convertible_to<typename T::node_type>;
+						};
+}
+
 namespace sl::graph::detail
 {
 	template <typename Node>
@@ -164,7 +191,7 @@ namespace sl::graph::detail
 		concepts::view_for<Node> View,
 		concepts::queue_for<Node> QueueStrategy,
 		concepts::tracker_for<node::vertex_t<Node>> TrackingStrategy,
-		typename ExplorationStrategy = default_explorer_t<Node, NodeFactory<Node>>>
+		concepts::explorer<Node, View, TrackingStrategy> ExplorationStrategy = default_explorer_t<Node, NodeFactory<Node>>>
 		requires concepts::edge_for<view::edge_t<View>, Node>
 	class BasicTraverser
 	{
@@ -264,18 +291,6 @@ namespace sl::graph::detail
 		tracker_type m_Tracker;
 		view_type m_View;
 	};
-}
-
-namespace sl::graph::concepts
-{
-	template <typename T>
-	concept traverser = std::destructible<T>
-						&& requires(T& traverser)
-						{
-							typename T::node_type;
-							{ !traverser.next() } -> std::convertible_to<bool>;
-							{ *traverser.next() } -> std::convertible_to<typename T::node_type>;
-						};
 }
 
 namespace sl::graph
