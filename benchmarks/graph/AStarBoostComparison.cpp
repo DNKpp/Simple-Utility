@@ -15,11 +15,12 @@
 #include <boost/graph/filtered_graph.hpp>
 #include <boost/graph/grid_graph.hpp>
 
+#include <fstream>
 #include <random>
 #include <unordered_map>
 #include <unordered_set>
 
-#include <fstream>
+#include "../Defines.hpp"
 
 #include "Simple-Utility/graph/AStarSearch.hpp"
 
@@ -433,7 +434,7 @@ TEMPLATE_TEST_CASE_SIG(
 		const std::optional boostSolution = [m, fileName = std::format("./{}_{}x{}.maze.txt", seed, width, height)]() mutable
 		{
 			auto result = m.solve();
-			const auto path = std::filesystem::current_path() / "graph" / "astar_vs_boost";
+			const auto path = artifacts_root_path() / "graph" / "astar_vs_boost";
 			create_directories(path);
 			std::ofstream out{path / fileName};
 			out << m;
