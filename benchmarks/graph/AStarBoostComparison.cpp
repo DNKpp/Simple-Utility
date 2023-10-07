@@ -408,40 +408,6 @@ std::ostream& operator<<(std::ostream& output, const maze& m)
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"sl::graph and boost::graph generate equally good solutions",
-	"[vs_boost][comparison]",
-	((int width, int height), width, height),
-	(8, 8),
-	(16, 16),
-	(32, 32),
-	(64, 64),
-	(128, 128),
-	(256, 256),
-	(512, 512),
-	(1024, 1024)
-)
-{
-	const auto seed = Catch::getSeed();
-	maze m{width, height};
-	random_maze(m, seed);
-
-	const std::optional boostSolution = [m, fileName = std::format("./{}_{}x{}.maze.txt", seed, width, height)]() mutable
-	{
-		auto result = m.solve();
-		std::ofstream out{std::filesystem::current_path() / fileName};
-		out << m;
-		return result;
-	}();
-	const std::optional slSolution = [m] { return sl_graph_solve(m); }();
-
-	REQUIRE(boostSolution.has_value() == slSolution.has_value());
-	if (boostSolution.has_value())
-	{
-		REQUIRE(std::get<1>(*boostSolution) == Catch::Approx{std::get<1>(*slSolution)});
-	}
-}
-
-TEMPLATE_TEST_CASE_SIG(
 	"Benchmarking sl::graph vs boost::graph AStar.",
 	"[vs_boost][benchmark][benchmark::graph]",
 	((int width, int height), width, height),
@@ -455,8 +421,32 @@ TEMPLATE_TEST_CASE_SIG(
 	(1024, 1024)
 )
 {
+	const std::uint32_t seed = GENERATE(
+		// add static seeds here
+		Catch::getSeed());
+
 	maze m{width, height};
 	random_maze(m, Catch::getSeed());
+
+	SECTION("Compare the results of both implementations.")
+	{
+		const std::optional boostSolution = [m, fileName = std::format("./{}_{}x{}.maze.txt", seed, width, height)]() mutable
+		{
+			auto result = m.solve();
+			const auto path = std::filesystem::current_path() / "graph" / "astar_vs_boost";
+			create_directories(path);
+			std::ofstream out{path / fileName};
+			out << m;
+			return result;
+		}();
+		const std::optional slSolution = [m] { return sl_graph_solve(m); }();
+
+		REQUIRE(boostSolution.has_value() == slSolution.has_value());
+		if (boostSolution.has_value())
+		{
+			REQUIRE(std::get<1>(*boostSolution) == Catch::Approx{std::get<1>(*slSolution)});
+		}
+	}
 
 	BENCHMARK("boost::graph")
 	{
