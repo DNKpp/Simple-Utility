@@ -63,7 +63,7 @@ jobs:
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: ${{env.BUILD_DIR}}/${{env.ARTIFACTS_DIR}}
+        path: ${{env.ARTIFACTS_DIR}}
 
 
   ubuntu-20_04:
@@ -104,7 +104,7 @@ jobs:
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: ${{env.BUILD_DIR}}/${{env.ARTIFACTS_DIR}}
+        path: ${{env.ARTIFACTS_DIR}}
 
 
   windows_2022:
@@ -129,7 +129,7 @@ jobs:
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: ${{env.BUILD_DIR}}/${{env.ARTIFACTS_DIR}}
+        path: ${{env.ARTIFACTS_DIR}}
 
 
   windows_2019:
@@ -154,4 +154,4 @@ jobs:
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: ${{env.BUILD_DIR}}/${{env.ARTIFACTS_DIR}}
+        path: ${{env.ARTIFACTS_DIR}}
