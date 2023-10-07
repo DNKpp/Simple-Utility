@@ -41,6 +41,23 @@ namespace sl::graph::concepts
 								Node>;
 						};
 
+	template <typename T, typename View, typename Explorer, typename Queue, typename Tracker>
+	concept traverser_kernel = sl::concepts::unqualified<T>
+								&& std::destructible<T>
+								&& requires(
+								T& kernel,
+								const View& view,
+								const Explorer& explorer,
+								Queue& queue,
+								Tracker& tracker
+							)
+								{
+									{ !std::invoke(kernel, view, explorer, queue, tracker) } -> std::convertible_to<bool>;
+									//{
+									//	*std::invoke(kernel, explorer, queue, tracker)
+									//} -> std::convertible_to<std::remove_cvref_t<decltype(queue::next(queue))>>;
+								};
+
 	template <typename T>
 	concept traverser = std::destructible<T>
 						&& requires(T& traverser)
@@ -186,12 +203,49 @@ namespace sl::graph::detail
 	using default_explorer_t = BufferedExplorer<Node, NodeFactory>;
 #endif
 
+	struct PreOrderKernel
+	{
+		template <typename View, typename Explorer, typename Queue, typename Tracker>
+		[[nodiscard]]
+		constexpr auto operator()(const View& view, const Explorer& explorer, Queue& queue, Tracker& tracker) const
+		{
+			using node_type = std::remove_cvref_t<decltype(queue::next(queue))>;
+
+			const auto queueNext = [&]() -> std::optional<node_type>
+			{
+				if (!queue::empty(queue))
+				{
+					return {queue::next(queue)};
+				}
+
+				return std::nullopt;
+			};
+
+			std::optional result = queueNext();
+			for (;
+				result && !tracker::set_visited(tracker, node::vertex(*result));
+				result = queueNext())
+			{
+			}
+
+			if (result)
+			{
+				queue::insert(
+					queue,
+					std::invoke(explorer, view, *result, tracker));
+			}
+
+			return result;
+		}
+	};
+
 	template <
 		concepts::basic_node Node,
 		concepts::view_for<Node> View,
 		concepts::queue_for<Node> QueueStrategy,
 		concepts::tracker_for<node::vertex_t<Node>> TrackingStrategy,
-		concepts::explorer<Node, View, TrackingStrategy> ExplorationStrategy = default_explorer_t<Node, NodeFactory<Node>>>
+		concepts::explorer<Node, View, TrackingStrategy> ExplorationStrategy = default_explorer_t<Node, NodeFactory<Node>>,
+		concepts::traverser_kernel<View, ExplorationStrategy, QueueStrategy, TrackingStrategy> KernelStrategy = PreOrderKernel>
 		requires concepts::edge_for<view::edge_t<View>, Node>
 	class BasicTraverser
 	{
@@ -240,31 +294,7 @@ namespace sl::graph::detail
 		[[nodiscard]]
 		constexpr std::optional<node_type> next()
 		{
-			const auto queueNext = [&]() -> std::optional<node_type>
-			{
-				if (!queue::empty(m_Queue))
-				{
-					return {queue::next(m_Queue)};
-				}
-
-				return std::nullopt;
-			};
-
-			std::optional result = queueNext();
-			for (;
-				result && !tracker::set_visited(m_Tracker, node::vertex(*result));
-				result = queueNext())
-			{
-			}
-
-			if (result)
-			{
-				queue::insert(
-					m_Queue,
-					std::invoke(m_Explorer, m_View, *result, m_Tracker));
-			}
-
-			return result;
+			return std::invoke(m_Kernel, m_View, m_Explorer, m_Queue, m_Tracker);
 		}
 
 		[[nodiscard]]
@@ -286,7 +316,8 @@ namespace sl::graph::detail
 		}
 
 	private:
-		SL_UTILITY_NO_UNIQUE_ADDRESS ExplorationStrategy m_Explorer{};
+		ExplorationStrategy m_Explorer{};
+		KernelStrategy m_Kernel{};
 		queue_type m_Queue;
 		tracker_type m_Tracker;
 		view_type m_View;

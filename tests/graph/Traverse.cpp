@@ -157,6 +157,20 @@ TEMPLATE_LIST_TEST_CASE(
 	}
 }
 
+using TestKernels = std::tuple<
+	sg::detail::PreOrderKernel>;
+
+TEMPLATE_LIST_TEST_CASE(
+	"Kernel implementations satisfy concepts::traverser_kernel",
+	"[graph][graph::detail][graph::concept]",
+	TestKernels
+)
+{
+	using Explorer = sg::detail::BufferedExplorer<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>;
+
+	STATIC_REQUIRE(sg::concepts::traverser_kernel<TestType, BasicViewMock<int>, Explorer, QueueMock<DefaultNode>, TrackerMock<int>>);
+}
+
 TEST_CASE(
 	"detail::BasicTraverser is not copyable but movable, when strategies support it.",
 	"[graph][graph::traverser][graph::detail]"
