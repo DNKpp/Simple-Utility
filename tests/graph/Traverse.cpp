@@ -107,7 +107,7 @@ TEMPLATE_LIST_TEST_CASE(
 	SECTION("When creating successor(s).")
 	{
 		constexpr DefaultNode current{.vertex = 42};
-		const auto& [expected, visited, edges] = GENERATE(
+		const auto& [expected, visited, edgeCollection] = GENERATE(
 			(table<std::vector<DefaultNode>, std::vector<bool>, std::vector<DefaultEdge>>)({
 				{{}, {}, {}},
 				{{{.vertex = 43}}, {false}, {{.destination = 43}}},
@@ -116,17 +116,19 @@ TEMPLATE_LIST_TEST_CASE(
 				{{{.vertex = 41}}, {true, false}, {{.destination = 43}, {.destination = 41}}},
 				{{{.vertex = 43}}, {false, true}, {{.destination = 43}, {.destination = 41}}}
 				}));
-		CHECK(std::ssize(edges) == std::ssize(visited));
+		CHECK(std::ssize(edgeCollection) == std::ssize(visited));
 
 		const BasicViewMock<int> view{};
+		// clang, honestly. I hate you. This workaround is necessary for the whole range clang[11, 14] + clangCl
+		const std::vector<DefaultEdge>& edgeCollectionRef = edgeCollection;
 		REQUIRE_CALL(view, edges(current))
-			.RETURN(edges);
+			.LR_RETURN(edgeCollectionRef);
 
 		NodeFactoryMock<DefaultNode, DefaultEdge> nodeFactory{};
 		std::vector<std::unique_ptr<trompeloeil::expectation>> expectations{};
 		for (std::size_t i{0}; i < std::ranges::size(visited); ++i)
 		{
-			const auto& edge = edges[i];
+			const auto& edge = edgeCollection[i];
 			const bool isVisited = visited[i];
 
 			expectations.emplace_back(
