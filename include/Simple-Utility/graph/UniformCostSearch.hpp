@@ -34,7 +34,7 @@ namespace sl::graph::ucs
 			View,
 			queue::CommonPriorityQueue<Node>,
 			Tracker,
-			detail::default_kernel_t<Node, NodeFactory<Node>>>>;
+			detail::default_explorer_t<Node, NodeFactory<Node>>>>;
 }
 
 #endif

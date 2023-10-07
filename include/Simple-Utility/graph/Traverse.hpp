@@ -63,56 +63,57 @@ namespace sl::graph::detail
 	{
 	};
 
-	template <concepts::basic_node Node, typename NodeFactory>
-	class BaseKernel
+	template <concepts::basic_node Node, typename NodeFactory, typename CollectorStrategy>
+	class BasicExplorer
 	{
 	public:
 		[[nodiscard]]
-		explicit BaseKernel() = default;
+		explicit BasicExplorer() = default;
 
 		[[nodiscard]]
-		explicit constexpr BaseKernel(
+		explicit constexpr BasicExplorer(
 			NodeFactory nodeFactory
 		) noexcept(std::is_nothrow_move_constructible_v<NodeFactory>)
 			: m_NodeFactory{std::move(nodeFactory)}
 		{
 		}
 
-		constexpr Node operator ()(const node::vertex_t<Node>& vertex) const
+		template <typename Tracker>
+		[[nodiscard]]
+		constexpr Node operator ()(const node::vertex_t<Node>& vertex, Tracker& tracker) const
 		{
+			[[maybe_unused]] const bool result = tracker::set_discovered(tracker, vertex);
+			assert(result && "Tracker returned false (already visited) for the origin node.");
+
 			return std::invoke(m_NodeFactory, vertex);
 		}
 
-		[[nodiscard]]
-		constexpr const NodeFactory& node_factory() const & noexcept
-		{
-			return m_NodeFactory;
-		}
-
-	protected:
-		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactory m_NodeFactory{};
-	};
-
-	template <concepts::basic_node Node, typename NodeFactory>
-	class BufferedKernel
-		: public BaseKernel<Node, NodeFactory>
-	{
-	private:
-		using Super = BaseKernel<Node, NodeFactory>;
-
-	public:
-		using Super::Super;
-		using Super::operator();
-
-		template <std::ranges::input_range Edges>
+		template <typename View, typename Tracker>
 			requires std::convertible_to<
 				std::invoke_result_t<
 					NodeFactory,
 					const Node&,
-					std::ranges::range_reference_t<Edges>>,
+					view::edge_t<View>>,
 				Node>
 		[[nodiscard]]
-		constexpr auto operator ()(const Node& current, Edges&& edges) const
+		constexpr auto operator ()(const View& graph, const Node& current, Tracker& tracker) const
+		{
+			return std::invoke(
+				CollectorStrategy{},
+				view::edges(graph, current),
+				current,
+				m_NodeFactory,
+				tracker);
+		}
+
+	private:
+		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactory m_NodeFactory{};
+	};
+
+	struct BufferedCollector
+	{
+		template <typename Edges, typename Node, typename NodeFactory, typename Tracker>
+		constexpr auto operator ()(Edges&& edges, const Node& current, const NodeFactory& nodeFactory, Tracker& tracker)
 		{
 			std::vector<Node> results{};
 			if constexpr (std::ranges::sized_range<decltype(edges)>)
@@ -120,85 +121,42 @@ namespace sl::graph::detail
 				results.reserve(std::ranges::size(edges));
 			}
 
-			std::ranges::transform(
-				std::forward<Edges>(edges),
-				std::back_inserter(results),
-				[&](const auto& edge) { return std::invoke(Super::m_NodeFactory, current, edge); });
-
-			return results;
-		}
-	};
-
-	struct BufferedExplorer
-	{
-		template <typename View, typename Node, typename Tracker>
-		[[nodiscard]]
-		constexpr auto operator ()(const Node& current, const View& graph, Tracker& tracker)
-		{
-			auto edges = view::edges(graph, current);
-
-			std::vector<view::edge_t<View>> results{};
-			if constexpr (std::ranges::sized_range<decltype(edges)>)
+			for (const auto& edge : edges)
 			{
-				results.reserve(std::ranges::size(edges));
+				if (tracker::set_discovered(tracker, edge::destination(edge)))
+				{
+					results.emplace_back(std::invoke(nodeFactory, current, edge));
+				}
 			}
 
-			std::ranges::copy_if(
-				std::move(edges),
-				std::back_inserter(results),
-				[&](const auto& edge) { return tracker::set_discovered(tracker, edge::destination(edge)); });
-
 			return results;
-		}
-	};
-
-#ifdef SL_UTILITY_HAS_RANGES_VIEWS
-	struct LazyExplorer
-	{
-		template <typename View, typename Node, typename Tracker>
-		[[nodiscard]]
-		constexpr auto operator ()(const Node& current, const View& graph, Tracker& tracker) const
-		{
-			return view::edges(graph, current)
-					| std::views::filter([&](const auto& edge) { return tracker::set_discovered(tracker, edge::destination(edge)); });
 		}
 	};
 
 	template <concepts::basic_node Node, typename NodeFactory>
-	class LazyKernel
-		: public BaseKernel<Node, NodeFactory>
+	using BufferedExplorer = BasicExplorer<Node, NodeFactory, BufferedCollector>;
+
+#ifdef SL_UTILITY_HAS_RANGES_VIEWS
+
+	struct LazyCollector
 	{
-	private:
-		using Super = BaseKernel<Node, NodeFactory>;
-
-	public:
-		using Super::Super;
-		using Super::operator();
-
-		template <std::ranges::input_range Edges>
-			requires std::convertible_to<
-				std::invoke_result_t<
-					NodeFactory,
-					const Node&,
-					std::ranges::range_reference_t<Edges>>,
-				Node>
-		[[nodiscard]]
-		constexpr auto operator ()(const Node& current, Edges&& edges) const
+		template <typename Edges, typename Node, typename NodeFactory, typename Tracker>
+		constexpr auto operator ()(Edges&& edges, const Node& current, const NodeFactory& nodeFactory, Tracker& tracker)
 		{
-			return std::forward<Edges>(edges)
-					| std::views::transform([&](const auto& edge) { return std::invoke(Super::m_NodeFactory, current, edge); });
+			return std::views::all(std::forward<Edges>(edges))
+					| std::views::filter([&](const auto& edge) { return tracker::set_discovered(tracker, edge::destination(edge)); })
+					| std::views::transform([&](const auto& edge) { return std::invoke(nodeFactory, current, edge); });
 		}
 	};
 
-	using default_explorer_t = LazyExplorer;
+	template <concepts::basic_node Node, typename NodeFactory>
+	using LazyExplorer = BasicExplorer<Node, NodeFactory, LazyCollector>;
 
 	template <typename Node, typename NodeFactory>
-	using default_kernel_t = LazyKernel<Node, NodeFactory>;
+	using default_explorer_t = BufferedExplorer<Node, NodeFactory>;
 #else
-	using default_explorer_t = BufferedExplorer;
-
 	template <typename Node, typename NodeFactory>
-	using default_kernel_t = BufferedKernel<Node, NodeFactory>;
+	using default_explorer_t = BufferedExplorer<Node, NodeFactory>;
 #endif
 
 	template <
@@ -206,8 +164,7 @@ namespace sl::graph::detail
 		concepts::view_for<Node> View,
 		concepts::queue_for<Node> QueueStrategy,
 		concepts::tracker_for<node::vertex_t<Node>> TrackingStrategy,
-		typename KernelStrategy = default_kernel_t<Node, NodeFactory<Node>>,
-		typename ExplorationStrategy = default_explorer_t>
+		typename ExplorationStrategy = default_explorer_t<Node, NodeFactory<Node>>>
 		requires concepts::edge_for<view::edge_t<View>, Node>
 	class BasicTraverser
 	{
@@ -230,12 +187,10 @@ namespace sl::graph::detail
 			typename... ViewArgs,
 			typename... QueueArgs,
 			typename... TrackerArgs,
-			typename... KernelArgs,
 			typename... ExplorerArgs>
 			requires std::constructible_from<view_type, ViewArgs...>
 					&& std::constructible_from<queue_type, QueueArgs...>
 					&& std::constructible_from<tracker_type, TrackerArgs...>
-					&& std::constructible_from<KernelStrategy, KernelArgs...>
 					&& std::constructible_from<ExplorationStrategy, ExplorerArgs...>
 		[[nodiscard]]
 		explicit constexpr BasicTraverser(
@@ -243,21 +198,16 @@ namespace sl::graph::detail
 			std::tuple<ViewArgs...> viewArgs,
 			std::tuple<QueueArgs...> queueArgs,
 			std::tuple<TrackerArgs...> trackerArgs,
-			std::tuple<KernelArgs...> kernelArgs,
 			std::tuple<ExplorerArgs...> explorerArgs
 		)
 			: m_Explorer{std::make_from_tuple<ExplorationStrategy>(std::move(explorerArgs))},
-			m_Kernel{std::make_from_tuple<KernelStrategy>(std::move(kernelArgs))},
 			m_Queue{std::make_from_tuple<queue_type>(std::move(queueArgs))},
 			m_Tracker{std::make_from_tuple<tracker_type>(std::move(trackerArgs))},
 			m_View{std::make_from_tuple<view_type>(std::move(viewArgs))}
 		{
 			assert(queue::empty(m_Queue) && "Queue already contains elements.");
 
-			const bool result = tracker::set_discovered(m_Tracker, origin);
-			assert(result && "Tracker returned false (already visited) for the origin node.");
-
-			queue::insert(m_Queue, std::array{std::invoke(m_Kernel, origin)});
+			queue::insert(m_Queue, std::array{std::invoke(m_Explorer, origin, m_Tracker)});
 		}
 
 		[[nodiscard]]
@@ -284,10 +234,7 @@ namespace sl::graph::detail
 			{
 				queue::insert(
 					m_Queue,
-					std::invoke(
-						m_Kernel,
-						*result,
-						std::invoke(m_Explorer, *result, m_View, m_Tracker)));
+					std::invoke(m_Explorer, m_View, *result, m_Tracker));
 			}
 
 			return result;
@@ -313,10 +260,9 @@ namespace sl::graph::detail
 
 	private:
 		SL_UTILITY_NO_UNIQUE_ADDRESS ExplorationStrategy m_Explorer{};
-		KernelStrategy m_Kernel{};
 		queue_type m_Queue;
 		tracker_type m_Tracker;
-		View m_View;
+		view_type m_View;
 	};
 }
 

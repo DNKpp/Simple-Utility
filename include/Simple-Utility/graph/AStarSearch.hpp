@@ -31,136 +31,6 @@ namespace sl::graph::astar::detail
 		assert(0 <= increase && "increase must be non-negative.");
 		assert(increase <= std::numeric_limits<Rank>::max() - base && "Rank is about to overflow.");
 	}
-
-	template <concepts::ranked_node Node, concepts::heuristic_for<Node> Heuristic, typename NodeFactory>
-	class BaseKernel
-	{
-	public:
-		[[nodiscard]]
-		explicit BaseKernel() = default;
-
-		[[nodiscard]]
-		explicit constexpr BaseKernel(
-			Heuristic heuristic,
-			NodeFactory nodeFactory
-		) noexcept(std::is_nothrow_move_constructible_v<Heuristic>
-					&& std::is_nothrow_move_constructible_v<NodeFactory>)
-			: m_Heuristic{std::move(heuristic)},
-			m_NodeFactory{std::move(nodeFactory)}
-		{
-		}
-
-		constexpr Node operator ()(const node::vertex_t<Node>& vertex) const
-		{
-			return std::invoke(
-				m_NodeFactory,
-				vertex,
-				std::invoke(m_Heuristic, vertex));
-		}
-
-		[[nodiscard]]
-		constexpr const Heuristic& heuristic() const & noexcept
-		{
-			return m_Heuristic;
-		}
-
-		[[nodiscard]]
-		constexpr const NodeFactory& node_factory() const & noexcept
-		{
-			return m_NodeFactory;
-		}
-
-	protected:
-		SL_UTILITY_NO_UNIQUE_ADDRESS Heuristic m_Heuristic{};
-		SL_UTILITY_NO_UNIQUE_ADDRESS NodeFactory m_NodeFactory{};
-	};
-
-	template <concepts::ranked_node Node, concepts::heuristic_for<Node> Heuristic, typename NodeFactory>
-	class BufferedKernel
-		: public BaseKernel<Node, Heuristic, NodeFactory>
-	{
-	private:
-		using Super = BaseKernel<Node, Heuristic, NodeFactory>;
-
-	public:
-		using Super::Super;
-		using Super::operator();
-
-		template <std::ranges::input_range Edges>
-			requires std::convertible_to<
-				std::invoke_result_t<
-					NodeFactory,
-					const Node&,
-					std::ranges::range_reference_t<Edges>,
-					std::invoke_result_t<Heuristic, const node::vertex_t<Node>>>,
-				Node>
-		[[nodiscard]]
-		constexpr auto operator ()(const Node& current, Edges&& edges) const
-		{
-			std::vector<Node> results{};
-			if constexpr (std::ranges::sized_range<decltype(edges)>)
-			{
-				results.reserve(std::ranges::size(edges));
-			}
-
-			std::ranges::transform(
-				std::forward<Edges>(edges),
-				std::back_inserter(results),
-				[&](const auto& edge)
-				{
-					return std::invoke(
-						Super::m_NodeFactory,
-						current,
-						edge,
-						std::invoke(Super::m_Heuristic, edge::destination(edge)));
-				});
-
-			return results;
-		}
-	};
-
-#ifdef SL_UTILITY_HAS_RANGES_VIEWS
-	template <concepts::ranked_node Node, concepts::heuristic_for<Node> Heuristic, typename NodeFactory>
-	class LazyKernel
-		: public BaseKernel<Node, Heuristic, NodeFactory>
-	{
-	private:
-		using Super = BaseKernel<Node, Heuristic, NodeFactory>;
-
-	public:
-		using Super::Super;
-		using Super::operator();
-
-		template <std::ranges::input_range Edges>
-			requires std::convertible_to<
-				std::invoke_result_t<
-					NodeFactory,
-					const Node&,
-					std::ranges::range_reference_t<Edges>,
-					std::invoke_result_t<Heuristic, const node::vertex_t<Node>>>,
-				Node>
-		[[nodiscard]]
-		constexpr auto operator ()(const Node& current, Edges&& edges) const
-		{
-			return std::forward<Edges>(edges)
-					| std::views::transform(
-						[&](const auto& edge)
-						{
-							return std::invoke(
-								Super::m_NodeFactory,
-								current,
-								edge,
-								std::invoke(Super::m_Heuristic, edge::destination(edge)));
-						});
-		}
-	};
-
-	template <typename Node, typename Heuristic, typename NodeFactory>
-	using default_kernel_t = LazyKernel<Node, Heuristic, NodeFactory>;
-#else
-	template <typename CommonNode, typename Heuristic, typename NodeFactory>
-	using default_kernel_t = BufferedKernel<CommonNode, Heuristic, NodeFactory>;
-#endif
 }
 
 namespace sl::graph::astar
@@ -186,52 +56,75 @@ namespace sl::graph::astar
 		[[nodiscard]]
 		friend bool operator==(const CommonNode&, const CommonNode&) = default;
 	};
-}
 
-template <sl::graph::concepts::vertex Vertex, sl::graph::concepts::rank Rank>
-struct sl::graph::detail::NodeFactory<sl::graph::astar::CommonNode<Vertex, Rank>>
-{
-public:
-	using node_type = astar::CommonNode<Vertex, Rank>;
-	using vertex_type = Vertex;
-	using rank_type = Rank;
+	template <concepts::ranked_node Node, concepts::heuristic_for<Node> Heuristic>
+	struct NodeFactory;
 
-	[[nodiscard]]
-	constexpr node_type operator ()(vertex_type origin, rank_type estimatedPendingCost) const
+	template <concepts::vertex Vertex, concepts::rank Rank, concepts::heuristic_for<CommonNode<Vertex, Rank>> Heuristic>
+	struct NodeFactory<CommonNode<Vertex, Rank>, Heuristic>
 	{
-		node_type node{
-			.vertex = std::move(origin),
-			.cost = {},
-			.estimatedPendingCost = std::move(estimatedPendingCost)
-		};
-		astar::detail::check_bounds(node.cost, node.estimatedPendingCost);
+	public:
+		using node_type = CommonNode<Vertex, Rank>;
+		using vertex_type = Vertex;
+		using rank_type = Rank;
 
-		return node;
-	}
+		[[nodiscard]]
+		explicit NodeFactory(Heuristic heuristic) noexcept(std::is_nothrow_move_constructible_v<Heuristic>)
+			: m_Heuristic{std::move(heuristic)}
+		{
+		}
 
-	template <concepts::edge_for<node_type> Edge>
-	[[nodiscard]]
-	constexpr node_type operator ()(const node_type& current, const Edge& edge, rank_type estimatedPendingCost) const
+		[[nodiscard]]
+		constexpr node_type operator ()(const vertex_type& origin) const
+		{
+			node_type node{
+				.vertex = origin,
+				.cost = {0},
+				.estimatedPendingCost = std::invoke(m_Heuristic, origin)
+			};
+			detail::check_bounds(node.cost, node.estimatedPendingCost);
+
+			return node;
+		}
+
+		template <concepts::edge_for<node_type> Edge>
+		[[nodiscard]]
+		constexpr node_type operator ()(const node_type& current, const Edge& edge) const
+		{
+			detail::check_bounds(current.cost, edge::weight(edge));
+
+			node_type node{
+				.vertex = edge::destination(edge),
+				.cost = current.cost + edge::weight(edge),
+				.estimatedPendingCost = std::invoke(m_Heuristic, edge::destination(edge))
+			};
+			detail::check_bounds(node.cost, node.estimatedPendingCost);
+
+			return node;
+		}
+
+	private:
+		SL_UTILITY_NO_UNIQUE_ADDRESS Heuristic m_Heuristic;
+	};
+
+	template <typename Heuristic>
+	struct NodeFactoryTemplate
 	{
-		astar::detail::check_bounds(current.cost, edge::weight(edge));
+		template <concepts::ranked_node Node>
+		using type = NodeFactory<Node, Heuristic>;
+	};
 
-		node_type node{
-			.vertex = edge::destination(edge),
-			.cost = current.cost + edge::weight(edge),
-			.estimatedPendingCost = std::move(estimatedPendingCost)
-		};
-		astar::detail::check_bounds(node.cost, node.estimatedPendingCost);
-
-		return node;
-	}
-};
-
-namespace sl::graph::astar
-{
-	template <typename Node>
-	struct NodeFactory
-		: public graph::detail::NodeFactory<Node>
+	template <concepts::ranked_node Node, concepts::heuristic_for<Node> Heuristic>
+		requires requires { typename decorator::NodeFactory<Node, NodeFactoryTemplate<Heuristic>::template type>::node_type; }
+	struct NodeFactory<Node, Heuristic>
+		: public decorator::NodeFactory<Node, NodeFactoryTemplate<Heuristic>::template type>
 	{
+	private:
+		using Super = decorator::NodeFactory<Node, NodeFactoryTemplate<Heuristic>::template type>;
+
+	public:
+		using Super::Super;
+		using Super::operator ();
 	};
 
 	template <concepts::vertex Vertex, std::invocable<Vertex, Vertex> Strategy>
@@ -284,10 +177,9 @@ namespace sl::graph::astar
 			View,
 			queue::CommonPriorityQueue<Node>,
 			Tracker,
-			detail::default_kernel_t<
+			graph::detail::default_explorer_t<
 				Node,
-				Heuristic,
-				NodeFactory<Node>>>>;
+				NodeFactory<Node, Heuristic>>>>;
 }
 
 #endif

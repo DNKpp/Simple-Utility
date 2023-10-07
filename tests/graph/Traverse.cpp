@@ -51,44 +51,13 @@ namespace
 	};
 }
 
-using TestExplorers = std::tuple<
-#ifdef SL_UTILITY_HAS_RANGES_VIEWS
-	sg::detail::LazyExplorer,
-#endif
-	sg::detail::BufferedExplorer>;
-
-TEMPLATE_LIST_TEST_CASE(
-	"Explorer implementations behave as expected.",
-	"[graph][graph::detail]",
-	TestExplorers
-)
-{
-	using namespace Catch::Matchers;
-
-	constexpr DefaultNode current{.vertex = 42};
-	const BasicViewMock<int> view{};
-	REQUIRE_CALL(view, edges(current))
-		.RETURN(std::vector<DefaultEdge>{{41}, {43}, {44}, {45}});
-
-	TrackerMock<int> tracker{};
-	REQUIRE_CALL(tracker, set_discovered(41))
-		.RETURN(false);
-	REQUIRE_CALL(tracker, set_discovered(43))
-		.RETURN(false);
-	REQUIRE_CALL(tracker, set_discovered(44))
-		.RETURN(true);
-	REQUIRE_CALL(tracker, set_discovered(45))
-		.RETURN(false);
-
-	TestType explorer{};
-	REQUIRE_THAT(std::invoke(explorer, current, view, tracker), RangeEquals(std::array{DefaultEdge{44}}));
-}
-
 namespace
 {
 	template <typename Node, typename Edge>
 	struct NodeFactoryMock
 	{
+		inline static constexpr bool trompeloeil_movable_mock = true;
+
 		MAKE_CONST_MOCK1(MakeOrigin, Node(const sg::node::vertex_t<Node>& vertex));
 		MAKE_CONST_MOCK2(MakeSuccessor, Node(const Node& current, const Edge& edge));
 
@@ -106,49 +75,74 @@ namespace
 	};
 }
 
-using TestKernels = std::tuple<
+using TestExplorers = std::tuple<
 #ifdef SL_UTILITY_HAS_RANGES_VIEWS
-	sg::detail::LazyKernel<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>,
+	sg::detail::LazyExplorer<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>,
 #endif
-	sg::detail::BufferedKernel<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>>;
+	sg::detail::BufferedExplorer<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>>;
 
 TEMPLATE_LIST_TEST_CASE(
-	"Kernel implementations behave as expected.",
+	"Explorer implementations behave as expected.",
 	"[graph][graph::detail]",
-	TestKernels
+	TestExplorers
 )
 {
 	using namespace Catch::Matchers;
 
-	TestType kernel{};
+	TrackerMock<int> tracker{};
 
 	SECTION("When creating origin.")
 	{
-		REQUIRE_CALL(kernel.node_factory(), MakeOrigin(42))
+		REQUIRE_CALL(tracker, set_discovered(42))
+			.RETURN(true);
+
+		NodeFactoryMock<DefaultNode, DefaultEdge> nodeFactory{};
+		REQUIRE_CALL(nodeFactory, MakeOrigin(42))
 			.RETURN(DefaultNode{.vertex = 42});
 
-		REQUIRE(DefaultNode{.vertex = 42} == std::invoke(kernel, 42));
+		TestType explorer{std::move(nodeFactory)};
+		REQUIRE(DefaultNode{.vertex = 42} == std::invoke(explorer, 42, tracker));
 	}
 
 	SECTION("When creating successor(s).")
 	{
 		constexpr DefaultNode current{.vertex = 42};
-		const auto& [expected, edges] = GENERATE(
-			(table<std::vector<DefaultNode>, std::vector<DefaultEdge>>)({
-				{{}, {}},
-				{{{.vertex = 43}}, {{.destination = 43}}},
-				{{{.vertex = 43}, {.vertex = 41}}, {{.destination = 43}, {.destination = 41}}}
+		const auto& [expected, visited, edges] = GENERATE(
+			(table<std::vector<DefaultNode>, std::vector<bool>, std::vector<DefaultEdge>>)({
+				{{}, {}, {}},
+				{{{.vertex = 43}}, {false}, {{.destination = 43}}},
+				{{}, {true}, {{.destination = 43}}},
+				{{{.vertex = 43}, {.vertex = 41}}, {false, false}, {{.destination = 43}, {.destination = 41}}},
+				{{{.vertex = 41}}, {true, false}, {{.destination = 43}, {.destination = 41}}},
+				{{{.vertex = 43}}, {false, true}, {{.destination = 43}, {.destination = 41}}}
 				}));
+		CHECK(std::ssize(edges) == std::ssize(visited));
 
+		const BasicViewMock<int> view{};
+		REQUIRE_CALL(view, edges(current))
+			.RETURN(edges);
+
+		NodeFactoryMock<DefaultNode, DefaultEdge> nodeFactory{};
 		std::vector<std::unique_ptr<trompeloeil::expectation>> expectations{};
-		for (const auto& edge : edges)
+		for (std::size_t i{0}; i < std::ranges::size(visited); ++i)
 		{
+			const auto& edge = edges[i];
+			const bool isVisited = visited[i];
+
 			expectations.emplace_back(
-				NAMED_REQUIRE_CALL(kernel.node_factory(), MakeSuccessor(current, edge))
-					.RETURN(DefaultNode{.vertex = sg::edge::destination(edge)}));
+				NAMED_REQUIRE_CALL(tracker, set_discovered(sg::edge::destination(edge)))
+					.RETURN(!isVisited));
+
+			if (!isVisited)
+			{
+				expectations.emplace_back(
+					NAMED_REQUIRE_CALL(nodeFactory, MakeSuccessor(current, edge))
+					   .RETURN(DefaultNode{.vertex = sg::edge::destination(edge)}));
+			}
 		}
 
-		REQUIRE_THAT(std::invoke(kernel, current, edges), RangeEquals(expected));
+		TestType explorer{std::move(nodeFactory)};
+		REQUIRE_THAT(std::invoke(explorer, view, current, tracker), RangeEquals(expected));
 	}
 }
 
@@ -195,7 +189,6 @@ TEST_CASE("detail::BasicTraverser can be constructed with an origin.", "[graph][
 		std::forward_as_tuple(DefaultView{}),
 		std::forward_as_tuple(std::move(queue)),
 		std::forward_as_tuple(std::move(tracker)),
-		std::tuple{},
 		std::tuple{}
 	};
 }
@@ -224,7 +217,6 @@ TEST_CASE("detail::BasicTraverser::next returns the current node, or std::nullop
 			std::forward_as_tuple(DefaultView{}),
 			std::forward_as_tuple(std::move(queue)),
 			std::forward_as_tuple(std::move(trackerMock)),
-			std::tuple{},
 			std::tuple{}
 		};
 	}();

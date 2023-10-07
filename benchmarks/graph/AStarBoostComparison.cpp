@@ -297,8 +297,7 @@ std::optional<std::tuple<vertex_set, distance>> sl_graph_solve(const maze& m)
 		std::make_tuple(std::ref(m)),
 		std::tuple{},
 		std::tuple{},
-		std::tuple{euclidean_heuristic{m.goal()}, sg::astar::NodeFactory<Node>{}},
-		std::tuple{}
+		std::tuple{sg::astar::NodeFactory<Node, euclidean_heuristic>{euclidean_heuristic{m.goal()}}}
 	};
 
 	std::unordered_map<vertex_descriptor, Node, vertex_hash> nodes{};

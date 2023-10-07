@@ -35,7 +35,7 @@ namespace sl::graph::dfs
 			View,
 			queue::CommonStack<Node>,
 			Tracker,
-			detail::default_kernel_t<Node, NodeFactory<Node>>>>;
+			detail::default_explorer_t<Node, NodeFactory<Node>>>>;
 }
 
 #endif

@@ -259,6 +259,8 @@ namespace sl::graph::decorator
 		using node_type = PredecessorNode<Node>;
 		using vertex_type = node::vertex_t<node_type>;
 
+		using Super::Super;
+
 		template <typename... Args>
 		[[nodiscard]]
 		constexpr node_type operator ()(vertex_type origin, Args&&... args) const
@@ -306,6 +308,8 @@ namespace sl::graph::decorator
 	public:
 		using node_type = DepthNode<Node>;
 		using vertex_type = node::vertex_t<node_type>;
+
+		using Super::Super;
 
 		template <typename... Args>
 		[[nodiscard]]

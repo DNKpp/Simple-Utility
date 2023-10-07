@@ -98,8 +98,7 @@ TEMPLATE_TEST_CASE(
 		std::tuple{TestType{}},
 		std::tuple{},
 		std::tuple{},
-		std::tuple{Heuristic{destination}, sg::astar::NodeFactory<Node>{}},
-		std::tuple{}
+		std::tuple{sg::astar::NodeFactory<Node, Heuristic>{Heuristic{destination}}}
 	};
 	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
 
@@ -120,8 +119,7 @@ TEMPLATE_TEST_CASE(
 		std::tuple{TestType{}},
 		std::tuple{},
 		std::tuple{},
-		std::tuple{Heuristic{destination}, sg::astar::NodeFactory<Node>{}},
-		std::tuple{}
+		std::tuple{sg::astar::NodeFactory<Node, Heuristic>{Heuristic{destination}}}
 	};
 	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
 
@@ -142,8 +140,7 @@ TEMPLATE_TEST_CASE(
 		std::tuple{TestType{}},
 		std::tuple{},
 		std::tuple{},
-		std::tuple{Heuristic{destination}, sg::astar::NodeFactory<Node>{}},
-		std::tuple{}
+		std::tuple{sg::astar::NodeFactory<Node, Heuristic>{Heuristic{destination}}}
 	};
 	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
 
@@ -164,8 +161,7 @@ TEMPLATE_TEST_CASE(
 		std::tuple{TestType{}},
 		std::tuple{},
 		std::tuple{},
-		std::tuple{Heuristic{destination}, sg::astar::NodeFactory<Node>{}},
-		std::tuple{}
+		std::tuple{sg::astar::NodeFactory<Node, Heuristic>{Heuristic{destination}}}
 	};
 	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
 

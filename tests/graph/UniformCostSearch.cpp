@@ -52,7 +52,7 @@ TEMPLATE_TEST_CASE(
 	using Node = sg::CommonRankedNode<std::string, int>;
 	const auto& [expected, origin] = GENERATE(from_range(slice_test_expectations(testResults, toCommonRankedNode)));
 
-	sg::ucs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};
+	sg::ucs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}};
 	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
 
 	REQUIRE_THAT(buffer_nodes(range), Catch::Matchers::UnorderedRangeEquals(expected));
@@ -67,7 +67,7 @@ TEMPLATE_TEST_CASE(
 	using Node = sg::decorator::DepthNode<sg::CommonRankedNode<std::string, int>>;
 	const auto& [expected, origin] = GENERATE(from_range(slice_test_expectations(testResults, toDepthRankedNode)));
 
-	sg::ucs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};
+	sg::ucs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}};
 	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
 
 	REQUIRE_THAT(buffer_nodes(range), Catch::Matchers::UnorderedRangeEquals(expected));
@@ -82,7 +82,7 @@ TEMPLATE_TEST_CASE(
 	using Node = sg::decorator::PredecessorNode<sg::CommonRankedNode<std::string, int>>;
 	const auto& [expected, origin] = GENERATE(from_range(slice_test_expectations(testResults, toPredecessorRankedNode)));
 
-	sg::ucs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};
+	sg::ucs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}};
 	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
 
 	REQUIRE_THAT(buffer_nodes(range), Catch::Matchers::UnorderedRangeEquals(expected));
@@ -97,7 +97,7 @@ TEMPLATE_TEST_CASE(
 	using Node = sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::CommonRankedNode<std::string, int>>>;
 	const auto& [expected, origin] = GENERATE(from_range(testResults));
 
-	sg::ucs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}, std::tuple{}};
+	sg::ucs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}};
 	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
 
 	REQUIRE_THAT(buffer_nodes(range), Catch::Matchers::UnorderedRangeEquals(expected));
