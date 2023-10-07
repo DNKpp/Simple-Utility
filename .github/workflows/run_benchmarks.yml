@@ -1,4 +1,4 @@
-name: run tests
+name: run benchmarks
 
 env:
   BUILD_DIR: out    # root build directory
