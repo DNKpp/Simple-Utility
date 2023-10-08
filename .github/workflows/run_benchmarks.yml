@@ -61,7 +61,7 @@ jobs:
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/${{env.ARTIFACTS_DIR}}"
+        path: "${{env.ARTIFACTS_DIR}}"
 
 
   ubuntu-20_04:
@@ -100,7 +100,7 @@ jobs:
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/${{env.ARTIFACTS_DIR}}"
+        path: "${{env.ARTIFACTS_DIR}}"
 
 
   windows_2022:
@@ -116,14 +116,20 @@ jobs:
     - uses: actions/checkout@v3
     - name: Compile
       run: |
-        cmake -G"Visual Studio 17 2022" -T${{ matrix.toolset }} -DSIMPLE_UTILITY_BUILD_BENCHMARKS=Yes -B${{ env.BUILD_DIR }} -Ax64 -S .
+        cmake -G"Visual Studio 17 2022" \
+              -T${{matrix.toolset}} \
+              -DCMAKE_BUILD_TYPE=${{matrix.build_mode}} \
+              -DSIMPLE_UTILITY_BUILD_BENCHMARKS=Yes \
+              -B${{env.BUILD_DIR}} \
+              -Ax64 \
+              -S .
         cmake --build ${{ env.BUILD_DIR }} --config ${{ matrix.build_mode }} -j4
     - name: Run benchmarks
-      run: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/Simple-Utility-Benchmarks.exe"
+      run: ".\\${{env.BUILD_DIR}}\\${{env.BENCHMARK_DIR}}\\${{matrix.build_mode}}\\Simple-Utility-Benchmarks.exe"
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/${{env.ARTIFACTS_DIR}}"
+        path: "${{env.ARTIFACTS_DIR}}"
 
 
   windows_2019:
@@ -139,11 +145,17 @@ jobs:
     - uses: actions/checkout@v3
     - name: Compile
       run: |
-        cmake -G"Visual Studio 16 2019" -T${{ matrix.toolset }} -DSIMPLE_UTILITY_BUILD_BENCHMARKS=Yes -B${{ env.BUILD_DIR }} -Ax64 -S .
-        cmake --build ${{ env.BUILD_DIR }} --config ${{ matrix.build_mode }} -j4
+        cmake -G"Visual Studio 16 2019" \
+              -T${{matrix.toolset}} \
+              -DCMAKE_BUILD_TYPE=${{matrix.build_mode}} \
+              -DSIMPLE_UTILITY_BUILD_BENCHMARKS=Yes \
+              -B${{env.BUILD_DIR}} \
+              -Ax64 \
+              -S .
+        cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_mode}} -j4
     - name: Run benchmarks
-      run: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/Simple-Utility-Benchmarks.exe"
+      run: ".\\${{env.BUILD_DIR}}\\${{env.BENCHMARK_DIR}}\\${{matrix.build_mode}}\\Simple-Utility-Benchmarks.exe"
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/${{env.ARTIFACTS_DIR}}"
+        path: "${{env.ARTIFACTS_DIR}}"
