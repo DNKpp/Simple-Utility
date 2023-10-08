@@ -119,7 +119,7 @@ jobs:
         cmake -G"Visual Studio 17 2022" -T${{ matrix.toolset }} -DSIMPLE_UTILITY_BUILD_BENCHMARKS=Yes -B${{ env.BUILD_DIR }} -Ax64 -S .
         cmake --build ${{ env.BUILD_DIR }} --config ${{ matrix.build_mode }} -j4
     - name: Run benchmarks
-      run: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/Simple-Utility-Benchmarks"
+      run: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/Simple-Utility-Benchmarks.exe"
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -142,7 +142,7 @@ jobs:
         cmake -G"Visual Studio 16 2019" -T${{ matrix.toolset }} -DSIMPLE_UTILITY_BUILD_BENCHMARKS=Yes -B${{ env.BUILD_DIR }} -Ax64 -S .
         cmake --build ${{ env.BUILD_DIR }} --config ${{ matrix.build_mode }} -j4
     - name: Run benchmarks
-      run: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/Simple-Utility-Benchmarks"
+      run: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/Simple-Utility-Benchmarks.exe"
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
