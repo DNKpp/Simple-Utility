@@ -57,9 +57,7 @@ jobs:
         cmake -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }} -DSIMPLE_UTILITY_BUILD_BENCHMARKS=Yes -B ${{ env.BUILD_DIR }} -S .
         cmake --build ${{ env.BUILD_DIR }} -j4
     - name: Run benchmarks
-      env:
-        CTEST_OUTPUT_ON_FAILURE: 1
-      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.BENCHMARK_DIR }} -C ${{ matrix.build_mode }} -j1 --verbose
+      run: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/Simple-Utility-Benchmarks"
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -98,9 +96,7 @@ jobs:
         cmake -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }} -DSIMPLE_UTILITY_BUILD_BENCHMARKS=Yes -B ${{ env.BUILD_DIR }} -S .
         cmake --build ${{ env.BUILD_DIR }} -j4
     - name: Run benchmarks
-      env:
-        CTEST_OUTPUT_ON_FAILURE: 1
-      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.BENCHMARK_DIR }} -C ${{ matrix.build_mode }} -j1 --verbose
+      run: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/Simple-Utility-Benchmarks"
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -123,9 +119,7 @@ jobs:
         cmake -G"Visual Studio 17 2022" -T${{ matrix.toolset }} -DSIMPLE_UTILITY_BUILD_BENCHMARKS=Yes -B${{ env.BUILD_DIR }} -Ax64 -S .
         cmake --build ${{ env.BUILD_DIR }} --config ${{ matrix.build_mode }} -j4
     - name: Run benchmarks
-      env:
-        CTEST_OUTPUT_ON_FAILURE: 1
-      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.BENCHMARK_DIR }} -C${{ matrix.build_mode }} -j1 --verbose
+      run: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/Simple-Utility-Benchmarks"
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
@@ -148,9 +142,7 @@ jobs:
         cmake -G"Visual Studio 16 2019" -T${{ matrix.toolset }} -DSIMPLE_UTILITY_BUILD_BENCHMARKS=Yes -B${{ env.BUILD_DIR }} -Ax64 -S .
         cmake --build ${{ env.BUILD_DIR }} --config ${{ matrix.build_mode }} -j4
     - name: Run benchmarks
-      env:
-        CTEST_OUTPUT_ON_FAILURE: 1
-      run: ctest --test-dir ${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}} -C${{ matrix.build_mode }} -j1 --verbose
+      run: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/Simple-Utility-Benchmarks"
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
