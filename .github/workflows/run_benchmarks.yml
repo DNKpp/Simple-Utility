@@ -3,7 +3,7 @@ name: run benchmarks
 env:
   BUILD_DIR: out    # root build directory
   BENCHMARK_DIR: benchmarks   # relative directory below BUILD_DIR
-  ARTIFACTS_DIR: artifacts # relative directory below BUILD_DIR
+  ARTIFACTS_DIR: artifacts # relative directory below BENCHMARK_DIR
 
 on:
   push:
@@ -59,11 +59,11 @@ jobs:
     - name: Run benchmarks
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
-      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.BENCHMARK_DIR }} -C ${{ matrix.build_mode }} -j4
+      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.BENCHMARK_DIR }} -C ${{ matrix.build_mode }} -j4 --verbose
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: ${{env.ARTIFACTS_DIR}}
+        path: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/${{env.ARTIFACTS_DIR}}"
 
 
   ubuntu-20_04:
@@ -100,11 +100,11 @@ jobs:
     - name: Run benchmarks
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
-      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.BENCHMARK_DIR }} -C ${{ matrix.build_mode }} -j4
+      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.BENCHMARK_DIR }} -C ${{ matrix.build_mode }} -j4 --verbose
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: ${{env.ARTIFACTS_DIR}}
+        path: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/${{env.ARTIFACTS_DIR}}"
 
 
   windows_2022:
@@ -125,11 +125,11 @@ jobs:
     - name: Run benchmarks
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
-      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.BENCHMARK_DIR }} -C${{ matrix.build_mode }} -j4
+      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.BENCHMARK_DIR }} -C${{ matrix.build_mode }} -j4 --verbose
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: ${{env.ARTIFACTS_DIR}}
+        path: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/${{env.ARTIFACTS_DIR}}"
 
 
   windows_2019:
@@ -150,8 +150,8 @@ jobs:
     - name: Run benchmarks
       env:
         CTEST_OUTPUT_ON_FAILURE: 1
-      run: ctest --test-dir ${{ env.BUILD_DIR }}/${{ env.BENCHMARK_DIR }} -C${{ matrix.build_mode }} -j4
+      run: ctest --test-dir ${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}} -C${{ matrix.build_mode }} -j4 --verbose
     - name: Upload generated report artifacts
       uses: actions/upload-artifact@v3
       with:
-        path: ${{env.ARTIFACTS_DIR}}
+        path: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/${{env.ARTIFACTS_DIR}}"
