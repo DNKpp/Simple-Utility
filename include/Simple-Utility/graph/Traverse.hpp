@@ -28,7 +28,7 @@ namespace sl::graph::concepts
 {
 	template <typename T, typename Node, typename View, typename Tracker>
 	concept explorer = basic_node<Node>
-						&& view_for<View, Node>
+						&& basic_graph<View>
 						&& tracker_for<Tracker, node::vertex_t<Node>>
 						&& sl::concepts::unqualified<T>
 						&& std::destructible<T>
@@ -42,7 +42,8 @@ namespace sl::graph::concepts
 						};
 
 	template <typename T, typename View, typename Explorer, typename Queue, typename Tracker>
-	concept traverser_kernel = sl::concepts::unqualified<T>
+	concept traverser_kernel = basic_graph<View>
+								&& sl::concepts::unqualified<T>
 								&& std::destructible<T>
 								&& requires(
 								T& kernel,
@@ -53,9 +54,9 @@ namespace sl::graph::concepts
 							)
 								{
 									{ !std::invoke(kernel, view, explorer, queue, tracker) } -> std::convertible_to<bool>;
-									//{
-									//	*std::invoke(kernel, explorer, queue, tracker)
-									//} -> std::convertible_to<std::remove_cvref_t<decltype(queue::next(queue))>>;
+									{
+										*std::invoke(kernel, view, explorer, queue, tracker)
+									} -> std::convertible_to<std::remove_cvref_t<decltype(queue::next(queue))>>;
 								};
 
 	template <typename T>
@@ -144,7 +145,7 @@ namespace sl::graph::detail
 		{
 			return std::invoke(
 				CollectorStrategy{},
-				view::edges(graph, current),
+				view::out_edges(graph, node::vertex(current)),
 				current,
 				m_NodeFactory,
 				tracker);
@@ -241,7 +242,7 @@ namespace sl::graph::detail
 
 	template <
 		concepts::basic_node Node,
-		concepts::view_for<Node> View,
+		concepts::basic_graph View,
 		concepts::queue_for<Node> QueueStrategy,
 		concepts::tracker_for<node::vertex_t<Node>> TrackingStrategy,
 		concepts::explorer<Node, View, TrackingStrategy> ExplorationStrategy = default_explorer_t<Node, NodeFactory<Node>>,

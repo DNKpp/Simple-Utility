@@ -165,12 +165,11 @@ namespace sl::graph::astar
 	};
 
 	template <
-		typename View,
+		concepts::basic_graph View,
 		typename Heuristic,
 		concepts::ranked_node Node = CommonNode<edge::vertex_t<view::edge_t<View>>, edge::weight_t<view::edge_t<View>>>,
 		concepts::tracker_for<node::vertex_t<Node>> Tracker = tracker::CommonHashMap<node::vertex_t<Node>>>
-		requires concepts::view_for<View, Node>
-				&& concepts::heuristic_for<Heuristic, Node>
+		requires concepts::heuristic_for<Heuristic, Node>
 	using Range = IterableTraverser<
 		graph::detail::BasicTraverser<
 			Node,

@@ -12,55 +12,55 @@
 
 namespace
 {
-	struct member_fun_get_edges
+	struct member_fun_out_edges
 	{
-		using edge_type = GenericBasicEdge<std::string>;
+		using vertex_type = std::string;
+		using edge_type = GenericBasicEdge<vertex_type>;
 
-		MAKE_CONST_MOCK1(edges, std::vector<edge_type>(const GenericBasicNode<std::string>&));
+		MAKE_CONST_MOCK1(out_edges, std::vector<edge_type>(const vertex_type&));
 	};
 
-	struct free_fun_get_edges
+	struct free_fun_out_edges
 	{
+		using vertex_type = std::string;
 		using edge_type = GenericBasicEdge<std::string>;
 
-		MAKE_CONST_MOCK1(get_edges, std::vector<edge_type>(const GenericBasicNode<std::string>&));
+		MAKE_CONST_MOCK1(get_out_edges, std::vector<edge_type>(const vertex_type&));
 
-		friend std::vector<edge_type> edges(const free_fun_get_edges& obj, const GenericBasicNode<std::string>& node)
+		friend std::vector<edge_type> out_edges(const free_fun_out_edges& obj, const vertex_type& vertex)
 		{
-			return obj.get_edges(node);
+			return obj.get_out_edges(vertex);
 		}
 	};
 
-	struct customized_get_edges
+	struct customized_out_edges
 	{
+		using vertex_type = std::string;
 		using edge_type = GenericBasicEdge<std::string>;
 
-		MAKE_CONST_MOCK1(get_edges, std::vector<edge_type>(const GenericBasicNode<std::string>&));
+		MAKE_CONST_MOCK1(get_out_edges, std::vector<edge_type>(const vertex_type&));
 	};
 
 	template <sg::concepts::vertex Vertex>
 	struct GenericBasicView
 	{
+		using vertex_type = Vertex;
 		using edge_type = GenericBasicEdge<Vertex>;
 
-		template <sg::concepts::basic_node Node>
-			requires sg::concepts::edge_for<edge_type, Node>
-		static std::vector<edge_type> edges(const Node&)
+		static std::vector<edge_type> out_edges(const vertex_type&)
 		{
 			return {};
 		}
 	};
 
-	static_assert(sg::concepts::view_for<GenericBasicView<std::string>, GenericBasicNode<std::string>>);
-
 	template <sg::concepts::vertex Vertex, sg::concepts::weight Weight>
 	struct GenericWeightedView
 	{
+		using vertex_type = Vertex;
+		using weight_type = Weight;
 		using edge_type = GenericWeightedEdge<Vertex, Weight>;
 
-		template <sg::concepts::basic_node Node>
-			requires sg::concepts::edge_for<edge_type, Node>
-		static std::vector<edge_type> edges(const Node&)
+		static std::vector<edge_type> out_edges(const vertex_type&)
 		{
 			return {};
 		}
@@ -68,50 +68,14 @@ namespace
 }
 
 template <>
-struct sl::graph::customize::edges_fn<customized_get_edges>
+struct sl::graph::customize::out_edges_fn<customized_out_edges>
 {
 	[[nodiscard]]
-	auto operator ()(const customized_get_edges& e, const GenericBasicNode<std::string>& node) const
+	auto operator ()(const customized_out_edges& e, const std::string& vertex) const
 	{
-		return e.get_edges(node);
+		return e.get_out_edges(vertex);
 	}
 };
-
-TEST_CASE(
-	"graph::view::edges serves as a customization point, returning the outgoing edges of the given node.",
-	"[graph][graph::view]")
-{
-	const GenericBasicNode<std::string> node{"Hello, World!"};
-	const std::vector<GenericBasicEdge<std::string>> expected{
-		{"Edge0"},
-		{"Edge1"},
-		{"Edge2"}
-	};
-
-	SECTION("Access via the member function.")
-	{
-		const member_fun_get_edges mock{};
-		REQUIRE_CALL(mock, edges(node))
-			.RETURN(expected);
-		REQUIRE_THAT(sg::view::edges(mock, node), Catch::Matchers::RangeEquals(expected));
-	}
-
-	SECTION("Access via the free function.")
-	{
-		const free_fun_get_edges mock{};
-		REQUIRE_CALL(mock, get_edges(node))
-			.RETURN(expected);
-		REQUIRE_THAT(sg::view::edges(mock, node), Catch::Matchers::RangeEquals(expected));
-	}
-
-	SECTION("Access via customized function.")
-	{
-		const customized_get_edges mock{};
-		REQUIRE_CALL(mock, get_edges(node))
-			.RETURN(expected);
-		REQUIRE_THAT(sg::view::edges(mock, node), Catch::Matchers::RangeEquals(expected));
-	}
-}
 
 TEMPLATE_TEST_CASE_SIG(
 	"view::traits extracts edge type.",
@@ -127,19 +91,65 @@ TEMPLATE_TEST_CASE_SIG(
 }
 
 TEMPLATE_TEST_CASE_SIG(
-	"concepts::view_for determines, whether the view type satisfies the minimal requirements of the specified node.",
-	"[graph][graph::concepts]",
-	((bool expected, class Graph, class Node), expected, Graph, Node),
-	(false, GenericBasicView<std::string>, GenericBasicNode<int>),
-	(true, GenericBasicView<std::string>, GenericBasicNode<std::string>),
-	(true, GenericWeightedView<std::string, int>, GenericBasicNode<std::string>),
-
-	(false, GenericBasicView<std::string>, GenericRankedNode<std::string, int>),
-	(false, GenericWeightedView<int, int>, GenericRankedNode<std::string, int>),
-	(true, GenericWeightedView<std::string, int>, GenericRankedNode<std::string, int>),
-
-	(true, BasicViewMock<std::string>, GenericBasicNode<std::string>)
+	"view::traits extracts vertex type.",
+	"[graph][graph::view]",
+	((bool dummy, class Expected, class Graph), dummy, Expected, Graph),
+	(true, int, GenericBasicView<int>),
+	(true, std::string, GenericBasicView<std::string>),
+	(true, std::string, GenericWeightedView<std::string, int>)
 )
 {
-	STATIC_REQUIRE(expected == sg::concepts::view_for<Graph, Node>);
+	STATIC_REQUIRE(std::same_as<Expected, typename sg::view::traits<Graph>::vertex_type>);
+	STATIC_REQUIRE(std::same_as<Expected, sg::view::vertex_t<Graph>>);
+}
+
+TEMPLATE_TEST_CASE_SIG(
+	"concepts::basic_graph determines, whether the given type satisfies the minimal requirements.",
+	"[graph][graph::concepts]",
+	((bool expected, class Graph), expected, Graph),
+	(true, GenericBasicView<std::string>),
+	(true, GenericWeightedView<std::string, int>),
+	(true, BasicViewMock<std::string>),
+	(true, EmptyViewStub<std::string>),
+	(true, BasicViewStub),
+	(true, WeightedViewStub)
+)
+{
+	STATIC_REQUIRE(expected == sg::concepts::basic_graph<Graph>);
+}
+
+TEST_CASE(
+	"graph::view::out_edges serves as a customization point, returning the outgoing edges of the given vertex.",
+	"[graph][graph::view]")
+{
+	const std::string vertex{"Hello, World!"};
+	const std::vector<GenericBasicEdge<std::string>> expected{
+		{"Edge0"},
+		{"Edge1"},
+		{"Edge2"}
+	};
+
+	SECTION("Access via the member function.")
+	{
+		const member_fun_out_edges mock{};
+		REQUIRE_CALL(mock, out_edges(vertex))
+			.RETURN(expected);
+		REQUIRE_THAT(sg::view::out_edges(mock, vertex), Catch::Matchers::RangeEquals(expected));
+	}
+
+	SECTION("Access via the free function.")
+	{
+		const free_fun_out_edges mock{};
+		REQUIRE_CALL(mock, get_out_edges(vertex))
+			.RETURN(expected);
+		REQUIRE_THAT(sg::view::out_edges(mock, vertex), Catch::Matchers::RangeEquals(expected));
+	}
+
+	SECTION("Access via customized function.")
+	{
+		const customized_out_edges mock{};
+		REQUIRE_CALL(mock, get_out_edges(vertex))
+			.RETURN(expected);
+		REQUIRE_THAT(sg::view::out_edges(mock, vertex), Catch::Matchers::RangeEquals(expected));
+	}
 }

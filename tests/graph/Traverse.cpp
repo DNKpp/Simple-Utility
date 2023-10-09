@@ -130,7 +130,7 @@ TEMPLATE_LIST_TEST_CASE(
 		const BasicViewMock<int> view{};
 		// clang, honestly. I hate you. This workaround is necessary for the whole range clang[11, 14] + clangCl
 		const std::vector<DefaultEdge>& edgeCollectionRef = edgeCollection;
-		REQUIRE_CALL(view, edges(current))
+		REQUIRE_CALL(view, out_edges(sg::node::vertex(current)))
 			.LR_RETURN(edgeCollectionRef);
 
 		NodeFactoryMock<DefaultNode, DefaultEdge> nodeFactory{};
@@ -254,7 +254,7 @@ TEST_CASE("detail::BasicTraverser::next returns the current node, or std::nullop
 	SECTION("Next returns a node, when queue contains elements.")
 	{
 		// vertex 43 will be skipped on purpose
-		REQUIRE_CALL(view, edges(originNode))
+		REQUIRE_CALL(view, out_edges(sg::node::vertex(originNode)))
 			.RETURN(std::vector<VertexInfo>{{41}, {43}, {44}});
 
 		REQUIRE_CALL(queue, do_insert(matches(RangeEquals(std::vector<DefaultNode>{{41}, {44}}))));

@@ -118,27 +118,20 @@ class BasicViewMock
 public:
 	inline static constexpr bool trompeloeil_movable_mock = true;
 
-	using edge_type = GenericBasicEdge<Vertex>;
+	using vertex_type = Vertex;
+	using edge_type = GenericBasicEdge<vertex_type>;
 
-	MAKE_CONST_MOCK1(edges, std::vector<edge_type>(const GenericBasicNode<Vertex>&));
-
-	template <sg::concepts::basic_node Node>
-		requires sg::concepts::edge_for<edge_type, Node>
-	std::vector<edge_type> edges(const Node& node) const
-	{
-		return edges(GenericBasicNode<Vertex>{.vertex = sg::node::vertex(node)});
-	}
+	MAKE_CONST_MOCK1(out_edges, std::vector<edge_type>(const vertex_type&));
 };
 
 template <sg::concepts::vertex Vertex>
 class EmptyViewStub
 {
 public:
-	using edge_type = GenericBasicEdge<Vertex>;
+	using vertex_type = Vertex;
+	using edge_type = GenericBasicEdge<vertex_type>;
 
-	template <sg::concepts::basic_node Node>
-		requires sg::concepts::edge_for<edge_type, Node>
-	static constexpr std::array<edge_type, 0> edges([[maybe_unused]] const Node& node) noexcept
+	static constexpr std::array<edge_type, 0> out_edges([[maybe_unused]] const vertex_type&) noexcept
 	{
 		return {};
 	}
@@ -160,13 +153,12 @@ inline static const std::unordered_map<int, std::vector<int>> graph{
 
 struct BasicViewStub
 {
-	using edge_type = sg::CommonBasicEdge<std::string>;
+	using vertex_type = std::string;
+	using edge_type = sg::CommonBasicEdge<vertex_type>;
 
-	template <sg::concepts::basic_node Node>
-		requires sg::concepts::edge_for<edge_type, Node>
-	static std::vector<edge_type> edges(const Node& current)
+	static std::vector<edge_type> out_edges(const vertex_type& current)
 	{
-		const auto vertex = std::stoi(sg::node::vertex(current));
+		const auto vertex = std::stoi(current);
 		if (!graph.contains(vertex))
 		{
 			return {};
@@ -185,13 +177,12 @@ struct BasicViewStub
 
 struct WeightedViewStub
 {
+	using vertex_type = std::string;
 	using edge_type = sg::CommonWeightedEdge<std::string, int>;
 
-	template <sg::concepts::basic_node Node>
-		requires sg::concepts::edge_for<edge_type, Node>
-	static std::vector<edge_type> edges(const Node& current)
+	static std::vector<edge_type> out_edges(const vertex_type& current)
 	{
-		const auto vertex = std::stoi(sg::node::vertex(current));
+		const auto vertex = std::stoi(current);
 		if (!graph.contains(vertex))
 		{
 			return {};
@@ -207,7 +198,7 @@ struct WeightedViewStub
 			{
 				return edge_type{
 					.destination = std::to_string(v),
-					.weight = std::abs(v - std::stoi(current.vertex))
+					.weight = std::abs(v - vertex)
 				};
 			});
 		return infos;

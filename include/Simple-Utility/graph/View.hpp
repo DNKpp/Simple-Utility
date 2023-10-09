@@ -25,10 +25,14 @@ namespace sl::graph::view
 	using edge_t = typename traits<T>::edge_type;
 
 	template <typename T>
-		requires requires { typename T::edge_type; }
-				&& concepts::edge<typename T::edge_type>
+	using vertex_t = typename traits<T>::vertex_type;
+
+	template <typename T>
+		requires concepts::readable_vertex_type<T>
+				&& requires { requires concepts::edge<typename T::edge_type>; }
 	struct traits<T>
 	{
+		using vertex_type = typename T::vertex_type;
 		using edge_type = typename T::edge_type;
 	};
 }
@@ -36,71 +40,81 @@ namespace sl::graph::view
 namespace sl::graph::customize
 {
 	template <typename>
-	struct edges_fn;
+	struct out_edges_fn;
 }
 
 namespace sl::graph::detail
 {
-	template <typename View, typename Node>
-		requires requires { customize::edges_fn<View>{}; }
-				&& std::ranges::input_range<std::invoke_result_t<customize::edges_fn<View>, const View&, const Node&>>
+	template <typename View>
+		requires requires { customize::out_edges_fn<View>{}; }
+				&& std::ranges::input_range<std::invoke_result_t<
+					customize::out_edges_fn<View>, const View&, const view::vertex_t<View>&>>
 				&& std::convertible_to<
-					std::ranges::range_reference_t<std::invoke_result_t<customize::edges_fn<View>, const View&, const Node&>>,
+					std::ranges::range_reference_t<std::invoke_result_t<
+						customize::out_edges_fn<View>, const View&, const view::vertex_t<View>&>>,
 					view::edge_t<View>>
-	constexpr decltype(auto) edges(
+	constexpr decltype(auto) out_edges(
 		const View& view,
-		const Node& node,
+		const view::vertex_t<View>& vertex,
 		const priority_tag<2>
-	) noexcept(noexcept(customize::edges_fn<View>{}(view, node)))
+	) noexcept(noexcept(customize::out_edges_fn<View>{}(view, vertex)))
 	{
-		return customize::edges_fn<View>{}(view, node);
+		return customize::out_edges_fn<View>{}(view, vertex);
 	}
 
 	// pleases msvc v142
 	// ReSharper disable CppRedundantTemplateKeyword
 	// ReSharper disable CppRedundantTypenameKeyword
-	template <typename View, typename Node>
-		requires requires(const View& view, const Node& node)
+	template <typename View>
+		requires requires(const View& view, const view::vertex_t<View>& vertex)
 		{
-			{ view.edges(node) } -> std::ranges::input_range;
+			{ view.out_edges(vertex) } -> std::ranges::input_range;
 			requires std::convertible_to<
-				std::ranges::range_reference_t<decltype(view.edges(node))>,
+				std::ranges::range_reference_t<decltype(view.out_edges(vertex))>,
 				typename view::template edge_t<View>>;
 		}
-	constexpr decltype(auto) edges(const View& view, const Node& node, const priority_tag<1>) noexcept(noexcept(view.edges(node)))
+	constexpr decltype(auto) out_edges(
+		const View& view,
+		const view::vertex_t<View>& vertex,
+		const priority_tag<1>
+	) noexcept(noexcept(view.out_edges(vertex)))
 	{
-		return view.edges(node);
+		return view.out_edges(vertex);
 	}
 
-	template <typename View, typename Node>
-		requires requires(const View& view, const Node& node)
+	template <typename View>
+		requires requires(const View& view, const view::vertex_t<View>& vertex)
 		{
-			{ edges(view, node) } -> std::ranges::input_range;
+			{ out_edges(view, vertex) } -> std::ranges::input_range;
 			requires std::convertible_to<
-				std::ranges::range_reference_t<decltype(edges(view, node))>,
+				std::ranges::range_reference_t<decltype(out_edges(view, vertex))>,
 				typename view::template edge_t<View>>;
 		}
-	constexpr decltype(auto) edges(const View& view, const Node& node, const priority_tag<0>) noexcept(noexcept(edges(view, node)))
+	constexpr decltype(auto) out_edges(
+		const View& view,
+		const view::vertex_t<View>& vertex,
+		const priority_tag<0>
+	) noexcept(noexcept(out_edges(view, vertex)))
 	{
-		return edges(view, node);
+		return out_edges(view, vertex);
 	}
 
-	struct edges_fn
+	struct out_edges_fn
 	{
-		template <typename View, typename Node>
-			requires requires(const View& view, const Node& node, const priority_tag<2> tag)
+		template <typename View>
+			requires requires(const View& view, const view::vertex_t<View>& vertex, const priority_tag<2> tag)
 			{
-				{ detail::edges(view, node, tag) } -> std::ranges::input_range;
+				{ detail::out_edges(view, vertex, tag) } -> std::ranges::input_range;
 				requires std::convertible_to<
-					std::ranges::range_reference_t<decltype(detail::edges(view, node, tag))>,
+					std::ranges::range_reference_t<decltype(detail::out_edges(view, vertex, tag))>,
 					typename view::template edge_t<View>>;
 			}
 		constexpr decltype(auto) operator ()(
 			const View& view,
-			const Node& node
-		) const noexcept(noexcept(detail::edges(view, node, priority_tag<2>{})))
+			const view::vertex_t<View>& vertex
+		) const noexcept(noexcept(detail::out_edges(view, vertex, priority_tag<2>{})))
 		{
-			return detail::edges(view, node, priority_tag<2>{});
+			return detail::out_edges(view, vertex, priority_tag<2>{});
 		}
 	};
 
@@ -110,24 +124,25 @@ namespace sl::graph::detail
 
 namespace sl::graph::view
 {
-	inline constexpr detail::edges_fn edges{};
+	inline constexpr detail::out_edges_fn out_edges{};
 }
 
 namespace sl::graph::concepts
 {
-	template <typename T, typename Node>
-	concept view_for = basic_node<Node>
-						&& sl::concepts::unqualified<T>
-						&& requires(const T& view, const Node& node)
+	template <typename T>
+	concept basic_graph = sl::concepts::unqualified<T>
+						&& std::destructible<T>
+						&& requires(const T& view)
 						{
 							// fixes compile error on msvc v142
 							// ReSharper disable CppRedundantTemplateKeyword
 							// ReSharper disable CppRedundantTypenameKeyword
-							typename view::template traits<T>::edge_type;
-							requires edge_for<typename view::template edge_t<T>, Node>;
-							{ view::edges(view, node) } -> std::ranges::input_range;
+							requires vertex<typename view::template traits<T>::vertex_type>;
+							requires edge<typename view::template traits<T>::edge_type>;
+							{ view::out_edges(view, std::declval<const view::vertex_t<T>&>()) } -> std::ranges::input_range;
 							requires std::convertible_to<
-								std::ranges::range_value_t<std::invoke_result_t<detail::edges_fn, const T&, const Node&>>,
+								std::ranges::range_value_t<std::invoke_result_t<
+									detail::out_edges_fn, const T&, const view::vertex_t<T>&>>,
 								typename view::template edge_t<T>>;
 							// ReSharper restore CppRedundantTemplateKeyword
 							// ReSharper restore CppRedundantTypenameKeyword
