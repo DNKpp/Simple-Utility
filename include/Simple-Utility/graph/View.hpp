@@ -66,7 +66,7 @@ namespace sl::graph::detail
 	// ReSharper disable CppRedundantTemplateKeyword
 	// ReSharper disable CppRedundantTypenameKeyword
 	template <typename View>
-		requires requires(const View& view, const view::vertex_t<View>& vertex)
+		requires requires(const View& view, const typename view::template vertex_t<View>& vertex)
 		{
 			{ view.out_edges(vertex) } -> std::ranges::input_range;
 			requires std::convertible_to<
@@ -83,7 +83,7 @@ namespace sl::graph::detail
 	}
 
 	template <typename View>
-		requires requires(const View& view, const view::vertex_t<View>& vertex)
+		requires requires(const View& view, const typename view::template vertex_t<View>& vertex)
 		{
 			{ out_edges(view, vertex) } -> std::ranges::input_range;
 			requires std::convertible_to<
@@ -102,7 +102,7 @@ namespace sl::graph::detail
 	struct out_edges_fn
 	{
 		template <typename View>
-			requires requires(const View& view, const view::vertex_t<View>& vertex, const priority_tag<2> tag)
+			requires requires(const View& view, const typename view::template vertex_t<View>& vertex, const priority_tag<2> tag)
 			{
 				{ detail::out_edges(view, vertex, tag) } -> std::ranges::input_range;
 				requires std::convertible_to<
@@ -139,10 +139,10 @@ namespace sl::graph::concepts
 							// ReSharper disable CppRedundantTypenameKeyword
 							requires vertex<typename view::template traits<T>::vertex_type>;
 							requires edge<typename view::template traits<T>::edge_type>;
-							{ view::out_edges(view, std::declval<const view::vertex_t<T>&>()) } -> std::ranges::input_range;
+							{ view::out_edges(view, std::declval<const typename view::template vertex_t<T>&>()) } -> std::ranges::input_range;
 							requires std::convertible_to<
 								std::ranges::range_value_t<std::invoke_result_t<
-									detail::out_edges_fn, const T&, const view::vertex_t<T>&>>,
+									detail::out_edges_fn, const T&, const typename view::template vertex_t<T>&>>,
 								typename view::template edge_t<T>>;
 							// ReSharper restore CppRedundantTemplateKeyword
 							// ReSharper restore CppRedundantTypenameKeyword
