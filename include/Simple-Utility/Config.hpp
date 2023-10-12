@@ -37,7 +37,9 @@
 #endif
 
 #if defined(_MSC_VER) || (__cpp_lib_ranges >= 202110L)
-	#define SL_UTILITY_HAS_RANGES_VIEWS
+	#if not defined(__clang__) || __clang_major__ >= 16L
+		#define SL_UTILITY_HAS_RANGES_VIEWS
+	#endif
 #endif
 
 #endif
