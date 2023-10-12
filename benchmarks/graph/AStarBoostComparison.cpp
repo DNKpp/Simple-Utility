@@ -264,7 +264,7 @@ void random_maze(maze& m, const std::uint32_t seed)
  ############################## */
 
 template <>
-struct sl::graph::view::traits<std::reference_wrapper<const maze>>
+struct sl::graph::graph::traits<std::reference_wrapper<const maze>>
 {
 	using edge_type = CommonWeightedEdge<vertex_descriptor, distance>;
 	using vertex_type = edge::vertex_t<edge_type>;
@@ -274,7 +274,7 @@ struct sl::graph::view::traits<std::reference_wrapper<const maze>>
 template <>
 struct sl::graph::customize::out_edges_fn<std::reference_wrapper<const maze>>
 {
-	using edge_type = view::edge_t<std::reference_wrapper<const maze>>;
+	using edge_type = graph::edge_t<std::reference_wrapper<const maze>>;
 	using vertex_type = edge::vertex_t<edge_type>;
 	using weight_type = edge::weight_t<edge_type>;
 

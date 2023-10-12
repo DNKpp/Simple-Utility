@@ -24,14 +24,14 @@ namespace sl::graph::dfs
 	using CommonNode = CommonBasicNode<Vertex>;
 
 	template <
-		concepts::basic_graph View,
-		concepts::basic_node Node = CommonNode<edge::vertex_t<view::edge_t<View>>>,
+		concepts::basic_graph Graph,
+		concepts::basic_node Node = CommonNode<edge::vertex_t<graph::edge_t<Graph>>>,
 		concepts::tracker_for<node::vertex_t<Node>> Tracker = tracker::CommonHashMap<node::vertex_t<Node>>>
 		requires (!concepts::ranked_node<Node>)
 	using Range = IterableTraverser<
 		detail::BasicTraverser<
 			Node,
-			View,
+			Graph,
 			queue::CommonQueue<Node>,
 			Tracker,
 			detail::default_explorer_t<Node, NodeFactory<Node>>>>;

@@ -45,8 +45,8 @@ namespace
 TEMPLATE_TEST_CASE(
 	"bfs::Range visits all reachable vertices.",
 	"[graph][graph::bfs]",
-	BasicViewStub,
-	WeightedViewStub
+	BasicGraphStub,
+	WeightedGraphStub
 )
 {
 	using Node = sg::CommonBasicNode<std::string>;
@@ -61,8 +61,8 @@ TEMPLATE_TEST_CASE(
 TEMPLATE_TEST_CASE(
 	"bfs::Range can be used with depth decorated nodes.",
 	"[graph][graph::bfs]",
-	BasicViewStub,
-	WeightedViewStub
+	BasicGraphStub,
+	WeightedGraphStub
 )
 {
 	using Node = sg::decorator::DepthNode<sg::CommonBasicNode<std::string>>;
@@ -77,8 +77,8 @@ TEMPLATE_TEST_CASE(
 TEMPLATE_TEST_CASE(
 	"bfs::Range can be used with predecessor decorated nodes.",
 	"[graph][graph::bfs]",
-	BasicViewStub,
-	WeightedViewStub
+	BasicGraphStub,
+	WeightedGraphStub
 )
 {
 	using Node = sg::decorator::PredecessorNode<sg::CommonBasicNode<std::string>>;
@@ -93,8 +93,8 @@ TEMPLATE_TEST_CASE(
 TEMPLATE_TEST_CASE(
 	"bfs::Range can be used with arbitrary decorated nodes.",
 	"[graph][graph::bfs]",
-	BasicViewStub,
-	WeightedViewStub
+	BasicGraphStub,
+	WeightedGraphStub
 )
 {
 	using Node = sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::CommonBasicNode<std::string>>>;

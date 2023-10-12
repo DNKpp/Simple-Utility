@@ -25,7 +25,7 @@ using DefaultNode = GenericBasicNode<int>;
 using DefaultEdge = GenericBasicEdge<int>;
 using DefaultQueue = QueueMock<DefaultNode>;
 using DefaultTracker = TrackerMock<sg::node::vertex_t<DefaultNode>>;
-using DefaultView = BasicViewMock<sg::node::vertex_t<DefaultNode>>;
+using DefaultView = BasicGraphMock<sg::node::vertex_t<DefaultNode>>;
 using DefaultTraverser = sg::detail::BasicTraverser<
 	DefaultNode,
 	DefaultView,
@@ -34,7 +34,7 @@ using DefaultTraverser = sg::detail::BasicTraverser<
 
 using MovableTraverser = sg::detail::BasicTraverser<
 	DefaultNode,
-	EmptyViewStub<int>,
+	EmptyGraphStub<int>,
 	EmptyQueueStub<DefaultNode>,
 	sg::tracker::Null>;
 
@@ -87,7 +87,7 @@ TEMPLATE_LIST_TEST_CASE(
 	TestExplorers
 )
 {
-	STATIC_REQUIRE(sg::concepts::explorer<TestType, DefaultNode, BasicViewMock<int>, TrackerMock<int>>);
+	STATIC_REQUIRE(sg::concepts::explorer<TestType, DefaultNode, BasicGraphMock<int>, TrackerMock<int>>);
 }
 
 TEMPLATE_LIST_TEST_CASE(
@@ -127,7 +127,7 @@ TEMPLATE_LIST_TEST_CASE(
 				}));
 		CHECK(std::ssize(edgeCollection) == std::ssize(visited));
 
-		const BasicViewMock<int> view{};
+		const BasicGraphMock<int> view{};
 		// clang, honestly. I hate you. This workaround is necessary for the whole range clang[11, 14] + clangCl
 		const std::vector<DefaultEdge>& edgeCollectionRef = edgeCollection;
 		REQUIRE_CALL(view, out_edges(sg::node::vertex(current)))
@@ -168,7 +168,7 @@ TEMPLATE_LIST_TEST_CASE(
 {
 	using Explorer = sg::detail::BufferedExplorer<DefaultNode, NodeFactoryMock<DefaultNode, DefaultEdge>>;
 
-	STATIC_REQUIRE(sg::concepts::traverser_kernel<TestType, BasicViewMock<int>, Explorer, QueueMock<DefaultNode>, TrackerMock<int>>);
+	STATIC_REQUIRE(sg::concepts::traverser_kernel<TestType, BasicGraphMock<int>, Explorer, QueueMock<DefaultNode>, TrackerMock<int>>);
 }
 
 TEST_CASE(

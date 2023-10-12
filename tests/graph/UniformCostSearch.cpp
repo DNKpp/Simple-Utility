@@ -46,7 +46,7 @@ namespace
 TEMPLATE_TEST_CASE(
 	"ucs::Range visits all reachable vertices.",
 	"[graph][graph::ucs]",
-	WeightedViewStub
+	WeightedGraphStub
 )
 {
 	using Node = sg::CommonRankedNode<std::string, int>;
@@ -61,7 +61,7 @@ TEMPLATE_TEST_CASE(
 TEMPLATE_TEST_CASE(
 	"ucs::Range node can be decorated with DepthNode.",
 	"[graph][graph::ucs]",
-	WeightedViewStub
+	WeightedGraphStub
 )
 {
 	using Node = sg::decorator::DepthNode<sg::CommonRankedNode<std::string, int>>;
@@ -76,7 +76,7 @@ TEMPLATE_TEST_CASE(
 TEMPLATE_TEST_CASE(
 	"ucs::Range node can be decorated with PredecessorNode.",
 	"[graph][graph::ucs]",
-	WeightedViewStub
+	WeightedGraphStub
 )
 {
 	using Node = sg::decorator::PredecessorNode<sg::CommonRankedNode<std::string, int>>;
@@ -91,7 +91,7 @@ TEMPLATE_TEST_CASE(
 TEMPLATE_TEST_CASE(
 	"ucs::Range can be used with arbitrary decorated nodes.",
 	"[graph][graph::ucs]",
-	WeightedViewStub
+	WeightedGraphStub
 )
 {
 	using Node = sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::CommonRankedNode<std::string, int>>>;

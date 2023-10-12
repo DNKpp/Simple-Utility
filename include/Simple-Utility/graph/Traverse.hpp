@@ -11,10 +11,10 @@
 #include "Simple-Utility/Config.hpp"
 #include "Simple-Utility/functional/Tuple.hpp"
 #include "Simple-Utility/graph/Edge.hpp"
+#include "Simple-Utility/graph/Graph.hpp"
 #include "Simple-Utility/graph/Node.hpp"
 #include "Simple-Utility/graph/Queue.hpp"
 #include "Simple-Utility/graph/Tracker.hpp"
-#include "Simple-Utility/graph/View.hpp"
 
 #include <array>
 #include <cassert>
@@ -26,28 +26,28 @@
 
 namespace sl::graph::concepts
 {
-	template <typename T, typename Node, typename View, typename Tracker>
+	template <typename T, typename Node, typename Graph, typename Tracker>
 	concept explorer = basic_node<Node>
-						&& basic_graph<View>
+						&& basic_graph<Graph>
 						&& tracker_for<Tracker, node::vertex_t<Node>>
 						&& sl::concepts::unqualified<T>
 						&& std::destructible<T>
-						&& requires(const T& explorer, const Node& node, const View& view, Tracker& tracker)
+						&& requires(const T& explorer, const Node& node, const Graph& view, Tracker& tracker)
 						{
 							{ std::invoke(explorer, node::vertex(node), tracker) } -> std::convertible_to<Node>;
 							{ std::invoke(explorer, view, node, tracker) } -> std::ranges::input_range;
 							requires std::convertible_to<
-								std::ranges::range_reference_t<std::invoke_result_t<T&, const View&, const Node&, Tracker&>>,
+								std::ranges::range_reference_t<std::invoke_result_t<T&, const Graph&, const Node&, Tracker&>>,
 								Node>;
 						};
 
-	template <typename T, typename View, typename Explorer, typename Queue, typename Tracker>
-	concept traverser_kernel = basic_graph<View>
+	template <typename T, typename Graph, typename Explorer, typename Queue, typename Tracker>
+	concept traverser_kernel = basic_graph<Graph>
 								&& sl::concepts::unqualified<T>
 								&& std::destructible<T>
 								&& requires(
 								T& kernel,
-								const View& view,
+								const Graph& view,
 								const Explorer& explorer,
 								Queue& queue,
 								Tracker& tracker
@@ -138,14 +138,14 @@ namespace sl::graph::detail
 				std::invoke_result_t<
 					NodeFactory,
 					const Node&,
-					view::edge_t<View>>,
+					graph::edge_t<View>>,
 				Node>
 		[[nodiscard]]
 		constexpr auto operator ()(const View& graph, const Node& current, Tracker& tracker) const
 		{
 			return std::invoke(
 				CollectorStrategy{},
-				view::out_edges(graph, node::vertex(current)),
+				graph::out_edges(graph, node::vertex(current)),
 				current,
 				m_NodeFactory,
 				tracker);
@@ -206,9 +206,9 @@ namespace sl::graph::detail
 
 	struct PreOrderKernel
 	{
-		template <typename View, typename Explorer, typename Queue, typename Tracker>
+		template <typename Graph, typename Explorer, typename Queue, typename Tracker>
 		[[nodiscard]]
-		constexpr auto operator()(const View& view, const Explorer& explorer, Queue& queue, Tracker& tracker) const
+		constexpr auto operator()(const Graph& graph, const Explorer& explorer, Queue& queue, Tracker& tracker) const
 		{
 			using node_type = std::remove_cvref_t<decltype(queue::next(queue))>;
 
@@ -233,7 +233,7 @@ namespace sl::graph::detail
 			{
 				queue::insert(
 					queue,
-					std::invoke(explorer, view, *result, tracker));
+					std::invoke(explorer, graph, *result, tracker));
 			}
 
 			return result;
@@ -242,19 +242,19 @@ namespace sl::graph::detail
 
 	template <
 		concepts::basic_node Node,
-		concepts::basic_graph View,
+		concepts::basic_graph Graph,
 		concepts::queue_for<Node> QueueStrategy,
 		concepts::tracker_for<node::vertex_t<Node>> TrackingStrategy,
-		concepts::explorer<Node, View, TrackingStrategy> ExplorationStrategy = default_explorer_t<Node, NodeFactory<Node>>,
-		concepts::traverser_kernel<View, ExplorationStrategy, QueueStrategy, TrackingStrategy> KernelStrategy = PreOrderKernel>
-		requires concepts::edge_for<view::edge_t<View>, Node>
+		concepts::explorer<Node, Graph, TrackingStrategy> ExplorationStrategy = default_explorer_t<Node, NodeFactory<Node>>,
+		concepts::traverser_kernel<Graph, ExplorationStrategy, QueueStrategy, TrackingStrategy> KernelStrategy = PreOrderKernel>
+		requires concepts::edge_for<graph::edge_t<Graph>, Node>
 	class BasicTraverser
 	{
 	public:
 		using node_type = Node;
-		using edge_type = view::edge_t<View>;
+		using edge_type = graph::edge_t<Graph>;
 		using vertex_type = node::vertex_t<Node>;
-		using view_type = View;
+		using graph_type = Graph;
 		using queue_type = QueueStrategy;
 		using tracker_type = TrackingStrategy;
 
@@ -266,18 +266,18 @@ namespace sl::graph::detail
 		BasicTraverser& operator =(BasicTraverser&&) = default;
 
 		template <
-			typename... ViewArgs,
+			typename... GraphArgs,
 			typename... QueueArgs,
 			typename... TrackerArgs,
 			typename... ExplorerArgs>
-			requires std::constructible_from<view_type, ViewArgs...>
+			requires std::constructible_from<graph_type, GraphArgs...>
 					&& std::constructible_from<queue_type, QueueArgs...>
 					&& std::constructible_from<tracker_type, TrackerArgs...>
 					&& std::constructible_from<ExplorationStrategy, ExplorerArgs...>
 		[[nodiscard]]
 		explicit constexpr BasicTraverser(
 			const vertex_type& origin,
-			std::tuple<ViewArgs...> viewArgs,
+			std::tuple<GraphArgs...> graphArgs,
 			std::tuple<QueueArgs...> queueArgs,
 			std::tuple<TrackerArgs...> trackerArgs,
 			std::tuple<ExplorerArgs...> explorerArgs
@@ -285,7 +285,7 @@ namespace sl::graph::detail
 			: m_Explorer{std::make_from_tuple<ExplorationStrategy>(std::move(explorerArgs))},
 			m_Queue{std::make_from_tuple<queue_type>(std::move(queueArgs))},
 			m_Tracker{std::make_from_tuple<tracker_type>(std::move(trackerArgs))},
-			m_View{std::make_from_tuple<view_type>(std::move(viewArgs))}
+			m_Graph{std::make_from_tuple<graph_type>(std::move(graphArgs))}
 		{
 			assert(queue::empty(m_Queue) && "Queue already contains elements.");
 
@@ -295,7 +295,7 @@ namespace sl::graph::detail
 		[[nodiscard]]
 		constexpr std::optional<node_type> next()
 		{
-			return std::invoke(m_Kernel, m_View, m_Explorer, m_Queue, m_Tracker);
+			return std::invoke(m_Kernel, m_Graph, m_Explorer, m_Queue, m_Tracker);
 		}
 
 		[[nodiscard]]
@@ -311,9 +311,9 @@ namespace sl::graph::detail
 		}
 
 		[[nodiscard]]
-		constexpr const view_type& view() const noexcept
+		constexpr const graph_type& view() const noexcept
 		{
-			return m_View;
+			return m_Graph;
 		}
 
 	private:
@@ -321,7 +321,7 @@ namespace sl::graph::detail
 		KernelStrategy m_Kernel{};
 		queue_type m_Queue;
 		tracker_type m_Tracker;
-		view_type m_View;
+		graph_type m_Graph;
 	};
 }
 

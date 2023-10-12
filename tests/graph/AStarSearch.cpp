@@ -88,7 +88,7 @@ namespace
 TEMPLATE_TEST_CASE(
 	"astar::Range visits all reachable vertices.",
 	"[graph][graph::astar]",
-	WeightedViewStub)
+	WeightedGraphStub)
 {
 	using Node = sg::astar::CommonNode<std::string, int>;
 	const auto& [expected, origin, destination] = GENERATE(from_range(slice_test_expectations(testResults, toCommonAStarNode)));
@@ -108,7 +108,7 @@ TEMPLATE_TEST_CASE(
 TEMPLATE_TEST_CASE(
 	"astar::Range node can be decorated with DepthNodeDecorator.",
 	"[graph][graph::astar]",
-	WeightedViewStub
+	WeightedGraphStub
 )
 {
 	using Node = sg::decorator::DepthNode<sg::astar::CommonNode<std::string, int>>;
@@ -129,7 +129,7 @@ TEMPLATE_TEST_CASE(
 TEMPLATE_TEST_CASE(
 	"astar::Range node can be decorated with PredecessorNodeDecorator.",
 	"[graph][graph::astar]",
-	WeightedViewStub
+	WeightedGraphStub
 )
 {
 	using Node = sg::decorator::PredecessorNode<sg::astar::CommonNode<std::string, int>>;
@@ -150,7 +150,7 @@ TEMPLATE_TEST_CASE(
 TEMPLATE_TEST_CASE(
 	"astar::Range can be used with arbitrary decorated nodes.",
 	"[graph][graph::astar]",
-	WeightedViewStub
+	WeightedGraphStub
 )
 {
 	using Node = sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::astar::CommonNode<std::string, int>>>;

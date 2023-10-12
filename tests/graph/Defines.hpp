@@ -13,9 +13,9 @@
 #include "Simple-Utility/graph/Common.hpp"
 #include "Simple-Utility/graph/Edge.hpp"
 #include "Simple-Utility/graph/Formatter.hpp"
+#include "Simple-Utility/graph/Graph.hpp"
 #include "Simple-Utility/graph/Node.hpp"
 #include "Simple-Utility/graph/Tracker.hpp"
-#include "Simple-Utility/graph/View.hpp"
 #include "Simple-Utility/test_util/Catch2Ext.hpp"
 #include "Simple-Utility/test_util/TrompeloeilExt.hpp"
 
@@ -113,7 +113,7 @@ public:
 };
 
 template <sg::concepts::vertex Vertex>
-class BasicViewMock
+class BasicGraphMock
 {
 public:
 	inline static constexpr bool trompeloeil_movable_mock = true;
@@ -124,8 +124,21 @@ public:
 	MAKE_CONST_MOCK1(out_edges, std::vector<edge_type>(const vertex_type&));
 };
 
+template <sg::concepts::vertex Vertex, sg::concepts::weight Weight>
+class WeightedGraphMock
+{
+public:
+	inline static constexpr bool trompeloeil_movable_mock = true;
+
+	using vertex_type = Vertex;
+	using weight_type = Weight;
+	using edge_type = GenericWeightedEdge<vertex_type, weight_type>;
+
+	MAKE_CONST_MOCK1(out_edges, std::vector<edge_type>(const vertex_type&));
+};
+
 template <sg::concepts::vertex Vertex>
-class EmptyViewStub
+class EmptyGraphStub
 {
 public:
 	using vertex_type = Vertex;
@@ -151,7 +164,7 @@ inline static const std::unordered_map<int, std::vector<int>> graph{
 	{9, {4}}
 };
 
-struct BasicViewStub
+struct BasicGraphStub
 {
 	using vertex_type = std::string;
 	using edge_type = sg::CommonBasicEdge<vertex_type>;
@@ -175,7 +188,7 @@ struct BasicViewStub
 	}
 };
 
-struct WeightedViewStub
+struct WeightedGraphStub
 {
 	using vertex_type = std::string;
 	using edge_type = sg::CommonWeightedEdge<std::string, int>;

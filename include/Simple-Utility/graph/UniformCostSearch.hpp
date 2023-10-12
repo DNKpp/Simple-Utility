@@ -24,13 +24,13 @@ namespace sl::graph::ucs
 	using CommonNode = CommonRankedNode<Vertex, Rank>;
 
 	template <
-		concepts::basic_graph View,
-		concepts::ranked_node Node = CommonNode<edge::vertex_t<view::edge_t<View>>, edge::weight_t<view::edge_t<View>>>,
+		concepts::basic_graph Graph,
+		concepts::ranked_node Node = CommonNode<edge::vertex_t<graph::edge_t<Graph>>, edge::weight_t<graph::edge_t<Graph>>>,
 		concepts::tracker_for<node::vertex_t<Node>> Tracker = tracker::CommonHashMap<node::vertex_t<Node>>>
 	using Range = IterableTraverser<
 		detail::BasicTraverser<
 			Node,
-			View,
+			Graph,
 			queue::CommonPriorityQueue<Node>,
 			Tracker,
 			detail::default_explorer_t<Node, NodeFactory<Node>>>>;

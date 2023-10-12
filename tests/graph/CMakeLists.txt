@@ -7,10 +7,10 @@ target_sources(
 	"DepthFirstSearch.cpp"
 	"Edge.cpp"
 	"Formatter.cpp"
+	"Graph.cpp"
 	"Node.cpp"
 	"Queue.cpp"
 	"Tracker.cpp"
 	"Traverse.cpp"
 	"UniformCostSearch.cpp"
-	"View.cpp"
 )
