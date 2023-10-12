@@ -7,6 +7,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 TEST_CASE("catch_ext::RangesEmpty matches empty ranges.", "[test_util][test_util::catch2]")
 {
@@ -16,7 +17,7 @@ TEST_CASE("catch_ext::RangesEmpty matches empty ranges.", "[test_util][test_util
 
 TEST_CASE("catch_ext::RangesEmpty::describe prints a description.", "[test_util][test_util::catch2]")
 {
-	REQUIRE_THAT(catch_ext::RangesEmpty{}.describe(), !catch_ext::RangesEmpty{});
+	REQUIRE_THAT(catch_ext::RangesEmpty{}.describe(), Catch::Matchers::Equals("Empty"));
 }
 
 #ifdef SL_UTILITY_HAS_STD_FORMAT
@@ -44,7 +45,7 @@ TEST_CASE("Catch::StringMaker is extended by std::format compatible types.", "[t
 {
 	STATIC_CHECK(sl::concepts::formattable<TestType, char>);
 
-	REQUIRE("TestType: 42" == Catch::StringMaker<TestType>{}.convert(TestType{42}));
+	REQUIRE_THAT(Catch::StringMaker<TestType>{}.convert(TestType{42}), Catch::Matchers::Equals("TestType: 42"));
 }
 
 #endif
