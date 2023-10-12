@@ -30,6 +30,7 @@
     "." SL_UTILITY_XSTR(SL_UTILITY_VERSION_MINOR) \
     "." SL_UTILITY_XSTR(SL_UTILITY_VERSION_PATCH)
 
+#include <version>
 
 #if defined(_MSC_VER) || (__cpp_lib_format >= 201907L)
 	#define SL_UTILITY_HAS_STD_FORMAT
