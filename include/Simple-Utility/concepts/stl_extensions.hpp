@@ -12,6 +12,7 @@
 
 #include <compare>
 #include <concepts>
+#include <utility>
 
 // ReSharper disable CppClangTidyClangDiagnosticDocumentation
 // ReSharper disable CppIdenticalOperandsInBinaryExpression
@@ -285,6 +286,7 @@ namespace sl::concepts
 #ifdef SL_UTILITY_HAS_STD_FORMAT
 
 #include <format>
+#include <iterator>
 
 namespace sl::concepts
 {
