@@ -4,6 +4,7 @@
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "Simple-Utility/graph/Graph.hpp"
+#include "Simple-Utility/graph/mixins/graph/std_reference_wrapper.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_range_equals.hpp>
@@ -58,7 +59,9 @@ TEMPLATE_TEST_CASE_SIG(
 	((bool dummy, class Expected, class Graph), dummy, Expected, Graph),
 	(true, GenericBasicEdge<int>, BasicGraphMock<int>),
 	(true, GenericBasicEdge<std::string>, BasicGraphMock<std::string>),
-	(true, GenericWeightedEdge<std::string, int>, WeightedGraphMock<std::string, int>)
+	(true, GenericWeightedEdge<std::string, int>, WeightedGraphMock<std::string, int>),
+	(true, GenericBasicEdge<int>, std::reference_wrapper<BasicGraphMock<int>>),
+	(true, GenericBasicEdge<int>, std::reference_wrapper<const BasicGraphMock<int>>)
 )
 {
 	STATIC_REQUIRE(std::same_as<Expected, typename sg::graph::traits<Graph>::edge_type>);
@@ -71,7 +74,9 @@ TEMPLATE_TEST_CASE_SIG(
 	((bool dummy, class Expected, class Graph), dummy, Expected, Graph),
 	(true, int, BasicGraphMock<int>),
 	(true, std::string, BasicGraphMock<std::string>),
-	(true, std::string, WeightedGraphMock<std::string, int>)
+	(true, std::string, WeightedGraphMock<std::string, int>),
+	(true, int, std::reference_wrapper<BasicGraphMock<int>>),
+	(true, int, std::reference_wrapper<const BasicGraphMock<int>>)
 )
 {
 	STATIC_REQUIRE(std::same_as<Expected, typename sg::graph::traits<Graph>::vertex_type>);
@@ -86,7 +91,9 @@ TEMPLATE_TEST_CASE_SIG(
 	(true, WeightedGraphMock<std::string, int>),
 	(true, EmptyGraphStub<std::string>),
 	(true, BasicGraphStub),
-	(true, WeightedGraphStub)
+	(true, WeightedGraphStub),
+	(true, std::reference_wrapper<BasicGraphMock<int>>),
+	(true, std::reference_wrapper<const BasicGraphMock<int>>)
 )
 {
 	STATIC_REQUIRE(expected == sg::concepts::basic_graph<Graph>);
@@ -94,7 +101,8 @@ TEMPLATE_TEST_CASE_SIG(
 
 TEST_CASE(
 	"graph::graph::out_edges serves as a customization point, returning the outgoing edges of the given vertex.",
-	"[graph][graph::graph]")
+	"[graph][graph::graph]"
+)
 {
 	const std::string vertex{"Hello, World!"};
 	const std::vector<GenericBasicEdge<std::string>> expected{
@@ -125,5 +133,26 @@ TEST_CASE(
 		REQUIRE_CALL(mock, get_out_edges(vertex))
 			.RETURN(expected);
 		REQUIRE_THAT(sg::graph::out_edges(mock, vertex), Catch::Matchers::RangeEquals(expected));
+	}
+}
+
+TEST_CASE(
+	"std::reference_wrapper forwards calls to graph::out_edges to the actual graph object.",
+	"[graph][graph::graph]"
+)
+{
+	const std::vector<sg::graph::edge_t<BasicGraphMock<int>>> expected{{41}, {43}, {44}};
+	BasicGraphMock<int> graph{};
+	REQUIRE_CALL(graph, out_edges(42))
+		.RETURN(expected);
+
+	SECTION("as std::ref")
+	{
+		REQUIRE_THAT(sg::graph::out_edges(std::ref(graph), 42), Catch::Matchers::RangeEquals(expected));
+	}
+
+	SECTION("as std::cref")
+	{
+		REQUIRE_THAT(sg::graph::out_edges(std::cref(graph), 42), Catch::Matchers::RangeEquals(expected));
 	}
 }

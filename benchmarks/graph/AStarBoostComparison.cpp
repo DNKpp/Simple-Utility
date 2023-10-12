@@ -15,8 +15,8 @@
 #include <boost/graph/filtered_graph.hpp>
 #include <boost/graph/grid_graph.hpp>
 
-#include <range/v3/all.hpp>
 #include <fmt/format.h>
+#include <range/v3/all.hpp>
 
 #include <fstream>
 #include <random>
@@ -26,6 +26,7 @@
 #include "../Defines.hpp"
 
 #include "Simple-Utility/graph/AStarSearch.hpp"
+#include "Simple-Utility/graph/mixins/graph/std_reference_wrapper.hpp"
 
 /* Most of this code is directly taken from https://github.com/boostorg/graph/blob/develop/example/astar_maze.cpp
  * and slightly modernized.
@@ -264,7 +265,7 @@ void random_maze(maze& m, const std::uint32_t seed)
  ############################## */
 
 template <>
-struct sl::graph::graph::traits<std::reference_wrapper<const maze>>
+struct sl::graph::graph::traits<maze>
 {
 	using edge_type = CommonWeightedEdge<vertex_descriptor, distance>;
 	using vertex_type = edge::vertex_t<edge_type>;
@@ -272,19 +273,20 @@ struct sl::graph::graph::traits<std::reference_wrapper<const maze>>
 };
 
 template <>
-struct sl::graph::customize::out_edges_fn<std::reference_wrapper<const maze>>
+struct sl::graph::customize::out_edges_fn<maze>
 {
-	using edge_type = graph::edge_t<std::reference_wrapper<const maze>>;
+	using edge_type = graph::edge_t<maze>;
 	using vertex_type = edge::vertex_t<edge_type>;
 	using weight_type = edge::weight_t<edge_type>;
 
+	[[nodiscard]]
 	auto operator ()(const maze& m, const vertex_type& current) const
 	{
 		const auto& g = m.get_grid();
 		const auto [edgesBegin, edgesEnd] = out_edges(current, g);
 
 		return ranges::subrange{edgesBegin, edgesEnd}
-			| ranges::views::transform([&](const auto& e) { return edge_type{target(e, g), 1.}; });
+				| ranges::views::transform([&](const auto& e) { return edge_type{target(e, g), 1.}; });
 	}
 };
 
