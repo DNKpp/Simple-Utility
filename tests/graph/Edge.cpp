@@ -87,6 +87,34 @@ struct sg::customize::weight_fn<custom_fun_weight>
 	}
 };
 
+//! [ThirdPartyEdge definition]
+class ThirdPartyEdge
+{
+public:
+	using vertex_type = int;
+
+	vertex_type vertex() const
+	{
+		return m_Vertex;
+	}
+
+private:
+	vertex_type m_Vertex{};
+};
+//! [ThirdPartyEdge definition]
+
+//! [ThirdPartyEdge destination_fn specialization]
+template <>
+struct sl::graph::customize::destination_fn<ThirdPartyEdge>
+{
+	using vertex_type = typename ThirdPartyEdge::vertex_type;
+	vertex_type operator ()(const ThirdPartyEdge& edge) const
+	{
+		return edge.vertex();
+	}
+};
+//! [ThirdPartyEdge destination_fn specialization]
+
 TEST_CASE("graph::edge::destination serves as a customization point accessing the destination.", "[graph][detail]")
 {
 	const int expected = GENERATE(take(5, random(0, std::numeric_limits<int>::max())));
@@ -188,6 +216,7 @@ TEMPLATE_TEST_CASE_SIG(
 	(false, member_fun_weight),
 	(false, free_fun_weight),
 	(false, custom_fun_weight),
+	(true, ThirdPartyEdge),
 	(true, GenericBasicEdge<std::string>),
 	(true, GenericWeightedEdge<std::string, int>),
 	(true, sg::CommonBasicEdge<std::string>),

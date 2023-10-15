@@ -86,7 +86,35 @@
  *
  * A traverser can be decorated with ``IterableTraverser``, which in fact provides ``begin`` and ``end`` members, and can then be used as a input-range with any existing
  * algorithms.
+ *
+ * ## Customization points
+ * As already pointed out, the library does utilize concepts very much. But to be fully exchangeable, the library introduces another layer of indirection in the
+ * sub-namespace ``graph:customize``. All templates in this namespace may be specialized for user types and any such specialization will be prioritized by the
+ * library.
  */
+
+// ReSharper disable CppDoxygenUnresolvedReference
+/**
+ * \defgroup GROUP_GRAPH_CUSTOMIZATION_POINT customization points
+ * \ingroup GROUP_GRAPH
+ *
+ * \brief Customization points offered by the library.
+ * \details The library offers several customization points to the users, which may be used to make custom or third-party types interface compliant.
+ * In fact a special implementation strategy is used, so that each customization point favors the user defined customization point specialization in cases
+ * where an appropriate alternative would exist. All what has to be done is, to introduce a template specialization for the desired entry point. The specialization
+ * must adhere to the expectations of the customization point and should not alter observable behavior in any way.
+ *
+ * ## Example
+ * For example, given the type ``ThirdPartyEdge`` which shall be utilized as an edge type for this library.
+ * \snippet tests/graph/Edge.cpp ThirdPartyEdge definition
+ *
+ * As you can see, it offers a ``vertex`` member function but the library expects a ``destination`` member function instead. Given its a type of a third party you
+ * can not simply alter the function name, nor its wise to add a free function into a third party namespace. Fortunately the library offers a third option: The
+ * customization points. In this case its ``sl::graph::customize::destination_fn``, which one can specialize here.
+ * \snippet tests/graph/Edge.cpp ThirdPartyEdge destination_fn specialization
+ * And that's it,``ThirdPartyEdge`` can now be used as an edge type in this library.
+ */
+// ReSharper restore CppDoxygenUnresolvedReference
 
 namespace sl::graph::concepts
 {
