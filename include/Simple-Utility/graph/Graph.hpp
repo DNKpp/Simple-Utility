@@ -18,15 +18,37 @@
 
 namespace sl::graph::graph
 {
+	/**
+	 * \defgroup GROUP_GRAPH_GRAPH graph
+	 * \ingroup GROUP_GRAPH
+	 * \brief Contains graph related definitions.
+	 *\{
+	 */
+
+	/**
+	 * \brief Primary template is purposely undefined.
+	 */
 	template <typename>
 	struct traits;
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::graph::graph::traits "traits" type.
+	 * \tparam T Type to retrieve the info for.
+	 */
 	template <typename T>
 	using edge_t = typename traits<T>::edge_type;
 
+	/**
+	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::graph::graph::traits "traits" type.
+	 * \tparam T Type to retrieve the info for.
+	 */
 	template <typename T>
 	using vertex_t = typename traits<T>::vertex_type;
 
+	/**
+	 * \brief General trait specialization for graphs, which have both, a valid ``vertex_type`` and ``edge_type`` member alias.
+	 * \tparam T 
+	 */
 	template <typename T>
 		requires concepts::readable_vertex_type<T>
 				&& requires { requires concepts::edge<typename T::edge_type>; }
@@ -35,10 +57,18 @@ namespace sl::graph::graph
 		using vertex_type = typename T::vertex_type;
 		using edge_type = typename T::edge_type;
 	};
+
+	/**
+	 * \}
+	 */
 }
 
 namespace sl::graph::customize
 {
+	/**
+	 * \brief Primary template for the ``out_edges`` customization point. Is purposely undefined.
+	 * \ingroup GROUP_GRAPH_CUSTOMIZATION_POINT_OUT_EDGES
+	 */
 	template <typename>
 	struct out_edges_fn;
 }
@@ -124,11 +154,40 @@ namespace sl::graph::detail
 
 namespace sl::graph::graph
 {
+	/**
+	 * \defgroup GROUP_GRAPH_CUSTOMIZATION_POINT_OUT_EDGES out_edges
+	 * \ingroup GROUP_GRAPH_CUSTOMIZATION_POINT
+	 * \ingroup GROUP_GRAPH_GRAPH
+	 * \brief Queries the outgoing edges of a specific vertex from a graph.
+	 * \details This function internally dispatches the call in regards of the following priority list:
+	 * - ``graph::customize::out_edges_fn`` specialization
+	 * - ``out_edges`` member function
+	 * - ``out_edges`` free function (with ADL enabled)
+	 *
+	 * Specialized ``out_edges_fn`` should offer an ``operator ()`` definition matching the following signature:
+	 * \code{.cpp}
+	 * input_edge_view operator ()(const Graph&, const sl::graph::graph::vertex_t<Graph>&) const;
+	 * \endcode
+	 * ``input_edge_view`` may be any type satisfying the ``std::ranges::input_range`` concept and having a ``reference_type`` convertible to
+	 * the ``sl::graph::graph::edge_t<Graph>`` type. ``Graph`` itself is the user type, for which the entry point is specialized for.
+	 *\{
+	 */
+
+	/**
+	 * \brief Customization point, querying the outgoing edges of a specific vertex from a graph.
+	 */
 	inline constexpr detail::out_edges_fn out_edges{};
+
+	/**
+	 * \}
+	 */
 }
 
 namespace sl::graph::concepts
 {
+	/**
+	 * \brief Determines, whether the given type satisfies the requirements of a graph type.
+	 */
 	template <typename T>
 	concept basic_graph = sl::concepts::unqualified<T>
 						&& std::destructible<T>
