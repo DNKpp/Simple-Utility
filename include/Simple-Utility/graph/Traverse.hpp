@@ -198,7 +198,7 @@ namespace sl::graph::detail
 	using LazyExplorer = BasicExplorer<Node, NodeFactory, LazyCollector>;
 
 	template <typename Node, typename NodeFactory>
-	using default_explorer_t = BufferedExplorer<Node, NodeFactory>;
+	using default_explorer_t = LazyExplorer<Node, NodeFactory>;
 #else
 	template <typename Node, typename NodeFactory>
 	using default_explorer_t = BufferedExplorer<Node, NodeFactory>;
