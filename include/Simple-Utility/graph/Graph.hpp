@@ -39,14 +39,14 @@ namespace sl::graph::graph
 	struct traits;
 
 	/**
-	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::graph::graph::traits "traits" type.
+	 * \brief Convenience alias, exposing the ``edge_type`` member alias of the \ref sl::graph::graph::traits "traits" type.
 	 * \tparam T Type to retrieve the info for.
 	 */
 	template <typename T>
 	using edge_t = typename traits<T>::edge_type;
 
 	/**
-	 * \brief Convenience alias, exposing the ``type`` member alias of the \ref sl::graph::graph::traits "traits" type.
+	 * \brief Convenience alias, exposing the ``vertex_type`` member alias of the \ref sl::graph::graph::traits "traits" type.
 	 * \tparam T Type to retrieve the info for.
 	 */
 	template <typename T>

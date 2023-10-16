@@ -12,11 +12,80 @@
 #include "Simple-Utility/concepts/stl_extensions.hpp"
 #include "Simple-Utility/graph/Common.hpp"
 
+namespace sl::graph::edge
+{
+	/**
+	 * \defgroup GROUP_GRAPH_EDGE edge
+	 * \ingroup GROUP_GRAPH
+	 * \brief Contains edge related definitions.
+	 * \details An edge connects two vertices inside a graph. A minimal edge contains a ``destination`` vertex; a weighted edge contains also a
+	 * ``weight`` property.
+	 *
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template is purposely undefined.
+	 */
+	template <class>
+	struct traits;
+
+	/**
+	 * \brief Convenience alias, exposing the ``vertex_type`` member alias of the \ref sl::graph::edge::traits "traits" type.
+	 * \tparam Edge Type to retrieve the info for.
+	 */
+	template <typename Edge>
+	using vertex_t = typename traits<Edge>::vertex_type;
+
+	/**
+	 * \brief Convenience alias, exposing the ``weight_type`` member alias of the \ref sl::graph::edge::traits "traits" type.
+	 * \tparam Edge Type to retrieve the info for.
+	 */
+	template <typename Edge>
+	using weight_t = typename traits<Edge>::weight_type;
+
+	/**
+	 * \brief General trait specialization for graphs, which contains a valid ``vertex_type`` member alias.
+	 * \tparam T 
+	 */
+	template <class T>
+		requires concepts::readable_vertex_type<T>
+	struct traits<T>
+	{
+		using vertex_type = typename T::vertex_type;
+	};
+
+	/**
+	 * \brief General trait specialization for graphs, which contains both, a valid ``vertex_type`` and ``weight_type`` member alias.
+	 * \tparam T 
+	 */
+	template <class T>
+		requires concepts::readable_vertex_type<T>
+				&& concepts::readable_weight_type<T>
+	struct traits<T>
+	{
+		using vertex_type = typename T::vertex_type;
+		using weight_type = typename T::weight_type;
+	};
+
+	/**
+	 * \}
+	 */
+}
+
 namespace sl::graph::customize
 {
+	/**
+	 * \brief Primary template for the ``weight`` customization point. Is purposely undefined.
+	 * \ingroup GROUP_GRAPH_CUSTOMIZATION_POINT_WEIGHT
+	 */
 	template <class>
 	struct weight_fn;
 
+	/**
+	 * \brief Primary template for the ``destination`` customization point. Is purposely undefined.
+	 * \ingroup GROUP_GRAPH_CUSTOMIZATION_POINT_DESTINATION
+	 */
 	template <class>
 	struct destination_fn;
 }
@@ -135,27 +204,61 @@ namespace sl::graph::edge::detail
 
 namespace sl::graph::edge
 {
+	/**
+	 * \defgroup GROUP_GRAPH_CUSTOMIZATION_POINT_DESTINATION destination
+	 * \ingroup GROUP_GRAPH_CUSTOMIZATION_POINT
+	 * \ingroup GROUP_GRAPH_EDGE
+	 * \brief Queries the edge for its destination vertex.
+	 * \details This function internally dispatches the call in regards of the following priority list:
+	 * - ``graph::customize::destination_fn`` specialization
+	 * - ``destination`` member variable
+	 * - ``destination`` member function
+	 * - ``destination`` free function (with ADL enabled)
+	 *
+	 * Specialized ``destination_fn`` should offer an ``operator ()`` definition matching the following signature:
+	 * \code{.cpp}
+	 * sl::graph::edge::vertex_t<Edge> operator ()(const Edge&) const;
+	 * \endcode
+	 * ``Edge`` itself is the user type, for which the entry point is specialized for.
+	 *\{
+	 */
+
+	/**
+	 * \brief Customization point, retrieving the destination vertex of a the given edge.
+	 */
 	inline constexpr detail::destination_fn destination{};
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_GRAPH_CUSTOMIZATION_POINT_WEIGHT weight
+	 * \ingroup GROUP_GRAPH_CUSTOMIZATION_POINT
+	 * \ingroup GROUP_GRAPH_EDGE
+	 * \brief Queries the edge for its weight.
+	 * \details This function internally dispatches the call in regards of the following priority list:
+	 * - ``graph::customize::weight_fn`` specialization
+	 * - ``weight`` member variable
+	 * - ``weight`` member function
+	 * - ``weight`` free function (with ADL enabled)
+	 *
+	 * Specialized ``weight_fn`` should offer an ``operator ()`` definition matching the following signature:
+	 * \code{.cpp}
+	 * sl::graph::edge::weight_t<Edge> operator ()(const Edge&) const;
+	 * \endcode
+	 * ``Edge`` itself is the user type, for which the entry point is specialized for.
+	 *\{
+	 */
+
+	/**
+	 * \brief Customization point, retrieving the weight of a the given edge.
+	 */
 	inline constexpr detail::weight_fn weight{};
 
-	template <class>
-	struct traits;
-
-	template <class T>
-		requires concepts::readable_vertex_type<T>
-	struct traits<T>
-	{
-		using vertex_type = typename T::vertex_type;
-	};
-
-	template <class T>
-		requires concepts::readable_vertex_type<T>
-				&& concepts::readable_weight_type<T>
-	struct traits<T>
-	{
-		using vertex_type = typename T::vertex_type;
-		using weight_type = typename T::weight_type;
-	};
+	/**
+	 * \}
+	 */
 }
 
 namespace sl::graph::concepts
@@ -183,17 +286,18 @@ namespace sl::graph::concepts
 							};
 }
 
-namespace sl::graph::edge
-{
-	template <concepts::edge Edge>
-	using vertex_t = typename traits<Edge>::vertex_type;
-
-	template <concepts::edge Edge>
-	using weight_t = typename traits<Edge>::weight_type;
-}
-
 namespace sl::graph
 {
+	/**
+	 * \addtogroup GROUP_GRAPH_COMMON_TYPES
+	 * \{
+	 */
+
+	/**
+	 * \brief A basic edge type.
+	 * \tparam Vertex The used vertex type.
+	 * \note This type is also equality comparable, which is not an actual requirement for basic edge types.
+	 */
 	template <concepts::vertex Vertex>
 	struct CommonBasicEdge
 	{
@@ -202,9 +306,15 @@ namespace sl::graph
 		vertex_type destination;
 
 		[[nodiscard]]
-		friend bool operator==(const CommonBasicEdge&, const CommonBasicEdge&) = default;
+		friend bool operator ==(const CommonBasicEdge&, const CommonBasicEdge&) = default;
 	};
 
+	/**
+	 * \brief A weighted edge type.
+	 * \tparam Vertex The used vertex type.
+	 * \tparam Weight The used weight type.
+	 * \note This type is also equality comparable, which is not an actual requirement for weighted edge types.
+	 */
 	template <concepts::vertex Vertex, concepts::weight Weight>
 	struct CommonWeightedEdge
 	{
@@ -217,6 +327,10 @@ namespace sl::graph
 		[[nodiscard]]
 		friend bool operator==(const CommonWeightedEdge&, const CommonWeightedEdge&) = default;
 	};
+
+	/**
+	 * \}
+	 */
 }
 
 #endif

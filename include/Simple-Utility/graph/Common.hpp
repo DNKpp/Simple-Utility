@@ -110,12 +110,19 @@
  * \snippet tests/graph/Edge.cpp ThirdPartyEdge definition
  *
  * As you can see, it offers a ``vertex`` member function but the library expects a ``destination`` member function instead. Given its a type of a third party you
- * can not simply alter the function name, nor its wise to add a free function into a third party namespace. Fortunately the library offers a third option: The
+ * can not simply alter the function name, nor is it wise to add a free function into a third party namespace. Fortunately the library offers a third option: The
  * customization points. In this case its ``sl::graph::customize::destination_fn``, which one can specialize here.
  * \snippet tests/graph/Edge.cpp ThirdPartyEdge destination_fn specialization
  * And that's it,``ThirdPartyEdge`` can now be used as an edge type in this library.
  */
 // ReSharper restore CppDoxygenUnresolvedReference
+
+/**
+ * \defgroup GROUP_GRAPH_COMMON_TYPES common types
+ * \ingroup GROUP_GRAPH
+ * \brief Contains common types, which can be utilized for algorithms.
+ * \details The contained types are just default types, which can be utilized for algorithms, but may also be easily exchanged with user types.
+ */
 
 namespace sl::graph::concepts
 {
