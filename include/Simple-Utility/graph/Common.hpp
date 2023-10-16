@@ -19,7 +19,7 @@
  * \brief This library offers various graph related algorithms.
  * \details
  * # Design philosophy
- * This library is built completely on concepts, thus almost anything is exchangeable by users. Some parts may be worth the effort, some may not.
+ * This library is built completely on concepts, thus almost everything is exchangeable by users. Some parts may be worth the effort, some may not.
  * Symbols in ``detail`` namespace can be used, but are less secure and may require some more insights into the internals to be used correctly.
  *
  * The (as far as I'm aware of) unique core idea of this library is to *somehow* sort the vertices of an arbitrary graph as sequential range. The actual
@@ -49,6 +49,7 @@
  * ### Graph
  * A graph consists of multiple elements (vertices) and multiple edges. Most of the algorithms allow graphs to be dynamically explored during the traversal,
  * thus they can be generated on the fly.
+ * For more info see \ref GROUP_GRAPH_GRAPH graph sub-section.
  *
  * ### Vertex
  * A vertex denotes a unique graph element and is used by algorithms to query the graph for further information (e.g. neighboring vertices).

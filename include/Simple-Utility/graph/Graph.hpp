@@ -22,6 +22,13 @@ namespace sl::graph::graph
 	 * \defgroup GROUP_GRAPH_GRAPH graph
 	 * \ingroup GROUP_GRAPH
 	 * \brief Contains graph related definitions.
+	 * \details A graph is a compilation of vertices and edges. Vertices are uniquely identifiable elements, which are connected via edges.
+	 * A minimal graph can be queried for outgoing edges of a specific vertex, one at a time. Thus, the graph doesn't have to be know from
+	 * the get go; it can be generated during algorithm runs.
+	 *
+	 * Algorithms expect graphs by value, but its generally enough to provide a shallow graph (aka view) to the library, which just references
+	 * an actual graph object (e.g. a graph wrapped as ``std::reference_wrapper`` is fine). Thus, this library sometimes refers to graphs as
+	 * ``view``.
 	 *\{
 	 */
 
