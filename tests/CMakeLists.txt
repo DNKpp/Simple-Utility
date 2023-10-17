@@ -25,7 +25,7 @@ add_subdirectory("test_util")
 target_link_libraries(
 	Simple-Utility-Tests
 	PRIVATE
-	Simple::Utility
+	Simple-Utility::Simple-Utility
 	Catch2::Catch2WithMain
 	trompeloeil::trompeloeil
 )

@@ -1,0 +1,6 @@
+@PACKAGE_INIT@
+
+set_and_check(@PACKAGE_NAME@_LIB_DIR "@PACKAGE_LIB_INSTALL_DIR@")
+include("${@PACKAGE_NAME@_LIB_DIR}/cmake/@PACKAGE_NAME@Targets.cmake")
+
+check_required_components(@PACKAGE_NAME@)

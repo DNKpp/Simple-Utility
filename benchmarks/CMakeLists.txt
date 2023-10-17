@@ -18,7 +18,7 @@ add_subdirectory("graph")
 target_link_libraries(
 	Simple-Utility-Benchmarks
 	PRIVATE
-	Simple::Utility
+	Simple-Utility::Simple-Utility
 	Catch2::Catch2WithMain
 	std::mdspan
 	Boost::graph

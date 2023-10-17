@@ -94,7 +94,7 @@ This library can easily be integrated into your project via CMake target_link_li
 target_link_libraries(
 	<your_target_name>
 	PUBLIC
-	Simple::Utility
+	Simple-Utility::Simple-Utility
 )
 ```
 
