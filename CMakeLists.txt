@@ -26,13 +26,19 @@ target_compile_features(
 	cxx_std_20
 )
 
-OPTION(SIMPLE_UTILITY_BUILD_TESTS "Determines whether tests will be built." OFF)
-if (SIMPLE_UTILITY_BUILD_TESTS OR CMAKE_SOURCE_DIR STREQUAL Simple-Utility_SOURCE_DIR)
+if (CMAKE_SOURCE_DIR STREQUAL Simple-Utility_SOURCE_DIR)
+	set(IS_ROOT_PROJECT TRUE)
+else()
+	set(IS_ROOT_PROJECT FALSE)
+endif()
+
+OPTION(SIMPLE_UTILITY_BUILD_TESTS "Determines whether tests will be built." ${IS_ROOT_PROJECT})
+if (SIMPLE_UTILITY_BUILD_TESTS)
 	include(CTest)
 	add_subdirectory("tests")
 endif()
 
-OPTION(SIMPLE_UTILITY_BUILD_BENCHMARKS "Determines whether benchmarks will be built." OFF)
+OPTION(SIMPLE_UTILITY_BUILD_BENCHMARKS "Determines whether benchmarks will be built." ${IS_ROOT_PROJECT})
 if (SIMPLE_UTILITY_BUILD_BENCHMARKS)
 	include(CTest)
 	add_subdirectory("benchmarks")
