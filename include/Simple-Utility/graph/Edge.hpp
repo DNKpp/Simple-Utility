@@ -45,7 +45,7 @@ namespace sl::graph::edge
 	using weight_t = typename traits<Edge>::weight_type;
 
 	/**
-	 * \brief General trait specialization for graphs, which contains a valid ``vertex_type`` member alias.
+	 * \brief General trait specialization for edges, which contain a valid ``vertex_type`` member alias.
 	 * \tparam T 
 	 */
 	template <class T>
@@ -56,7 +56,7 @@ namespace sl::graph::edge
 	};
 
 	/**
-	 * \brief General trait specialization for graphs, which contains both, a valid ``vertex_type`` and ``weight_type`` member alias.
+	 * \brief General trait specialization for edges, which contain both, a valid ``vertex_type`` and ``weight_type`` member alias.
 	 * \tparam T 
 	 */
 	template <class T>
