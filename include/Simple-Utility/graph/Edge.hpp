@@ -224,7 +224,7 @@ namespace sl::graph::edge
 	 */
 
 	/**
-	 * \brief Customization point, retrieving the destination vertex of a the given edge.
+	 * \brief Customization point, retrieving the destination vertex of the given edge.
 	 */
 	inline constexpr detail::destination_fn destination{};
 
@@ -252,7 +252,7 @@ namespace sl::graph::edge
 	 */
 
 	/**
-	 * \brief Customization point, retrieving the weight of a the given edge.
+	 * \brief Customization point, retrieving the weight of the given edge.
 	 */
 	inline constexpr detail::weight_fn weight{};
 

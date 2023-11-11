@@ -165,7 +165,7 @@ namespace sl::graph::node
 	 */
 
 	/**
-	 * \brief Customization point, retrieving the related vertex of a the given node.
+	 * \brief Customization point, retrieving the related vertex of the given node.
 	 */
 
 	inline constexpr detail::vertex_fn vertex{};
@@ -194,7 +194,7 @@ namespace sl::graph::node
 	 */
 
 	/**
-	 * \brief Customization point, retrieving the rank of a the given node.
+	 * \brief Customization point, retrieving the rank of the given node.
 	 */
 
 	inline constexpr detail::rank_fn rank{};
