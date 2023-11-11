@@ -85,6 +85,37 @@ namespace
 	};
 }
 
+TEST_CASE("astar::CommonNode members have expected values.", "[graph][graph::astar]")
+{
+	using Node = sg::astar::CommonNode<std::string, int>;
+	const auto vertex = GENERATE("42", "Hello, World!");
+	const auto cost = GENERATE(1337, 42);
+	const auto estimatedPendingCost = GENERATE(1338, 41);
+
+	const Node node{.vertex = vertex, .cost = cost, .estimatedPendingCost = estimatedPendingCost};
+
+	REQUIRE(node.vertex == vertex);
+	REQUIRE(node.cost == cost);
+	REQUIRE(node.estimatedPendingCost == estimatedPendingCost);
+}
+
+TEST_CASE("astar::CommonNode is equality comparable.", "[graph][graph::astar]")
+{
+	using Node = sg::astar::CommonNode<std::string, int>;
+	const auto& [expectedEquality, first, second] = GENERATE(
+		(table<bool, Node, Node>)({
+			{true, {"42", 1337, 1338}, {"42", 1337, 1338}},
+			{false, {"41", 1337, 1338}, {"42", 1337, 1338}},
+			{false, {"42", 1336, 1338}, {"42", 1337, 1338}},
+			{false, {"42", 1337, 1339}, {"42", 1337, 1338}}
+			}));
+
+	REQUIRE(expectedEquality == (first == second));
+	REQUIRE(expectedEquality == (second == first));
+	REQUIRE(expectedEquality != (first != second));
+	REQUIRE(expectedEquality != (second != first));
+}
+
 TEMPLATE_TEST_CASE(
 	"astar::Stream visits all reachable vertices.",
 	"[graph][graph::astar]",
