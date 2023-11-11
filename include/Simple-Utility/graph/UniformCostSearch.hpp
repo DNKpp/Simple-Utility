@@ -27,7 +27,7 @@ namespace sl::graph::ucs
 		concepts::basic_graph Graph,
 		concepts::ranked_node Node = CommonNode<edge::vertex_t<graph::edge_t<Graph>>, edge::weight_t<graph::edge_t<Graph>>>,
 		concepts::tracker_for<node::vertex_t<Node>> Tracker = tracker::CommonHashMap<node::vertex_t<Node>>>
-	using Range = IterableTraverser<
+	using Stream = IterableTraverser<
 		detail::BasicTraverser<
 			Node,
 			Graph,

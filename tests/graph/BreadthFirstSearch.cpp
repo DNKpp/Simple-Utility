@@ -43,7 +43,7 @@ namespace
 }
 
 TEMPLATE_TEST_CASE(
-	"bfs::Range visits all reachable vertices.",
+	"bfs::Stream visits all reachable vertices.",
 	"[graph][graph::bfs]",
 	BasicGraphStub,
 	WeightedGraphStub
@@ -52,14 +52,14 @@ TEMPLATE_TEST_CASE(
 	using Node = sg::CommonBasicNode<std::string>;
 	const auto& [expected, origin] = GENERATE(from_range(slice_test_expectations(testResults, toCommonBasicNode)));
 
-	sg::dfs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}};
-	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
+	sg::dfs::Stream<TestType, Node> stream{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}};
+	STATIC_CHECK(std::ranges::input_range<decltype(stream)>);
 
-	REQUIRE_THAT(buffer_nodes(range), Catch::Matchers::RangeEquals(expected));
+	REQUIRE_THAT(buffer_nodes(stream), Catch::Matchers::RangeEquals(expected));
 }
 
 TEMPLATE_TEST_CASE(
-	"bfs::Range can be used with depth decorated nodes.",
+	"bfs::Stream can be used with depth decorated nodes.",
 	"[graph][graph::bfs]",
 	BasicGraphStub,
 	WeightedGraphStub
@@ -68,14 +68,14 @@ TEMPLATE_TEST_CASE(
 	using Node = sg::decorator::DepthNode<sg::CommonBasicNode<std::string>>;
 	const auto& [expected, origin] = GENERATE(from_range(slice_test_expectations(testResults, toDepthBasicNode)));
 
-	sg::dfs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}};
-	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
+	sg::dfs::Stream<TestType, Node> stream{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}};
+	STATIC_CHECK(std::ranges::input_range<decltype(stream)>);
 
-	REQUIRE_THAT(buffer_nodes(range), Catch::Matchers::RangeEquals(expected));
+	REQUIRE_THAT(buffer_nodes(stream), Catch::Matchers::RangeEquals(expected));
 }
 
 TEMPLATE_TEST_CASE(
-	"bfs::Range can be used with predecessor decorated nodes.",
+	"bfs::Stream can be used with predecessor decorated nodes.",
 	"[graph][graph::bfs]",
 	BasicGraphStub,
 	WeightedGraphStub
@@ -84,14 +84,14 @@ TEMPLATE_TEST_CASE(
 	using Node = sg::decorator::PredecessorNode<sg::CommonBasicNode<std::string>>;
 	const auto& [expected, origin] = GENERATE(from_range(slice_test_expectations(testResults, toPredecessorBasicNode)));
 
-	sg::dfs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}};
-	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
+	sg::dfs::Stream<TestType, Node> stream{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}};
+	STATIC_CHECK(std::ranges::input_range<decltype(stream)>);
 
-	REQUIRE_THAT(buffer_nodes(range), Catch::Matchers::RangeEquals(expected));
+	REQUIRE_THAT(buffer_nodes(stream), Catch::Matchers::RangeEquals(expected));
 }
 
 TEMPLATE_TEST_CASE(
-	"bfs::Range can be used with arbitrary decorated nodes.",
+	"bfs::Stream can be used with arbitrary decorated nodes.",
 	"[graph][graph::bfs]",
 	BasicGraphStub,
 	WeightedGraphStub
@@ -100,8 +100,8 @@ TEMPLATE_TEST_CASE(
 	using Node = sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::CommonBasicNode<std::string>>>;
 	const auto& [expected, origin] = GENERATE(from_range(testResults));
 
-	sg::dfs::Range<TestType, Node> range{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}};
-	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
+	sg::dfs::Stream<TestType, Node> stream{origin, std::tuple{TestType{}}, std::tuple{}, std::tuple{}, std::tuple{}};
+	STATIC_CHECK(std::ranges::input_range<decltype(stream)>);
 
-	REQUIRE_THAT(buffer_nodes(range), Catch::Matchers::RangeEquals(expected));
+	REQUIRE_THAT(buffer_nodes(stream), Catch::Matchers::RangeEquals(expected));
 }

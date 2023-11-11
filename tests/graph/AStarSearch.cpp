@@ -86,27 +86,27 @@ namespace
 }
 
 TEMPLATE_TEST_CASE(
-	"astar::Range visits all reachable vertices.",
+	"astar::Stream visits all reachable vertices.",
 	"[graph][graph::astar]",
 	WeightedGraphStub)
 {
 	using Node = sg::astar::CommonNode<std::string, int>;
 	const auto& [expected, origin, destination] = GENERATE(from_range(slice_test_expectations(testResults, toCommonAStarNode)));
 
-	sg::astar::Range<TestType, Heuristic, Node> range{
+	sg::astar::Stream<TestType, Heuristic, Node> stream{
 		origin,
 		std::tuple{TestType{}},
 		std::tuple{},
 		std::tuple{},
 		std::tuple{sg::astar::NodeFactory<Node, Heuristic>{Heuristic{destination}}}
 	};
-	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
+	STATIC_CHECK(std::ranges::input_range<decltype(stream)>);
 
-	REQUIRE_THAT(buffer_nodes(range), Catch::Matchers::UnorderedRangeEquals(expected));
+	REQUIRE_THAT(buffer_nodes(stream), Catch::Matchers::UnorderedRangeEquals(expected));
 }
 
 TEMPLATE_TEST_CASE(
-	"astar::Range node can be decorated with DepthNodeDecorator.",
+	"astar::Stream node can be decorated with DepthNodeDecorator.",
 	"[graph][graph::astar]",
 	WeightedGraphStub
 )
@@ -114,20 +114,20 @@ TEMPLATE_TEST_CASE(
 	using Node = sg::decorator::DepthNode<sg::astar::CommonNode<std::string, int>>;
 	const auto& [expected, origin, destination] = GENERATE(from_range(slice_test_expectations(testResults, toDepthAStarNode)));
 
-	sg::astar::Range<TestType, Heuristic, Node> range{
+	sg::astar::Stream<TestType, Heuristic, Node> stream{
 		origin,
 		std::tuple{TestType{}},
 		std::tuple{},
 		std::tuple{},
 		std::tuple{sg::astar::NodeFactory<Node, Heuristic>{Heuristic{destination}}}
 	};
-	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
+	STATIC_CHECK(std::ranges::input_range<decltype(stream)>);
 
-	REQUIRE_THAT(buffer_nodes(range), Catch::Matchers::UnorderedRangeEquals(expected));
+	REQUIRE_THAT(buffer_nodes(stream), Catch::Matchers::UnorderedRangeEquals(expected));
 }
 
 TEMPLATE_TEST_CASE(
-	"astar::Range node can be decorated with PredecessorNodeDecorator.",
+	"astar::Stream node can be decorated with PredecessorNodeDecorator.",
 	"[graph][graph::astar]",
 	WeightedGraphStub
 )
@@ -135,20 +135,20 @@ TEMPLATE_TEST_CASE(
 	using Node = sg::decorator::PredecessorNode<sg::astar::CommonNode<std::string, int>>;
 	const auto& [expected, origin, destination] = GENERATE(from_range(slice_test_expectations(testResults, toPredecessorAStarNode)));
 
-	sg::astar::Range<TestType, Heuristic, Node> range{
+	sg::astar::Stream<TestType, Heuristic, Node> stream{
 		origin,
 		std::tuple{TestType{}},
 		std::tuple{},
 		std::tuple{},
 		std::tuple{sg::astar::NodeFactory<Node, Heuristic>{Heuristic{destination}}}
 	};
-	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
+	STATIC_CHECK(std::ranges::input_range<decltype(stream)>);
 
-	REQUIRE_THAT(buffer_nodes(range), Catch::Matchers::UnorderedRangeEquals(expected));
+	REQUIRE_THAT(buffer_nodes(stream), Catch::Matchers::UnorderedRangeEquals(expected));
 }
 
 TEMPLATE_TEST_CASE(
-	"astar::Range can be used with arbitrary decorated nodes.",
+	"astar::Stream can be used with arbitrary decorated nodes.",
 	"[graph][graph::astar]",
 	WeightedGraphStub
 )
@@ -156,14 +156,14 @@ TEMPLATE_TEST_CASE(
 	using Node = sg::decorator::DepthNode<sg::decorator::PredecessorNode<sg::astar::CommonNode<std::string, int>>>;
 	const auto& [expected, origin, destination] = GENERATE(from_range(testResults));
 
-	sg::astar::Range<TestType, Heuristic, Node> range{
+	sg::astar::Stream<TestType, Heuristic, Node> stream{
 		origin,
 		std::tuple{TestType{}},
 		std::tuple{},
 		std::tuple{},
 		std::tuple{sg::astar::NodeFactory<Node, Heuristic>{Heuristic{destination}}}
 	};
-	STATIC_CHECK(std::ranges::input_range<decltype(range)>);
+	STATIC_CHECK(std::ranges::input_range<decltype(stream)>);
 
-	REQUIRE_THAT(buffer_nodes(range), Catch::Matchers::UnorderedRangeEquals(expected));
+	REQUIRE_THAT(buffer_nodes(stream), Catch::Matchers::UnorderedRangeEquals(expected));
 }

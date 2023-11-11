@@ -295,13 +295,13 @@ std::optional<std::tuple<vertex_set, distance>> sl_graph_solve(const maze& m)
 	namespace sg = sl::graph;
 
 	using Node = sg::decorator::PredecessorNode<sg::astar::CommonNode<vertex_descriptor, distance>>;
-	using Range = sg::astar::Range<
+	using Stream = sg::astar::Stream<
 		std::reference_wrapper<const maze>,
 		euclidean_heuristic,
 		Node,
 		sg::tracker::CommonHashMap<vertex_descriptor, vertex_hash>>;
 
-	Range range{
+	Stream stream{
 		m.source(),
 		std::make_tuple(std::ref(m)),
 		std::tuple{},
@@ -310,7 +310,7 @@ std::optional<std::tuple<vertex_set, distance>> sl_graph_solve(const maze& m)
 	};
 
 	std::unordered_map<vertex_descriptor, Node, vertex_hash> nodes{};
-	for (const auto& node : range)
+	for (const auto& node : stream)
 	{
 		nodes.emplace(node.vertex, node);
 		if (node.vertex == m.goal())

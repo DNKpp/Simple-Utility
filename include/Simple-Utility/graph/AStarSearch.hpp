@@ -170,7 +170,7 @@ namespace sl::graph::astar
 		concepts::ranked_node Node = CommonNode<edge::vertex_t<graph::edge_t<Graph>>, edge::weight_t<graph::edge_t<Graph>>>,
 		concepts::tracker_for<node::vertex_t<Node>> Tracker = tracker::CommonHashMap<node::vertex_t<Node>>>
 		requires concepts::heuristic_for<Heuristic, Node>
-	using Range = IterableTraverser<
+	using Stream = IterableTraverser<
 		sl::graph::detail::BasicTraverser<
 			Node,
 			Graph,
