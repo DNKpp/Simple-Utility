@@ -32,6 +32,12 @@ if (SIMPLE_UTILITY_BUILD_TESTS OR CMAKE_SOURCE_DIR STREQUAL Simple-Utility_SOURC
 	add_subdirectory("tests")
 endif()
 
+OPTION(SIMPLE_UTILITY_BUILD_BENCHMARKS "Determines whether benchmarks will be built." OFF)
+if (SIMPLE_UTILITY_BUILD_BENCHMARKS)
+	include(CTest)
+	add_subdirectory("benchmarks")
+endif()
+
 option(SIMPLE_UTILITY_GEN_DOCS_ENABLED "Enables the GenerateDocs target." OFF)
 if (SIMPLE_UTILITY_GEN_DOCS_ENABLED)
 	add_subdirectory("docs")

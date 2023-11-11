@@ -1,0 +1,161 @@
+name: run benchmarks
+
+env:
+  BUILD_DIR: out    # root build directory
+  BENCHMARK_DIR: benchmarks   # relative directory below BUILD_DIR
+  ARTIFACTS_DIR: artifacts # relative directory below BENCHMARK_DIR
+
+on:
+  push:
+    branches:
+    - master
+    - development
+    paths-ignore:
+      - 'README.md'
+      - 'docs/'
+  pull_request:
+    branches:
+    - '**'
+    paths-ignore:
+      - 'README.md'
+      - 'docs/'
+
+jobs:
+  ubuntu-22_04:
+    runs-on: ubuntu-22.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        build_mode: [Release]
+        compiler:
+          - pkg: g++-12
+            exe: g++-12
+          - pkg: g++-11
+            exe: g++-11
+          - pkg: g++-10
+            exe: g++-10
+          - pkg: clang-14
+            exe: clang++-14
+          - pkg: clang-13
+            exe: clang++-13
+          - pkg: clang-12
+            exe: clang++-12
+          - pkg: clang-11
+            exe: clang++-11
+            
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install compiler
+      run: |
+        sudo apt-get update
+        sudo apt-get install ${{ matrix.compiler.pkg }} -y
+    - name: Compile
+      env:
+        CXX: ${{ matrix.compiler.exe }}
+      run: |
+        cmake -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }} -DSIMPLE_UTILITY_BUILD_BENCHMARKS=Yes -B ${{ env.BUILD_DIR }} -S .
+        cmake --build ${{ env.BUILD_DIR }} -j4
+    - name: Run benchmarks
+      run: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/Simple-Utility-Benchmarks"
+    - name: Upload generated report artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: "${{env.ARTIFACTS_DIR}}"
+
+
+  ubuntu-20_04:
+    runs-on: ubuntu-20.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        build_mode: [Release]
+        compiler:
+          - pkg: g++-11
+            exe: g++-11
+          - pkg: g++-10
+            exe: g++-10
+          - pkg: clang-12
+            exe: clang++-12
+          - pkg: clang-11
+            exe: clang++-11
+          - pkg: clang-10
+            exe: clang++-10
+            
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install compiler
+      run: |
+        sudo apt-get update
+        sudo apt-get install ${{ matrix.compiler.pkg }} -y
+    - name: Compile
+      env:
+        CXX: ${{ matrix.compiler.exe }}
+      run: |
+        cmake -DCMAKE_BUILD_TYPE=${{ matrix.build_mode }} -DSIMPLE_UTILITY_BUILD_BENCHMARKS=Yes -B ${{ env.BUILD_DIR }} -S .
+        cmake --build ${{ env.BUILD_DIR }} -j4
+    - name: Run benchmarks
+      run: "${{env.BUILD_DIR}}/${{env.BENCHMARK_DIR}}/Simple-Utility-Benchmarks"
+    - name: Upload generated report artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: "${{env.ARTIFACTS_DIR}}"
+
+
+  windows_2022:
+    runs-on: windows-2022
+
+    strategy:
+      fail-fast: false
+      matrix:
+        build_mode: [Release]
+        toolset: [v142, v143, ClangCl]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Compile
+      run: |
+        cmake -G"Visual Studio 17 2022" `
+              -T${{matrix.toolset}} `
+              -DCMAKE_BUILD_TYPE=${{matrix.build_mode}} `
+              -DSIMPLE_UTILITY_BUILD_BENCHMARKS=Yes `
+              -B${{env.BUILD_DIR}} `
+              -Ax64 `
+              -S .
+        cmake --build ${{ env.BUILD_DIR }} --config ${{ matrix.build_mode }} -j4
+    - name: Run benchmarks
+      run: ".\\${{env.BUILD_DIR}}\\${{env.BENCHMARK_DIR}}\\${{matrix.build_mode}}\\Simple-Utility-Benchmarks.exe"
+    - name: Upload generated report artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: "${{env.ARTIFACTS_DIR}}"
+
+
+  windows_2019:
+    runs-on: windows-2019
+
+    strategy:
+      fail-fast: false
+      matrix:
+        build_mode: [Release]
+        toolset: [v142, ClangCl]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Compile
+      run: |
+        cmake -G"Visual Studio 16 2019" `
+              -T${{matrix.toolset}} `
+              -DCMAKE_BUILD_TYPE=${{matrix.build_mode}} `
+              -DSIMPLE_UTILITY_BUILD_BENCHMARKS=Yes `
+              -B${{env.BUILD_DIR}} `
+              -Ax64 `
+              -S .
+        cmake --build ${{env.BUILD_DIR}} --config ${{matrix.build_mode}} -j4
+    - name: Run benchmarks
+      run: ".\\${{env.BUILD_DIR}}\\${{env.BENCHMARK_DIR}}\\${{matrix.build_mode}}\\Simple-Utility-Benchmarks.exe"
+    - name: Upload generated report artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: "${{env.ARTIFACTS_DIR}}"

@@ -6,9 +6,18 @@ env:
 
 on:
   push:
-    branches: [master, development]
+    branches:
+    - master
+    - development
+    paths-ignore:
+      - 'README.md'
+      - 'docs/'
   pull_request:
-    branches: [master, development]
+    branches:
+    - '**'
+    paths-ignore:
+      - 'README.md'
+      - 'docs/'
 
 jobs:
   ubuntu-22_04:
