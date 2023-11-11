@@ -19,9 +19,17 @@
 
 namespace sl::graph::customize
 {
+	/**
+	 * \brief Primary template for the ``vertex`` customization point. Is purposely undefined.
+	 * \ingroup GROUP_GRAPH_CUSTOMIZATION_POINT_VERTEX
+	 */
 	template <class>
 	struct vertex_fn;
 
+	/**
+	 * \brief Primary template for the ``rank`` customization point. Is purposely undefined.
+	 * \ingroup GROUP_GRAPH_CUSTOMIZATION_POINT_RANK
+	 */
 	template <class>
 	struct rank_fn;
 }
@@ -137,18 +145,103 @@ namespace sl::graph::detail
 
 namespace sl::graph::node
 {
+	/**
+	 * \defgroup GROUP_GRAPH_CUSTOMIZATION_POINT_VERTEX vertex
+	 * \ingroup GROUP_GRAPH_CUSTOMIZATION_POINT
+	 * \ingroup GROUP_GRAPH_NODE
+	 * \brief Queries the node for its related vertex.
+	 * \details This function internally dispatches the call in regards of the following priority list:
+	 * - ``graph::customize::vertex_fn`` specialization
+	 * - ``vertex`` member variable
+	 * - ``vertex`` member function
+	 * - ``vertex`` free function (with ADL enabled)
+	 *
+	 * Specialized ``vertex_fn`` should offer an ``operator ()`` definition matching the following signature:
+	 * \code{.cpp}
+	 * sl::graph::node::vertex_t<Node> operator ()(const Node&) const;
+	 * \endcode
+	 * ``Node`` itself is the user type, for which the entry point is specialized for.
+	 *\{
+	 */
+
+	/**
+	 * \brief Customization point, retrieving the related vertex of a the given node.
+	 */
+
 	inline constexpr detail::vertex_fn vertex{};
+
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_GRAPH_CUSTOMIZATION_POINT_RANK rank
+	 * \ingroup GROUP_GRAPH_CUSTOMIZATION_POINT
+	 * \ingroup GROUP_GRAPH_NODE
+	 * \brief Queries the node for its rank.
+	 * \details This function internally dispatches the call in regards of the following priority list:
+	 * - ``graph::customize::rank_fn`` specialization
+	 * - ``rank`` member variable
+	 * - ``rank`` member function
+	 * - ``rank`` free function (with ADL enabled)
+	 *
+	 * Specialized ``rank_fn`` should offer an ``operator ()`` definition matching the following signature:
+	 * \code{.cpp}
+	 * sl::graph::node::rank_t<Node> operator ()(const Node&) const;
+	 * \endcode
+	 * ``Node`` itself is the user type, for which the entry point is specialized for.
+	 *\{
+	 */
+
+	/**
+	 * \brief Customization point, retrieving the rank of a the given node.
+	 */
+
 	inline constexpr detail::rank_fn rank{};
 
+	/**
+	 * \}
+	 */
+
+	/**
+	 * \defgroup GROUP_GRAPH_NODE node
+	 * \ingroup GROUP_GRAPH
+	 * \brief Contains node related definitions.
+	 * \details A node represents the state of a vertex during an algorithm run. A minimal node contains its referred vertex but may also contain
+	 * addition information.
+	 *
+	 * In general a node is built by a node_factory, which receives the source node and one of its edges and then builds the sub-node with the provided
+	 * information. In fact the specified node for the algorithm determines the minimal information a graph must provide via its returned edges.
+	 * Or more formally:<br>
+	 * <center><code>information(node) &cap; information(edge) = information(node)</code></center>
+	 *
+	 * \{
+	 */
+
+	/**
+	 * \brief Primary template is purposely undefined.
+	 */
 	template <class>
 	struct traits;
 
+	/**
+	 * \brief Convenience alias, exposing the ``vertex_type`` member alias of the \ref sl::graph::node::traits "traits" type.
+	 * \tparam Node Type to retrieve the info for.
+	 */
 	template <typename Node>
 	using vertex_t = typename traits<Node>::vertex_type;
 
+	/**
+	 * \brief Convenience alias, exposing the ``rank_type`` member alias of the \ref sl::graph::node::traits "traits" type.
+	 * \tparam Node Type to retrieve the info for.
+	 */
 	template <typename Node>
 	using rank_t = typename traits<Node>::rank_type;
 
+	/**
+	 * \brief General trait specialization for nodes, which contain a valid ``vertex_type`` member alias.
+	 * \tparam T 
+	 */
 	template <class T>
 		requires concepts::readable_vertex_type<T>
 	struct traits<T>
@@ -156,6 +249,10 @@ namespace sl::graph::node
 		using vertex_type = typename T::vertex_type;
 	};
 
+	/**
+	 * \brief General trait specialization for nodes, which contain both, a valid ``vertex_type`` and ``rank_type`` member alias.
+	 * \tparam T 
+	 */
 	template <class T>
 		requires concepts::readable_vertex_type<T>
 				&& concepts::readable_rank_type<T>
@@ -164,10 +261,18 @@ namespace sl::graph::node
 		using vertex_type = typename T::vertex_type;
 		using rank_type = typename T::rank_type;
 	};
+
+	/**
+	 * \}
+	 */
 }
 
 namespace sl::graph::concepts
 {
+	/**
+	 * \brief Determines, whether the given type satisfies the requirements.
+	 * \tparam T Type to check.
+	 */
 	template <class T>
 	concept basic_node = sl::concepts::unqualified<T>
 						&& std::copyable<T>
@@ -181,6 +286,10 @@ namespace sl::graph::concepts
 							{ node::vertex(node) } -> std::convertible_to<typename node::template vertex_t<T>>; // pleases msvc v142
 						};
 
+	/**
+	 * \brief Determines, whether the given type satisfies the requirements.
+	 * \tparam Node Type to check.
+	 */
 	template <class Node>
 	concept ranked_node = basic_node<Node>
 						&& requires { typename node::traits<Node>::rank_type; }
@@ -192,6 +301,11 @@ namespace sl::graph::concepts
 							{ node::rank(node) } -> std::convertible_to<typename node::template rank_t<Node>>; // pleases msvc v142
 						};
 
+	/**
+	 * \brief Determines, whether the ``Edge`` type provides the minimal information required by the ``Node`` type.
+	 * \tparam Edge Type to check.
+	 * \tparam Node Baseline for the minimal required information.
+	 */
 	template <class Edge, class Node>
 	concept edge_for = basic_node<Node>
 						&& edge<Edge>
@@ -206,6 +320,10 @@ namespace sl::graph::concepts
 
 namespace sl::graph
 {
+	/**
+	 * \brief Generic node type, satisfying the requirements of the ``basic_node`` concept.
+	 * \tparam Vertex Vertex type.
+	 */
 	template <concepts::vertex Vertex>
 	struct CommonBasicNode
 	{
@@ -217,6 +335,11 @@ namespace sl::graph
 		friend bool operator==(const CommonBasicNode&, const CommonBasicNode&) = default;
 	};
 
+	/**
+	 * \brief Generic node type, satisfying the requirements of the ``ranked_node`` concept.
+	 * \tparam Vertex Vertex type.
+	 * \tparam Rank Rank type.
+	 */
 	template <concepts::vertex Vertex, concepts::rank Rank>
 	struct CommonRankedNode
 	{
@@ -233,6 +356,10 @@ namespace sl::graph
 
 namespace sl::graph::decorator
 {
+	/**
+	 * \brief Node decorator, extending the provided Node type with a ``predecessor`` property.
+	 * \tparam Node The decorated node type.
+	 */
 	template <concepts::basic_node Node>
 	struct PredecessorNode
 		: public Node
@@ -245,9 +372,21 @@ namespace sl::graph::decorator
 		friend bool operator ==(const PredecessorNode&, const PredecessorNode&) = default;
 	};
 
+	/**
+	 * \brief Primary template node factory decorator, extending the given base node-factory. Purposely undefined.
+	 * \tparam Node The node type.
+	 * \tparam BaseNodeFactory The base node-factory template.
+	 * \details This complexity is necessary, so users can freely nest library-provided and user-defined
+	 * node decorators in arbitrary depth.
+	 */
 	template <concepts::basic_node Node, template<class> typename BaseNodeFactory>
 	class NodeFactory;
 
+	/**
+	 * \brief Node factory decorator specialization for PredecessorNode decorator.
+	 * \tparam Node The decorated node type.
+	 * \tparam BaseNodeFactory The base node-factory template.
+	 */
 	template <concepts::basic_node Node, template<class> typename BaseNodeFactory>
 	class NodeFactory<PredecessorNode<Node>, BaseNodeFactory>
 		: private BaseNodeFactory<Node>
@@ -286,6 +425,10 @@ namespace sl::graph::decorator
 		}
 	};
 
+	/**
+	 * \brief Node decorator, extending the provided Node type with a ``depth`` property.
+	 * \tparam Node The decorated node type.
+	 */
 	template <concepts::basic_node Node>
 	struct DepthNode
 		: public Node
@@ -298,6 +441,11 @@ namespace sl::graph::decorator
 		friend bool operator ==(const DepthNode&, const DepthNode&) = default;
 	};
 
+	/**
+	 * \brief Node factory decorator specialization for DepthNode decorator.
+	 * \tparam Node The decorated node type.
+	 * \tparam BaseNodeFactory The base node-factory template.
+	 */
 	template <concepts::basic_node Node, template<class> typename BaseNodeFactory>
 	class NodeFactory<DepthNode<Node>, BaseNodeFactory>
 		: private BaseNodeFactory<Node>
