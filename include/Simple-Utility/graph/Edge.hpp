@@ -263,6 +263,10 @@ namespace sl::graph::edge
 
 namespace sl::graph::concepts
 {
+	/**
+	 * \brief Determines, whether the given type satisfies the requirements.
+	 * \tparam T Type to check.
+	 */
 	template <class T>
 	concept edge = sl::concepts::unqualified<T>
 					&& std::copyable<T>
@@ -275,6 +279,10 @@ namespace sl::graph::concepts
 						{ edge::destination(edge) } -> std::convertible_to<typename edge::template traits<T>::vertex_type>;
 					};
 
+	/**
+	 * \brief Determines, whether the given type satisfies the requirements.
+	 * \tparam T Type to check.
+	 */
 	template <class T>
 	concept weighted_edge = edge<T>
 							&& weight<typename edge::traits<T>::weight_type>
