@@ -28,7 +28,9 @@ namespace sl
 	 */
 	template <std::size_t priority>
 	struct priority_tag
+		/** \cond */
 		: public priority_tag<priority - 1>
+		/** \endcond */
 	{
 	};
 
